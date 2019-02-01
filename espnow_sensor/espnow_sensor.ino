@@ -4,6 +4,9 @@
 #elif defined(ESP32)
 #include <WiFi.h>
 #endif
+#include "cryptModule.h"
+#include "helperFunctions.h"
+
 
 
 void initWiFi () {
@@ -28,6 +31,10 @@ void setup () {
     //***INICIALIZACIÓN DEL PUERTO SERIE***//
     Serial.begin (115200); Serial.println (); Serial.println ();
 
+    initWiFi ();
+    initEspNow ();
+
+    Crypto.getDH1 ();
 }
 
 void loop () {
