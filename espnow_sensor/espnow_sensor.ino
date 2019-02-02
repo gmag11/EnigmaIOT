@@ -4,11 +4,11 @@
 #elif defined(ESP32)
 #include <WiFi.h>
 #endif
-#include "cryptModule.h"
-#include "helperFunctions.h"
+#include "lib/cryptModule.h"
+#include "lib/helperFunctions.h"
 #include <CRC32.h>
 
-byte gateway[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+byte gateway[6] = { 0x5E, 0xCF, 0x7F, 0x80, 0x34, 0x75 };
 
 void initEspNow () {
     bool ok = WifiEspNow.begin ();
