@@ -13,11 +13,51 @@
 bool flashRed = false;
 bool flashBlue = false;
 
+bool serverHello (byte *key) {
+	byte buffer[KEY_LENGTH + 5];
+	uint32_t crc32;
+
+	if (!key) {
+		return false;
+	}
+
+	buffer[0] = 0xfe; // Server hello message
+
+	for (int i = 0; i < KEY_LENGTH; i++) {
+		buffer[i + 1] = key[i];
+	}
+
+	crc32 = CRC32::calculate (buffer, KEY_LENGTH + 1);
+	Serial.printf ("CRC32 = 0x%08X\n", crc32);
+
+	// int is little indian mode on ESP platform
+	uint32_t *crcField = (uint32_t*)&(buffer[KEY_LENGTH + 1]);
+
+	*crcField = crc32;
+	printHexBuffer (buffer, KEY_LENGTH + 5);
+
+	WifiEspNow.send (peer, buffer, KEY_LENGTH + 5);
+}
+
+void clientHello (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+
+}
+
 void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void* cbarg) {
 	Serial.printf ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X\n", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
-	Serial.print ("Received data: ");
-	printHexBuffer ((byte *)buf, count);
+	//Serial.print ("Received data: ");
+	//printHexBuffer ((byte *)buf, count);
 	flashBlue = true;
+	if (count <= 1) {
+		return;
+	}
+
+	switch (buf[0]) {
+	case 0xFF:
+		Serial.println ("Recibido Client Hello");
+		WifiEspNow.addPeer (mac);
+		clientHello (mac, &(buf[1]), count - 1);
+	}
 }
 
 void initEspNow () {
