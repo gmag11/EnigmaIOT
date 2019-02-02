@@ -8,8 +8,15 @@
 #else
 	#include "WProgram.h"
 #endif
+#if defined(ESP8266)
+#include <ESP8266WiFi.h>
+#elif defined(ESP32)
+#include <WiFi.h>
+#endif
 
 void printHexBuffer (byte *buffer, uint16_t len);
+
+void initWiFi ();
 
 #endif
 

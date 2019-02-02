@@ -10,3 +10,13 @@ void printHexBuffer (byte *buffer, uint16_t len) {
     }
     Serial.println ();
 }
+
+void initWiFi () {
+	WiFi.persistent (false);
+	WiFi.mode (WIFI_AP);
+	WiFi.softAP ("ESPNOW", nullptr, 3);
+	WiFi.softAPdisconnect (false);
+
+	Serial.print ("MAC address of this node is ");
+	Serial.println (WiFi.softAPmacAddress ());
+}
