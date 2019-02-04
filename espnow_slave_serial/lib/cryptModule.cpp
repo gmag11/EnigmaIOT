@@ -7,6 +7,71 @@
 #include <Curve25519.h>
 #include "helperFunctions.h"
 
+#define CYPHER_TYPE Speck
+
+void CryptModule::decryptBuffer (byte *output, byte *input, size_t length, byte *key) {
+	CYPHER_TYPE cipher;
+	size_t blockSize = cipher.blockSize ();
+	size_t keySize = cipher.keySize ();
+	int index = 0;
+	u8 numBlocks;
+
+	if (length % blockSize == 0) {
+		numBlocks = (u8)(length / blockSize);
+	}
+	else {
+		numBlocks = (u8)(length / blockSize) + 1;
+	}
+
+	Serial.printf ("%s bufferLength = %d. numBlocks = %u\n\n", __FUNCTION__, length, numBlocks);
+
+	cipher.setKey (key, keySize);
+
+	for (int i = 0; i < numBlocks; i++) {
+		// TODO: Check buffer limit.
+
+		//Serial.printf ("%s Before data: ", __FUNCTION__);
+		//printKey (&buffer[index], blockSize); Serial.println ();
+
+		cipher.decryptBlock (&output[index], &input[index]);
+
+		index += blockSize;
+	}
+
+	cipher.clear ();
+}
+
+void CryptModule::encryptBuffer (byte *output, byte *input, size_t length, byte *key) {
+	CYPHER_TYPE cipher;
+	size_t blockSize = cipher.blockSize ();
+	size_t keySize = cipher.keySize ();
+	int index = 0;
+	u8 numBlocks;
+
+	if (length % blockSize == 0) {
+		numBlocks = (u8)(length / blockSize);
+	}
+	else {
+		numBlocks = (u8)(length / blockSize) + 1;
+	}
+
+	Serial.printf ("%s bufferLength = %d. numBlocks = %u\n\n", __FUNCTION__, length, numBlocks);
+
+	cipher.setKey (key, keySize);
+
+	for (int i = 0; i < numBlocks; i++) {
+		// TODO: Check buffer limit.
+
+		//Serial.printf ("%s Before data: ", __FUNCTION__);
+		//printKey (&buffer[index], blockSize); Serial.println ();
+
+		cipher.encryptBlock (&output[index], &input[index]);
+
+		index += blockSize;
+	}
+
+	cipher.clear ();
+}
 
 uint32_t CryptModule::random () {
     return *(volatile uint32_t *)RANDOM_32;
@@ -15,25 +80,19 @@ uint32_t CryptModule::random () {
 
 void CryptModule::getDH1 () {
     Curve25519::dh1 (publicDHKey, privateDHKey);
-    DEBUG_MSG ("Public key: ");
-    printHexBuffer (publicDHKey, KEY_LENGTH);
+	DEBUG_VERBOSE ("Public key: %s", printHexBuffer (publicDHKey, KEY_LENGTH));
 
-    DEBUG_MSG ("Private key: ");
-    printHexBuffer (privateDHKey, KEY_LENGTH);
+	DEBUG_VERBOSE ("Private key: %s", printHexBuffer (privateDHKey, KEY_LENGTH));
 }
 
 bool CryptModule::getDH2 (uint8_t* remotePubKey) {
-    DEBUG_MSG ("Remote public key: ");
-	printHexBuffer (remotePubKey, KEY_LENGTH);
-	
+	DEBUG_VERBOSE ("Remote public key: %s", printHexBuffer (remotePubKey, KEY_LENGTH));
+	DEBUG_VERBOSE ("Private key: %s", printHexBuffer (privateDHKey, KEY_LENGTH));
+
 	if (!Curve25519::dh2 (remotePubKey, privateDHKey)) {
+		DEBUG_WARN ("DH2 error");
 		return false;
 	}
-	
-    DEBUG_MSG ("Remote public key: ");
-	printHexBuffer (remotePubKey, KEY_LENGTH);
-    DEBUG_MSG ("Private key: ");
-	printHexBuffer (privateDHKey, KEY_LENGTH);
 	
 	return true;
 }

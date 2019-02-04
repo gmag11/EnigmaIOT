@@ -59,21 +59,20 @@ bool serverHello (byte *key) {
 	}
 
 	crc32 = CRC32::calculate (buffer, KEY_LENGTH + 1);
-	Serial.printf ("%s CRC32 = 0x%08X\n", __FUNCTION__, crc32);
+	DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
 	// int is little indian mode on ESP platform
 	uint32_t *crcField = (uint32_t*)&(buffer[KEY_LENGTH + 1]);
 
 	*crcField = crc32;
-	Serial.printf ("%u %s Server Hello message: ", millis(), __FUNCTION__);
-	printHexBuffer (buffer, KEY_LENGTH + 5);
+	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer (buffer, KEY_LENGTH + 5));
 	flashRed = true;
 	return WifiEspNow.send (node.mac, buffer, KEY_LENGTH + 5);
 }
 
 bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
 	uint32_t _crc = CRC32::calculate (buf, count);
-	Serial.printf ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X\n", _crc, *crc);
+	DEBUG_VERBOSE ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X", _crc, *crc);
 	return (_crc == *crc);
 }
 
@@ -81,7 +80,7 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 	uint8_t myPublicKey[KEY_LENGTH];
 
 	if (!checkCRC (buf, count - 4, (uint32_t*)(buf + count - 4))) {
-		Serial.printf ("%s Wrong CRC", __FUNCTION__);
+        DEBUG_WARN ("Wrong CRC");
 		return false;
 	}
 		
@@ -90,18 +89,15 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 	Crypto.getDH1 ();
 	memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
 	Crypto.getDH2 (node.key);
-	Serial.printf ("[%s] Node key: ", __FUNCTION__);
-	printHexBuffer (node.key, KEY_LENGTH);
+	DEBUG_INFO ("Node key: %s", printHexBuffer (node.key, KEY_LENGTH));
 
 	return serverHello (myPublicKey);
 }
 
 void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void* cbarg) {
-	Serial.printf ("%u: Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X\n", millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
-	Serial.print ("Received data: ");
-	printHexBuffer ((byte *)buf, count);
-	Serial.print ("Received CRC: ");
-	printHexBuffer ((byte *)(buf+count-4), 4);
+    DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
+	DEBUG_VERBOSE ("Received data: %s", printHexBuffer ((byte *)buf, count));
+	DEBUG_VERBOSE ("Received CRC: %s", printHexBuffer ((byte *)(buf+count-4), 4));
 	flashBlue = true;
 	if (count <= 1) {
 		return;
@@ -109,7 +105,7 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
 
 	switch (buf[0]) {
 	case CLIENT_HELLO:
-		Serial.println ("Recibido Client Hello");
+        DEBUG_INFO ("Client Hello received");
 		WifiEspNow.addPeer (mac);
 		processClientHello (mac, buf, count);
 	}

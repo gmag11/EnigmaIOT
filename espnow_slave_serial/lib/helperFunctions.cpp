@@ -5,11 +5,20 @@
 #include "helperFunctions.h"
 
 #ifdef DEBUG_ESP_PORT
-void printHexBuffer (byte *buffer, uint16_t len) {
+char *printHexBuffer (byte *buffer, uint16_t len) {
+	static char tempStr[150];
+	int charIndex = 0;
+	//char *chrPtr = tempStr;
+
     for (int i = 0; i < len; i++) {
-        Serial.printf ("%02X ", buffer[i]);
+		charIndex += sprintf (tempStr + charIndex, "%02X ", buffer[i]);
+		//Serial.printf ("%s\n", tempStr);
+		//chrPtr += charIndex;
+        //Serial.printf ("%02X ", buffer[i]);
     }
-    Serial.println ();
+	//sprintf (tempStr, "\n");
+    //Serial.println ();
+	return tempStr;
 }
 #endif
 
@@ -19,5 +28,5 @@ void initWiFi () {
 	WiFi.softAP ("ESPNOW", nullptr, 3);
 	WiFi.softAPdisconnect (false);
 
-    DEBUG_MSG ("MAC address of this node is %s\n", WiFi.softAPmacAddress ().c_str());
+    DEBUG_INFO ("MAC address of this device is %s", WiFi.softAPmacAddress ().c_str());
 }
