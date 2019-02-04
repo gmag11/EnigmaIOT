@@ -75,9 +75,11 @@ bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 }
 
 bool keyExchangeFinished () {
-	byte buffer[RANDOM_LENGTH + 5];
+	byte buffer[/*RANDOM_LENGTH + 5*/16]; //1 block
 	uint32_t crc32;
 	uint32_t nonce;
+
+	memset (buffer, 0, 16);
 
 	buffer[0] = KEY_EXCHANGE_FINISHED; // Client hello message
 
@@ -92,13 +94,17 @@ bool keyExchangeFinished () {
 	uint32_t *crcField = (uint32_t*)&(buffer[RANDOM_LENGTH + 1]);
 
 	*crcField = crc32;
-	DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer (buffer, RANDOM_LENGTH + 5));
+	DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer (buffer, 16));
 
-	Crypto.encryptBuffer (buffer+1, buffer+1, RANDOM_LENGTH + 4, key);
+	Crypto.encryptBuffer (buffer, buffer, RANDOM_LENGTH + 5, key);
 
-	DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer (buffer, RANDOM_LENGTH + 5));
+	DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer (buffer, 16));
 
-	return WifiEspNow.send (gateway, buffer, RANDOM_LENGTH + 5);
+	bool error = WifiEspNow.send (gateway, buffer, 16);
+	Crypto.decryptBuffer (buffer, buffer, 16, key);
+	DEBUG_VERBOSE ("Decripted Key Exchange Finished message: %s", printHexBuffer (buffer, RANDOM_LENGTH + 5));
+
+	return error;
 }
 
 void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void* cbarg) {

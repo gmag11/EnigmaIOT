@@ -13,7 +13,7 @@
 bool flashRed = false;
 bool flashBlue = false;
 
-enum status_t {
+enum server_status {
 	INIT,
 	WAIT_FOR_SERVER_HELLO,
 	WAIT_FOR_CIPHER_FINISHED,
@@ -22,6 +22,8 @@ enum status_t {
 	WAIT_FOR_SENSOR_DATA,
 	SLEEP
 };
+
+typedef enum server_status status_t;
 
 enum messageType_t {
 	SENSOR_DATA = 0x01,
@@ -37,7 +39,8 @@ struct node_instance {
 	uint16_t nodeId;
 	uint8_t key[32];
 	time_t lastMessage;
-	bool keyInvalid;
+	//status_t status;
+	bool keyValid = false;
 };
 
 typedef struct node_instance node_t;
@@ -89,15 +92,23 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 	Crypto.getDH1 ();
 	memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
 	Crypto.getDH2 (node.key);
+	node.keyValid = true;
 	DEBUG_INFO ("Node key: %s", printHexBuffer (node.key, KEY_LENGTH));
 
 	return serverHello (myPublicKey);
 }
 
 void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void* cbarg) {
+	//uint8_t *buffer;
+
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
 	DEBUG_VERBOSE ("Received data: %s", printHexBuffer ((byte *)buf, count));
-	DEBUG_VERBOSE ("Received CRC: %s", printHexBuffer ((byte *)(buf+count-4), 4));
+	if (node.keyValid) {
+		DEBUG_VERBOSE ("Decryption key: %s", printHexBuffer (node.key, KEY_LENGTH));
+		Crypto.decryptBuffer ((uint8_t *)buf, (uint8_t *)buf, count, node.key);
+		DEBUG_VERBOSE ("Decrypted data: %s", printHexBuffer ((byte *)buf, count));
+	}
+	//DEBUG_VERBOSE ("Received CRC: %s", printHexBuffer ((byte *)(buf+count-4), 4));
 	flashBlue = true;
 	if (count <= 1) {
 		return;
