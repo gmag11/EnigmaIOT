@@ -14,18 +14,6 @@
 bool flashRed = false;
 bool flashBlue = false;
 
-enum server_status {
-	INIT,
-	WAIT_FOR_SERVER_HELLO,
-	WAIT_FOR_CIPHER_FINISHED,
-	WAIT_FOR_KEY_EXCH_FINISHED,
-	WAIT_FOR_DOWNLINK,
-	WAIT_FOR_SENSOR_DATA,
-	SLEEP
-};
-
-typedef enum server_status status_t;
-
 enum messageType_t {
 	SENSOR_DATA = 0x01,
 	CLIENT_HELLO = 0xFF,
