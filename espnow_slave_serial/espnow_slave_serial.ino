@@ -98,19 +98,67 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 	return serverHello (myPublicKey);
 }
 
+bool cipherFinished () {
+    byte buffer[/*3 + RANDOM_LENGTH + CRC_LENGTH*/16];
+    uint32_t crc32;
+    uint32_t nonce;
+
+    memset (buffer, 0, 16);
+
+    buffer[0] = CYPHER_FINISHED; // Server hello message
+    node.nodeId = 1;
+    memcpy (buffer + 1, &node.nodeId, sizeof (uint16_t));
+    buffer[1] = node.nodeId;
+    
+    nonce = Crypto.random ();
+
+    memcpy (buffer + 3, &nonce, RANDOM_LENGTH);
+
+    crc32 = CRC32::calculate (buffer, 3 + RANDOM_LENGTH + CRC_LENGTH);
+    DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
+
+    // int is little indian mode on ESP platform
+    uint32_t *crcField = (uint32_t*)&(buffer[3 + RANDOM_LENGTH]);
+    *crcField = crc32;
+
+    DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer (buffer, 16));
+
+    Crypto.encryptBuffer (buffer, buffer, 16, node.key);
+
+    DEBUG_VERBOSE ("Encripted Cipher Finished message: %s", printHexBuffer (buffer, 16));
+
+    return WifiEspNow.send (node.mac, buffer, 16);
+}
+
+bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+    if (!checkCRC (buf, count - 4, (uint32_t*)(buf + count - 4))) {
+        DEBUG_WARN ("Wrong CRC");
+        return false;
+    }
+    //DEBUG_INFO ("CRC OK");
+
+
+    return cipherFinished ();
+
+}
+
+
 void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void* cbarg) {
 	//uint8_t *buffer;
 
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
 	DEBUG_VERBOSE ("Received data: %s", printHexBuffer ((byte *)buf, count));
-	if (node.keyValid) {
-		DEBUG_VERBOSE ("Decryption key: %s", printHexBuffer (node.key, KEY_LENGTH));
+
+    if (node.keyValid && (count % 16 == 0)) { // Encrypted frames have to be n times 16 bytes long
 		Crypto.decryptBuffer ((uint8_t *)buf, (uint8_t *)buf, count, node.key);
 		DEBUG_VERBOSE ("Decrypted data: %s", printHexBuffer ((byte *)buf, count));
-	}
-	//DEBUG_VERBOSE ("Received CRC: %s", printHexBuffer ((byte *)(buf+count-4), 4));
+    } else if (buf[0] != CLIENT_HELLO) { // Only valid unencrypted message is Client Hello
+        DEBUG_WARN ("Non valid unencrypted message");
+        return;
+    }
 	flashBlue = true;
 	if (count <= 1) {
+        DEBUG_WARN ("Empty message");
 		return;
 	}
 
@@ -119,6 +167,12 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
         DEBUG_INFO ("Client Hello received");
 		WifiEspNow.addPeer (mac);
 		processClientHello (mac, buf, count);
+        break;
+    case KEY_EXCHANGE_FINISHED:
+        DEBUG_INFO ("Key Exchange Finished received");
+        processKeyExchangeFinished (mac, buf, 1 + RANDOM_LENGTH + CRC_LENGTH);
+        break;
+
 	}
 }
 

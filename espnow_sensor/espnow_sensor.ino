@@ -96,21 +96,24 @@ bool keyExchangeFinished () {
 	*crcField = crc32;
 	DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer (buffer, 16));
 
-	Crypto.encryptBuffer (buffer, buffer, RANDOM_LENGTH + 5, key);
+	Crypto.encryptBuffer (buffer, buffer, /*RANDOM_LENGTH + 5*/16, key);
 
 	DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer (buffer, 16));
 
-	bool error = WifiEspNow.send (gateway, buffer, 16);
-	Crypto.decryptBuffer (buffer, buffer, 16, key);
-	DEBUG_VERBOSE ("Decripted Key Exchange Finished message: %s", printHexBuffer (buffer, RANDOM_LENGTH + 5));
-
-	return error;
+	return WifiEspNow.send (gateway, buffer, 16);
 }
 
 void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void* cbarg) {
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     DEBUG_VERBOSE ("Received data: %s",printHexBuffer ((byte *)buf, count));
-	DEBUG_VERBOSE ("Received CRC: %s", printHexBuffer ((byte *)(buf + count - 4), 4));
+    if ((count % 16) == 0) { // Encrypted frames have to be n times 16 bytes long
+        Crypto.decryptBuffer ((uint8_t *)buf, (uint8_t *)buf, count, key);
+        DEBUG_VERBOSE ("Decrypted data: %s", printHexBuffer ((byte *)buf, count));
+    } else if (buf[0] != SERVER_HELLO) { // Only valid unencrypted message is Server Hello
+        DEBUG_WARN ("Non valid unencrypted message");
+        return;
+    }
+	//DEBUG_VERBOSE ("Received CRC: %s", printHexBuffer ((byte *)(buf + count - 4), 4));
 	if (count <= 1) {
 		return;
 	}

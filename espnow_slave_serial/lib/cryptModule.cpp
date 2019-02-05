@@ -24,7 +24,7 @@ void CryptModule::decryptBuffer (byte *output, byte *input, size_t length, byte 
 	}
 
 	DEBUG_VERBOSE ("BufferLength = %d. numBlocks = %u", length, numBlocks);
-	DEBUG_VERBOSE ("Decryption key: %s", printHexBuffer(key,KEY_LENGTH));
+	//DEBUG_VERBOSE ("Decryption key: %s", printHexBuffer(key,KEY_LENGTH));
 	cipher.setKey (key, keySize);
 
 	for (int i = 0; i < numBlocks; i++) {
@@ -57,7 +57,7 @@ void CryptModule::encryptBuffer (byte *output, byte *input, size_t length, byte 
 
 	DEBUG_VERBOSE ("BufferLength = %d. numBlocks = %u. BlockSize = %u",
 		length, numBlocks, blockSize);
-	DEBUG_VERBOSE ("Encryption key: %s", printHexBuffer (key, KEY_LENGTH));
+	//DEBUG_VERBOSE ("Encryption key: %s", printHexBuffer (key, KEY_LENGTH));
 
 	cipher.setKey (key, keySize);
 

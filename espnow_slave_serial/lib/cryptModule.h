@@ -12,6 +12,7 @@
 #define RANDOM_32 0x3FF20E44
 #define KEY_LENGTH 32U
 #define RANDOM_LENGTH 4U
+#define CRC_LENGTH 4U
 #define BLOCK_SIZE 16U
 #define BUFFER_SIZE 255U
 
