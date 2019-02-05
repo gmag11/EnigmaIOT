@@ -13,8 +13,8 @@ enum node_status {
     UNREGISTERED,
     INIT,
     WAIT_FOR_SERVER_HELLO,
-    WAIT_FOR_CIPHER_FINISHED,
     WAIT_FOR_KEY_EXCH_FINISHED,
+    WAIT_FOR_CIPHER_FINISHED,
     WAIT_FOR_DOWNLINK,
     REGISTERED,
     SLEEP
@@ -42,11 +42,6 @@ public:
     uint8_t *getMacAddress () {
         return mac;
     }
-    void setMacAddress (uint8_t *macAddress) {
-        if (macAddress) {
-            memcpy (mac, macAddress, 6);
-        }
-    }
     uint16_t getNodeId () {
         return nodeId;
     }
@@ -56,7 +51,7 @@ public:
     uint8_t *getEncriptionKey () {
         return key;
     }
-    void setEncryptionKey (uint8_t* key);
+    void setEncryptionKey (const uint8_t* key);
     time_t getLastMessageTime () {
         return lastMessageTime;
     }
@@ -104,6 +99,12 @@ protected:
     //bool registered = false; 
     status_t status;
 
+    void setMacAddress (const uint8_t *macAddress) {
+        if (macAddress) {
+            memcpy (mac, macAddress, 6);
+        }
+    }
+
     friend class NodeList;
 };
 
@@ -114,9 +115,9 @@ class NodeList {
 public:
     NodeList ();
 
-    Node *getNode (uint16_t nodeId);
+    Node *getNodeFromID (uint16_t nodeId);
 
-    Node *getNode (uint8_t* mac);
+    Node *getNodeFromMAC (const uint8_t* mac);
     
     Node *findEmptyNode ();
     
@@ -124,13 +125,15 @@ public:
     
     bool unregisterNode (uint16_t nodeId);
     
-    bool unregisterNode (uint8_t* mac);
+    bool unregisterNode (const uint8_t* mac);
     
-    bool unregisterNode (Node node);
+    bool unregisterNode (Node *node);
 
     Node *getNextActiveNode (uint16_t nodeId);
 
     Node *getNextActiveNode (Node node);
+
+    Node *getNewNode (const uint8_t* mac);
 
 protected:
     Node nodes[NUM_NODES];

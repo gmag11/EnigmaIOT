@@ -25,7 +25,9 @@ enum messageType_t {
 
 node_t node;
 
-bool serverHello (byte *key) {
+NodeList nodelist;
+
+bool serverHello (byte *key, Node *node) {
 	byte buffer[KEY_LENGTH + 5];
 	uint32_t crc32;
 
@@ -48,7 +50,13 @@ bool serverHello (byte *key) {
 	*crcField = crc32;
 	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer (buffer, KEY_LENGTH + 5));
 	flashRed = true;
-	return WifiEspNow.send (node.mac, buffer, KEY_LENGTH + 5);
+    if (WifiEspNow.send (node->getMacAddress (), buffer, KEY_LENGTH + 5)) {
+        node->setStatus (WAIT_FOR_KEY_EXCH_FINISHED);
+        return true;
+    } else {
+        nodelist.unregisterNode (node);
+        return false;
+    }
 }
 
 bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
@@ -68,16 +76,25 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
         DEBUG_WARN ("Wrong CRC");
 		return false;
 	}
-		
-	memcpy (node.mac, mac, 6);
-	memcpy (node.key, &(buf[1]), KEY_LENGTH);
+
+    Node *node = nodelist.getNewNode (mac);
+    node->setLastMessageTime(millis ());
+	//memcpy (node.mac, mac, 6);
+    node->setEncryptionKey (&(buf[1]));
+	//memcpy (node.key, &(buf[1]), KEY_LENGTH);
 	Crypto.getDH1 ();
 	memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
-	Crypto.getDH2 (node.key);
-	node.keyValid = true;
-	DEBUG_INFO ("Node key: %s", printHexBuffer (node.key, KEY_LENGTH));
+    if (Crypto.getDH2 (node->getEncriptionKey ())) {
+        node->setKeyValid (true);
+    } else {
+        nodelist.unregisterNode (node);
+        return false;
+    }
+	//Crypto.getDH2 (node.key);
+	//node.keyValid = true;
+	DEBUG_INFO ("Node key: %s", printHexBuffer (node->getEncriptionKey (), KEY_LENGTH));
     
-	return serverHello (myPublicKey);
+	return serverHello (myPublicKey, node);
 }
 
 bool cipherFinished () {
@@ -150,8 +167,11 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
 	switch (buf[0]) {
 	case CLIENT_HELLO:
         DEBUG_INFO ("Client Hello received");
-		WifiEspNow.addPeer (mac);
-		processClientHello (mac, buf, count);
+        if (WifiEspNow.addPeer (mac)) {
+            if (!processClientHello (mac, buf, count)) {
+                DEBUG_ERROR ("Error processing client hello");
+            }
+        }
         break;
     case KEY_EXCHANGE_FINISHED:
         DEBUG_INFO ("Key Exchange Finished received");

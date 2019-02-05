@@ -4,7 +4,7 @@
 
 #include "NodeList.h"
 
-void Node::setEncryptionKey (uint8_t* key) {
+void Node::setEncryptionKey (const uint8_t* key) {
     if (key) {
         memcpy (this->key, key, KEYLENGTH);
     }
@@ -48,12 +48,12 @@ NodeList::NodeList () {
     }
 }
 
-Node *NodeList::getNode (uint16_t nodeId)
+Node *NodeList::getNodeFromID (uint16_t nodeId)
 {
     return &(nodes[nodeId]);
 }
 
-Node *NodeList::getNode (uint8_t * mac)
+Node *NodeList::getNodeFromMAC (const uint8_t * mac)
 {
     uint16_t index = 0;
 
@@ -110,9 +110,9 @@ bool NodeList::unregisterNode (uint16_t nodeId)
     return false;
 }
 
-bool NodeList::unregisterNode (uint8_t * mac)
+bool NodeList::unregisterNode (const uint8_t * mac)
 {
-    Node *node = getNode (mac);
+    Node *node = getNodeFromMAC (mac);
     if (node) {
         memset (node->mac, 0, 6);
         memset (node->key, 0, KEYLENGTH);
@@ -124,13 +124,20 @@ bool NodeList::unregisterNode (uint8_t * mac)
     }
 }
 
-bool NodeList::unregisterNode (Node node)
+bool NodeList::unregisterNode (Node *node)
 {
-    if (nodes[node.nodeId].status != UNREGISTERED) {
-        nodes[node.nodeId].status = UNREGISTERED;
-        return true;
-    } else {
-        return false;
+    if (node)
+    {
+        memset (node->mac, 0, 6);
+        memset (node->key, 0, KEYLENGTH);
+        node->keyValid = false;
+
+        if (nodes[node->nodeId].status != UNREGISTERED) {
+            nodes[node->nodeId].status = UNREGISTERED;
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
@@ -149,6 +156,22 @@ Node * NodeList::getNextActiveNode (Node node)
     for (int i = node.nodeId + 1; i < NUM_NODES; i++) {
         if (nodes[i].status != UNREGISTERED) {
             return &(nodes[i]);
+        }
+    }
+    return NULL;
+}
+
+Node * NodeList::getNewNode (const uint8_t * mac)
+{
+    Node *node = getNodeFromMAC (mac);
+    if (node) {
+        return node;
+    } else {
+        for (int i = 0; i < NUM_NODES; i++) {
+            if (nodes[i].status == UNREGISTERED) {
+                nodes[i].setMacAddress (mac);
+                return &(nodes[i]);
+            }
         }
     }
     return NULL;
