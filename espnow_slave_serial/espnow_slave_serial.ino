@@ -1,3 +1,4 @@
+#include "NodeList.h"
 #include <WifiEspNow.h>
 #if defined(ESP8266)
 #include <ESP8266WiFi.h>
@@ -33,17 +34,6 @@ enum messageType_t {
 	CYPHER_FINISHED = 0xFC,
 	INVALIDATE_KEY = 0xFB
 };
-
-struct node_instance {
-	uint8_t mac[6];
-	uint16_t nodeId;
-	uint8_t key[32];
-	time_t lastMessage;
-	//status_t status;
-	bool keyValid = false;
-};
-
-typedef struct node_instance node_t;
 
 node_t node;
 
