@@ -74,9 +74,13 @@ bool serverHello (byte *key) {
 }
 
 bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
-	uint32_t _crc = CRC32::calculate (buf, count);
-	DEBUG_VERBOSE ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X", _crc, *crc);
-	return (_crc == *crc);
+    uint32 recvdCRC;
+
+    memcpy (&recvdCRC, crc, sizeof (uint32_t));
+    //DEBUG_VERBOSE ("Received CRC32: 0x%08X", *crc);
+    uint32_t _crc = CRC32::calculate (buf, count);
+    DEBUG_VERBOSE ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X Length: %d", _crc, recvdCRC, count);
+    return (_crc == recvdCRC);
 }
 
 bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count) {
@@ -94,7 +98,7 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 	Crypto.getDH2 (node.key);
 	node.keyValid = true;
 	DEBUG_INFO ("Node key: %s", printHexBuffer (node.key, KEY_LENGTH));
-
+    
 	return serverHello (myPublicKey);
 }
 
@@ -108,13 +112,14 @@ bool cipherFinished () {
     buffer[0] = CYPHER_FINISHED; // Server hello message
     node.nodeId = 1;
     memcpy (buffer + 1, &node.nodeId, sizeof (uint16_t));
-    buffer[1] = node.nodeId;
+    //buffer[1] = 0;
+    //buffer[1] = node.nodeId;
     
     nonce = Crypto.random ();
 
     memcpy (buffer + 3, &nonce, RANDOM_LENGTH);
 
-    crc32 = CRC32::calculate (buffer, 3 + RANDOM_LENGTH + CRC_LENGTH);
+    crc32 = CRC32::calculate (buffer, 3 + RANDOM_LENGTH);
     DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
     // int is little indian mode on ESP platform
@@ -127,6 +132,7 @@ bool cipherFinished () {
 
     DEBUG_VERBOSE ("Encripted Cipher Finished message: %s", printHexBuffer (buffer, 16));
 
+    flashRed = true;
     return WifiEspNow.send (node.mac, buffer, 16);
 }
 
@@ -136,9 +142,10 @@ bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_
         return false;
     }
     //DEBUG_INFO ("CRC OK");
+    
+    return true;
 
-
-    return cipherFinished ();
+    //return cipherFinished ();
 
 }
 
@@ -170,7 +177,11 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
         break;
     case KEY_EXCHANGE_FINISHED:
         DEBUG_INFO ("Key Exchange Finished received");
-        processKeyExchangeFinished (mac, buf, 1 + RANDOM_LENGTH + CRC_LENGTH);
+        if (processKeyExchangeFinished (mac, buf, 1 + RANDOM_LENGTH + CRC_LENGTH)) {
+            if (cipherFinished ()) {
+                // add node to nodeList
+            }
+        }
         break;
 
 	}
