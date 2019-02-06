@@ -59,11 +59,7 @@ char* printHexBuffer (byte *buffer, uint16_t len);
 #define DEBUG_ERROR(...)
 #endif
 
-bool mac2str (uint8_t *mac, char *buffer) {
-    if (mac && buffer) {
-        sprintf (buffer, MACSTR, MAC2STR (mac));
-    }
-}
+bool mac2str (uint8_t *mac, char *buffer);
 
 void initWiFi ();
 
