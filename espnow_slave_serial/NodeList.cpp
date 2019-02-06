@@ -23,6 +23,52 @@ node_t Node::getNodeData () {
     thisNode.status = status;
 }
 
+String Node::toString ()
+{
+    String nodeString = "Node: ";
+    nodeString += nodeId;
+    nodeString += "\n\tMAC Address: ";
+    char macstr[18];
+    nodeString += mac2str (mac,macstr);
+    nodeString += "\n\tLast counter: ";
+    nodeString += lastMessageCounter;
+    nodeString += "\n\tLast message: ";
+    nodeString += (millis()-lastMessageTime)/1000;
+    nodeString += "\n\tKey: ";
+    nodeString += keyValid ? "Valid" : "Invalid";
+    nodeString += "ms ago\n\tStatus: ";
+    switch (status) {
+    case UNREGISTERED :
+        nodeString += "Unregistered";
+        break;
+    case INIT:
+        nodeString += "Initializing";
+        break;
+    case SLEEP:
+        nodeString += "Going to sleep";
+        break;
+    case WAIT_FOR_SERVER_HELLO:
+        nodeString += "Wait for server hello";
+        break;
+    case WAIT_FOR_KEY_EXCH_FINISHED:
+        nodeString += "Wait for Key Exchange Finished";
+        break;
+    case WAIT_FOR_CIPHER_FINISHED:
+        nodeString += "Wait for Cipher Finished";
+        break;
+    case WAIT_FOR_DOWNLINK:
+        nodeString += "Wait for Downlik";
+        break;
+    case REGISTERED:
+        nodeString += "Registered. Wait for messagges";
+        break;
+    default:
+        nodeString += status;
+    }
+    
+    return nodeString;
+}
+
 Node::Node () :
     keyValid (false),
     status (UNREGISTERED)

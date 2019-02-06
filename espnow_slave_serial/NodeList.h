@@ -12,7 +12,6 @@
 enum node_status {
     UNREGISTERED,
     INIT,
-    WAIT_FOR_MESSAGES,
     WAIT_FOR_SERVER_HELLO,
     WAIT_FOR_KEY_EXCH_FINISHED,
     WAIT_FOR_CIPHER_FINISHED,
@@ -88,6 +87,8 @@ public:
         this->status = status;
     }
     node_t getNodeData ();
+
+    String toString ();
 
 protected:
 #define KEYLENGTH 32
