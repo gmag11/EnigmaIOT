@@ -25,7 +25,7 @@
 
 #define DEGUG_LEVEL VERBOSE
 
-#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%u] %u free (%s:%d) ",millis(),__FUNCTION__,ESP.getFreeHeap(),__LINE__);
+#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%u] %u free (%s:%d) ",millis(),ESP.getFreeHeap(),__FUNCTION__,__LINE__);
 
 #ifdef DEBUG_ESP_PORT
 char* printHexBuffer (byte *buffer, uint16_t len);
