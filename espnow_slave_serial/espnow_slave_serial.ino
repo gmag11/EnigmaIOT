@@ -192,7 +192,8 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
         DEBUG_INFO ("Key Exchange Finished received");
         if (processKeyExchangeFinished (mac, buf, 1 + RANDOM_LENGTH + CRC_LENGTH)) {
             if (cipherFinished (node)) {
-                node->setStatus (WAIT_FOR_MESSAGES);
+                node->setStatus (REGISTERED);
+                DEBUG_INFO ("%s", nodelist.toString ().c_str());
             }
         }
         break;
