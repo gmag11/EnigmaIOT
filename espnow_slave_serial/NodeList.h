@@ -81,7 +81,9 @@ public:
     }
     node_t getNodeData ();
 
-    String toString ();
+    //String toString ();
+
+    void printToSerial ();
 
 protected:
 #define KEYLENGTH 32
@@ -131,7 +133,9 @@ public:
 
     Node *getNewNode (const uint8_t* mac);
 
-    String toString ();
+    //String toString ();
+
+    void printToSerial ();
 
 protected:
     Node nodes[NUM_NODES];

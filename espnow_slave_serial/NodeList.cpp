@@ -24,20 +24,70 @@ node_t Node::getNodeData () {
     thisNode.status = status;
 }
 
-String Node::toString ()
+
+void Node::printToSerial ()
 {
+    Serial.printf ("Node: %d\n", nodeId);
+    char macstr[18];
+    mac2str (mac, macstr);
+    Serial.printf ("\tMAC Address: %s\n", macstr);
+    Serial.printf ("\tLast counter: %u\n",lastMessageCounter);
+    Serial.printf ("\tLast message: %u ms ago\n", millis () - lastMessageTime);
+    Serial.printf ("\tKey: %s\n", keyValid ? "Valid" : "Invalid");
+    Serial.print ("\tStatus: ");
+    switch (status) {
+    case UNREGISTERED:
+        Serial.println ("Unregistered");
+        break;
+    case INIT:
+        Serial.println ("Initializing");
+        break;
+    case SLEEP:
+        Serial.println ("Going to sleep");
+        break;
+    case WAIT_FOR_SERVER_HELLO:
+        Serial.println ("Wait for server hello");
+        break;
+    case WAIT_FOR_KEY_EXCH_FINISHED:
+        Serial.println ("Wait for Key Exchange Finished");
+        break;
+    case WAIT_FOR_CIPHER_FINISHED:
+        Serial.println ("Wait for Cipher Finished");
+        break;
+    case WAIT_FOR_DOWNLINK:
+        Serial.println ("Wait for Downlik");
+        break;
+    case REGISTERED:
+        Serial.println ("Registered. Wait for messages");
+        break;
+    default:
+        Serial.println (status);
+    }
+}
+
+
+/*String Node::toString ()
+{
+    DEBUG_VERBOSE ("NodeId");
     String nodeString = "Node: ";
     nodeString += nodeId;
+    DEBUG_VERBOSE ("Mac Address");
     nodeString += "\n\tMAC Address: ";
     char macstr[18];
-    nodeString += mac2str (mac,macstr);
+    mac2str (mac, macstr);
+    nodeString += String(macstr);
+    DEBUG_VERBOSE ("Counter");
     nodeString += "\n\tLast counter: ";
     nodeString += lastMessageCounter;
+    DEBUG_VERBOSE ("Timer");
     nodeString += "\n\tLast message: ";
-    nodeString += (millis()-lastMessageTime)/1000;
+    nodeString += (millis()-lastMessageTime);
+    nodeString += "ms ago";
+    DEBUG_VERBOSE ("Key");
     nodeString += "\n\tKey: ";
     nodeString += keyValid ? "Valid" : "Invalid";
-    nodeString += "ms ago\n\tStatus: ";
+    DEBUG_VERBOSE ("Status");
+    nodeString += "\n\tStatus: ";
     switch (status) {
     case UNREGISTERED :
         nodeString += "Unregistered";
@@ -67,9 +117,9 @@ String Node::toString ()
         nodeString += status;
     }
     nodeString += "\n";
-    
+    DEBUG_VERBOSE ("Exit");
     return nodeString;
-}
+}*/
 
 Node::Node () :
     keyValid (false),
@@ -227,7 +277,7 @@ Node * NodeList::getNewNode (const uint8_t * mac)
     return NULL;
 }
 
-String NodeList::toString () {
+/*String NodeList::toString () {
     String nodelistStr;
 
     for (int i = 0; i < NUM_NODES; i++) {
@@ -236,4 +286,14 @@ String NodeList::toString () {
         }
     }
     nodelistStr += "\n";
+}*/
+
+void NodeList::printToSerial () {
+    Serial.println ();
+    for (int i = 0; i < NUM_NODES; i++) {
+        if (nodes[i].status != UNREGISTERED) {
+            nodes[i].printToSerial ();
+        }
+    }
+    Serial.println ();
 }
