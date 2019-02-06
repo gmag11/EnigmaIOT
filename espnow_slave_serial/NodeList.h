@@ -107,6 +107,8 @@ protected:
         }
     }
 
+    void reset ();
+
     friend class NodeList;
 };
 

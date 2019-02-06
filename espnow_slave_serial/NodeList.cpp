@@ -141,12 +141,18 @@ uint16_t NodeList::countActiveNodes ()
     return counter;
 }
 
+void Node::reset () {
+    memset (mac, 0, 6);
+    memset (key, 0, KEYLENGTH);
+    keyValid = false;
+    lastMessageCounter = 0;
+    lastMessageTime = 0;
+}
+
 bool NodeList::unregisterNode (uint16_t nodeId)
 {
     if (nodeId < NUM_NODES) {
-        memset (nodes[nodeId].mac, 0, 6);
-        memset (nodes[nodeId].key, 0, KEYLENGTH);
-        nodes[nodeId].keyValid = false;
+        nodes[nodeId].reset ();
 
         if (nodes[nodeId].status != UNREGISTERED) {
             nodes[nodeId].status = UNREGISTERED;
@@ -160,9 +166,7 @@ bool NodeList::unregisterNode (const uint8_t * mac)
 {
     Node *node = getNodeFromMAC (mac);
     if (node) {
-        memset (node->mac, 0, 6);
-        memset (node->key, 0, KEYLENGTH);
-        node->keyValid = false;
+        node->reset ();
         node->status = UNREGISTERED;
         return true;
     } else {
@@ -174,9 +178,7 @@ bool NodeList::unregisterNode (Node *node)
 {
     if (node)
     {
-        memset (node->mac, 0, 6);
-        memset (node->key, 0, KEYLENGTH);
-        node->keyValid = false;
+        node->reset ();
 
         if (nodes[node->nodeId].status != UNREGISTERED) {
             nodes[node->nodeId].status = UNREGISTERED;
