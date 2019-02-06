@@ -28,7 +28,9 @@ void initWiFi () {
 	WiFi.softAP ("ESPNOW", nullptr, 3);
 	WiFi.softAPdisconnect (false);
 
-    DEBUG_INFO ("MAC address of this device is %s", WiFi.softAPmacAddress ().c_str());
+    DEBUG_INFO ("AP MAC address of this device is %s", WiFi.softAPmacAddress ().c_str());
+    DEBUG_INFO ("STA MAC address of this device is %s", WiFi.macAddress ().c_str ());
+
 }
 
 bool mac2str (uint8_t *mac, char *buffer) {

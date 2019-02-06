@@ -53,7 +53,6 @@ bool serverHello (byte *key, Node *node) {
 	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer (buffer, KEY_LENGTH + 5));
 	flashRed = true;
     if (WifiEspNow.send (node->getMacAddress (), buffer, KEY_LENGTH + 5)) {
-        node->setStatus (WAIT_FOR_KEY_EXCH_FINISHED);
         DEBUG_INFO ("Server Hello message sent");
         return true;
     } else {
@@ -64,7 +63,7 @@ bool serverHello (byte *key, Node *node) {
 }
 
 bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
-    uint32 recvdCRC;
+    uint32_t recvdCRC;
 
     memcpy (&recvdCRC, crc, sizeof (uint32_t)); // Use of memcpy is a must to ensure code does not try to read non memory aligned int
     uint32_t _crc = CRC32::calculate (buf, count);
@@ -177,22 +176,28 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
         // TODO: Check message length
         DEBUG_INFO ("Client Hello received");
         if (WifiEspNow.addPeer (mac)) {
-            if (!processClientHello (mac, buf, count, node)) {
+            if (processClientHello (mac, buf, count, node)) {
+                node->setStatus (WAIT_FOR_KEY_EXCH_FINISHED);
+            } else {
                 DEBUG_ERROR ("Error processing client hello");
             }
         }
+        WifiEspNow.removePeer (mac);
         break;
     case KEY_EXCHANGE_FINISHED:
         // TODO: Check message length
         // TODO: Check that ongoing registration belongs to this mac address
         DEBUG_INFO ("Key Exchange Finished received");
-        if (processKeyExchangeFinished (mac, buf, 1 + RANDOM_LENGTH + CRC_LENGTH)) {
-            if (cipherFinished (node)) {
-                node->setStatus (REGISTERED);
-                nodelist.printToSerial ();
-                //DEBUG_INFO ("%s", nodelist.toString ().c_str());
+        if (WifiEspNow.addPeer (mac)) {
+            if (processKeyExchangeFinished (mac, buf, 1 + RANDOM_LENGTH + CRC_LENGTH)) {
+                if (cipherFinished (node)) {
+                    node->setStatus (REGISTERED);
+                    nodelist.printToSerial ();
+                    //DEBUG_INFO ("%s", nodelist.toString ().c_str());
+                }
             }
         }
+        WifiEspNow.removePeer (mac);
         break;
 
 	}

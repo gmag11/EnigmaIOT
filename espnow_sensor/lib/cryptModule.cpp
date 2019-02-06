@@ -14,13 +14,13 @@ void CryptModule::decryptBuffer (byte *output, byte *input, size_t length, byte 
 	size_t blockSize = cipher.blockSize ();
 	size_t keySize = cipher.keySize ();
 	int index = 0;
-	u8 numBlocks;
+	uint8_t numBlocks;
 
 	if (length % blockSize == 0) {
-		numBlocks = (u8)(length / blockSize);
+		numBlocks = (uint8_t)(length / blockSize);
 	}
 	else {
-		numBlocks = (u8)(length / blockSize) + 1;
+		numBlocks = (uint8_t)(length / blockSize) + 1;
 	}
 
 	DEBUG_VERBOSE ("BufferLength = %d. numBlocks = %u", length, numBlocks);
@@ -46,13 +46,13 @@ void CryptModule::encryptBuffer (byte *output, byte *input, size_t length, byte 
 	size_t blockSize = cipher.blockSize ();
 	size_t keySize = cipher.keySize ();
 	int index = 0;
-	u8 numBlocks;
+    uint8_t numBlocks;
 
 	if (length % blockSize == 0) {
-		numBlocks = (u8)(length / blockSize);
+		numBlocks = (uint8_t)(length / blockSize);
 	}
 	else {
-		numBlocks = (u8)(length / blockSize) + 1;
+		numBlocks = (uint8_t)(length / blockSize) + 1;
 	}
 
 	DEBUG_VERBOSE ("BufferLength = %d. numBlocks = %u. BlockSize = %u",
