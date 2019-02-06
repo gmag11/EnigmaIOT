@@ -89,6 +89,7 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count,
 	memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
     if (Crypto.getDH2 (node->getEncriptionKey ())) {
         node->setKeyValid (true);
+        node->setStatus (INIT);
         DEBUG_INFO ("Node key: %s", printHexBuffer (node->getEncriptionKey (), KEY_LENGTH));
     } else {
         nodelist.unregisterNode (node);
