@@ -68,7 +68,7 @@ bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
 
     memcpy (&recvdCRC, crc, sizeof (uint32_t)); // Use of memcpy is a must to ensure code does not try to read non memory aligned int
     uint32_t _crc = CRC32::calculate (buf, count);
-    DEBUG_VERBOSE ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X Length: %d", _crc, recvdCRC, count);
+    DEBUG_VERBOSE ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X %s", _crc, recvdCRC, (_crc == recvdCRC) ? "OK" : "FAIL");
     return (_crc == recvdCRC);
 }
 

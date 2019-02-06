@@ -28,8 +28,7 @@ struct node_instance {
     uint8_t key[32];
     unsigned int lastMessageCounter;
     time_t lastMessageTime;
-    status_t status;
-    //bool registered = false;
+    status_t status = UNREGISTERED;
     bool keyValid = false;
 };
 
@@ -45,9 +44,6 @@ public:
     uint16_t getNodeId () {
         return nodeId;
     }
-    /*void setNodeId (uint16_t nodeId) {
-        this->nodeId = nodeId;
-    }*/
     uint8_t *getEncriptionKey () {
         return key;
     }
@@ -77,9 +73,6 @@ public:
     bool isRegistered () {
         return status == REGISTERED;
     }
-    /*void setRegistered (boolean reg) {
-        registered = reg;
-    }*/
     status_t getStatus () {
         return status;
     }
@@ -98,8 +91,7 @@ protected:
     unsigned int lastMessageCounter;
     time_t lastMessageTime;
     bool keyValid = false;
-    //bool registered = false; 
-    status_t status;
+    status_t status = UNREGISTERED;
 
     void setMacAddress (const uint8_t *macAddress) {
         if (macAddress) {
