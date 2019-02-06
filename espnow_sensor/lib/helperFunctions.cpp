@@ -30,3 +30,9 @@ void initWiFi () {
 
     DEBUG_INFO ("MAC address of this device is %s", WiFi.softAPmacAddress ().c_str());
 }
+
+bool mac2str (uint8_t *mac, char *buffer) {
+    if (mac && buffer) {
+        sprintf (buffer, MACSTR, MAC2STR (mac));
+    }
+}
