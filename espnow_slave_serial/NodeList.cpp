@@ -65,6 +65,7 @@ String Node::toString ()
     default:
         nodeString += status;
     }
+    nodeString += "\n";
     
     return nodeString;
 }
@@ -223,4 +224,15 @@ Node * NodeList::getNewNode (const uint8_t * mac)
         }
     }
     return NULL;
+}
+
+String NodeList::toString () {
+    String nodelistStr;
+
+    for (int i = 0; i < NUM_NODES; i++) {
+        if (nodes[i].status != UNREGISTERED) {
+            nodelistStr += nodes[i].toString ();
+        }
+    }
+    nodelistStr += "\n";
 }

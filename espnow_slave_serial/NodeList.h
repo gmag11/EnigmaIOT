@@ -139,6 +139,8 @@ public:
 
     Node *getNewNode (const uint8_t* mac);
 
+    String toString ();
+
 protected:
     Node nodes[NUM_NODES];
 
