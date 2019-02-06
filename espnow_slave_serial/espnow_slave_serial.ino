@@ -98,8 +98,6 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count,
         DEBUG_ERROR ("DH2 error with %s", macstr);
         return false;
     }
-	//Crypto.getDH2 (node.key);
-	//node.keyValid = true;
     
 	return serverHello (myPublicKey, node);
 }
@@ -112,11 +110,9 @@ bool cipherFinished (Node *node) {
     memset (buffer, 0, BLOCK_SIZE);
 
     buffer[0] = CYPHER_FINISHED; // Server hello message
-    //node->nodeId = 1;
+
     uint16_t nodeId = node->getNodeId ();
     memcpy (buffer + 1, &nodeId, sizeof (uint16_t));
-    //buffer[1] = 0;
-    //buffer[1] = node.nodeId;
     
     nonce = Crypto.random ();
 
