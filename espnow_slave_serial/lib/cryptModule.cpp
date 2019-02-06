@@ -99,4 +99,10 @@ bool CryptModule::getDH2 (uint8_t* remotePubKey) {
 	return true;
 }
 
+size_t CryptModule::getBlockSize ()
+{
+    CYPHER_TYPE cipher;
+    return cipher.blockSize();
+}
+
 CryptModule Crypto;

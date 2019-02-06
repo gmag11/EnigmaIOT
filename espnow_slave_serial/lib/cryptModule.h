@@ -32,6 +32,8 @@ public:
     byte* getPubDHKey () {
         return publicDHKey;
     }
+    
+    static size_t getBlockSize ();
 
 
 protected:
