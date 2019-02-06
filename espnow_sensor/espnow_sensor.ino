@@ -7,16 +7,8 @@
 #include "lib/cryptModule.h"
 #include "lib/helperFunctions.h"
 #include <CRC32.h>
+#include "Node.h"
 
-enum status_t {
-	INIT,
-	WAIT_FOR_SERVER_HELLO,
-	WAIT_FOR_CIPHER_FINISHED,
-	WAIT_FOR_KEY_EXCH_FINISHED,
-	WAIT_FOR_DOWNLINK,
-	WAIT_FOR_SENSOR_DATA,
-	SLEEP
-};
 
 enum messageType_t {
 	SENSOR_DATA = 0x01,
@@ -27,18 +19,8 @@ enum messageType_t {
 	INVALIDATE_KEY = 0xFB
 };
 
-struct node_instance {
-	uint8_t mac[6];
-	uint16_t nodeId;
-	uint8_t key[KEY_LENGTH];
-	time_t lastMessage;
-	bool keyValid = false;
-};
-
-typedef struct node_instance node_t;
-
 byte gateway[6] = { 0x5E, 0xCF, 0x7F, 0x80, 0x34, 0x75 };
-enum status_t state = INIT;
+//enum status_t state = INIT;
 //uint8_t key[KEY_LENGTH];
 
 node_t node;
