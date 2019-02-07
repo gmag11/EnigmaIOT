@@ -44,6 +44,9 @@ public:
     uint16_t getNodeId () {
         return nodeId;
     }
+    void setNodeId (uint16_t nodeId) {
+        this->nodeId = nodeId;
+    }
     uint8_t *getEncriptionKey () {
         return key;
     }
@@ -85,6 +88,8 @@ public:
 
     void printToSerial ();
 
+    void reset ();
+
 protected:
 #define KEYLENGTH 32
     uint8_t mac[6];
@@ -100,8 +105,6 @@ protected:
             memcpy (mac, macAddress, 6);
         }
     }
-
-    void reset ();
 
 };
 

@@ -66,6 +66,13 @@ void Node::printToSerial ()
     }
 }
 
+void Node::reset () {
+    memset (mac, 0, 6);
+    memset (key, 0, KEYLENGTH);
+    keyValid = false;
+    lastMessageCounter = 0;
+    lastMessageTime = 0;
+}
 
 /*String Node::toString ()
 {
