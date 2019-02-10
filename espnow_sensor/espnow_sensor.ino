@@ -114,17 +114,15 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     DEBUG_VERBOSE ("Received data: %s",printHexBuffer ((byte *)buf, count));
     flashBlue = true;
-    if ((count % 16) == 0) { // Encrypted frames have to be n times 16 bytes long
-        Crypto.decryptBuffer ((uint8_t *)buf, (uint8_t *)buf, count, node.getEncriptionKey ());
-        DEBUG_VERBOSE ("Decrypted data: %s", printHexBuffer ((byte *)buf, count));
-    } else if (buf[0] != SERVER_HELLO) { // Only valid unencrypted message is Server Hello
-        DEBUG_WARN ("Non valid unencrypted message");
+
+    if (count <= 1) {
         return;
     }
-	//DEBUG_VERBOSE ("Received CRC: %s", printHexBuffer ((byte *)(buf + count - 4), 4));
-	if (count <= 1) {
-		return;
-	}
+
+    if (buf[0] != SERVER_HELLO) { 
+        Crypto.decryptBuffer ((uint8_t *)buf, (uint8_t *)buf, count, node.getEncriptionKey ());
+        DEBUG_VERBOSE ("Decrypted data: %s", printHexBuffer ((byte *)buf, count));
+    } 
 
 	switch (buf[0]) {
 	case SERVER_HELLO:
@@ -166,7 +164,7 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
 }
 
 bool clientHello (byte *key) {
-	byte buffer[KEY_LENGTH + 5];
+	byte buffer[1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH];
 	uint32_t crc32;
 
 	if (!key) {
@@ -175,21 +173,27 @@ bool clientHello (byte *key) {
 
 	buffer[0] = CLIENT_HELLO; // Client hello message
 
+    CryptModule::random (buffer + 1, IV_LENGTH);
+
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (buffer +1, IV_LENGTH));
+
 	for (int i = 0; i < KEY_LENGTH; i++) {
-		buffer[i + 1] = key[i];
+		buffer[i + 1 + IV_LENGTH] = key[i];
 	}
 
-	crc32 = CRC32::calculate (buffer, KEY_LENGTH + 1);
+	crc32 = CRC32::calculate (buffer, 1 + IV_LENGTH + KEY_LENGTH);
 	DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
 	// int is little indian mode on ESP platform
-	uint32_t *crcField = (uint32_t*)&(buffer[KEY_LENGTH + 1]);
+	uint8_t *crcField = (uint8_t*)(buffer + 1 + IV_LENGTH + KEY_LENGTH);
 
-	*crcField = crc32;
-	DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer (buffer, KEY_LENGTH + 5));
+	//*crcField = crc32;
+    memcpy (crcField, &crc32, CRC_LENGTH);
+
+	DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH));
 
     node.setStatus (WAIT_FOR_SERVER_HELLO);
-	return WifiEspNow.send (gateway, buffer, KEY_LENGTH + 5);
+	return WifiEspNow.send (gateway, buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH);
 }
 
 void setup () {

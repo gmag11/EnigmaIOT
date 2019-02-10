@@ -85,6 +85,8 @@ public:
 
     void printToSerial ();
 
+    void reset ();
+
 protected:
 #define KEYLENGTH 32
     uint8_t mac[6];
@@ -100,8 +102,6 @@ protected:
             memcpy (mac, macAddress, 6);
         }
     }
-
-    void reset ();
 
     friend class NodeList;
 };

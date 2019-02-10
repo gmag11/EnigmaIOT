@@ -28,7 +28,7 @@ node_t node;
 NodeList nodelist;
 
 bool serverHello (byte *key, Node *node) {
-	byte buffer[KEY_LENGTH + 5];
+	uint8_t buffer[1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH];
 	uint32_t crc32;
 
 	if (!key) {
@@ -37,27 +37,37 @@ bool serverHello (byte *key, Node *node) {
 	}
 
 	buffer[0] = SERVER_HELLO; // Server hello message
+    
+    CryptModule::random (buffer + 1, IV_LENGTH);
+
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (buffer + 1, IV_LENGTH));
 
 	for (int i = 0; i < KEY_LENGTH; i++) {
-		buffer[i + 1] = key[i];
+		buffer[1 + IV_LENGTH + i] = key[i];
 	}
 
-	crc32 = CRC32::calculate (buffer, KEY_LENGTH + 1);
+	crc32 = CRC32::calculate (buffer, 1 + IV_LENGTH + KEY_LENGTH);
 	DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
 	// int is little indian mode on ESP platform
-	uint32_t *crcField = (uint32_t*)&(buffer[KEY_LENGTH + 1]);
+	uint8_t *crcField = buffer + 1 + IV_LENGTH + KEY_LENGTH;
 
-    memcpy (crcField, &crc32, sizeof (uint32_t));
-	//*crcField = crc32;
-	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer (buffer, KEY_LENGTH + 5));
+    memcpy (crcField, &crc32, CRC_LENGTH);
+
+    DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH));
 	flashRed = true;
-    if (WifiEspNow.send (node->getMacAddress (), buffer, KEY_LENGTH + 5)) {
-        DEBUG_INFO ("Server Hello message sent");
+
+#ifdef DEBUG_ESP_PORT
+    char mac[18];
+    mac2str (node->getMacAddress (), mac);
+#endif
+
+    if (WifiEspNow.send (node->getMacAddress (), buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH)) {
+        DEBUG_INFO ("Server Hello message sent to %s", mac);
         return true;
     } else {
         nodelist.unregisterNode (node);
-        DEBUG_ERROR ("Error sendig Server Hello message");
+        DEBUG_ERROR ("Error sending Server Hello message to %s", mac);
         return false;
     }
 }
@@ -73,19 +83,26 @@ bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
 
 bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
 	uint8_t myPublicKey[KEY_LENGTH];
+    uint32_t crc32;
 
-	if (!checkCRC (buf, count - 4, (uint32_t*)(buf + count - 4))) {
+    if (count < 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH) {
+        DEBUG_WARN ("Message too short");
+        return false;
+    }
+
+    memcpy (&crc32, buf + 1 + IV_LENGTH + KEY_LENGTH, CRC_LENGTH);
+
+	if (!checkCRC (buf, 1 + IV_LENGTH + KEY_LENGTH, &crc32)) {
         DEBUG_WARN ("Wrong CRC");
 		return false;
 	}
 
-    //Node *node = nodelist.getNewNode (mac);
     node->setLastMessageTime(millis ());
-	//memcpy (node.mac, mac, 6);
-    node->setEncryptionKey (&(buf[1]));
-	//memcpy (node.key, &(buf[1]), KEY_LENGTH);
-	Crypto.getDH1 ();
+    node->setEncryptionKey (buf + 1);
+
+    Crypto.getDH1 ();
 	memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
+    
     if (Crypto.getDH2 (node->getEncriptionKey ())) {
         node->setKeyValid (true);
         node->setStatus (INIT);
@@ -149,26 +166,25 @@ bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_
 
 
 void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void* cbarg) {
-	//uint8_t *buffer;
+	//const uint8_t *buffer = buf;
     Node *node;
 
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
 	DEBUG_VERBOSE ("Received data: %s", printHexBuffer ((byte *)buf, count));
 
-    node = nodelist.getNewNode (mac);
-
-    if (node->isKeyValid() && (count % BLOCK_SIZE == 0)) { // Encrypted frames have to be n times 16 bytes long
-		Crypto.decryptBuffer ((uint8_t *)buf, (uint8_t *)buf, count, node->getEncriptionKey());
-		DEBUG_VERBOSE ("Decrypted data: %s", printHexBuffer ((byte *)buf, count));
-    } else if (buf[0] != CLIENT_HELLO) { // Only valid unencrypted message is Client Hello
-        DEBUG_WARN ("Non valid unencrypted message");
+    if (count <= 1) {
+        DEBUG_WARN ("Empty message");
         return;
     }
+
+    node = nodelist.getNewNode (mac);
+
+    if (buf[0] != CLIENT_HELLO) {
+		Crypto.decryptBuffer ((uint8_t *)buf, (uint8_t *)buf, count, node->getEncriptionKey());
+		DEBUG_VERBOSE ("Decrypted data: %s", printHexBuffer ((byte *)buf, count));
+    } 
+
 	flashBlue = true;
-	if (count <= 1) {
-        DEBUG_WARN ("Empty message");
-		return;
-	}
 
 	switch (buf[0]) {
 	case CLIENT_HELLO:
@@ -179,6 +195,7 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
             if (processClientHello (mac, buf, count, node)) {
                 node->setStatus (WAIT_FOR_KEY_EXCH_FINISHED);
             } else {
+                node->reset ();
                 DEBUG_ERROR ("Error processing client hello");
             }
         }

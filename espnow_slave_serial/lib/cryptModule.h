@@ -11,14 +11,16 @@
 
 #define RANDOM_32 0x3FF20E44
 #define KEY_LENGTH 32U
+#define IV_LENGTH 16U
 #define RANDOM_LENGTH 4U
-#define CRC_LENGTH 4U
+#define CRC_LENGTH sizeof(uint32_t)
 #define BLOCK_SIZE 16U
 #define BUFFER_SIZE 255U
 
 class CryptModule {
 public:
     static uint32_t random ();
+    static uint8_t *random (uint8_t *buf, size_t len);
 	static void decryptBuffer (byte *output, byte *input, size_t length, byte *key);
 	static void encryptBuffer (byte *output, byte *input, size_t length, byte *key);
 

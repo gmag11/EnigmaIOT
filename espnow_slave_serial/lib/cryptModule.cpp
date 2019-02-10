@@ -79,6 +79,15 @@ uint32_t CryptModule::random () {
     return *(volatile uint32_t *)RANDOM_32;
 }
 
+uint8_t *CryptModule::random (uint8_t *buf, size_t len) {
+    if (buf) {
+        for (int i = 0; i < len; i + sizeof (uint32_t)) {
+            uint32 rnd = random ();
+            memcpy (buf + i, &rnd, sizeof (uint32_t));
+        }
+    }
+    return buf;
+}
 
 void CryptModule::getDH1 () {
     Curve25519::dh1 (publicDHKey, privateDHKey);
