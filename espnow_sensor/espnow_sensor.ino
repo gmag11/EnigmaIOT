@@ -61,6 +61,11 @@ bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 	uint8_t myPublicKey[KEY_LENGTH];
     uint32_t crc = *(uint32_t*)(buf + count - 4);
     uint8_t key[KEY_LENGTH];
+    
+    if (count < 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH) {
+        DEBUG_WARN ("Message too short");
+        return false;
+    }
 
 	if (!checkCRC (buf, count - CRC_LENGTH, &crc)) {
         DEBUG_WARN ("Wrong CRC");
