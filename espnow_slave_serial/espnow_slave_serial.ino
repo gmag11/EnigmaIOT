@@ -163,7 +163,7 @@ bool cipherFinished (Node *node) {
 
 bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
     uint8_t *iv;
-    uint32_t *crc;
+    uint32_t crc;
 
     if (count < (1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH)) {
         DEBUG_WARN ("Wrong message");
@@ -178,7 +178,7 @@ bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_
 
     memcpy (&crc, buf + 1 + IV_LENGTH + RANDOM_LENGTH, CRC_LENGTH);
 
-    if (!checkCRC (buf, count - 4, (uint32_t*)(buf + count - 4))) {
+    if (!checkCRC (buf, count - 4, &crc)) {
         DEBUG_WARN ("Wrong CRC");
         return false;
     }
