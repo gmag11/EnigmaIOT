@@ -1,5 +1,8 @@
 #include "NodeList.h"
 #include <WifiEspNow.h>
+extern "C" {
+#include <espnow.h>
+}
 #if defined(ESP8266)
 #include <ESP8266WiFi.h>
 #elif defined(ESP32)
@@ -22,6 +25,8 @@ enum messageType_t {
 	CYPHER_FINISHED = 0xFC,
 	INVALIDATE_KEY = 0xFB
 };
+
+uint8_t myPublicKey[KEY_LENGTH];
 
 node_t node;
 
@@ -61,8 +66,8 @@ bool serverHello (byte *key, Node *node) {
     char mac[18];
     mac2str (node->getMacAddress (), mac);
 #endif
-
-    if (WifiEspNow.send (node->getMacAddress (), buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH)) {
+    DEBUG_INFO (" -------> SERVER_HELLO");
+    if (esp_now_send (node->getMacAddress (), buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH) == 0) {
         DEBUG_INFO ("Server Hello message sent to %s", mac);
         return true;
     } else {
@@ -82,7 +87,7 @@ bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
 }
 
 bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
-	uint8_t myPublicKey[KEY_LENGTH];
+	//uint8_t myPublicKey[KEY_LENGTH];
     uint32_t crc32;
 
     if (count < 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH) {
@@ -98,7 +103,7 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count,
 	}
 
     node->setLastMessageTime(millis ());
-    node->setEncryptionKey (buf + 1);
+    node->setEncryptionKey (buf + 1 + IV_LENGTH);
 
     Crypto.getDH1 ();
 	memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
@@ -114,8 +119,6 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count,
         DEBUG_ERROR ("DH2 error with %s", macstr);
         return false;
     }
-    
-	return serverHello (myPublicKey, node);
 }
 
 bool cipherFinished (Node *node) {
@@ -165,7 +168,7 @@ bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_
 }
 
 
-void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void* cbarg) {
+void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) {
 	//const uint8_t *buffer = buf;
     Node *node;
 
@@ -186,20 +189,34 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
 
 	flashBlue = true;
 
+    int espNowError;
+
 	switch (buf[0]) {
 	case CLIENT_HELLO:
         // TODO: Do no accept new Client Hello if registration is on process on any node
         // TODO: Check message length
-        DEBUG_INFO ("Client Hello received");
-        if (WifiEspNow.addPeer (mac)) {
-            if (processClientHello (mac, buf, count, node)) {
+        DEBUG_INFO (" <------- CLIENT HELLO");
+        //if (WifiEspNow.addPeer (mac)) {
+        espNowError = esp_now_add_peer (mac, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
+        if (espNowError == 0) {
+                if (processClientHello (mac, buf, count, node)) {
                 node->setStatus (WAIT_FOR_KEY_EXCH_FINISHED);
+                delay (1000);
+                if (serverHello (myPublicKey, node)) {
+                    DEBUG_INFO ("Server Hello sent");
+                } else {
+                    DEBUG_INFO ("Error sending Server Hello");
+                }
+
             } else {
                 node->reset ();
                 DEBUG_ERROR ("Error processing client hello");
             }
+        } else {
+            DEBUG_ERROR ("Error adding peer %d", espNowError);
         }
-        WifiEspNow.removePeer (mac);
+        esp_now_del_peer (mac);
+        //WifiEspNow.removePeer (mac);
         break;
     case KEY_EXCHANGE_FINISHED:
         // TODO: Check message length
@@ -221,12 +238,19 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
 }
 
 void initEspNow () {
-	bool ok = WifiEspNow.begin ();
+	/*bool ok = WifiEspNow.begin ();
 	if (!ok) {
 		Serial.println ("WifiEspNow.begin() failed");
 		ESP.restart ();
 	}
-	WifiEspNow.onReceive (manageMessage, NULL);
+	WifiEspNow.onReceive (manageMessage, NULL);*/
+    if (esp_now_init () != 0) {
+        Serial.println ("Protocolo ESP-NOW no inicializado...");
+        ESP.restart ();
+        delay (1);
+    }
+    esp_now_set_self_role (ESP_NOW_ROLE_SLAVE);
+    esp_now_register_recv_cb (manageMessage);
 }
 
 void setup () {
@@ -241,9 +265,6 @@ void setup () {
 	initWiFi ();
 	initEspNow ();
 
-	//Crypto.getDH1 ();
-
-	//clientHello (Crypto.getPubDHKey ());
 }
 
 void loop () {

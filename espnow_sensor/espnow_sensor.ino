@@ -1,5 +1,8 @@
 #include <WifiEspNow.h>
 #if defined(ESP8266)
+extern "C" {
+#include <espnow.h>
+}
 #include <ESP8266WiFi.h>
 #elif defined(ESP32)
 #include <WiFi.h>
@@ -27,13 +30,21 @@ Node node;
 bool flashBlue = false;
 
 void initEspNow () {
-    bool ok = WifiEspNow.begin ();
+    /*bool ok = WifiEspNow.begin ();
     if (!ok) {
         DEBUG_ERROR ("WifiEspNow.begin() failed");
         ESP.restart ();
     }
 	WifiEspNow.addPeer (gateway);
-	WifiEspNow.onReceive (manageMessage, NULL);
+	WifiEspNow.onReceive (manageMessage, NULL);*/
+    if (esp_now_init () != 0) {
+        Serial.println ("Protocolo ESP-NOW no inicializado...");
+        ESP.restart ();
+        delay (1);
+    }
+    esp_now_set_self_role (ESP_NOW_ROLE_CONTROLLER);
+    esp_now_register_recv_cb (manageMessage);
+    esp_now_add_peer (gateway, ESP_NOW_ROLE_SLAVE, 0, NULL, 0);
 }
 
 bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc){
@@ -58,7 +69,7 @@ bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 
 	//memcpy (node.mac, mac, 6);
     
-	memcpy (key, &(buf[1]), KEY_LENGTH);
+	memcpy (key, buf + 1 + IV_LENGTH, KEY_LENGTH);
 	//memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
 	Crypto.getDH2 (key);
     node.setEncryptionKey (key);
@@ -110,7 +121,7 @@ bool keyExchangeFinished () {
 	return WifiEspNow.send (gateway, buffer, 16);
 }
 
-void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void* cbarg) {
+void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) {
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     DEBUG_VERBOSE ("Received data: %s",printHexBuffer ((byte *)buf, count));
     flashBlue = true;
@@ -163,8 +174,8 @@ void manageMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, void
 	}
 }
 
-bool clientHello (byte *key) {
-	byte buffer[1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH];
+bool clientHello (uint8_t *key) {
+	uint8_t buffer[1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH];
 	uint32_t crc32;
 
 	if (!key) {
@@ -193,7 +204,11 @@ bool clientHello (byte *key) {
 	DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH));
 
     node.setStatus (WAIT_FOR_SERVER_HELLO);
-	return WifiEspNow.send (gateway, buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH);
+
+    DEBUG_INFO (" -------> CLIENT HELLO");
+
+	//return WifiEspNow.send (gateway, buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH);
+    return esp_now_send (gateway, buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH) == 0;
 }
 
 void setup () {

@@ -81,9 +81,13 @@ uint32_t CryptModule::random () {
 
 uint8_t *CryptModule::random (uint8_t *buf, size_t len) {
     if (buf) {
-        for (int i = 0; i < len; i + sizeof (uint32_t)) {
+        for (int i = 0; i < len; i += sizeof (uint32_t)) {
             uint32 rnd = random ();
-            memcpy (buf + i, &rnd, sizeof (uint32_t));
+            if (i < len - (len % sizeof (int32_t))) {
+                memcpy (buf + i, &rnd, sizeof (uint32_t));
+            } else {
+                memcpy (buf + i, &rnd, len % sizeof (int32_t));
+            }
         }
     }
     return buf;
