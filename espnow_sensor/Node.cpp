@@ -72,6 +72,7 @@ void Node::reset () {
     keyValid = false;
     lastMessageCounter = 0;
     lastMessageTime = 0;
+    status = UNREGISTERED;
 }
 
 /*String Node::toString ()

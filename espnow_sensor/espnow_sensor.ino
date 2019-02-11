@@ -98,32 +98,38 @@ bool processCypherFinished (const uint8_t mac[6], const uint8_t* buf, size_t cou
 }
 
 bool keyExchangeFinished () {
-	byte buffer[/*RANDOM_LENGTH + 5*/16]; //1 block
+	byte buffer[1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH]; //1 block
 	uint32_t crc32;
 	uint32_t nonce;
+    uint8_t *iv;
 
-	memset (buffer, 0, 16);
+	memset (buffer, 0, 1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH);
 
 	buffer[0] = KEY_EXCHANGE_FINISHED; // Client hello message
 
+    iv = CryptModule::random (buffer + 1, IV_LENGTH);
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (buffer + 1, IV_LENGTH));
+
 	nonce = Crypto.random ();
 
-	memcpy (buffer + 1, &nonce, RANDOM_LENGTH);
+	memcpy (buffer + 1 + IV_LENGTH, (uint8_t *)&nonce, RANDOM_LENGTH);
 
-	crc32 = CRC32::calculate (buffer, RANDOM_LENGTH + 1);
+	crc32 = CRC32::calculate (buffer, 1 + IV_LENGTH + RANDOM_LENGTH);
 	DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
 	// int is little indian mode on ESP platform
-	uint32_t *crcField = (uint32_t*)&(buffer[RANDOM_LENGTH + 1]);
+	uint8_t *crcField = (uint8_t*)(buffer + 1 + IV_LENGTH + RANDOM_LENGTH);
+    memcpy (crcField, (uint8_t *)&crc32, CRC_LENGTH);
 
-	*crcField = crc32;
-	DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer (buffer, 16));
+	DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH));
 
-	Crypto.encryptBuffer (buffer, buffer, /*RANDOM_LENGTH + 5*/16, node.getEncriptionKey());
+    uint8_t *crypt_buf = buffer + 1 + IV_LENGTH;
 
-	DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer (buffer, 16));
+	Crypto.encryptBuffer (crypt_buf, crypt_buf, RANDOM_LENGTH + CRC_LENGTH, iv, IV_LENGTH, node.getEncriptionKey(), KEY_LENGTH);
 
-	return WifiEspNow.send (gateway, buffer, 16);
+	DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH));
+    DEBUG_INFO (" -------> KEY_EXCHANGE_FINISHED");
+	return esp_now_send (gateway, buffer, 1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH) == 0;
 }
 
 void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) {
@@ -135,14 +141,14 @@ void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
         return;
     }
 
-    if (buf[0] != SERVER_HELLO) { 
+    /*if (buf[0] != SERVER_HELLO) { 
         Crypto.decryptBuffer ((uint8_t *)buf, (uint8_t *)buf, count, node.getEncriptionKey ());
         DEBUG_VERBOSE ("Decrypted data: %s", printHexBuffer ((byte *)buf, count));
-    } 
+    } */
 
 	switch (buf[0]) {
 	case SERVER_HELLO:
-        DEBUG_INFO ("Server Hello received");
+        DEBUG_INFO (" <------- SERVER HELLO");
         node.setLastMessageTime (millis ());
         if (node.getStatus () == WAIT_FOR_SERVER_HELLO) {
             if (processServerHello (mac, buf, count)) {
@@ -161,6 +167,7 @@ void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
         DEBUG_INFO ("Cypher Finished received");
         node.setLastMessageTime (millis ());
         if (node.getStatus () == WAIT_FOR_CIPHER_FINISHED) {
+            DEBUG_INFO (" <------- CIPHER_FINISHED");
             if (processCypherFinished (mac, buf, 3 + RANDOM_LENGTH + CRC_LENGTH)) {
                 // mark node as registered
                 node.setKeyValid (true);

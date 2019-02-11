@@ -1,6 +1,8 @@
 // 
 // 
 // 
+#include <Crypto.h>
+#include <CFB.h>
 #include <CryptoLW.h>
 #include "cryptModule.h"
 #include <Speck.h>
@@ -9,7 +11,26 @@
 
 #define CYPHER_TYPE Speck
 
-void CryptModule::decryptBuffer (byte *output, byte *input, size_t length, byte *key) {
+CFB<CYPHER_TYPE> cfb;
+
+void CryptModule::decryptBuffer (uint8_t *output, uint8_t *input, size_t length,
+    uint8_t *iv, uint8_t ivlen, uint8_t *key, uint8_t keylen) {
+    if (key && iv) {
+        if (cfb.setKey (key, keylen)) {
+            if (cfb.setIV (iv, ivlen)) {
+                cfb.decrypt (output, input, length);
+            } else {
+                DEBUG_ERROR ("Error setting IV");
+            }
+        } else {
+            DEBUG_ERROR ("Error setting key");
+        }
+    } else {
+        DEBUG_ERROR ("Error in key or IV");
+    }
+}
+
+/*void CryptModule::decryptBuffer (byte *output, byte *input, size_t length, byte *key) {
 	CYPHER_TYPE cipher;
 	size_t blockSize = cipher.blockSize ();
 	size_t keySize = cipher.keySize ();
@@ -39,41 +60,58 @@ void CryptModule::decryptBuffer (byte *output, byte *input, size_t length, byte 
 	}
 
 	cipher.clear ();
+}*/
+
+void CryptModule::encryptBuffer (uint8_t *output, uint8_t *input, size_t length,
+    uint8_t *iv, uint8_t ivlen, uint8_t *key, uint8_t keylen) {
+    if (key && iv) {
+        if (cfb.setKey (key, keylen)) {
+            if (cfb.setIV (iv, ivlen)) {
+                cfb.encrypt (output, input, length);
+            } else {
+                DEBUG_ERROR ("Error setting IV");
+            }
+        } else {
+            DEBUG_ERROR ("Error setting key");
+        }
+    } else {
+        DEBUG_ERROR ("Error in key or IV");
+    }
 }
 
-void CryptModule::encryptBuffer (byte *output, byte *input, size_t length, byte *key) {
-	CYPHER_TYPE cipher;
-	size_t blockSize = cipher.blockSize ();
-	size_t keySize = cipher.keySize ();
-	int index = 0;
+/*void CryptModule::encryptBuffer (byte *output, byte *input, size_t length, byte *key) {
+    CYPHER_TYPE cipher;
+    size_t blockSize = cipher.blockSize ();
+    size_t keySize = cipher.keySize ();
+    int index = 0;
     uint8_t numBlocks;
 
-	if (length % blockSize == 0) {
-		numBlocks = (uint8_t)(length / blockSize);
-	}
-	else {
-		numBlocks = (uint8_t)(length / blockSize) + 1;
-	}
+    if (length % blockSize == 0) {
+        numBlocks = (uint8_t)(length / blockSize);
+    }
+    else {
+        numBlocks = (uint8_t)(length / blockSize) + 1;
+    }
 
-	DEBUG_VERBOSE ("BufferLength = %d. numBlocks = %u. BlockSize = %u",
-		length, numBlocks, blockSize);
-	//DEBUG_VERBOSE ("Encryption key: %s", printHexBuffer (key, KEY_LENGTH));
+    DEBUG_VERBOSE ("BufferLength = %d. numBlocks = %u. BlockSize = %u",
+        length, numBlocks, blockSize);
+    //DEBUG_VERBOSE ("Encryption key: %s", printHexBuffer (key, KEY_LENGTH));
 
-	cipher.setKey (key, keySize);
+    cipher.setKey (key, keySize);
 
-	for (int i = 0; i < numBlocks; i++) {
-		// TODO: Check buffer limit.
+    for (int i = 0; i < numBlocks; i++) {
+        // TODO: Check buffer limit.
 
-		//Serial.printf ("%s Before data: ", __FUNCTION__);
-		//printKey (&buffer[index], blockSize); Serial.println ();
+        //Serial.printf ("%s Before data: ", __FUNCTION__);
+        //printKey (&buffer[index], blockSize); Serial.println ();
 
-		cipher.encryptBlock (&output[index], &input[index]);
+        cipher.encryptBlock (&output[index], &input[index]);
 
-		index += blockSize;
-	}
+        index += blockSize;
+    }
 
-	cipher.clear ();
-}
+    cipher.clear ();
+}*/
 
 uint32_t CryptModule::random () {
     return *(volatile uint32_t *)RANDOM_32;
@@ -81,7 +119,7 @@ uint32_t CryptModule::random () {
 
 uint8_t *CryptModule::random (uint8_t *buf, size_t len) {
     if (buf) {
-        for (int i = 0; i < len; i += sizeof(uint32_t)) {
+        for (int i = 0; i < len; i += sizeof (uint32_t)) {
             uint32 rnd = random ();
             if (i < len - (len % sizeof (int32_t))) {
                 memcpy (buf + i, &rnd, sizeof (uint32_t));

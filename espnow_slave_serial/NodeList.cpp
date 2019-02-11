@@ -199,6 +199,7 @@ void Node::reset () {
     keyValid = false;
     lastMessageCounter = 0;
     lastMessageTime = 0;
+    status = UNREGISTERED;
 }
 
 bool NodeList::unregisterNode (uint16_t nodeId)
