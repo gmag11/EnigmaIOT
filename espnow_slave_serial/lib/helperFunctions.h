@@ -17,7 +17,7 @@
 
 #define DEBUG_ESP_PORT Serial
 
-#define NONE	0
+#define NO_DEBUG	0
 #define ERROR	1
 #define WARN	2
 #define INFO	3
