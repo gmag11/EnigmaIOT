@@ -29,13 +29,6 @@ Node node;
 bool flashBlue = false;
 
 void initEspNow () {
-    /*bool ok = WifiEspNow.begin ();
-    if (!ok) {
-        DEBUG_ERROR ("WifiEspNow.begin() failed");
-        ESP.restart ();
-    }
-	WifiEspNow.addPeer (gateway);
-	WifiEspNow.onReceive (manageMessage, NULL);*/
     if (esp_now_init () != 0) {
         Serial.println ("Protocolo ESP-NOW no inicializado...");
         ESP.restart ();
@@ -74,7 +67,6 @@ bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 	//memcpy (node.mac, mac, 6);
     
 	memcpy (key, buf + 1 + IV_LENGTH, KEY_LENGTH);
-	//memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
 	Crypto.getDH2 (key);
     node.setEncryptionKey (key);
     DEBUG_INFO ("Node key: %s", printHexBuffer (node.getEncriptionKey(), KEY_LENGTH));
@@ -179,7 +171,6 @@ void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
                 node.setKeyValid (true);
                 node.setStatus (REGISTERED);
 #if DEGUG_LEVEL >= INFO
-                //Serial.println ();
                 node.printToSerial (&DEBUG_ESP_PORT);
 #endif
                 // TODO: Store node data on EEPROM, SPIFFS or RTCMEM
@@ -230,6 +221,47 @@ bool clientHello (uint8_t *key) {
     return esp_now_send (gateway, buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH) == 0;
 }
 
+bool dataMessage (uint8_t *data, size_t len) {
+    uint8_t buffer[200];
+    uint32_t crc32;
+    uint32_t nonce;
+    uint16_t nodeId = node.getNodeId ();
+
+    if (!data) {
+        return false;
+    }
+
+    buffer[0] = SENSOR_DATA;
+
+    CryptModule::random (buffer + 1, IV_LENGTH);
+
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (buffer + 1, IV_LENGTH));
+
+    memcpy (buffer + 1 + IV_LENGTH + 2, &nodeId, sizeof(uint16_t));
+
+    nonce = Crypto.random ();
+
+    memcpy (buffer + 1 + IV_LENGTH + 2 + 2, (uint8_t *)&nonce, RANDOM_LENGTH);
+
+    memcpy (buffer + 1 + IV_LENGTH + 2 + 2 + RANDOM_LENGTH, data, len);
+
+    uint16_t packet_length = 1 + IV_LENGTH + 2 + 2 + RANDOM_LENGTH + len;
+
+    memcpy (buffer + 1 + IV_LENGTH, &packet_length, sizeof (uint16_t));
+
+    crc32 = CRC32::calculate (buffer, packet_length);
+    DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
+
+    // int is little indian mode on ESP platform
+    uint8_t *crcField = (uint8_t*)(buffer + packet_length);
+
+    memcpy (crcField, &crc32, CRC_LENGTH);
+
+    DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH));
+    
+    return esp_now_send (gateway, buffer, packet_length + CRC_LENGTH) == 0;
+}
+
 void setup () {
     //***INICIALIZACIÓN DEL PUERTO SERIE***//
     Serial.begin (115200); Serial.println (); Serial.println ();
@@ -252,6 +284,8 @@ void setup () {
 void loop () {
 #define LED_PERIOD 100
     static unsigned long blueOntime;
+    //static time_t lastMessage;
+    //static char *message = "Hello World!!!";
 
     if (flashBlue) {
         blueOntime = millis ();
@@ -262,4 +296,13 @@ void loop () {
     if (!digitalRead (BLUE_LED) && millis () - blueOntime > LED_PERIOD) {
         digitalWrite (BLUE_LED, HIGH);
     }
+
+    /*if (millis () - lastMessage > 5000) {
+        lastMessage = millis ();
+        DEBUG_INFO ("Trying to send");
+        if (node.getStatus() == REGISTERED && node.isKeyValid()) {
+            DEBUG_INFO ("Sending data: %s", printHexBuffer((byte*)message,strlen(message)));
+            dataMessage ((uint8_t *)message, strlen (message));
+        }
+    }*/
 }
