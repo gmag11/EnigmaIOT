@@ -141,7 +141,7 @@ bool cipherFinished (Node *node) {
 
     memcpy (buffer + 1 +IV_LENGTH + sizeof (uint16_t), &nonce, RANDOM_LENGTH);
 
-    crc32 = CRC32::calculate (buffer, 3 + RANDOM_LENGTH);
+    crc32 = CRC32::calculate (buffer, 1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH);
     DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
     // int is little indian mode on ESP platform
@@ -203,11 +203,6 @@ void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
 
     node = nodelist.getNewNode (mac);
 
-    //if (buf[0] != CLIENT_HELLO) {
-		//Crypto.decryptBuffer ((uint8_t *)buf, (uint8_t *)buf, count, node->getEncriptionKey());
-		//DEBUG_VERBOSE ("Decrypted data: %s", printHexBuffer ((byte *)buf, count));
-    //} 
-
 	flashBlue = true;
 
     int espNowError;
@@ -242,14 +237,14 @@ void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
     case KEY_EXCHANGE_FINISHED:
         // TODO: Check message length
         // TODO: Check that ongoing registration belongs to this mac address
-        if (node->getStatus== WAIT_FOR_KEY_EXCH_FINISHED) {
+        if (node->getStatus() == WAIT_FOR_KEY_EXCH_FINISHED) {
             DEBUG_INFO (" <------- KEY EXCHANGE FINISHED");
             espNowError = esp_now_add_peer (mac, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
             if (espNowError == 0) {
                 if (processKeyExchangeFinished (mac, buf, count, node)) {
                     if (cipherFinished (node)) {
                         node->setStatus (REGISTERED);
-                        nodelist.printToSerial ();
+                        nodelist.printToSerial (&DEBUG_ESP_PORT);
                         //DEBUG_INFO ("%s", nodelist.toString ().c_str());
                     } else {
                         node->reset ();
@@ -263,7 +258,6 @@ void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
             DEBUG_INFO (" <------- unsolicited KEY EXCHANGE FINISHED");
         }
         break;
-
 	}
 }
 

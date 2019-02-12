@@ -30,38 +30,6 @@ void CryptModule::decryptBuffer (uint8_t *output, uint8_t *input, size_t length,
     }
 }
 
-/*void CryptModule::decryptBuffer (byte *output, byte *input, size_t length, byte *key) {
-	CYPHER_TYPE cipher;
-	size_t blockSize = cipher.blockSize ();
-	size_t keySize = cipher.keySize ();
-	int index = 0;
-	uint8_t numBlocks;
-
-	if (length % blockSize == 0) {
-		numBlocks = (uint8_t)(length / blockSize);
-	}
-	else {
-		numBlocks = (uint8_t)(length / blockSize) + 1;
-	}
-
-	DEBUG_VERBOSE ("BufferLength = %d. numBlocks = %u", length, numBlocks);
-	//DEBUG_VERBOSE ("Decryption key: %s", printHexBuffer(key,KEY_LENGTH));
-	cipher.setKey (key, keySize);
-
-	for (int i = 0; i < numBlocks; i++) {
-		// TODO: Check buffer limit.
-
-		//Serial.printf ("%s Before data: ", __FUNCTION__);
-		//printKey (&buffer[index], blockSize); Serial.println ();
-
-		cipher.decryptBlock (&output[index], &input[index]);
-
-		index += blockSize;
-	}
-
-	cipher.clear ();
-}*/
-
 void CryptModule::encryptBuffer (uint8_t *output, uint8_t *input, size_t length,
     uint8_t *iv, uint8_t ivlen, uint8_t *key, uint8_t keylen) {
     if (key && iv) {
@@ -78,40 +46,6 @@ void CryptModule::encryptBuffer (uint8_t *output, uint8_t *input, size_t length,
         DEBUG_ERROR ("Error in key or IV");
     }
 }
-
-/*void CryptModule::encryptBuffer (byte *output, byte *input, size_t length, byte *key) {
-    CYPHER_TYPE cipher;
-    size_t blockSize = cipher.blockSize ();
-    size_t keySize = cipher.keySize ();
-    int index = 0;
-    uint8_t numBlocks;
-
-    if (length % blockSize == 0) {
-        numBlocks = (uint8_t)(length / blockSize);
-    }
-    else {
-        numBlocks = (uint8_t)(length / blockSize) + 1;
-    }
-
-    DEBUG_VERBOSE ("BufferLength = %d. numBlocks = %u. BlockSize = %u",
-        length, numBlocks, blockSize);
-    //DEBUG_VERBOSE ("Encryption key: %s", printHexBuffer (key, KEY_LENGTH));
-
-    cipher.setKey (key, keySize);
-
-    for (int i = 0; i < numBlocks; i++) {
-        // TODO: Check buffer limit.
-
-        //Serial.printf ("%s Before data: ", __FUNCTION__);
-        //printKey (&buffer[index], blockSize); Serial.println ();
-
-        cipher.encryptBlock (&output[index], &input[index]);
-
-        index += blockSize;
-    }
-
-    cipher.clear ();
-}*/
 
 uint32_t CryptModule::random () {
     return *(volatile uint32_t *)RANDOM_32;

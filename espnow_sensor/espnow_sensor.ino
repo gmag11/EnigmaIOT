@@ -83,15 +83,29 @@ bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 	return true;
 }
 
-bool processCypherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count) {
     uint16_t nodeId;
+    uint8_t *iv;
+    uint32_t crc;
 
-    DEBUG_VERBOSE ("%s Length: %d", printHexBuffer ((byte *)buf, count), count);
-    if (!checkCRC (buf, count - 4, (uint32_t*)(buf + count - 4))) {
+    if (count < (1 + IV_LENGTH + sizeof(uint16_t) + RANDOM_LENGTH + CRC_LENGTH)) {
+        DEBUG_WARN ("Wrong message length --> Required: %d Received: %d", 
+            1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH + CRC_LENGTH, count);
+        return false;
+    }
+
+    iv = (uint8_t *)(buf + 1);
+    uint8_t *crypt_buf = (uint8_t *)(buf + 1 + IV_LENGTH);
+    Crypto.decryptBuffer (crypt_buf, crypt_buf, sizeof (uint16_t) + RANDOM_LENGTH + CRC_LENGTH, iv, IV_LENGTH, node.getEncriptionKey (), KEY_LENGTH);
+    DEBUG_VERBOSE ("Decripted Cipher Finished message: %s", printHexBuffer ((byte *)buf, 1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH + CRC_LENGTH));
+
+    memcpy (&crc, buf + 1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH, CRC_LENGTH);
+
+    if (!checkCRC (buf, count - 4, &crc)) {
         DEBUG_WARN ("Wrong CRC");
         return false;
     }
-    memcpy (&nodeId, buf + 1, sizeof (uint16_t));
+    memcpy (&nodeId, buf + 1 + IV_LENGTH, sizeof (uint16_t));
     node.setNodeId (nodeId);
     DEBUG_VERBOSE ("Node ID: %u", node.getNodeId());
     return true;
@@ -141,11 +155,6 @@ void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
         return;
     }
 
-    /*if (buf[0] != SERVER_HELLO) { 
-        Crypto.decryptBuffer ((uint8_t *)buf, (uint8_t *)buf, count, node.getEncriptionKey ());
-        DEBUG_VERBOSE ("Decrypted data: %s", printHexBuffer ((byte *)buf, count));
-    } */
-
 	switch (buf[0]) {
 	case SERVER_HELLO:
         DEBUG_INFO (" <------- SERVER HELLO");
@@ -156,11 +165,9 @@ void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
                 node.setStatus (WAIT_FOR_CIPHER_FINISHED);
             } else {
                 node.reset ();
-                node.setStatus (UNREGISTERED);
             } 
         } else {
             node.reset ();
-            node.setStatus (UNREGISTERED);
         }
         break;
     case CYPHER_FINISHED:
@@ -168,19 +175,20 @@ void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
         node.setLastMessageTime (millis ());
         if (node.getStatus () == WAIT_FOR_CIPHER_FINISHED) {
             DEBUG_INFO (" <------- CIPHER_FINISHED");
-            if (processCypherFinished (mac, buf, 3 + RANDOM_LENGTH + CRC_LENGTH)) {
+            if (processCipherFinished (mac, buf, count)) {
                 // mark node as registered
                 node.setKeyValid (true);
                 node.setStatus (REGISTERED);
-                node.printToSerial ();
+#if DEGUG_LEVEL >= INFO
+                //Serial.println ();
+                node.printToSerial (&DEBUG_ESP_PORT);
+#endif
                 // TODO: Store node data on EEPROM, SPIFFS or RTCMEM
             } else {
                 node.reset ();
-                node.setStatus (UNREGISTERED);
             }
         } else {
             node.reset ();
-            node.setStatus (UNREGISTERED);
         }
         break;
 	}
@@ -235,7 +243,11 @@ void setup () {
 
     Crypto.getDH1 ();
     node.setStatus (INIT);
-	clientHello (Crypto.getPubDHKey());
+    uint8_t macAddress[6];
+    if (wifi_get_macaddr (0, macAddress)) {
+        node.setMacAddress (macAddress);
+    }
+    clientHello (Crypto.getPubDHKey());
 }
 
 void loop () {

@@ -66,6 +66,11 @@ public:
     void setLastMessageCounter (unsigned int counter) {
         lastMessageCounter = counter;
     }
+    void setMacAddress (uint8_t *mac) {
+        if (mac) {
+            memcpy (this->mac, mac, 6);
+        }
+    }
 
     bool isKeyValid () {
         return keyValid;
