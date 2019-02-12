@@ -84,9 +84,7 @@ public:
     }
     node_t getNodeData ();
 
-    //String toString ();
-
-    void printToSerial ();
+    void printToSerial (Stream *port);
 
     void reset ();
 

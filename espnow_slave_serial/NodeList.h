@@ -81,9 +81,7 @@ public:
     }
     node_t getNodeData ();
 
-    //String toString ();
-
-    void printToSerial ();
+    void printToSerial (Stream *port);
 
     void reset ();
 
@@ -133,9 +131,7 @@ public:
 
     Node *getNewNode (const uint8_t* mac);
 
-    //String toString ();
-
-    void printToSerial ();
+    void printToSerial (Stream *port);
 
 protected:
     Node nodes[NUM_NODES];

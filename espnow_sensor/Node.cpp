@@ -26,44 +26,46 @@ node_t Node::getNodeData () {
 }
 
 
-void Node::printToSerial ()
+void Node::printToSerial (Stream *port)
 {
-    Serial.printf ("Node: %d\n", nodeId);
+    port->println ();
+    port->printf ("Node: %d\n", nodeId);
     char macstr[18];
     mac2str (mac, macstr);
-    Serial.printf ("\tMAC Address: %s\n", macstr);
-    Serial.printf ("\tLast counter: %u\n", lastMessageCounter);
-    Serial.printf ("\tLast message: %u ms ago\n", millis () - lastMessageTime);
-    Serial.printf ("\tKey: %s\n", keyValid ? "Valid" : "Invalid");
-    Serial.print ("\tStatus: ");
+    port->printf ("\tMAC Address: %s\n", macstr);
+    port->printf ("\tLast counter: %u\n", lastMessageCounter);
+    port->printf ("\tLast message: %u ms ago\n", millis () - lastMessageTime);
+    port->printf ("\tKey: %s\n", keyValid ? "Valid" : "Invalid");
+    port->print ("\tStatus: ");
     switch (status) {
     case UNREGISTERED:
-        Serial.println ("Unregistered");
+        port->println ("Unregistered");
         break;
     case INIT:
-        Serial.println ("Initializing");
+        port->println ("Initializing");
         break;
     case SLEEP:
-        Serial.println ("Going to sleep");
+        port->println ("Going to sleep");
         break;
     case WAIT_FOR_SERVER_HELLO:
-        Serial.println ("Wait for server hello");
+        port->println ("Wait for server hello");
         break;
     case WAIT_FOR_KEY_EXCH_FINISHED:
-        Serial.println ("Wait for Key Exchange Finished");
+        port->println ("Wait for Key Exchange Finished");
         break;
     case WAIT_FOR_CIPHER_FINISHED:
-        Serial.println ("Wait for Cipher Finished");
+        port->println ("Wait for Cipher Finished");
         break;
     case WAIT_FOR_DOWNLINK:
-        Serial.println ("Wait for Downlik");
+        port->println ("Wait for Downlik");
         break;
     case REGISTERED:
-        Serial.println ("Registered. Wait for messages");
+        port->println ("Registered. Wait for messages");
         break;
     default:
-        Serial.println (status);
+        port->println (status);
     }
+    port->println ();
 }
 
 void Node::reset () {
@@ -74,61 +76,6 @@ void Node::reset () {
     lastMessageTime = 0;
     status = UNREGISTERED;
 }
-
-/*String Node::toString ()
-{
-    DEBUG_VERBOSE ("NodeId");
-    String nodeString = "Node: ";
-    nodeString += nodeId;
-    DEBUG_VERBOSE ("Mac Address");
-    nodeString += "\n\tMAC Address: ";
-    char macstr[18];
-    mac2str (mac, macstr);
-    nodeString += String(macstr);
-    DEBUG_VERBOSE ("Counter");
-    nodeString += "\n\tLast counter: ";
-    nodeString += lastMessageCounter;
-    DEBUG_VERBOSE ("Timer");
-    nodeString += "\n\tLast message: ";
-    nodeString += (millis()-lastMessageTime);
-    nodeString += "ms ago";
-    DEBUG_VERBOSE ("Key");
-    nodeString += "\n\tKey: ";
-    nodeString += keyValid ? "Valid" : "Invalid";
-    DEBUG_VERBOSE ("Status");
-    nodeString += "\n\tStatus: ";
-    switch (status) {
-    case UNREGISTERED :
-        nodeString += "Unregistered";
-        break;
-    case INIT:
-        nodeString += "Initializing";
-        break;
-    case SLEEP:
-        nodeString += "Going to sleep";
-        break;
-    case WAIT_FOR_SERVER_HELLO:
-        nodeString += "Wait for server hello";
-        break;
-    case WAIT_FOR_KEY_EXCH_FINISHED:
-        nodeString += "Wait for Key Exchange Finished";
-        break;
-    case WAIT_FOR_CIPHER_FINISHED:
-        nodeString += "Wait for Cipher Finished";
-        break;
-    case WAIT_FOR_DOWNLINK:
-        nodeString += "Wait for Downlik";
-        break;
-    case REGISTERED:
-        nodeString += "Registered. Wait for messagges";
-        break;
-    default:
-        nodeString += status;
-    }
-    nodeString += "\n";
-    DEBUG_VERBOSE ("Exit");
-    return nodeString;
-}*/
 
 Node::Node () :
     keyValid (false),
