@@ -14,7 +14,7 @@
 #define IV_LENGTH 16U
 #define RANDOM_LENGTH sizeof(uint32_t)
 #define CRC_LENGTH sizeof(uint32_t)
-#define BLOCK_SIZE 16U
+//#define BLOCK_SIZE 16U
 #define BUFFER_SIZE 255U
 
 class CryptModule {
@@ -37,7 +37,7 @@ public:
         return publicDHKey;
     }
     
-    static size_t getBlockSize ();
+    //static size_t getBlockSize ();
 
 
 protected:

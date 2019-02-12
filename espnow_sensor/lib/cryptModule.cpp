@@ -1,7 +1,7 @@
 // 
 // 
 // 
-#include <Crypto.h>
+//#include <Crypto.h>
 #include <CFB.h>
 #include <CryptoLW.h>
 #include "cryptModule.h"
@@ -9,16 +9,16 @@
 #include <Curve25519.h>
 #include "helperFunctions.h"
 
-#define CYPHER_TYPE Speck
+#define CYPHER_TYPE CFB<Speck>
 
-CFB<CYPHER_TYPE> cfb;
+CYPHER_TYPE cipher;
 
 void CryptModule::decryptBuffer (uint8_t *output, uint8_t *input, size_t length,
     uint8_t *iv, uint8_t ivlen, uint8_t *key, uint8_t keylen) {
     if (key && iv) {
-        if (cfb.setKey (key, keylen)) {
-            if (cfb.setIV (iv, ivlen)) {
-                cfb.decrypt (output, input, length);
+        if (cipher.setKey (key, keylen)) {
+            if (cipher.setIV (iv, ivlen)) {
+                cipher.decrypt (output, input, length);
             } else {
                 DEBUG_ERROR ("Error setting IV");
             }
@@ -33,9 +33,9 @@ void CryptModule::decryptBuffer (uint8_t *output, uint8_t *input, size_t length,
 void CryptModule::encryptBuffer (uint8_t *output, uint8_t *input, size_t length,
     uint8_t *iv, uint8_t ivlen, uint8_t *key, uint8_t keylen) {
     if (key && iv) {
-        if (cfb.setKey (key, keylen)) {
-            if (cfb.setIV (iv, ivlen)) {
-                cfb.encrypt (output, input, length);
+        if (cipher.setKey (key, keylen)) {
+            if (cipher.setIV (iv, ivlen)) {
+                cipher.encrypt (output, input, length);
             } else {
                 DEBUG_ERROR ("Error setting IV");
             }
@@ -84,10 +84,10 @@ bool CryptModule::getDH2 (uint8_t* remotePubKey) {
 	return true;
 }
 
-size_t CryptModule::getBlockSize ()
+/*size_t CryptModule::getBlockSize ()
 {
     CYPHER_TYPE cipher;
     return cipher.blockSize();
-}
+}*/
 
 CryptModule Crypto;
