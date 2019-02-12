@@ -1,3 +1,4 @@
+#include <WifiEspNow.h>
 #if defined(ESP8266)
 extern "C" {
 #include <espnow.h>
@@ -227,38 +228,55 @@ bool dataMessage (uint8_t *data, size_t len) {
     uint32_t nonce;
     uint16_t nodeId = node.getNodeId ();
 
+    uint8_t *msgType_p =    buffer;
+    uint8_t *iv_p =         buffer + 1;
+    uint8_t *length_p =     buffer + 1 + IV_LENGTH;
+    uint8_t *nodeId_p =     buffer + 1 + IV_LENGTH + sizeof(int16_t);
+    uint8_t *nonce_p =      buffer + 1 + IV_LENGTH + sizeof(int16_t) + sizeof (int16_t);
+    uint8_t *data_p =       buffer + 1 + IV_LENGTH + sizeof(int16_t) + sizeof (int16_t) + RANDOM_LENGTH;
+        
     if (!data) {
         return false;
     }
 
-    buffer[0] = SENSOR_DATA;
+    *msgType_p = (uint8_t)SENSOR_DATA;
 
-    CryptModule::random (buffer + 1, IV_LENGTH);
+    CryptModule::random (iv_p, IV_LENGTH);
 
-    DEBUG_VERBOSE ("IV: %s", printHexBuffer (buffer + 1, IV_LENGTH));
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (iv_p, IV_LENGTH));
 
-    memcpy (buffer + 1 + IV_LENGTH + 2, &nodeId, sizeof(uint16_t));
+    memcpy (nodeId_p, &nodeId, sizeof(uint16_t));
 
     nonce = Crypto.random ();
 
-    memcpy (buffer + 1 + IV_LENGTH + 2 + 2, (uint8_t *)&nonce, RANDOM_LENGTH);
+    memcpy (nonce_p, (uint8_t *)&nonce, RANDOM_LENGTH);
 
-    memcpy (buffer + 1 + IV_LENGTH + 2 + 2 + RANDOM_LENGTH, data, len);
+    memcpy (data_p, data, len);
 
-    uint16_t packet_length = 1 + IV_LENGTH + 2 + 2 + RANDOM_LENGTH + len;
+    uint16_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + RANDOM_LENGTH + len;
 
-    memcpy (buffer + 1 + IV_LENGTH, &packet_length, sizeof (uint16_t));
+    memcpy (length_p, &packet_length, sizeof (uint16_t));
 
     crc32 = CRC32::calculate (buffer, packet_length);
     DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
     // int is little indian mode on ESP platform
-    uint8_t *crcField = (uint8_t*)(buffer + packet_length);
+    uint8_t *crc_p = (uint8_t*)(buffer + packet_length);
 
-    memcpy (crcField, &crc32, CRC_LENGTH);
+    memcpy (crc_p, &crc32, CRC_LENGTH);
 
-    DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH));
+    DEBUG_VERBOSE ("Data message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
     
+    uint8_t *crypt_buf = buffer + 1 + IV_LENGTH;
+
+    size_t cryptLen = packet_length + CRC_LENGTH - 1 - IV_LENGTH;
+
+    Crypto.encryptBuffer (crypt_buf, crypt_buf, cryptLen, iv_p, IV_LENGTH, node.getEncriptionKey (), KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Encrypted data message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
+    
+    DEBUG_INFO (" -------> DATA");
+
     return esp_now_send (gateway, buffer, packet_length + CRC_LENGTH) == 0;
 }
 
@@ -284,8 +302,8 @@ void setup () {
 void loop () {
 #define LED_PERIOD 100
     static unsigned long blueOntime;
-    //static time_t lastMessage;
-    //static char *message = "Hello World!!!";
+    static time_t lastMessage;
+    static char *message = "Hello World!!!";
 
     if (flashBlue) {
         blueOntime = millis ();
@@ -297,12 +315,13 @@ void loop () {
         digitalWrite (BLUE_LED, HIGH);
     }
 
-    /*if (millis () - lastMessage > 5000) {
+    if (millis () - lastMessage > 5000) {
         lastMessage = millis ();
         DEBUG_INFO ("Trying to send");
-        if (node.getStatus() == REGISTERED && node.isKeyValid()) {
-            DEBUG_INFO ("Sending data: %s", printHexBuffer((byte*)message,strlen(message)));
+        if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
+            DEBUG_INFO ("Sending data: %s", printHexBuffer ((byte*)message, strlen (message)));
             dataMessage ((uint8_t *)message, strlen (message));
+            flashBlue = true;
         }
-    }*/
+    }
 }

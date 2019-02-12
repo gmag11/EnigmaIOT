@@ -1,3 +1,4 @@
+#include <WifiEspNow.h>
 #include "NodeList.h"
 extern "C" {
 #include <espnow.h>
@@ -187,6 +188,36 @@ bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_
 
 }
 
+bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node *node) {
+    uint8_t msgType_idx = 0;
+    uint8_t iv_idx =      1;
+    uint8_t length_idx =  1 + IV_LENGTH;
+    uint8_t nodeId_idx =  1 + IV_LENGTH + sizeof (int16_t);
+    uint8_t nonce_idx =   1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t);
+    uint8_t data_idx =    1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + RANDOM_LENGTH;
+
+    uint8_t encrDataLen = count - length_idx;
+
+
+
+    uint8_t *iv;
+    uint32_t crc;
+
+    Crypto.decryptBuffer (buf + length_idx, buf + length_idx, encrDataLen, buf + iv_idx, IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
+    DEBUG_VERBOSE ("Decripted data message: %s", printHexBuffer ((byte *)buf, count));
+
+    memcpy (&crc, buf + count - CRC_LENGTH, CRC_LENGTH);
+
+    if (!checkCRC (buf, count - 4, &crc)) {
+        DEBUG_WARN ("Wrong CRC");
+        return false;
+    }
+    //DEBUG_INFO ("CRC OK");
+
+    return true;
+
+}
+
 
 void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) {
 	//const uint8_t *buffer = buf;
@@ -257,6 +288,17 @@ void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
             DEBUG_INFO (" <------- unsolicited KEY EXCHANGE FINISHED");
         }
         break;
+    case SENSOR_DATA:
+        DEBUG_INFO (" <------- DATA");
+        if (node->getStatus () == REGISTERED) {
+            //espNowError = esp_now_add_peer (mac, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
+            if (processDataMessage (mac, buf, count, node)) {
+                DEBUG_INFO ("Data OK");
+            } else {
+                DEBUG_INFO ("Data not OK");
+            }
+
+        }
 	}
 }
 
