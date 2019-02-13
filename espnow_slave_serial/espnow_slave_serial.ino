@@ -33,6 +33,12 @@ node_t node;
 NodeList nodelist;
 
 bool serverHello (byte *key, Node *node) {
+    /*
+    * ------------------------------------------------------
+    *| msgType (1) | random (16) | DH Kslave (32) | CRC (4) |
+    * ------------------------------------------------------
+    */
+
 	uint8_t buffer[1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH];
 	uint32_t crc32;
 
@@ -87,7 +93,12 @@ bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
 }
 
 bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
-	//uint8_t myPublicKey[KEY_LENGTH];
+    /*
+    * -------------------------------------------------------
+    *| msgType (1) | random (16) | DH Kmaster (32) | CRC (4) |
+    * -------------------------------------------------------
+    */
+
     uint32_t crc32;
 
     if (count < 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH) {
@@ -122,7 +133,11 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count,
 }
 
 bool cipherFinished (Node *node) {
-    byte buffer[1 + IV_LENGTH + sizeof(uint16_t) + RANDOM_LENGTH + CRC_LENGTH];
+    /*
+    * -----------------------------------------------------------
+    *| msgType (1) | IV (16) | nodeId (2) | random (4) | CRC (4) |
+    * -----------------------------------------------------------
+    */
     uint32_t crc32;
     uint32_t nonce;
     uint8_t *iv;
@@ -162,6 +177,12 @@ bool cipherFinished (Node *node) {
 }
 
 bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
+    /*
+    * ----------------------------------------------
+    *| msgType (1) | IV (16) | random (4) | CRC (4) |
+    * ----------------------------------------------
+    */
+
     uint8_t *iv;
     uint32_t crc;
 
@@ -189,6 +210,12 @@ bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_
 }
 
 bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node *node) {
+    /*
+    * --------------------------------------------------------------------------------------
+    *| msgType (1) | IV (16) | length (2) | NodeId (2) | Random (4) | Data (....) | CRC (4) |
+    * --------------------------------------------------------------------------------------
+    */
+
     uint8_t msgType_idx = 0;
     uint8_t iv_idx =      1;
     uint8_t length_idx =  1 + IV_LENGTH;

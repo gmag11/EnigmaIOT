@@ -51,6 +51,12 @@ bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc){
 }
 
 bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+    /*
+    * ------------------------------------------------------
+    *| msgType (1) | random (16) | DH Kslave (32) | CRC (4) |
+    * ------------------------------------------------------
+    */
+
 	uint8_t myPublicKey[KEY_LENGTH];
     uint32_t crc = *(uint32_t*)(buf + count - 4);
     uint8_t key[KEY_LENGTH];
@@ -76,6 +82,12 @@ bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 }
 
 bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+    /*
+    * -----------------------------------------------------------
+    *| msgType (1) | IV (16) | nodeId (2) | random (4) | CRC (4) |
+    * -----------------------------------------------------------
+    */
+
     uint16_t nodeId;
     uint8_t *iv;
     uint32_t crc;
@@ -104,6 +116,12 @@ bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t cou
 }
 
 bool keyExchangeFinished () {
+    /*
+    * ----------------------------------------------
+    *| msgType (1) | IV (16) | random (4) | CRC (4) |
+    * ----------------------------------------------
+    */
+
 	byte buffer[1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH]; //1 block
 	uint32_t crc32;
 	uint32_t nonce;
@@ -186,6 +204,12 @@ void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
 }
 
 bool clientHello (uint8_t *key) {
+    /*
+    * -------------------------------------------------------
+    *| msgType (1) | random (16) | DH Kmaster (32) | CRC (4) |
+    * -------------------------------------------------------
+    */
+
 	uint8_t buffer[1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH];
 	uint32_t crc32;
 
@@ -223,6 +247,12 @@ bool clientHello (uint8_t *key) {
 }
 
 bool dataMessage (uint8_t *data, size_t len) {
+    /*
+    * --------------------------------------------------------------------------------------
+    *| msgType (1) | IV (16) | length (2) | NodeId (2) | Random (4) | Data (....) | CRC (4) |
+    * --------------------------------------------------------------------------------------
+    */
+
     uint8_t buffer[200];
     uint32_t crc32;
     uint32_t nonce;
