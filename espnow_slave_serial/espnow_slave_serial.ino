@@ -40,9 +40,9 @@ bool serverHello (byte *key, Node *node) {
     */
 
     uint8_t msgType_idx = 0;
-    uint8_t iv_idx = 1;
-    uint8_t pubKey_idx = iv_idx + IV_LENGTH;
-    uint8_t crc_idx = pubKey_idx + KEY_LENGTH;
+    uint8_t iv_idx =      1;
+    uint8_t pubKey_idx =  iv_idx     + IV_LENGTH;
+    uint8_t crc_idx =     pubKey_idx + KEY_LENGTH;
 
 #define SHMSG_LEN (1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH)
 
@@ -105,23 +105,29 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count,
     *| msgType (1) | random (16) | DH Kmaster (32) | CRC (4) |
     * -------------------------------------------------------
     */
+    uint8_t msgType_idx = 0;
+    uint8_t iv_idx =      1;
+    uint8_t pubKey_idx =  iv_idx     + IV_LENGTH;
+    uint8_t crc_idx =     pubKey_idx + KEY_LENGTH;
+
+#define CHMSG_LEN (1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH)
 
     uint32_t crc32;
 
-    if (count < 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH) {
+    if (count < CHMSG_LEN) {
         DEBUG_WARN ("Message too short");
         return false;
     }
 
-    memcpy (&crc32, buf + 1 + IV_LENGTH + KEY_LENGTH, CRC_LENGTH);
+    memcpy (&crc32, &buf[crc_idx], sizeof(uint32_t));
 
-	if (!checkCRC (buf, 1 + IV_LENGTH + KEY_LENGTH, &crc32)) {
+	if (!checkCRC (buf, count - CRC_LENGTH, &crc32)) {
         DEBUG_WARN ("Wrong CRC");
 		return false;
 	}
 
     node->setLastMessageTime(millis ());
-    node->setEncryptionKey (buf + 1 + IV_LENGTH);
+    node->setEncryptionKey (&buf[pubKey_idx]);
 
     Crypto.getDH1 ();
 	memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
