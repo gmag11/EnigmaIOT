@@ -39,7 +39,14 @@ bool serverHello (byte *key, Node *node) {
     * ------------------------------------------------------
     */
 
-	uint8_t buffer[1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH];
+    uint8_t msgType_idx = 0;
+    uint8_t iv_idx = 1;
+    uint8_t pubKey_idx = iv_idx + IV_LENGTH;
+    uint8_t crc_idx = pubKey_idx + KEY_LENGTH;
+
+#define SHMSG_LEN (1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH)
+
+    uint8_t buffer[SHMSG_LEN];
 	uint32_t crc32;
 
 	if (!key) {
@@ -47,25 +54,25 @@ bool serverHello (byte *key, Node *node) {
 		return false;
 	}
 
-	buffer[0] = SERVER_HELLO; // Server hello message
+	buffer[msgType_idx] = SERVER_HELLO; // Server hello message
     
-    CryptModule::random (buffer + 1, IV_LENGTH);
+    CryptModule::random (&buffer[iv_idx], IV_LENGTH);
 
-    DEBUG_VERBOSE ("IV: %s", printHexBuffer (buffer + 1, IV_LENGTH));
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (&buffer[iv_idx], IV_LENGTH));
 
 	for (int i = 0; i < KEY_LENGTH; i++) {
-		buffer[1 + IV_LENGTH + i] = key[i];
+		buffer[pubKey_idx + i] = key[i];
 	}
 
-	crc32 = CRC32::calculate (buffer, 1 + IV_LENGTH + KEY_LENGTH);
+	crc32 = CRC32::calculate (buffer, SHMSG_LEN - CRC_LENGTH);
 	DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
 	// int is little indian mode on ESP platform
-	uint8_t *crcField = buffer + 1 + IV_LENGTH + KEY_LENGTH;
+	//uint8_t *crcField = buffer + 1 + IV_LENGTH + KEY_LENGTH;
 
-    memcpy (crcField, &crc32, CRC_LENGTH);
+    memcpy (&buffer[crc_idx], &crc32, CRC_LENGTH);
 
-    DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH));
+    DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer (buffer, SHMSG_LEN));
 	flashRed = true;
 
 #ifdef DEBUG_ESP_PORT
@@ -73,7 +80,7 @@ bool serverHello (byte *key, Node *node) {
     mac2str (node->getMacAddress (), mac);
 #endif
     DEBUG_INFO (" -------> SERVER_HELLO");
-    if (esp_now_send (node->getMacAddress (), buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH) == 0) {
+    if (esp_now_send (node->getMacAddress (), buffer, SHMSG_LEN) == 0) {
         DEBUG_INFO ("Server Hello message sent to %s", mac);
         return true;
     } else {
