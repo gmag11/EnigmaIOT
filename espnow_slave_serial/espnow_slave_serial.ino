@@ -138,42 +138,50 @@ bool cipherFinished (Node *node) {
     *| msgType (1) | IV (16) | nodeId (2) | random (4) | CRC (4) |
     * -----------------------------------------------------------
     */
+
+    uint8_t msgType_idx = 0;
+    uint8_t iv_idx =      1;
+    uint8_t nodeId_idx =  iv_idx     + IV_LENGTH;
+    uint8_t nonce_idx =   nodeId_idx + sizeof (int16_t);
+    uint8_t crc_idx =     nonce_idx  + RANDOM_LENGTH;
+
+#define CFMSG_LEN (1 + IV_LENGTH + sizeof(uint16_t) + RANDOM_LENGTH + CRC_LENGTH)
+
+    byte buffer[CFMSG_LEN];
+
     uint32_t crc32;
     uint32_t nonce;
-    uint8_t *iv;
 
-    memset (buffer, 0, 1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH + CRC_LENGTH);
+    //memset (buffer, 0, CFMSG_LEN);
 
-    buffer[0] = CYPHER_FINISHED; // Server hello message
+    buffer[msgType_idx] = CYPHER_FINISHED; // Server hello message
 
-    iv = CryptModule::random (buffer + 1, IV_LENGTH);
-    DEBUG_VERBOSE ("IV: %s", printHexBuffer (buffer + 1, IV_LENGTH));
+    CryptModule::random (&buffer[iv_idx], IV_LENGTH);
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (&buffer[iv_idx], IV_LENGTH));
 
     uint16_t nodeId = node->getNodeId ();
-    memcpy (buffer + 1 + IV_LENGTH, &nodeId, sizeof (uint16_t));
+    memcpy (&buffer[nodeId_idx], &nodeId, sizeof (uint16_t));
     
     nonce = Crypto.random ();
 
-    memcpy (buffer + 1 +IV_LENGTH + sizeof (uint16_t), &nonce, RANDOM_LENGTH);
+    memcpy (&buffer[nonce_idx], &nonce, RANDOM_LENGTH);
 
-    crc32 = CRC32::calculate (buffer, 1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH);
+    crc32 = CRC32::calculate (buffer, CFMSG_LEN - CRC_LENGTH);
     DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
     // int is little indian mode on ESP platform
-    uint8_t *crcField = (uint8_t*)(buffer + 1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH);
-    memcpy (crcField, (uint8_t *)&crc32, CRC_LENGTH);
+    //uint8_t *crcField = (uint8_t*)(buffer + crc_idx);
+    memcpy (&buffer[crc_idx], (uint8_t *)&crc32, CRC_LENGTH);
 
-    DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH + CRC_LENGTH));
+    DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer (buffer, CFMSG_LEN));
 
-    uint8_t *crypt_buf = buffer + 1 + IV_LENGTH;
+    Crypto.encryptBuffer (&buffer[nodeId_idx], &buffer[nodeId_idx], CFMSG_LEN - nodeId_idx, &buffer[iv_idx], IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
 
-    Crypto.encryptBuffer (crypt_buf, crypt_buf, sizeof (uint16_t) + RANDOM_LENGTH + CRC_LENGTH, iv, IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
-
-    DEBUG_VERBOSE ("Encripted Cipher Finished message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH + CRC_LENGTH));
+    DEBUG_VERBOSE ("Encripted Cipher Finished message: %s", printHexBuffer (buffer, CFMSG_LEN));
 
     flashRed = true;
     DEBUG_INFO (" -------> CYPHER_FINISHED");
-    return esp_now_send (node->getMacAddress(), buffer, 1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH + CRC_LENGTH) == 0;
+    return esp_now_send (node->getMacAddress(), buffer, CFMSG_LEN) == 0;
 }
 
 bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
@@ -218,28 +226,24 @@ bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node 
 
     uint8_t msgType_idx = 0;
     uint8_t iv_idx =      1;
-    uint8_t length_idx =  1 + IV_LENGTH;
-    uint8_t nodeId_idx =  1 + IV_LENGTH + sizeof (int16_t);
-    uint8_t nonce_idx =   1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t);
-    uint8_t data_idx =    1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + RANDOM_LENGTH;
-
-    uint8_t encrDataLen = count - length_idx;
-
-
+    uint8_t length_idx =  iv_idx     + IV_LENGTH;
+    uint8_t nodeId_idx =  length_idx + sizeof (int16_t);
+    uint8_t nonce_idx =   nodeId_idx + sizeof (int16_t);
+    uint8_t data_idx =    nonce_idx  + RANDOM_LENGTH;
+    uint8_t crc_idx =     count      - CRC_LENGTH;
 
     uint8_t *iv;
     uint32_t crc;
 
-    Crypto.decryptBuffer (buf + length_idx, buf + length_idx, encrDataLen, buf + iv_idx, IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
+    Crypto.decryptBuffer (&buf[length_idx], &buf[length_idx], count - length_idx, &buf[iv_idx], IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
     DEBUG_VERBOSE ("Decripted data message: %s", printHexBuffer ((byte *)buf, count));
 
-    memcpy (&crc, buf + count - CRC_LENGTH, CRC_LENGTH);
+    memcpy (&crc, &buf[crc_idx], CRC_LENGTH);
 
     if (!checkCRC (buf, count - 4, &crc)) {
         DEBUG_WARN ("Wrong CRC");
         return false;
     }
-    //DEBUG_INFO ("CRC OK");
 
     return true;
 
@@ -247,7 +251,6 @@ bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node 
 
 
 void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) {
-	//const uint8_t *buffer = buf;
     Node *node;
 
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
@@ -269,7 +272,6 @@ void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
         // TODO: Do no accept new Client Hello if registration is on process on any node
         // TODO: Check message length
         DEBUG_INFO (" <------- CLIENT HELLO");
-        //if (WifiEspNow.addPeer (mac)) {
         espNowError = esp_now_add_peer (mac, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
         if (espNowError == 0) {
                 if (processClientHello (mac, buf, count, node)) {
@@ -289,7 +291,6 @@ void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
             DEBUG_ERROR ("Error adding peer %d", espNowError);
         }
         esp_now_del_peer (mac);
-        //WifiEspNow.removePeer (mac);
         break;
     case KEY_EXCHANGE_FINISHED:
         // TODO: Check message length
@@ -302,7 +303,6 @@ void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
                     if (cipherFinished (node)) {
                         node->setStatus (REGISTERED);
                         nodelist.printToSerial (&DEBUG_ESP_PORT);
-                        //DEBUG_INFO ("%s", nodelist.toString ().c_str());
                     } else {
                         node->reset ();
                     }
@@ -346,7 +346,6 @@ void initEspNow () {
 }
 
 void setup () {
-	//***INICIALIZACIÓN DEL PUERTO SERIE***//
 	Serial.begin (115200); Serial.println (); Serial.println ();
 
 	pinMode (BLUE_LED, OUTPUT);

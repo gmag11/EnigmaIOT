@@ -311,7 +311,6 @@ bool dataMessage (uint8_t *data, size_t len) {
 }
 
 void setup () {
-    //***INICIALIZACIÓN DEL PUERTO SERIE***//
     Serial.begin (115200); Serial.println (); Serial.println ();
 
     pinMode (BLUE_LED, OUTPUT);
