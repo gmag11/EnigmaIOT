@@ -29,11 +29,11 @@ public:
     void getDH1 ();
 	bool getDH2 (uint8_t* remotePubKey);
 
-    byte* getPrivDHKey () {
+    uint8_t* getPrivDHKey () {
         return privateDHKey;
     }
 
-    byte* getPubDHKey () {
+    uint8_t* getPubDHKey () {
         return publicDHKey;
     }
     
@@ -41,8 +41,8 @@ public:
 
 
 protected:
-    byte privateDHKey[KEY_LENGTH];
-    byte publicDHKey[KEY_LENGTH];
+    uint8_t privateDHKey[KEY_LENGTH];
+    uint8_t publicDHKey[KEY_LENGTH];
 };
 
 extern CryptModule Crypto;

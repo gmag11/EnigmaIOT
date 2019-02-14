@@ -32,7 +32,7 @@ node_t node;
 
 NodeList nodelist;
 
-bool serverHello (byte *key, Node *node) {
+bool serverHello (uint8_t *key, Node *node) {
     /*
     * ------------------------------------------------------
     *| msgType (1) | random (16) | DH Kslave (32) | CRC (4) |
@@ -160,7 +160,7 @@ bool cipherFinished (Node *node) {
 
 #define CFMSG_LEN (1 + IV_LENGTH + sizeof(uint16_t) + RANDOM_LENGTH + CRC_LENGTH)
 
-    byte buffer[CFMSG_LEN];
+    uint8_t buffer[CFMSG_LEN];
 
     uint32_t crc32;
     uint32_t nonce;
@@ -208,11 +208,11 @@ bool processKeyExchangeFinished (const uint8_t mac[6], uint8_t* buf, size_t coun
     uint8_t nonce_idx =  iv_idx + IV_LENGTH;
     uint8_t crc_idx = nonce_idx + RANDOM_LENGTH;
 
-#define CHMSG_LEN (1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH)
+#define KEFMSG_LEN (1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH)
 
     uint32_t crc;
 
-    if (count < CHMSG_LEN) {
+    if (count < KEFMSG_LEN) {
         DEBUG_WARN ("Wrong message");
         return false;
     }
@@ -221,7 +221,7 @@ bool processKeyExchangeFinished (const uint8_t mac[6], uint8_t* buf, size_t coun
 
     //uint8_t *crypt_buf = (uint8_t *)(buf + 1 + IV_LENGTH);
     Crypto.decryptBuffer(&buf[nonce_idx], &buf[nonce_idx], RANDOM_LENGTH + CRC_LENGTH, &buf[iv_idx], IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
-    DEBUG_VERBOSE ("Decripted Key Exchange Finished message: %s", printHexBuffer ((byte *)buf, CHMSG_LEN));
+    DEBUG_VERBOSE ("Decripted Key Exchange Finished message: %s", printHexBuffer (buf, KEFMSG_LEN));
 
     memcpy (&crc, &buf[crc_idx], CRC_LENGTH);
 
@@ -253,7 +253,7 @@ bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node 
     uint32_t crc;
 
     Crypto.decryptBuffer (&buf[length_idx], &buf[length_idx], count - length_idx, &buf[iv_idx], IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
-    DEBUG_VERBOSE ("Decripted data message: %s", printHexBuffer ((byte *)buf, count));
+    DEBUG_VERBOSE ("Decripted data message: %s", printHexBuffer (buf, count));
 
     memcpy (&crc, &buf[crc_idx], CRC_LENGTH);
 
@@ -271,7 +271,7 @@ void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
     Node *node;
 
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
-	DEBUG_VERBOSE ("Received data: %s", printHexBuffer ((byte *)buf, count));
+	DEBUG_VERBOSE ("Received data: %s", printHexBuffer (buf, count));
 
     if (count <= 1) {
         DEBUG_WARN ("Empty message");

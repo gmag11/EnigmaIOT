@@ -22,7 +22,7 @@ enum messageType_t {
 	INVALIDATE_KEY = 0xFB
 };
 
-byte gateway[6] = { 0x5E, 0xCF, 0x7F, 0x80, 0x34, 0x75 };
+uint8_t gateway[6] = { 0x5E, 0xCF, 0x7F, 0x80, 0x34, 0x75 };
 
 Node node;
 
@@ -50,21 +50,29 @@ bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc){
 	return (_crc == recvdCRC);
 }
 
-bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool processServerHello (const uint8_t mac[6], uint8_t* buf, size_t count) {
     /*
     * ------------------------------------------------------
     *| msgType (1) | random (16) | DH Kslave (32) | CRC (4) |
     * ------------------------------------------------------
     */
+    uint8_t msgType_idx = 0;
+    uint8_t iv_idx =      1;
+    uint8_t pubKey_idx =  iv_idx     + IV_LENGTH;
+    uint8_t crc_idx =     pubKey_idx + KEY_LENGTH;
+
+#define SHMSG_LEN (1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH)
 
 	uint8_t myPublicKey[KEY_LENGTH];
-    uint32_t crc = *(uint32_t*)(buf + count - 4);
-    uint8_t key[KEY_LENGTH];
+    uint32_t crc;
+    //uint8_t key[KEY_LENGTH];
     
-    if (count < 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH) {
+    if (count < SHMSG_LEN) {
         DEBUG_WARN ("Message too short");
         return false;
     }
+
+    memcpy (&crc, &buf[crc_idx], CRC_LENGTH);
 
 	if (!checkCRC (buf, count - CRC_LENGTH, &crc)) {
         DEBUG_WARN ("Wrong CRC");
@@ -73,43 +81,50 @@ bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count)
 
 	//memcpy (node.mac, mac, 6);
     
-	memcpy (key, buf + 1 + IV_LENGTH, KEY_LENGTH);
-	Crypto.getDH2 (key);
-    node.setEncryptionKey (key);
+	//memcpy (key, &buf[pubKey_idx], KEY_LENGTH);
+	Crypto.getDH2 (&buf[pubKey_idx]);
+    node.setEncryptionKey (&buf[pubKey_idx]);
     DEBUG_INFO ("Node key: %s", printHexBuffer (node.getEncriptionKey(), KEY_LENGTH));
 
 	return true;
 }
 
-bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool processCipherFinished (const uint8_t mac[6], uint8_t* buf, size_t count) {
     /*
     * -----------------------------------------------------------
     *| msgType (1) | IV (16) | nodeId (2) | random (4) | CRC (4) |
     * -----------------------------------------------------------
     */
+    uint8_t msgType_idx = 0;
+    uint8_t iv_idx =      1;
+    uint8_t nodeId_idx =  iv_idx + IV_LENGTH;
+    uint8_t nonce_idx =   nodeId_idx + sizeof (int16_t);
+    uint8_t crc_idx =     nonce_idx  + RANDOM_LENGTH;
+
+#define CFMSG_LEN (1 + IV_LENGTH + sizeof(uint16_t) + RANDOM_LENGTH + CRC_LENGTH)
 
     uint16_t nodeId;
-    uint8_t *iv;
+    //uint8_t *iv;
     uint32_t crc;
 
-    if (count < (1 + IV_LENGTH + sizeof(uint16_t) + RANDOM_LENGTH + CRC_LENGTH)) {
-        DEBUG_WARN ("Wrong message length --> Required: %d Received: %d", 
-            1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH + CRC_LENGTH, count);
+    if (count < CFMSG_LEN) {
+        DEBUG_WARN ("Wrong message length --> Required: %d Received: %d", CFMSG_LEN, count);
         return false;
     }
 
-    iv = (uint8_t *)(buf + 1);
-    uint8_t *crypt_buf = (uint8_t *)(buf + 1 + IV_LENGTH);
-    Crypto.decryptBuffer (crypt_buf, crypt_buf, sizeof (uint16_t) + RANDOM_LENGTH + CRC_LENGTH, iv, IV_LENGTH, node.getEncriptionKey (), KEY_LENGTH);
-    DEBUG_VERBOSE ("Decripted Cipher Finished message: %s", printHexBuffer ((byte *)buf, 1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH + CRC_LENGTH));
+    //iv = (uint8_t *)(buf + 1);
+    //uint8_t *crypt_buf = (uint8_t *)(buf + 1 + IV_LENGTH);
+    Crypto.decryptBuffer (&buf[nodeId_idx], &buf[nodeId_idx], CFMSG_LEN - IV_LENGTH - 1, &buf[iv_idx], IV_LENGTH, node.getEncriptionKey (), KEY_LENGTH);
+    DEBUG_VERBOSE ("Decripted Cipher Finished message: %s", printHexBuffer (buf, CFMSG_LEN));
 
-    memcpy (&crc, buf + 1 + IV_LENGTH + sizeof (uint16_t) + RANDOM_LENGTH, CRC_LENGTH);
+    memcpy (&crc, &buf[crc_idx], CRC_LENGTH);
 
-    if (!checkCRC (buf, count - 4, &crc)) {
+    if (!checkCRC (buf, CFMSG_LEN - 4, &crc)) {
         DEBUG_WARN ("Wrong CRC");
         return false;
     }
-    memcpy (&nodeId, buf + 1 + IV_LENGTH, sizeof (uint16_t));
+
+    memcpy (&nodeId, &buf[nodeId_idx], sizeof (uint16_t));
     node.setNodeId (nodeId);
     DEBUG_VERBOSE ("Node ID: %u", node.getNodeId());
     return true;
@@ -122,43 +137,49 @@ bool keyExchangeFinished () {
     * ----------------------------------------------
     */
 
-	byte buffer[1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH]; //1 block
+    uint8_t msgType_idx = 0;
+    uint8_t iv_idx =      1;
+    uint8_t nonce_idx =   iv_idx    + IV_LENGTH;
+    uint8_t crc_idx =     nonce_idx + RANDOM_LENGTH;
+
+#define KEFMSG_LEN (1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH)
+
+	uint8_t buffer[KEFMSG_LEN];
 	uint32_t crc32;
 	uint32_t nonce;
     uint8_t *iv;
 
-	memset (buffer, 0, 1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH);
+	//memset (buffer, 0, KEFMSG_LEN);
 
-	buffer[0] = KEY_EXCHANGE_FINISHED; // Client hello message
+	buffer[msgType_idx] = KEY_EXCHANGE_FINISHED;
 
-    iv = CryptModule::random (buffer + 1, IV_LENGTH);
-    DEBUG_VERBOSE ("IV: %s", printHexBuffer (buffer + 1, IV_LENGTH));
+    iv = Crypto.random (&buffer[iv_idx], IV_LENGTH);
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (&buffer[iv_idx], IV_LENGTH));
 
 	nonce = Crypto.random ();
 
-	memcpy (buffer + 1 + IV_LENGTH, (uint8_t *)&nonce, RANDOM_LENGTH);
+	memcpy (&buffer[nonce_idx], &nonce, RANDOM_LENGTH);
 
-	crc32 = CRC32::calculate (buffer, 1 + IV_LENGTH + RANDOM_LENGTH);
+	crc32 = CRC32::calculate (buffer, KEFMSG_LEN-CRC_LENGTH);
 	DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
-	// int is little indian mode on ESP platform
-	uint8_t *crcField = (uint8_t*)(buffer + 1 + IV_LENGTH + RANDOM_LENGTH);
-    memcpy (crcField, (uint8_t *)&crc32, CRC_LENGTH);
+	//uint8_t *crcField = (uint8_t*)(buffer + 1 + IV_LENGTH + RANDOM_LENGTH);
+    memcpy (&buffer[crc_idx], &crc32, CRC_LENGTH);
 
-	DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH));
+	DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer (buffer, KEFMSG_LEN));
 
-    uint8_t *crypt_buf = buffer + 1 + IV_LENGTH;
+    //uint8_t *crypt_buf = buffer + 1 + IV_LENGTH;
 
-	Crypto.encryptBuffer (crypt_buf, crypt_buf, RANDOM_LENGTH + CRC_LENGTH, iv, IV_LENGTH, node.getEncriptionKey(), KEY_LENGTH);
+	Crypto.encryptBuffer (&buffer[nonce_idx], &buffer[nonce_idx], KEFMSG_LEN - IV_LENGTH - 1, &buffer[iv_idx], IV_LENGTH, node.getEncriptionKey(), KEY_LENGTH);
 
-	DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer (buffer, 1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH));
+	DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer (buffer, KEFMSG_LEN));
     DEBUG_INFO (" -------> KEY_EXCHANGE_FINISHED");
-	return esp_now_send (gateway, buffer, 1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH) == 0;
+	return esp_now_send (gateway, buffer, KEFMSG_LEN) == 0;
 }
 
 void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) {
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    DEBUG_VERBOSE ("Received data: %s",printHexBuffer ((byte *)buf, count));
+    DEBUG_VERBOSE ("Received data: %s",printHexBuffer (buf, count));
     flashBlue = true;
 
     if (count <= 1) {
@@ -348,7 +369,7 @@ void loop () {
         lastMessage = millis ();
         DEBUG_INFO ("Trying to send");
         if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
-            DEBUG_INFO ("Sending data: %s", printHexBuffer ((byte*)message, strlen (message)));
+            DEBUG_INFO ("Sending data: %s", printHexBuffer ((uint8_t *)message, strlen (message)));
             dataMessage ((uint8_t *)message, strlen (message));
             flashBlue = true;
         }

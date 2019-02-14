@@ -28,7 +28,7 @@
 #define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%u] %u free (%s:%d) ",millis(),ESP.getFreeHeap(),__FUNCTION__,__LINE__);
 
 #ifdef DEBUG_ESP_PORT
-char* printHexBuffer (byte *buffer, uint16_t len);
+char* printHexBuffer (uint8_t *buffer, uint16_t len);
 
 	#if DEGUG_LEVEL >= VERBOSE
 		#define DEBUG_VERBOSE(...) DEBUG_ESP_PORT.print("V "); DEBUG_LINE_PREFIX(); DEBUG_ESP_PORT.printf( __VA_ARGS__ ); DEBUG_ESP_PORT.println()
