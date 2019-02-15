@@ -20,14 +20,14 @@
 class CryptModule {
 public:
     static uint32_t random ();
-    static uint8_t *random (uint8_t *buf, size_t len);
-    static void decryptBuffer (uint8_t *output, uint8_t *input, size_t length,
-        uint8_t *iv, uint8_t ivlen, uint8_t *key, uint8_t keylen);
-    static void encryptBuffer (uint8_t *output, uint8_t *input, size_t length,
-        uint8_t *iv, uint8_t ivlen, uint8_t *key, uint8_t keylen);
+    static uint8_t *random (const uint8_t *buf, size_t len);
+    static void decryptBuffer (uint8_t *output, const uint8_t *input, size_t length,
+        const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen);
+    static void encryptBuffer (uint8_t *output, const uint8_t *input, size_t length,
+        const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen);
 
     void getDH1 ();
-	bool getDH2 (uint8_t* remotePubKey);
+	bool getDH2 (const uint8_t* remotePubKey);
 
     uint8_t* getPrivDHKey () {
         return privateDHKey;

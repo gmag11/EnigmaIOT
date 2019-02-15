@@ -29,15 +29,21 @@ Node node;
 #define BLUE_LED 2
 bool flashBlue = false;
 
+void getStatus (u8 *mac_addr, u8 status) {
+    DEBUG_VERBOSE ("SENDStatus %u", status);
+}
+
 void initEspNow () {
     if (esp_now_init () != 0) {
         Serial.println ("Protocolo ESP-NOW no inicializado...");
         ESP.restart ();
         delay (1);
     }
+    
     esp_now_set_self_role (ESP_NOW_ROLE_CONTROLLER);
-    esp_now_register_recv_cb (manageMessage);
-    esp_now_add_peer (gateway, ESP_NOW_ROLE_SLAVE, 0, NULL, 0);
+    esp_now_add_peer (gateway, ESP_NOW_ROLE_SLAVE, 3, NULL, 0);
+    esp_now_register_recv_cb (reinterpret_cast<esp_now_recv_cb_t>(manageMessage));
+    esp_now_register_send_cb (getStatus);
 }
 
 bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc){
@@ -50,7 +56,7 @@ bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc){
 	return (_crc == recvdCRC);
 }
 
-bool processServerHello (const uint8_t mac[6], uint8_t* buf, size_t count) {
+bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count) {
     /*
     * ------------------------------------------------------
     *| msgType (1) | random (16) | DH Kslave (32) | CRC (4) |
@@ -89,7 +95,7 @@ bool processServerHello (const uint8_t mac[6], uint8_t* buf, size_t count) {
 	return true;
 }
 
-bool processCipherFinished (const uint8_t mac[6], uint8_t* buf, size_t count) {
+bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count) {
     /*
     * -----------------------------------------------------------
     *| msgType (1) | IV (16) | nodeId (2) | random (4) | CRC (4) |
@@ -114,8 +120,16 @@ bool processCipherFinished (const uint8_t mac[6], uint8_t* buf, size_t count) {
 
     //iv = (uint8_t *)(buf + 1);
     //uint8_t *crypt_buf = (uint8_t *)(buf + 1 + IV_LENGTH);
-    Crypto.decryptBuffer (&buf[nodeId_idx], &buf[nodeId_idx], CFMSG_LEN - IV_LENGTH - 1, &buf[iv_idx], IV_LENGTH, node.getEncriptionKey (), KEY_LENGTH);
-    DEBUG_VERBOSE ("Decripted Cipher Finished message: %s", printHexBuffer (buf, CFMSG_LEN));
+    Crypto.decryptBuffer (
+        const_cast<uint8_t *>(&buf[nodeId_idx]), 
+        &buf[nodeId_idx], 
+        CFMSG_LEN - IV_LENGTH - 1, 
+        &buf[iv_idx], 
+        IV_LENGTH, 
+        node.getEncriptionKey (), 
+        KEY_LENGTH
+    );
+    DEBUG_VERBOSE ("Decripted Cipher Finished message: %s", printHexBuffer (const_cast<uint8_t *>(buf), CFMSG_LEN));
 
     memcpy (&crc, &buf[crc_idx], CRC_LENGTH);
 
@@ -177,9 +191,9 @@ bool keyExchangeFinished () {
 	return esp_now_send (gateway, buffer, KEFMSG_LEN) == 0;
 }
 
-void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) {
+void manageMessage (const uint8_t *mac, const uint8_t* buf, uint8_t count/*, void* cbarg*/) {
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    DEBUG_VERBOSE ("Received data: %s",printHexBuffer (buf, count));
+    DEBUG_VERBOSE ("Received data: %s",printHexBuffer (const_cast<uint8_t *>(buf), count));
     flashBlue = true;
 
     if (count <= 1) {
@@ -224,7 +238,7 @@ void manageMessage (uint8_t *mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
 	}
 }
 
-bool clientHello (uint8_t *key) {
+bool clientHello (const uint8_t *key) {
     /*
     * -------------------------------------------------------
     *| msgType (1) | random (16) | DH Kmaster (32) | CRC (4) |
@@ -263,11 +277,10 @@ bool clientHello (uint8_t *key) {
 
     DEBUG_INFO (" -------> CLIENT HELLO");
 
-	//return WifiEspNow.send (gateway, buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH);
     return esp_now_send (gateway, buffer, 1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH) == 0;
 }
 
-bool dataMessage (uint8_t *data, size_t len) {
+bool dataMessage (const uint8_t *data, size_t len) {
     /*
     * --------------------------------------------------------------------------------------
     *| msgType (1) | IV (16) | length (2) | NodeId (2) | Random (4) | Data (....) | CRC (4) |
@@ -353,7 +366,7 @@ void loop () {
 #define LED_PERIOD 100
     static unsigned long blueOntime;
     static time_t lastMessage;
-    static char *message = "Hello World!!!";
+    char *message = "Hello World!!!";
 
     if (flashBlue) {
         blueOntime = millis ();

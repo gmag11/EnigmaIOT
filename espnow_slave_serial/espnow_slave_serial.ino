@@ -1,4 +1,4 @@
-#include <WifiEspNow.h>
+//#include <WifiEspNow.h>
 #include "NodeList.h"
 extern "C" {
 #include <espnow.h>
@@ -32,7 +32,7 @@ node_t node;
 
 NodeList nodelist;
 
-bool serverHello (uint8_t *key, Node *node) {
+bool serverHello (const uint8_t *key, Node *node) {
     /*
     * ------------------------------------------------------
     *| msgType (1) | random (16) | DH Kslave (32) | CRC (4) |
@@ -90,7 +90,7 @@ bool serverHello (uint8_t *key, Node *node) {
     }
 }
 
-bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
+bool checkCRC (const uint8_t *buf, size_t count, const uint32_t *crc) {
     uint32_t recvdCRC;
 
     memcpy (&recvdCRC, crc, sizeof (uint32_t)); // Use of memcpy is a must to ensure code does not try to read non memory aligned int
@@ -197,7 +197,7 @@ bool cipherFinished (Node *node) {
     return esp_now_send (node->getMacAddress(), buffer, CFMSG_LEN) == 0;
 }
 
-bool processKeyExchangeFinished (const uint8_t mac[6], uint8_t* buf, size_t count, Node *node) {
+bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
     /*
     * ----------------------------------------------
     *| msgType (1) | IV (16) | random (4) | CRC (4) |
@@ -220,7 +220,16 @@ bool processKeyExchangeFinished (const uint8_t mac[6], uint8_t* buf, size_t coun
     //iv = (uint8_t *)(buf + 1);
 
     //uint8_t *crypt_buf = (uint8_t *)(buf + 1 + IV_LENGTH);
-    Crypto.decryptBuffer(&buf[nonce_idx], &buf[nonce_idx], RANDOM_LENGTH + CRC_LENGTH, &buf[iv_idx], IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
+    Crypto.decryptBuffer(
+        const_cast<uint8_t *>(&buf[nonce_idx]), 
+        const_cast<uint8_t *>(&buf[nonce_idx]), 
+        RANDOM_LENGTH + CRC_LENGTH, 
+        const_cast<uint8_t *>(&buf[iv_idx]), 
+        IV_LENGTH, 
+        node->getEncriptionKey (), 
+        KEY_LENGTH
+    );
+
     DEBUG_VERBOSE ("Decripted Key Exchange Finished message: %s", printHexBuffer (buf, KEFMSG_LEN));
 
     memcpy (&crc, &buf[crc_idx], CRC_LENGTH);
@@ -234,7 +243,7 @@ bool processKeyExchangeFinished (const uint8_t mac[6], uint8_t* buf, size_t coun
 
 }
 
-bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node *node) {
+bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
     /*
     * --------------------------------------------------------------------------------------
     *| msgType (1) | IV (16) | length (2) | NodeId (2) | Random (4) | Data (....) | CRC (4) |
@@ -252,7 +261,15 @@ bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node 
     uint8_t *iv;
     uint32_t crc;
 
-    Crypto.decryptBuffer (&buf[length_idx], &buf[length_idx], count - length_idx, &buf[iv_idx], IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
+    Crypto.decryptBuffer (
+        const_cast<uint8_t *>(&buf[length_idx]), 
+        const_cast<uint8_t *>(&buf[length_idx]), 
+        count - length_idx, 
+        const_cast<uint8_t *>(&buf[iv_idx]), 
+        IV_LENGTH, 
+        node->getEncriptionKey (), 
+        KEY_LENGTH
+    );
     DEBUG_VERBOSE ("Decripted data message: %s", printHexBuffer (buf, count));
 
     memcpy (&crc, &buf[crc_idx], CRC_LENGTH);
@@ -267,7 +284,7 @@ bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node 
 }
 
 
-void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) {
+static void manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count/*, void* cbarg*/) {
     Node *node;
 
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
@@ -289,7 +306,7 @@ void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
         // TODO: Do no accept new Client Hello if registration is on process on any node
         // TODO: Check message length
         DEBUG_INFO (" <------- CLIENT HELLO");
-        espNowError = esp_now_add_peer (mac, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
+        espNowError = esp_now_add_peer (const_cast<uint8_t *>(mac), ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
         if (espNowError == 0) {
                 if (processClientHello (mac, buf, count, node)) {
                 node->setStatus (WAIT_FOR_KEY_EXCH_FINISHED);
@@ -307,14 +324,14 @@ void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
         } else {
             DEBUG_ERROR ("Error adding peer %d", espNowError);
         }
-        esp_now_del_peer (mac);
+        esp_now_del_peer (const_cast<uint8_t *>(mac));
         break;
     case KEY_EXCHANGE_FINISHED:
         // TODO: Check message length
         // TODO: Check that ongoing registration belongs to this mac address
         if (node->getStatus() == WAIT_FOR_KEY_EXCH_FINISHED) {
             DEBUG_INFO (" <------- KEY EXCHANGE FINISHED");
-            espNowError = esp_now_add_peer (mac, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
+            espNowError = esp_now_add_peer (const_cast<uint8_t *>(mac), ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
             if (espNowError == 0) {
                 if (processKeyExchangeFinished (mac, buf, count, node)) {
                     if (cipherFinished (node)) {
@@ -327,7 +344,7 @@ void manageMessage (uint8_t* mac, uint8_t* buf, uint8_t count/*, void* cbarg*/) 
                     node->reset ();
                 }
             }
-            esp_now_del_peer (mac);
+            esp_now_del_peer (const_cast<uint8_t *>(mac));
         } else {
             DEBUG_INFO (" <------- unsolicited KEY EXCHANGE FINISHED");
         }
@@ -359,7 +376,7 @@ void initEspNow () {
         delay (1);
     }
     esp_now_set_self_role (ESP_NOW_ROLE_SLAVE);
-    esp_now_register_recv_cb (manageMessage);
+    esp_now_register_recv_cb (reinterpret_cast<esp_now_recv_cb_t>(manageMessage));
 }
 
 void setup () {

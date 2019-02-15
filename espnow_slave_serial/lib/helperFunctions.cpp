@@ -5,7 +5,7 @@
 #include "helperFunctions.h"
 
 #ifdef DEBUG_ESP_PORT
-char *printHexBuffer (uint8_t *buffer, uint16_t len) {
+char *printHexBuffer (const uint8_t *buffer, uint16_t len) {
 	static char tempStr[150];
 	int charIndex = 0;
 	//char *chrPtr = tempStr;
@@ -23,7 +23,8 @@ char *printHexBuffer (uint8_t *buffer, uint16_t len) {
 #endif
 
 void initWiFi () {
-	WiFi.persistent (false);
+    //WiFi.preinitWiFiOff ();
+	//WiFi.persistent (false);
 	WiFi.mode (WIFI_AP);
 	WiFi.softAP ("ESPNOW", nullptr, 3);
 	WiFi.softAPdisconnect (false);
@@ -33,8 +34,8 @@ void initWiFi () {
 
 }
 
-bool mac2str (uint8_t *mac, char *buffer) {
+bool mac2str (const uint8_t *mac, const char *buffer) {
     if (mac && buffer) {
-        sprintf (buffer, MACSTR, MAC2STR (mac));
+        sprintf (const_cast<char *>(buffer), MACSTR, MAC2STR (mac));
     }
 }
