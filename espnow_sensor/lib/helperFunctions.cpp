@@ -23,7 +23,6 @@ char *printHexBuffer (const uint8_t *buffer, uint16_t len) {
 #endif
 
 void initWiFi () {
-    //WiFi.preinitWiFiOff ();
 	//WiFi.persistent (false);
 	WiFi.mode (WIFI_AP);
 	WiFi.softAP ("ESPNOW", nullptr, 3);
