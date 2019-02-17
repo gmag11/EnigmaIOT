@@ -1,4 +1,4 @@
-//#include <WifiEspNow.h>
+#include <WifiEspNow.h>
 #include "NodeList.h"
 extern "C" {
 #include <espnow.h>
@@ -17,13 +17,23 @@ extern "C" {
 bool flashRed = false;
 bool flashBlue = false;
 
+#define MAX_KEY_VALIDITY 60000
+
 enum messageType_t {
-	SENSOR_DATA = 0x01,
-	CLIENT_HELLO = 0xFF,
-	SERVER_HELLO = 0xFE,
-	KEY_EXCHANGE_FINISHED = 0xFD,
-	CYPHER_FINISHED = 0xFC,
-	INVALIDATE_KEY = 0xFB
+    SENSOR_DATA = 0x01,
+    CLIENT_HELLO = 0xFF,
+    SERVER_HELLO = 0xFE,
+    KEY_EXCHANGE_FINISHED = 0xFD,
+    CYPHER_FINISHED = 0xFC,
+    INVALIDATE_KEY = 0xFB
+};
+
+enum invalidateReason_t {
+    WRONG_CLIENT_HELLO = 0x01,
+    WRONG_EXCHANGE_FINISHED = 0x02,
+    WRONG_DATA = 0x03,
+    UNREGISTERED_NODE = 0x04,
+    KEY_EXPIRED = 0x05
 };
 
 uint8_t myPublicKey[KEY_LENGTH];
@@ -47,33 +57,33 @@ bool serverHello (const uint8_t *key, Node *node) {
 #define SHMSG_LEN (1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH)
 
     uint8_t buffer[SHMSG_LEN];
-	uint32_t crc32;
+    uint32_t crc32;
 
-	if (!key) {
+    if (!key) {
         DEBUG_ERROR ("NULL key");
-		return false;
-	}
+        return false;
+    }
 
-	buffer[msgType_idx] = SERVER_HELLO; // Server hello message
-    
+    buffer[msgType_idx] = SERVER_HELLO; // Server hello message
+
     CryptModule::random (&buffer[iv_idx], IV_LENGTH);
 
     DEBUG_VERBOSE ("IV: %s", printHexBuffer (&buffer[iv_idx], IV_LENGTH));
 
-	for (int i = 0; i < KEY_LENGTH; i++) {
-		buffer[pubKey_idx + i] = key[i];
-	}
+    for (int i = 0; i < KEY_LENGTH; i++) {
+        buffer[pubKey_idx + i] = key[i];
+    }
 
-	crc32 = CRC32::calculate (buffer, SHMSG_LEN - CRC_LENGTH);
-	DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
+    crc32 = CRC32::calculate (buffer, SHMSG_LEN - CRC_LENGTH);
+    DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
-	// int is little indian mode on ESP platform
-	//uint8_t *crcField = buffer + 1 + IV_LENGTH + KEY_LENGTH;
+    // int is little indian mode on ESP platform
+    //uint8_t *crcField = buffer + 1 + IV_LENGTH + KEY_LENGTH;
 
     memcpy (&buffer[crc_idx], &crc32, CRC_LENGTH);
 
     DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer (buffer, SHMSG_LEN));
-	flashRed = true;
+    flashRed = true;
 
 #ifdef DEBUG_ESP_PORT
     char mac[18];
@@ -119,19 +129,18 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count,
         return false;
     }
 
-    memcpy (&crc32, &buf[crc_idx], sizeof(uint32_t));
+    memcpy (&crc32, &buf[crc_idx], sizeof (uint32_t));
 
-	if (!checkCRC (buf, count - CRC_LENGTH, &crc32)) {
+    if (!checkCRC (buf, count - CRC_LENGTH, &crc32)) {
         DEBUG_WARN ("Wrong CRC");
-		return false;
-	}
+        return false;
+    }
 
-    node->setLastMessageTime(millis ());
     node->setEncryptionKey (&buf[pubKey_idx]);
 
     Crypto.getDH1 ();
-	memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
-    
+    memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
+
     if (Crypto.getDH2 (node->getEncriptionKey ())) {
         node->setKeyValid (true);
         node->setStatus (INIT);
@@ -143,6 +152,34 @@ bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count,
         DEBUG_ERROR ("DH2 error with %s", macstr);
         return false;
     }
+}
+
+bool invalidateKey (Node *node, uint8_t reason) {
+    /*
+    * --------------------------
+    *| msgType (1) | reason (1) |
+    * --------------------------
+    */
+
+    uint8_t msgType_idx = 0;
+    uint8_t reason_idx = 1;
+    //uint8_t crc_idx = 2;
+
+#define IKMSG_LEN 2
+
+    uint8_t buffer[IKMSG_LEN];
+    //uint32_t crc;
+
+    buffer[msgType_idx] = INVALIDATE_KEY; // Server hello message
+
+    buffer[reason_idx] = reason;
+
+    //crc = CRC32::calculate (buffer, 2);
+    //DEBUG_VERBOSE ("CRC32 = 0x%08X", crc);
+    //memcpy (&buffer[crc_idx], (uint8_t *)&crc, CRC_LENGTH);
+    DEBUG_VERBOSE ("Invalidate Key message: %s", printHexBuffer (buffer, IKMSG_LEN));
+    DEBUG_INFO (" -------> INVALIDATE_KEY");
+    return esp_now_send (node->getMacAddress (), buffer, IKMSG_LEN) == 0;
 }
 
 bool cipherFinished (Node *node) {
@@ -174,7 +211,7 @@ bool cipherFinished (Node *node) {
 
     uint16_t nodeId = node->getNodeId ();
     memcpy (&buffer[nodeId_idx], &nodeId, sizeof (uint16_t));
-    
+
     nonce = Crypto.random ();
 
     memcpy (&buffer[nonce_idx], &nonce, RANDOM_LENGTH);
@@ -194,7 +231,7 @@ bool cipherFinished (Node *node) {
 
     flashRed = true;
     DEBUG_INFO (" -------> CYPHER_FINISHED");
-    return esp_now_send (node->getMacAddress(), buffer, CFMSG_LEN) == 0;
+    return esp_now_send (node->getMacAddress (), buffer, CFMSG_LEN) == 0;
 }
 
 bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
@@ -220,13 +257,13 @@ bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_
     //iv = (uint8_t *)(buf + 1);
 
     //uint8_t *crypt_buf = (uint8_t *)(buf + 1 + IV_LENGTH);
-    Crypto.decryptBuffer(
-        const_cast<uint8_t *>(&buf[nonce_idx]), 
-        const_cast<uint8_t *>(&buf[nonce_idx]), 
-        RANDOM_LENGTH + CRC_LENGTH, 
-        const_cast<uint8_t *>(&buf[iv_idx]), 
-        IV_LENGTH, 
-        node->getEncriptionKey (), 
+    Crypto.decryptBuffer (
+        const_cast<uint8_t *>(&buf[nonce_idx]),
+        const_cast<uint8_t *>(&buf[nonce_idx]),
+        RANDOM_LENGTH + CRC_LENGTH,
+        const_cast<uint8_t *>(&buf[iv_idx]),
+        IV_LENGTH,
+        node->getEncriptionKey (),
         KEY_LENGTH
     );
 
@@ -238,7 +275,7 @@ bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_
         DEBUG_WARN ("Wrong CRC");
         return false;
     }
-    
+
     return true;
 
 }
@@ -262,12 +299,12 @@ bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count,
     uint32_t crc;
 
     Crypto.decryptBuffer (
-        const_cast<uint8_t *>(&buf[length_idx]), 
-        const_cast<uint8_t *>(&buf[length_idx]), 
-        count - length_idx, 
-        const_cast<uint8_t *>(&buf[iv_idx]), 
-        IV_LENGTH, 
-        node->getEncriptionKey (), 
+        const_cast<uint8_t *>(&buf[length_idx]),
+        const_cast<uint8_t *>(&buf[length_idx]),
+        count - length_idx,
+        const_cast<uint8_t *>(&buf[iv_idx]),
+        IV_LENGTH,
+        node->getEncriptionKey (),
         KEY_LENGTH
     );
     DEBUG_VERBOSE ("Decripted data message: %s", printHexBuffer (buf, count));
@@ -287,8 +324,8 @@ bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count,
 static void manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count/*, void* cbarg*/) {
     Node *node;
 
-    DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
-	DEBUG_VERBOSE ("Received data: %s", printHexBuffer (buf, count));
+    DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    DEBUG_VERBOSE ("Received data: %s", printHexBuffer (buf, count));
 
     if (count <= 1) {
         DEBUG_WARN ("Empty message");
@@ -297,18 +334,18 @@ static void manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count
 
     node = nodelist.getNewNode (mac);
 
-	flashBlue = true;
+    flashBlue = true;
 
     int espNowError;
 
-	switch (buf[0]) {
-	case CLIENT_HELLO:
+    switch (buf[0]) {
+    case CLIENT_HELLO:
         // TODO: Do no accept new Client Hello if registration is on process on any node
         // TODO: Check message length
         DEBUG_INFO (" <------- CLIENT HELLO");
         espNowError = esp_now_add_peer (const_cast<uint8_t *>(mac), ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
         if (espNowError == 0) {
-                if (processClientHello (mac, buf, count, node)) {
+            if (processClientHello (mac, buf, count, node)) {
                 node->setStatus (WAIT_FOR_KEY_EXCH_FINISHED);
                 delay (1000);
                 if (serverHello (myPublicKey, node)) {
@@ -318,6 +355,7 @@ static void manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count
                 }
 
             } else {
+                invalidateKey (node, WRONG_CLIENT_HELLO);
                 node->reset ();
                 DEBUG_ERROR ("Error processing client hello");
             }
@@ -329,18 +367,20 @@ static void manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count
     case KEY_EXCHANGE_FINISHED:
         // TODO: Check message length
         // TODO: Check that ongoing registration belongs to this mac address
-        if (node->getStatus() == WAIT_FOR_KEY_EXCH_FINISHED) {
+        if (node->getStatus () == WAIT_FOR_KEY_EXCH_FINISHED) {
             DEBUG_INFO (" <------- KEY EXCHANGE FINISHED");
             espNowError = esp_now_add_peer (const_cast<uint8_t *>(mac), ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
             if (espNowError == 0) {
                 if (processKeyExchangeFinished (mac, buf, count, node)) {
                     if (cipherFinished (node)) {
                         node->setStatus (REGISTERED);
+                        node->setKeyValidFrom (millis ());
                         nodelist.printToSerial (&DEBUG_ESP_PORT);
                     } else {
                         node->reset ();
                     }
                 } else {
+                    invalidateKey (node, WRONG_EXCHANGE_FINISHED);
                     node->reset ();
                 }
             }
@@ -355,21 +395,28 @@ static void manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count
             //espNowError = esp_now_add_peer (mac, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
             if (processDataMessage (mac, buf, count, node)) {
                 DEBUG_INFO ("Data OK");
+                DEBUG_VERBOSE ("Key valid from %u ms", millis () - node->getKeyValidFrom ());
+                if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
+                    invalidateKey (node, KEY_EXPIRED);
+                }
             } else {
+                invalidateKey (node, WRONG_DATA);
                 DEBUG_INFO ("Data not OK");
             }
 
+        } else {
+            invalidateKey (node, UNREGISTERED_NODE);
         }
-	}
+    }
 }
 
 void initEspNow () {
-	/*bool ok = WifiEspNow.begin ();
-	if (!ok) {
-		Serial.println ("WifiEspNow.begin() failed");
-		ESP.restart ();
-	}
-	WifiEspNow.onReceive (manageMessage, NULL);*/
+    /*bool ok = WifiEspNow.begin ();
+    if (!ok) {
+        Serial.println ("WifiEspNow.begin() failed");
+        ESP.restart ();
+    }
+    WifiEspNow.onReceive (manageMessage, NULL);*/
     if (esp_now_init () != 0) {
         Serial.println ("Protocolo ESP-NOW no inicializado...");
         ESP.restart ();
@@ -380,40 +427,40 @@ void initEspNow () {
 }
 
 void setup () {
-	Serial.begin (115200); Serial.println (); Serial.println ();
+    Serial.begin (115200); Serial.println (); Serial.println ();
 
-	pinMode (BLUE_LED, OUTPUT);
-	digitalWrite (BLUE_LED, HIGH);
-	pinMode (RED_LED, OUTPUT);
-	digitalWrite (RED_LED, HIGH);
+    pinMode (BLUE_LED, OUTPUT);
+    digitalWrite (BLUE_LED, HIGH);
+    pinMode (RED_LED, OUTPUT);
+    digitalWrite (RED_LED, HIGH);
 
-	initWiFi ();
-	initEspNow ();
+    initWiFi ();
+    initEspNow ();
 
 }
 
 void loop () {
 #define LED_PERIOD 100
-	static unsigned long blueOntime;
-	static unsigned long redOntime;
+    static unsigned long blueOntime;
+    static unsigned long redOntime;
 
-	if (flashBlue) {
-		blueOntime = millis ();
-		digitalWrite (BLUE_LED, LOW);
-		flashBlue = false;
-	}
+    if (flashBlue) {
+        blueOntime = millis ();
+        digitalWrite (BLUE_LED, LOW);
+        flashBlue = false;
+    }
 
-	if (!digitalRead(BLUE_LED) && millis () - blueOntime > LED_PERIOD) {
-		digitalWrite (BLUE_LED, HIGH);
-	}
+    if (!digitalRead (BLUE_LED) && millis () - blueOntime > LED_PERIOD) {
+        digitalWrite (BLUE_LED, HIGH);
+    }
 
-	if (flashRed) {
-		redOntime = millis ();
-		digitalWrite (RED_LED, LOW);
-		flashRed = false;
-	}
+    if (flashRed) {
+        redOntime = millis ();
+        digitalWrite (RED_LED, LOW);
+        flashRed = false;
+    }
 
-	if (!digitalRead (RED_LED) && millis () - redOntime > LED_PERIOD) {
-		digitalWrite (RED_LED, HIGH);
-	}
+    if (!digitalRead (RED_LED) && millis () - redOntime > LED_PERIOD) {
+        digitalWrite (RED_LED, HIGH);
+    }
 }

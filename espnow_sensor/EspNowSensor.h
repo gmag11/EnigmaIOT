@@ -34,6 +34,14 @@ enum messageType {
     INVALIDATE_KEY = 0xFB
 };
 
+enum invalidateReason_t {
+    WRONG_CLIENT_HELLO = 0x01,
+    WRONG_EXCHANGE_FINISHED = 0x02,
+    WRONG_DATA = 0x03,
+    UNREGISTERED_NODE = 0x04,
+    KEY_EXPIRED = 0x05
+};
+
 typedef messageType messageType_t;
 
 class EspNowSensorClass
@@ -50,9 +58,10 @@ protected:
 
     void initEspNow ();
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
-    bool clientHello (const uint8_t *key);
+    bool clientHello (/*const uint8_t *key*/);
     bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count);
     bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    bool processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count);
     bool keyExchangeFinished ();
     bool dataMessage (const uint8_t *data, size_t len);
     void manageMessage (const uint8_t *mac, const uint8_t* buf, uint8_t count);

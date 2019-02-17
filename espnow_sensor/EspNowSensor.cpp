@@ -16,13 +16,13 @@ void EspNowSensorClass::begin () {
     initWiFi ();
     initEspNow ();
 
-    Crypto.getDH1 ();
-    node.setStatus (INIT);
-    uint8_t macAddress[6];
-    if (wifi_get_macaddr (0, macAddress)) {
-        node.setMacAddress (macAddress);
-    }
-    clientHello (Crypto.getPubDHKey ());
+    //Crypto.getDH1 ();
+    //node.setStatus (INIT);
+    //uint8_t macAddress[6];
+    //if (wifi_get_macaddr (0, macAddress)) {
+    //    node.setMacAddress (macAddress);
+    //}
+    clientHello (/*Crypto.getPubDHKey ()*/);
 
 }
 
@@ -76,7 +76,7 @@ bool EspNowSensorClass::checkCRC (const uint8_t *buf, size_t count, uint32_t *cr
     return (_crc == recvdCRC);
 }
 
-bool EspNowSensorClass::clientHello (const uint8_t *key) {
+bool EspNowSensorClass::clientHello (/*const uint8_t *key*/) {
     /*
     * -------------------------------------------------------
     *| msgType (1) | random (16) | DH Kmaster (32) | CRC (4) |
@@ -92,9 +92,17 @@ bool EspNowSensorClass::clientHello (const uint8_t *key) {
     uint8_t buffer[CHMSG_LEN];
     uint32_t crc32;
 
-    if (!key) {
-        return false;
+    //if (!key) {
+    //    return false;
+    //}
+
+    Crypto.getDH1 ();
+    node.setStatus (INIT);
+    uint8_t macAddress[6];
+    if (wifi_get_macaddr (0, macAddress)) {
+        node.setMacAddress (macAddress);
     }
+    uint8_t *key = Crypto.getPubDHKey ();
 
     buffer[msgType_idx] = CLIENT_HELLO; // Client hello message
 
@@ -328,6 +336,15 @@ bool EspNowSensorClass::dataMessage (const uint8_t *data, size_t len) {
     return esp_now_send (gateway, buffer, packet_length + CRC_LENGTH) == 0;
 }
 
+bool EspNowSensorClass::processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+#define IKMSG_LEN 2
+    if (buf && count < IKMSG_LEN) {
+        return false;
+    }
+    DEBUG_VERBOSE ("Invalidate key request. Reason: %u", buf[1]);
+    return true;
+}
+
 void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, uint8_t count) {
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     DEBUG_VERBOSE ("Received data: %s", printHexBuffer (const_cast<uint8_t *>(buf), count));
@@ -340,7 +357,6 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
     switch (buf[0]) {
     case SERVER_HELLO:
         DEBUG_INFO (" <------- SERVER HELLO");
-        node.setLastMessageTime (millis ());
         if (node.getStatus () == WAIT_FOR_SERVER_HELLO) {
             if (processServerHello (mac, buf, count)) {
                 keyExchangeFinished ();
@@ -354,12 +370,12 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
         break;
     case CYPHER_FINISHED:
         DEBUG_INFO ("Cypher Finished received");
-        node.setLastMessageTime (millis ());
         if (node.getStatus () == WAIT_FOR_CIPHER_FINISHED) {
             DEBUG_INFO (" <------- CIPHER_FINISHED");
             if (processCipherFinished (mac, buf, count)) {
                 // mark node as registered
                 node.setKeyValid (true);
+                node.setKeyValidFrom (millis ());
                 node.setStatus (REGISTERED);
 #if DEGUG_LEVEL >= INFO
                 node.printToSerial (&DEBUG_ESP_PORT);
@@ -372,6 +388,10 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
             node.reset ();
         }
         break;
+    case INVALIDATE_KEY:
+        DEBUG_INFO (" <------- INVALIDATE KEY");
+        processInvalidateKey (mac, buf, count);
+        clientHello ();
     }
 }
 

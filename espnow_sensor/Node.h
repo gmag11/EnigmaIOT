@@ -27,7 +27,7 @@ struct node_instance {
     uint16_t nodeId;
     uint8_t key[32];
     unsigned int lastMessageCounter;
-    time_t lastMessageTime;
+    time_t keyValidFrom;
     status_t status = UNREGISTERED;
     bool keyValid = false;
 };
@@ -51,14 +51,11 @@ public:
         return key;
     }
     void setEncryptionKey (const uint8_t* key);
-    time_t getLastMessageTime () {
-        return lastMessageTime;
+    time_t getKeyValidFrom () {
+        return keyValidFrom;
     }
-    time_t getLastMessageTime (time_t lastMessageTime) {
-        lastMessageTime = lastMessageTime;
-    }
-    void setLastMessageTime (time_t lastMessageTime) {
-        this->lastMessageTime = lastMessageTime;
+    void setKeyValidFrom (time_t keyValidFrom) {
+        this->keyValidFrom = keyValidFrom;
     }
     unsigned int getLastMessageCounter () {
         return lastMessageCounter;
@@ -99,7 +96,7 @@ protected:
     uint16_t nodeId;
     uint8_t key[KEYLENGTH];
     unsigned int lastMessageCounter;
-    time_t lastMessageTime;
+    time_t keyValidFrom;
     bool keyValid = false;
     status_t status = UNREGISTERED;
 

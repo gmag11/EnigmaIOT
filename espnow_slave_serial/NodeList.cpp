@@ -16,11 +16,13 @@ node_t Node::getNodeData () {
 
     memcpy (thisNode.key, key, KEYLENGTH);
     thisNode.keyValid = keyValid;
-    thisNode.lastMessageTime = lastMessageTime;
+    thisNode.keyValidFrom = keyValidFrom;
     memcpy (thisNode.mac, mac, 6);
     thisNode.nodeId = nodeId;
     thisNode.lastMessageCounter = lastMessageCounter;
     thisNode.status = status;
+
+    return thisNode;
 }
 
 void Node::printToSerial (Stream *port)
@@ -31,7 +33,7 @@ void Node::printToSerial (Stream *port)
     mac2str (mac, macstr);
     port->printf ("\tMAC Address: %s\n", macstr);
     port->printf ("\tLast counter: %u\n", lastMessageCounter);
-    port->printf ("\tLast message: %u ms ago\n", millis () - lastMessageTime);
+    port->printf ("\tKey valid from: %u ms ago\n", millis () - keyValidFrom);
     port->printf ("\tKey: %s\n", keyValid ? "Valid" : "Invalid");
     port->print ("\tStatus: ");
     switch (status) {
@@ -73,7 +75,7 @@ Node::Node () :
 
 Node::Node (node_t nodeData) :
     keyValid(nodeData.keyValid), 
-    lastMessageTime(nodeData.lastMessageTime), 
+    keyValidFrom(nodeData.keyValidFrom), 
     lastMessageCounter(nodeData.lastMessageCounter), 
     nodeId(nodeData.nodeId), 
     status(nodeData.status)
@@ -140,7 +142,7 @@ void Node::reset () {
     memset (key, 0, KEYLENGTH);
     keyValid = false;
     lastMessageCounter = 0;
-    lastMessageTime = 0;
+    keyValidFrom = 0;
     status = UNREGISTERED;
 }
 
