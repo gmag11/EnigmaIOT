@@ -3,23 +3,16 @@
 #ifndef _ESPNOWSENSOR_h
 #define _ESPNOWSENSOR_h
 
-#include <WifiEspNow.h>
+//#include <WifiEspNow.h>
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"
 #else
 #include "WProgram.h"
 #endif
-extern "C" {
-#include <espnow.h>
-}
-#if defined(ESP8266)
-#include <ESP8266WiFi.h>
-#elif defined(ESP32)
-#include <WiFi.h>
-#endif
 
 #include "lib/cryptModule.h"
 #include "lib/helperFunctions.h"
+#include "comms_hal.h"
 #include <CRC32.h>
 #include "Node.h"
 #include <cstddef>
@@ -44,6 +37,8 @@ enum invalidateReason_t {
 
 typedef messageType messageType_t;
 
+//typedef void (*espNowSensor_rcvd_data)(u8 *mac_addr, u8 *data, u8 len);
+
 class EspNowSensorClass
 {
 protected:
@@ -54,9 +49,9 @@ protected:
     int8_t led = -1;
     int ledOnTime;
     uint8_t channel = 3;
-    //esp_now_recv_cb_t rx_cb;
+    Comms_halClass *comm;
+    //espNowSensor_rcvd_data rxData;
 
-    void initEspNow ();
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
     bool clientHello (/*const uint8_t *key*/);
     bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count);
@@ -71,7 +66,7 @@ protected:
 
 
 public:
-    void begin ();
+    void begin (Comms_halClass *comm);
     void handle ();
     void setLed (uint8_t led, time_t onTime = 100);
     bool sendData (const uint8_t *data, size_t len);

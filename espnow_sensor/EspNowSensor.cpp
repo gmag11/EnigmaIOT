@@ -9,12 +9,15 @@ void EspNowSensorClass::setLed (uint8_t led, time_t onTime) {
     ledOnTime = onTime;
 }
 
-void EspNowSensorClass::begin () {
+void EspNowSensorClass::begin (Comms_halClass *comm) {
     pinMode (led, OUTPUT);
     digitalWrite (led, HIGH);
 
     initWiFi ();
-    initEspNow ();
+    this->comm = comm;
+    comm->begin (gateway,channel);
+    comm->onDataRcvd (rx_cb);
+    comm->onDataSent (tx_cb);
 
     //Crypto.getDH1 ();
     //node.setStatus (INIT);
@@ -52,20 +55,6 @@ void EspNowSensorClass::tx_cb (u8 *mac_addr, u8 status) {
     EspNowSensor.getStatus (mac_addr, status);
 }
 
-
-void EspNowSensorClass::initEspNow () {
-    if (esp_now_init () != 0) {
-        DEBUG_ERROR ("Protocolo ESP-NOW no inicializado...");
-        ESP.restart ();
-        delay (1);
-    }
-
-    esp_now_set_self_role (ESP_NOW_ROLE_CONTROLLER);
-    esp_now_add_peer (gateway, ESP_NOW_ROLE_SLAVE, channel, NULL, 0);
-    esp_now_register_recv_cb (reinterpret_cast<esp_now_recv_cb_t>(rx_cb));
-    esp_now_register_send_cb (reinterpret_cast<esp_now_send_cb_t>(tx_cb));
-}
-
 bool EspNowSensorClass::checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
     uint32 recvdCRC;
 
@@ -76,7 +65,7 @@ bool EspNowSensorClass::checkCRC (const uint8_t *buf, size_t count, uint32_t *cr
     return (_crc == recvdCRC);
 }
 
-bool EspNowSensorClass::clientHello (/*const uint8_t *key*/) {
+bool EspNowSensorClass::clientHello () {
     /*
     * -------------------------------------------------------
     *| msgType (1) | random (16) | DH Kmaster (32) | CRC (4) |
@@ -92,10 +81,6 @@ bool EspNowSensorClass::clientHello (/*const uint8_t *key*/) {
     uint8_t buffer[CHMSG_LEN];
     uint32_t crc32;
 
-    //if (!key) {
-    //    return false;
-    //}
-
     Crypto.getDH1 ();
     node.setStatus (INIT);
     uint8_t macAddress[6];
@@ -103,6 +88,10 @@ bool EspNowSensorClass::clientHello (/*const uint8_t *key*/) {
         node.setMacAddress (macAddress);
     }
     uint8_t *key = Crypto.getPubDHKey ();
+
+    if (!key) {
+        return false;
+    }
 
     buffer[msgType_idx] = CLIENT_HELLO; // Client hello message
 
@@ -125,7 +114,7 @@ bool EspNowSensorClass::clientHello (/*const uint8_t *key*/) {
 
     DEBUG_INFO (" -------> CLIENT HELLO");
 
-    return esp_now_send (gateway, buffer, CHMSG_LEN) == 0;
+    return comm->send (gateway, buffer, CHMSG_LEN) == 0;
 }
 
 
@@ -158,9 +147,6 @@ bool EspNowSensorClass::processServerHello (const uint8_t mac[6], const uint8_t*
         return false;
     }
 
-    //memcpy (node.mac, mac, 6);
-
-    //memcpy (key, &buf[pubKey_idx], KEY_LENGTH);
     Crypto.getDH2 (&buf[pubKey_idx]);
     node.setEncryptionKey (&buf[pubKey_idx]);
     DEBUG_INFO ("Node key: %s", printHexBuffer (node.getEncriptionKey (), KEY_LENGTH));
@@ -261,7 +247,7 @@ bool EspNowSensorClass::keyExchangeFinished () {
 
     DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer (buffer, KEFMSG_LEN));
     DEBUG_INFO (" -------> KEY_EXCHANGE_FINISHED");
-    return esp_now_send (gateway, buffer, KEFMSG_LEN) == 0;
+    return comm->send (gateway, buffer, KEFMSG_LEN) == 0;
 }
 
 bool EspNowSensorClass::sendData (const uint8_t *data, size_t len) {
@@ -333,7 +319,7 @@ bool EspNowSensorClass::dataMessage (const uint8_t *data, size_t len) {
 
     DEBUG_INFO (" -------> DATA");
 
-    return esp_now_send (gateway, buffer, packet_length + CRC_LENGTH) == 0;
+    return comm->send (gateway, buffer, packet_length + CRC_LENGTH) == 0;
 }
 
 bool EspNowSensorClass::processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count) {

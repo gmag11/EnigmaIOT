@@ -25,6 +25,18 @@ node_t Node::getNodeData () {
     thisNode.status = status;
 }
 
+void Node::setMacAddress (uint8_t *mac) {
+    if (mac) {
+        memcpy (this->mac, mac, 6);
+    }
+}
+
+void Node::setMacAddress (const uint8_t *macAddress) {
+    if (macAddress) {
+        memcpy (mac, macAddress, 6);
+    }
+}
+
 
 void Node::printToSerial (Stream *port)
 {

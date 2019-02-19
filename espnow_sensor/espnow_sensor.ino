@@ -1,10 +1,11 @@
 #include "EspNowSensor.h"
+#include "espnow_hal.h"
 
 void setup () {
     Serial.begin (115200); Serial.println (); Serial.println ();
 
     EspNowSensor.setLed (2);
-    EspNowSensor.begin ();
+    EspNowSensor.begin (&Espnow_hal);
 }
 
 void loop () {

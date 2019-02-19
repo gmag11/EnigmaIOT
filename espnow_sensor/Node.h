@@ -63,11 +63,7 @@ public:
     void setLastMessageCounter (unsigned int counter) {
         lastMessageCounter = counter;
     }
-    void setMacAddress (uint8_t *mac) {
-        if (mac) {
-            memcpy (this->mac, mac, 6);
-        }
-    }
+    void setMacAddress (uint8_t *mac);
 
     bool isKeyValid () {
         return keyValid;
@@ -100,11 +96,7 @@ protected:
     bool keyValid = false;
     status_t status = UNREGISTERED;
 
-    void setMacAddress (const uint8_t *macAddress) {
-        if (macAddress) {
-            memcpy (mac, macAddress, 6);
-        }
-    }
+    void setMacAddress (const uint8_t *macAddress);
 
 };
 
