@@ -20,7 +20,6 @@ void SecureSensorGatewayClass::setRxLed (uint8_t led, time_t onTime) {
 }
 
 void SecureSensorGatewayClass::begin (Comms_halClass *comm) {
-    initWiFi ();
     this->comm = comm;
     comm->begin (NULL, 0, COMM_GATEWAY);
     comm->onDataRcvd (rx_cb);
@@ -81,7 +80,7 @@ void SecureSensorGatewayClass::manageMessage (const uint8_t* mac, const uint8_t*
 
     flashRx = true;
 
-    int espNowError;
+    int espNowError = 0;
 
     switch (buf[0]) {
     case CLIENT_HELLO:
@@ -189,6 +188,10 @@ bool SecureSensorGatewayClass::processDataMessage (const uint8_t mac[6], const u
     if (!checkCRC (buf, count - 4, &crc)) {
         DEBUG_WARN ("Wrong CRC");
         return false;
+    }
+
+    if (notifyData) {
+        notifyData (mac, &buf[data_idx], crc_idx - data_idx);
     }
 
     return true;
