@@ -119,7 +119,9 @@ void SecureSensorGatewayClass::manageMessage (const uint8_t* mac, const uint8_t*
                     if (cipherFinished (node)) {
                         node->setStatus (REGISTERED);
                         node->setKeyValidFrom (millis ());
+#if DEBUG_LEVEL >= INFO
                         nodelist.printToSerial (&DEBUG_ESP_PORT);
+#endif
                     } else {
                         node->reset ();
                     }
