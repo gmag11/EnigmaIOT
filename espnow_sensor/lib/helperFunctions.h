@@ -15,7 +15,7 @@
 #include <WiFi.h>
 #endif
 
-#define DEBUG_ESP_PORT Serial
+//#define DEBUG_ESP_PORT Serial
 
 #define NO_DEBUG	0
 #define ERROR	1
@@ -23,12 +23,10 @@
 #define INFO	3
 #define VERBOSE	4
 
-#define DEBUG_LEVEL VERBOSE
-
 #define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%u] %u free (%s:%d) ",millis(),ESP.getFreeHeap(),__FUNCTION__,__LINE__);
 
 #ifdef DEBUG_ESP_PORT
-char* printHexBuffer (const uint8_t *buffer, uint16_t len);
+    #define DEBUG_LEVEL VERBOSE
 
 	#if DEBUG_LEVEL >= VERBOSE
 		#define DEBUG_VERBOSE(...) DEBUG_ESP_PORT.print("V "); DEBUG_LINE_PREFIX(); DEBUG_ESP_PORT.printf( __VA_ARGS__ ); DEBUG_ESP_PORT.println()
@@ -54,12 +52,13 @@ char* printHexBuffer (const uint8_t *buffer, uint16_t len);
 		#define DEBUG_ERROR(...)
 	#endif
 #else
-#define printHexBuffer(...)
 #define DEBUG_VERBOSE(...)
 #define DEBUG_INFO(...)
 #define DEBUG_WARN(...)
 #define DEBUG_ERROR(...)
 #endif
+
+char* printHexBuffer (const uint8_t *buffer, uint16_t len);
 
 bool mac2str (const uint8_t *mac, const char *buffer);
 

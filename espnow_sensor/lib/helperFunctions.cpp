@@ -4,7 +4,6 @@
 
 #include "helperFunctions.h"
 
-#ifdef DEBUG_ESP_PORT
 #define MAX_STR_LEN 200
 char *printHexBuffer (const uint8_t *buffer, uint16_t len) {
 	static char tempStr[MAX_STR_LEN];
@@ -19,7 +18,6 @@ char *printHexBuffer (const uint8_t *buffer, uint16_t len) {
     }
 	return tempStr;
 }
-#endif
 
 void initWiFi () {
 	//WiFi.persistent (false);
