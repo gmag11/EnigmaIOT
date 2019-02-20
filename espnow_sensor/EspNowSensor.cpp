@@ -363,7 +363,7 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
                 node.setKeyValid (true);
                 node.setKeyValidFrom (millis ());
                 node.setStatus (REGISTERED);
-#if DEGUG_LEVEL >= INFO
+#if DEBUG_LEVEL >= INFO
                 node.printToSerial (&DEBUG_ESP_PORT);
 #endif
                 // TODO: Store node data on EEPROM, SPIFFS or RTCMEM

@@ -37,7 +37,12 @@ enum invalidateReason_t {
 
 typedef messageType messageType_t;
 
-//typedef void (*espNowSensor_rcvd_data)(u8 *mac_addr, u8 *data, u8 len);
+#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
+#include <functional>
+typedef std::function<void (const uint8_t*, const uint8_t*, uint8_t)> onDataRx_t;
+#else
+typedef void (*onDataRx_t)(const uint8_t*, const uint8_t*, uint8_t);
+#endif
 
 class EspNowSensorClass
 {
@@ -50,7 +55,7 @@ protected:
     int ledOnTime;
     uint8_t channel = 3;
     Comms_halClass *comm;
-    //espNowSensor_rcvd_data rxData;
+    onDataRx_t notifyData;
 
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
     bool clientHello (/*const uint8_t *key*/);
@@ -70,6 +75,9 @@ public:
     void handle ();
     void setLed (uint8_t led, time_t onTime = 100);
     bool sendData (const uint8_t *data, size_t len);
+    void onDataRx (onDataRx_t handler) {
+        notifyData = handler;
+    }
 };
 
 extern EspNowSensorClass EspNowSensor;
