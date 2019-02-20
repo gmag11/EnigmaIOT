@@ -5,19 +5,18 @@
 #include "helperFunctions.h"
 
 #ifdef DEBUG_ESP_PORT
+#define MAX_STR_LEN 200
 char *printHexBuffer (const uint8_t *buffer, uint16_t len) {
-	static char tempStr[150];
+	static char tempStr[MAX_STR_LEN];
 	int charIndex = 0;
-	//char *chrPtr = tempStr;
+
+    memset (tempStr, 0, MAX_STR_LEN);
 
     for (int i = 0; i < len; i++) {
-		charIndex += sprintf (tempStr + charIndex, "%02X ", buffer[i]);
-		//Serial.printf ("%s\n", tempStr);
-		//chrPtr += charIndex;
-        //Serial.printf ("%02X ", buffer[i]);
+        if (i < MAX_STR_LEN-1) {
+            charIndex += sprintf (tempStr + charIndex, "%02X ", buffer[i]);
+        }
     }
-	//sprintf (tempStr, "\n");
-    //Serial.println ();
 	return tempStr;
 }
 #endif
@@ -32,6 +31,8 @@ void initWiFi () {
     DEBUG_INFO ("STA MAC address of this device is %s", WiFi.macAddress ().c_str ());
 
 }
+
+#define MACSTR "%02X:%02X:%02X:%02X:%02X:%02X"
 
 bool mac2str (const uint8_t *mac, const char *buffer) {
     if (mac && buffer) {

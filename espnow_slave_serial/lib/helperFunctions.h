@@ -23,7 +23,7 @@
 #define INFO	3
 #define VERBOSE	4
 
-#define DEBUG_LEVEL NO_DEBUG
+#define DEBUG_LEVEL VERBOSE
 
 #define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%u] %u free (%s:%d) ",millis(),ESP.getFreeHeap(),__FUNCTION__,__LINE__);
 

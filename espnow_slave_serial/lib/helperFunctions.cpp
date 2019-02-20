@@ -5,12 +5,17 @@
 #include "helperFunctions.h"
 
 #ifdef DEBUG_ESP_PORT
+#define MAX_STR_LEN 200
 char *printHexBuffer (const uint8_t *buffer, uint16_t len) {
-	static char tempStr[200];
+	static char tempStr[MAX_STR_LEN];
 	int charIndex = 0;
 
+    memset (tempStr, 0, MAX_STR_LEN);
+
     for (int i = 0; i < len; i++) {
-		charIndex += sprintf (tempStr + charIndex, "%02X ", buffer[i]);
+        if (i < MAX_STR_LEN-1) {
+            charIndex += sprintf (tempStr + charIndex, "%02X ", buffer[i]);
+        }
     }
 	return tempStr;
 }
