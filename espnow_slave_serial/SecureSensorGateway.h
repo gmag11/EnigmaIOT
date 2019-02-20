@@ -18,9 +18,6 @@
 #include <cstdint>
 
 #define MAX_KEY_VALIDITY 60000
-#define BLUE_LED 2
-#define RED_LED 16
-
 
 enum messageType_t {
     SENSOR_DATA = 0x01,
