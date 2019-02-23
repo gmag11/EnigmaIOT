@@ -1,5 +1,10 @@
+#include <ArduinoJson.h>
+#include <CayenneLPP.h>
+
+#include <CayenneLPPDec.h>
 #include "SecureSensorGateway.h"
 #include "espnow_hal.h"
+
 
 #define BLUE_LED 2
 #define RED_LED 16
