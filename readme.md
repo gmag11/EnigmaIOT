@@ -25,12 +25,12 @@ But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So 
 - Avoid rogue node, rogue gateway and man-in-the-middle attack. Not yet done.
 - Plugabble phisical layer communication. Right now only ESP-NOW protocol is developed
 - Using ESP-NOW only esp8266 is needed.
-- Optional data message counter to detect lost or repeated messages. Not yet done.
+- Optional data message counter to detect lost or repeated messages.
 - Designed as two libraries (one for gateway, one for node) for easier use.
 - Selectable crypto algorhithm
 - Gateway does not store keys only on RAM. They are lost on power cycle.
-- Downlink available. It is queued and sent just after node send a data message. Not yet done
-- Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place but SPIFFS or EEPROM use is possible.
+- Downlink available. It is queued and sent just after node send a data message. TODO
+- Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place but SPIFFS or EEPROM use is possible. TODO
 
 ## Design
 
@@ -64,5 +64,5 @@ All nodes and gateway are identified by its MAC address. No name is assigned so 
 
 ### Data protocol
 
-CayenneLPP and JSON
+CayenneLPP and JSON. TODO
 
