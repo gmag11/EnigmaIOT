@@ -59,7 +59,7 @@ bool EspNowSensorClass::checkCRC (const uint8_t *buf, size_t count, uint32_t *cr
     uint32 recvdCRC;
 
     memcpy (&recvdCRC, crc, sizeof (uint32_t));
-    //DEBUG_VERBOSE ("Received CRC32: 0x%08X", *crc);
+    //DEBUG_VERBOSE ("Received CRC32: 0x%08X", *crc32);
     uint32_t _crc = CRC32::calculate (buf, count);
     DEBUG_VERBOSE ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X Length: %d", _crc, recvdCRC, count);
     return (_crc == recvdCRC);
@@ -71,14 +71,16 @@ bool EspNowSensorClass::clientHello () {
     *| msgType (1) | random (16) | DH Kmaster (32) | CRC (4) |
     * -------------------------------------------------------
     */
-    uint8_t msgType_idx =     0;
-    uint8_t iv_idx =          1;
-    uint8_t publicKey_idx =   iv_idx + IV_LENGTH;
-    uint8_t crc_idx =         publicKey_idx + KEY_LENGTH;
 
-#define CHMSG_LEN (1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH)
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        uint8_t iv[IV_LENGTH];
+        uint8_t publicKey[KEY_LENGTH];
+        uint32_t crc;
+    } clientHello_msg;
 
-    uint8_t buffer[CHMSG_LEN];
+#define CHMSG_LEN sizeof(clientHello_msg)
+
     uint32_t crc32;
 
     Crypto.getDH1 ();
@@ -93,28 +95,28 @@ bool EspNowSensorClass::clientHello () {
         return false;
     }
 
-    buffer[msgType_idx] = CLIENT_HELLO; // Client hello message
+    clientHello_msg.msgType = CLIENT_HELLO; // Client hello message
 
-    CryptModule::random (&buffer[iv_idx], IV_LENGTH);
+    CryptModule::random (clientHello_msg.iv, IV_LENGTH);
 
-    DEBUG_VERBOSE ("IV: %s", printHexBuffer (&buffer[iv_idx], IV_LENGTH));
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (clientHello_msg.iv, IV_LENGTH));
 
     for (int i = 0; i < KEY_LENGTH; i++) {
-        buffer[publicKey_idx + i] = key[i];
+        clientHello_msg.publicKey[i] = key[i];
     }
 
-    crc32 = CRC32::calculate (buffer, CHMSG_LEN - CRC_LENGTH);
+    crc32 = CRC32::calculate ((uint8_t *)&clientHello_msg, CHMSG_LEN - CRC_LENGTH);
     DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
-    memcpy (&buffer[crc_idx], &crc32, CRC_LENGTH);
+    memcpy (&(clientHello_msg.crc), &crc32, CRC_LENGTH);
 
-    DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer (buffer, CHMSG_LEN));
+    DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
 
     node.setStatus (WAIT_FOR_SERVER_HELLO);
 
     DEBUG_INFO (" -------> CLIENT HELLO");
 
-    return comm->send (gateway, buffer, CHMSG_LEN) == 0;
+    return comm->send (gateway, (uint8_t*)&clientHello_msg, CHMSG_LEN) == 0;
 }
 
 
@@ -124,31 +126,35 @@ bool EspNowSensorClass::processServerHello (const uint8_t mac[6], const uint8_t*
     *| msgType (1) | random (16) | DH Kslave (32) | CRC (4) |
     * ------------------------------------------------------
     */
-    uint8_t msgType_idx = 0;
-    uint8_t iv_idx = 1;
-    uint8_t pubKey_idx = iv_idx + IV_LENGTH;
-    uint8_t crc_idx = pubKey_idx + KEY_LENGTH;
 
-#define SHMSG_LEN (1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH)
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        uint8_t iv[IV_LENGTH];
+        uint8_t publicKey[KEY_LENGTH];
+        uint32_t crc;
+    } serverHello_msg;
+
+#define SHMSG_LEN sizeof(serverHello_msg)
 
     uint8_t myPublicKey[KEY_LENGTH];
-    uint32_t crc;
-    //uint8_t key[KEY_LENGTH];
+    uint32_t crc32;
 
     if (count < SHMSG_LEN) {
         DEBUG_WARN ("Message too short");
         return false;
     }
 
-    memcpy (&crc, &buf[crc_idx], CRC_LENGTH);
+    memcpy (&serverHello_msg, buf, count);
 
-    if (!checkCRC (buf, count - CRC_LENGTH, &crc)) {
+    memcpy (&crc32, &(serverHello_msg.crc), CRC_LENGTH);
+
+    if (!checkCRC (buf, count - CRC_LENGTH, &crc32)) {
         DEBUG_WARN ("Wrong CRC");
         return false;
     }
 
-    Crypto.getDH2 (&buf[pubKey_idx]);
-    node.setEncryptionKey (&buf[pubKey_idx]);
+    Crypto.getDH2 (serverHello_msg.publicKey);
+    node.setEncryptionKey (serverHello_msg.publicKey);
     DEBUG_INFO ("Node key: %s", printHexBuffer (node.getEncriptionKey (), KEY_LENGTH));
 
     return true;
@@ -160,44 +166,46 @@ bool EspNowSensorClass::processCipherFinished (const uint8_t mac[6], const uint8
     *| msgType (1) | IV (16) | nodeId (2) | random (4) | CRC (4) |
     * -----------------------------------------------------------
     */
-    uint8_t msgType_idx = 0;
-    uint8_t iv_idx = 1;
-    uint8_t nodeId_idx = iv_idx + IV_LENGTH;
-    uint8_t nonce_idx = nodeId_idx + sizeof (int16_t);
-    uint8_t crc_idx = nonce_idx + RANDOM_LENGTH;
 
-#define CFMSG_LEN (1 + IV_LENGTH + sizeof(uint16_t) + RANDOM_LENGTH + CRC_LENGTH)
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        uint8_t iv[IV_LENGTH];
+        uint16_t nodeId;
+        uint32_t random;
+        uint32_t crc;
+    } cipherFinished_msg;
+
+#define CFMSG_LEN sizeof(cipherFinished_msg) 
 
     uint16_t nodeId;
-    //uint8_t *iv;
-    uint32_t crc;
+    uint32_t crc32;
 
     if (count < CFMSG_LEN) {
         DEBUG_WARN ("Wrong message length --> Required: %d Received: %d", CFMSG_LEN, count);
         return false;
     }
 
-    //iv = (uint8_t *)(buf + 1);
-    //uint8_t *crypt_buf = (uint8_t *)(buf + 1 + IV_LENGTH);
+    memcpy (&cipherFinished_msg, buf, CFMSG_LEN);
+
     Crypto.decryptBuffer (
-        const_cast<uint8_t *>(&buf[nodeId_idx]),
-        &buf[nodeId_idx],
+        (uint8_t *)&(cipherFinished_msg.nodeId),
+        (uint8_t *)&(cipherFinished_msg.nodeId),
         CFMSG_LEN - IV_LENGTH - 1,
-        &buf[iv_idx],
+        cipherFinished_msg.iv,
         IV_LENGTH,
         node.getEncriptionKey (),
         KEY_LENGTH
     );
-    DEBUG_VERBOSE ("Decripted Cipher Finished message: %s", printHexBuffer (const_cast<uint8_t *>(buf), CFMSG_LEN));
+    DEBUG_VERBOSE ("Decripted Cipher Finished message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
 
-    memcpy (&crc, &buf[crc_idx], CRC_LENGTH);
+    memcpy (&crc32, &(cipherFinished_msg.crc), CRC_LENGTH);
 
-    if (!checkCRC (buf, CFMSG_LEN - 4, &crc)) {
+    if (!checkCRC ((uint8_t *)&cipherFinished_msg, CFMSG_LEN - 4, &crc32)) {
         DEBUG_WARN ("Wrong CRC");
         return false;
     }
 
-    memcpy (&nodeId, &buf[nodeId_idx], sizeof (uint16_t));
+    memcpy (&nodeId, &cipherFinished_msg.nodeId, sizeof (uint16_t));
     node.setNodeId (nodeId);
     DEBUG_VERBOSE ("Node ID: %u", node.getNodeId ());
     return true;
@@ -210,44 +218,40 @@ bool EspNowSensorClass::keyExchangeFinished () {
     * ----------------------------------------------
     */
 
-    uint8_t msgType_idx = 0;
-    uint8_t iv_idx = 1;
-    uint8_t nonce_idx = iv_idx + IV_LENGTH;
-    uint8_t crc_idx = nonce_idx + RANDOM_LENGTH;
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        uint8_t iv[IV_LENGTH];
+        uint32_t random;
+        uint32_t crc;
+    } keyExchangeFinished_msg;
 
-#define KEFMSG_LEN (1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH)
+#define KEFMSG_LEN sizeof(keyExchangeFinished_msg) 
 
-    uint8_t buffer[KEFMSG_LEN];
     uint32_t crc32;
-    uint32_t nonce;
+    uint32_t random;
     uint8_t *iv;
 
-    //memset (buffer, 0, KEFMSG_LEN);
+    keyExchangeFinished_msg.msgType = KEY_EXCHANGE_FINISHED;
 
-    buffer[msgType_idx] = KEY_EXCHANGE_FINISHED;
+    iv = Crypto.random (keyExchangeFinished_msg.iv, IV_LENGTH);
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (keyExchangeFinished_msg.iv, IV_LENGTH));
 
-    iv = Crypto.random (&buffer[iv_idx], IV_LENGTH);
-    DEBUG_VERBOSE ("IV: %s", printHexBuffer (&buffer[iv_idx], IV_LENGTH));
+    random = Crypto.random ();
 
-    nonce = Crypto.random ();
+    memcpy (&(keyExchangeFinished_msg.random), &random, RANDOM_LENGTH);
 
-    memcpy (&buffer[nonce_idx], &nonce, RANDOM_LENGTH);
-
-    crc32 = CRC32::calculate (buffer, KEFMSG_LEN - CRC_LENGTH);
+    crc32 = CRC32::calculate ((uint8_t *)&keyExchangeFinished_msg, KEFMSG_LEN - CRC_LENGTH);
     DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
-    //uint8_t *crcField = (uint8_t*)(buffer + 1 + IV_LENGTH + RANDOM_LENGTH);
-    memcpy (&buffer[crc_idx], &crc32, CRC_LENGTH);
+    memcpy (&(keyExchangeFinished_msg.crc), &crc32, CRC_LENGTH);
 
-    DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer (buffer, KEFMSG_LEN));
+    DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&keyExchangeFinished_msg, KEFMSG_LEN));
 
-    //uint8_t *crypt_buf = buffer + 1 + IV_LENGTH;
+    Crypto.encryptBuffer ((uint8_t *)&(keyExchangeFinished_msg.random), (uint8_t *)&(keyExchangeFinished_msg.random), KEFMSG_LEN - IV_LENGTH - 1, keyExchangeFinished_msg.iv, IV_LENGTH, node.getEncriptionKey (), KEY_LENGTH);
 
-    Crypto.encryptBuffer (&buffer[nonce_idx], &buffer[nonce_idx], KEFMSG_LEN - IV_LENGTH - 1, &buffer[iv_idx], IV_LENGTH, node.getEncriptionKey (), KEY_LENGTH);
-
-    DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer (buffer, KEFMSG_LEN));
+    DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&(keyExchangeFinished_msg), KEFMSG_LEN));
     DEBUG_INFO (" -------> KEY_EXCHANGE_FINISHED");
-    return comm->send (gateway, buffer, KEFMSG_LEN) == 0;
+    return comm->send (gateway, (uint8_t *)&(keyExchangeFinished_msg), KEFMSG_LEN) == 0;
 }
 
 bool EspNowSensorClass::sendData (const uint8_t *data, size_t len) {
@@ -382,7 +386,7 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
 }
 
 void EspNowSensorClass::getStatus (u8 *mac_addr, u8 status) {
-    DEBUG_VERBOSE ("SENDStatus %u", status);
+    DEBUG_VERBOSE ("SENDStatus %s", status==0?"OK":"ERROR");
 }
 
 

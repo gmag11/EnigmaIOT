@@ -36,7 +36,7 @@ void SecureSensorGatewayClass::tx_cb (u8 *mac_addr, u8 status) {
 }
 
 void SecureSensorGatewayClass::getStatus (u8 *mac_addr, u8 status) {
-    DEBUG_VERBOSE ("SENDStatus %u", status);
+    DEBUG_VERBOSE ("SENDStatus %s", status == 0 ? "OK" : "ERROR");
 }
 
 void SecureSensorGatewayClass::handle () {
@@ -206,38 +206,43 @@ bool SecureSensorGatewayClass::processKeyExchangeFinished (const uint8_t mac[6],
     *| msgType (1) | IV (16) | random (4) | CRC (4) |
     * ----------------------------------------------
     */
-    uint8_t msgType_idx = 0;
-    uint8_t iv_idx = 1;
-    uint8_t nonce_idx = iv_idx + IV_LENGTH;
-    uint8_t crc_idx = nonce_idx + RANDOM_LENGTH;
 
-#define KEFMSG_LEN (1 + IV_LENGTH + RANDOM_LENGTH + CRC_LENGTH)
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        uint8_t iv[IV_LENGTH];
+        uint32_t random;
+        uint32_t crc;
+    } keyExchangeFinished_msg;
 
-    uint32_t crc;
+#define KEFMSG_LEN sizeof(keyExchangeFinished_msg)
+
+    uint32_t crc32;
 
     if (count < KEFMSG_LEN) {
         DEBUG_WARN ("Wrong message");
         return false;
     }
 
+    memcpy (&keyExchangeFinished_msg, buf, KEFMSG_LEN);
+
     //iv = (uint8_t *)(buf + 1);
 
     //uint8_t *crypt_buf = (uint8_t *)(buf + 1 + IV_LENGTH);
     Crypto.decryptBuffer (
-        const_cast<uint8_t *>(&buf[nonce_idx]),
-        const_cast<uint8_t *>(&buf[nonce_idx]),
+        (uint8_t *)&(keyExchangeFinished_msg.random),
+        (uint8_t *)&(keyExchangeFinished_msg.random),
         RANDOM_LENGTH + CRC_LENGTH,
-        const_cast<uint8_t *>(&buf[iv_idx]),
+        keyExchangeFinished_msg.iv,
         IV_LENGTH,
         node->getEncriptionKey (),
         KEY_LENGTH
     );
 
-    DEBUG_VERBOSE ("Decripted Key Exchange Finished message: %s", printHexBuffer (buf, KEFMSG_LEN));
+    DEBUG_VERBOSE ("Decripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&keyExchangeFinished_msg, KEFMSG_LEN));
 
-    memcpy (&crc, &buf[crc_idx], CRC_LENGTH);
+    memcpy (&crc32, &(keyExchangeFinished_msg.crc), CRC_LENGTH);
 
-    if (!checkCRC (buf, count - CRC_LENGTH, &crc)) {
+    if (!checkCRC ((uint8_t *)&keyExchangeFinished_msg, KEFMSG_LEN - CRC_LENGTH, &crc32)) {
         DEBUG_WARN ("Wrong CRC");
         return false;
     }
@@ -253,49 +258,57 @@ bool SecureSensorGatewayClass::cipherFinished (Node *node) {
     * -----------------------------------------------------------
     */
 
-    uint8_t msgType_idx = 0;
-    uint8_t iv_idx = 1;
-    uint8_t nodeId_idx = iv_idx + IV_LENGTH;
-    uint8_t nonce_idx = nodeId_idx + sizeof (int16_t);
-    uint8_t crc_idx = nonce_idx + RANDOM_LENGTH;
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        uint8_t iv[IV_LENGTH];
+        uint16_t nodeId;
+        uint32_t random;
+        uint32_t crc;
+    } cipherFinished_msg;
 
-#define CFMSG_LEN (1 + IV_LENGTH + sizeof(uint16_t) + RANDOM_LENGTH + CRC_LENGTH)
-
-    uint8_t buffer[CFMSG_LEN];
+#define CFMSG_LEN sizeof(cipherFinished_msg)
 
     uint32_t crc32;
-    uint32_t nonce;
+    uint32_t random;
 
     //memset (buffer, 0, CFMSG_LEN);
 
-    buffer[msgType_idx] = CYPHER_FINISHED; // Server hello message
+    cipherFinished_msg.msgType = CYPHER_FINISHED; // Server hello message
 
-    CryptModule::random (&buffer[iv_idx], IV_LENGTH);
-    DEBUG_VERBOSE ("IV: %s", printHexBuffer (&buffer[iv_idx], IV_LENGTH));
+    CryptModule::random (cipherFinished_msg.iv, IV_LENGTH);
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (cipherFinished_msg.iv, IV_LENGTH));
 
     uint16_t nodeId = node->getNodeId ();
-    memcpy (&buffer[nodeId_idx], &nodeId, sizeof (uint16_t));
+    memcpy (&(cipherFinished_msg.nodeId), &nodeId, sizeof (uint16_t));
 
-    nonce = Crypto.random ();
+    random = Crypto.random ();
 
-    memcpy (&buffer[nonce_idx], &nonce, RANDOM_LENGTH);
+    memcpy (&(cipherFinished_msg.random), &random, RANDOM_LENGTH);
 
-    crc32 = CRC32::calculate (buffer, CFMSG_LEN - CRC_LENGTH);
+    crc32 = CRC32::calculate ((uint8_t *)&cipherFinished_msg, CFMSG_LEN - CRC_LENGTH);
     DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
     // int is little indian mode on ESP platform
     //uint8_t *crcField = (uint8_t*)(buffer + crc_idx);
-    memcpy (&buffer[crc_idx], (uint8_t *)&crc32, CRC_LENGTH);
+    memcpy (&(cipherFinished_msg.crc), (uint8_t *)&crc32, CRC_LENGTH);
 
-    DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer (buffer, CFMSG_LEN));
+    DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
 
-    Crypto.encryptBuffer (&buffer[nodeId_idx], &buffer[nodeId_idx], CFMSG_LEN - nodeId_idx, &buffer[iv_idx], IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
+    Crypto.encryptBuffer (
+        (uint8_t *)&(cipherFinished_msg.nodeId), 
+        (uint8_t *)&(cipherFinished_msg.nodeId), 
+        2 + RANDOM_LENGTH + CRC_LENGTH,
+        cipherFinished_msg.iv, 
+        IV_LENGTH, 
+        node->getEncriptionKey (), 
+        KEY_LENGTH
+    );
 
-    DEBUG_VERBOSE ("Encripted Cipher Finished message: %s", printHexBuffer (buffer, CFMSG_LEN));
+    DEBUG_VERBOSE ("Encripted Cipher Finished message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
 
     flashTx = true;
     DEBUG_INFO (" -------> CYPHER_FINISHED");
-    return comm->send (node->getMacAddress (), buffer, CFMSG_LEN) == 0;
+    return comm->send (node->getMacAddress (), (uint8_t *)&cipherFinished_msg, CFMSG_LEN) == 0;
 }
 
 bool  SecureSensorGatewayClass::invalidateKey (Node *node, uint8_t reason) {
@@ -305,25 +318,24 @@ bool  SecureSensorGatewayClass::invalidateKey (Node *node, uint8_t reason) {
     * --------------------------
     */
 
-    uint8_t msgType_idx = 0;
-    uint8_t reason_idx = 1;
-    //uint8_t crc_idx = 2;
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        uint8_t reason;
+        //uint32_t crc;
+    } invalidateKey_msg;
 
-#define IKMSG_LEN 2
+#define IKMSG_LEN sizeof(invalidateKey_msg)
 
-    uint8_t buffer[IKMSG_LEN];
-    //uint32_t crc;
+    invalidateKey_msg.msgType = INVALIDATE_KEY; // Server hello message
 
-    buffer[msgType_idx] = INVALIDATE_KEY; // Server hello message
+    invalidateKey_msg.reason = reason;
 
-    buffer[reason_idx] = reason;
-
-    //crc = CRC32::calculate (buffer, 2);
+    //uint32_t crc = CRC32::calculate (buffer, 2);
     //DEBUG_VERBOSE ("CRC32 = 0x%08X", crc);
-    //memcpy (&buffer[crc_idx], (uint8_t *)&crc, CRC_LENGTH);
-    DEBUG_VERBOSE ("Invalidate Key message: %s", printHexBuffer (buffer, IKMSG_LEN));
+    //memcpy (&invalidateKey_msg.crc, (uint8_t *)&crc, CRC_LENGTH);
+    DEBUG_VERBOSE ("Invalidate Key message: %s", printHexBuffer ((uint8_t *)&invalidateKey_msg, IKMSG_LEN));
     DEBUG_INFO (" -------> INVALIDATE_KEY");
-    return comm->send (node->getMacAddress (), buffer, IKMSG_LEN) == 0;
+    return comm->send (node->getMacAddress (), (uint8_t *)&invalidateKey_msg, IKMSG_LEN) == 0;
 }
 
 bool SecureSensorGatewayClass::processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
@@ -332,12 +344,15 @@ bool SecureSensorGatewayClass::processClientHello (const uint8_t mac[6], const u
     *| msgType (1) | random (16) | DH Kmaster (32) | CRC (4) |
     * -------------------------------------------------------
     */
-    uint8_t msgType_idx = 0;
-    uint8_t iv_idx = 1;
-    uint8_t pubKey_idx = iv_idx + IV_LENGTH;
-    uint8_t crc_idx = pubKey_idx + KEY_LENGTH;
 
-#define CHMSG_LEN (1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH)
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        uint8_t iv[IV_LENGTH];
+        uint8_t publicKey[KEY_LENGTH];
+        uint32_t crc;
+    } clientHello_msg;
+
+#define CHMSG_LEN sizeof(clientHello_msg)
 
     uint32_t crc32;
 
@@ -346,14 +361,16 @@ bool SecureSensorGatewayClass::processClientHello (const uint8_t mac[6], const u
         return false;
     }
 
-    memcpy (&crc32, &buf[crc_idx], sizeof (uint32_t));
+    memcpy (&clientHello_msg, buf, count);
 
-    if (!checkCRC (buf, count - CRC_LENGTH, &crc32)) {
+    memcpy (&crc32, &(clientHello_msg.crc), sizeof (uint32_t));
+
+    if (!checkCRC ((uint8_t*)&clientHello_msg, CHMSG_LEN - CRC_LENGTH, &crc32)) {
         DEBUG_WARN ("Wrong CRC");
         return false;
     }
 
-    node->setEncryptionKey (&buf[pubKey_idx]);
+    node->setEncryptionKey (clientHello_msg.publicKey);
 
     Crypto.getDH1 ();
     memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
@@ -379,14 +396,15 @@ bool SecureSensorGatewayClass::serverHello (const uint8_t *key, Node *node) {
     * ------------------------------------------------------
     */
 
-    uint8_t msgType_idx = 0;
-    uint8_t iv_idx = 1;
-    uint8_t pubKey_idx = iv_idx + IV_LENGTH;
-    uint8_t crc_idx = pubKey_idx + KEY_LENGTH;
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        uint8_t iv[IV_LENGTH];
+        uint8_t publicKey[KEY_LENGTH];
+        uint32_t crc;
+    } serverHello_msg;
 
-#define SHMSG_LEN (1 + IV_LENGTH + KEY_LENGTH + CRC_LENGTH)
+#define SHMSG_LEN sizeof(serverHello_msg)
 
-    uint8_t buffer[SHMSG_LEN];
     uint32_t crc32;
 
     if (!key) {
@@ -394,25 +412,22 @@ bool SecureSensorGatewayClass::serverHello (const uint8_t *key, Node *node) {
         return false;
     }
 
-    buffer[msgType_idx] = SERVER_HELLO; // Server hello message
+    serverHello_msg.msgType = SERVER_HELLO; // Server hello message
 
-    CryptModule::random (&buffer[iv_idx], IV_LENGTH);
+    CryptModule::random (serverHello_msg.iv, IV_LENGTH);
 
-    DEBUG_VERBOSE ("IV: %s", printHexBuffer (&buffer[iv_idx], IV_LENGTH));
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (serverHello_msg.iv, IV_LENGTH));
 
     for (int i = 0; i < KEY_LENGTH; i++) {
-        buffer[pubKey_idx + i] = key[i];
+        serverHello_msg.publicKey[i] = key[i];
     }
 
-    crc32 = CRC32::calculate (buffer, SHMSG_LEN - CRC_LENGTH);
+    crc32 = CRC32::calculate ((uint8_t *)&serverHello_msg, SHMSG_LEN - CRC_LENGTH);
     DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
-    // int is little indian mode on ESP platform
-    //uint8_t *crcField = buffer + 1 + IV_LENGTH + KEY_LENGTH;
+    memcpy (&(serverHello_msg.crc), &crc32, CRC_LENGTH);
 
-    memcpy (&buffer[crc_idx], &crc32, CRC_LENGTH);
-
-    DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer (buffer, SHMSG_LEN));
+    DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t *)&serverHello_msg, SHMSG_LEN));
     flashTx = true;
 
 #ifdef DEBUG_ESP_PORT
@@ -420,7 +435,7 @@ bool SecureSensorGatewayClass::serverHello (const uint8_t *key, Node *node) {
     mac2str (node->getMacAddress (), mac);
 #endif
     DEBUG_INFO (" -------> SERVER_HELLO");
-    if (comm->send (node->getMacAddress (), buffer, SHMSG_LEN) == 0) {
+    if (comm->send (node->getMacAddress (), (uint8_t *)&serverHello_msg, SHMSG_LEN) == 0) {
         DEBUG_INFO ("Server Hello message sent to %s", mac);
         return true;
     } else {
