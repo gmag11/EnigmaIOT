@@ -26,7 +26,7 @@ struct node_instance {
     uint8_t mac[6];
     uint16_t nodeId;
     uint8_t key[32];
-    unsigned int lastMessageCounter;
+    uint16_t lastMessageCounter;
     time_t keyValidFrom;
     status_t status = UNREGISTERED;
     bool keyValid = false;
@@ -55,10 +55,10 @@ public:
     void setKeyValidFrom (time_t keyValidFrom) {
         this->keyValidFrom = keyValidFrom;
     }
-    unsigned int getLastMessageCounter(){
+    uint16_t getLastMessageCounter(){
         return lastMessageCounter;
     }
-    void setLastMessageCounter (unsigned int counter) {
+    void setLastMessageCounter (uint16_t counter) {
         lastMessageCounter = counter;
     }
 
@@ -88,7 +88,7 @@ protected:
     uint8_t mac[6];
     uint16_t nodeId;
     uint8_t key[KEYLENGTH];
-    unsigned int lastMessageCounter;
+    uint16_t lastMessageCounter;
     time_t keyValidFrom;
     bool keyValid = false;
     status_t status = UNREGISTERED;

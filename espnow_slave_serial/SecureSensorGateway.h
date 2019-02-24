@@ -38,9 +38,9 @@ enum invalidateReason_t {
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t* , const uint8_t* , uint8_t)> onDataRx_t;
+typedef std::function<void (const uint8_t* , const uint8_t* , uint8_t, size_t)> onDataRx_t;
 #else
-typedef void (*onDataRx_t)(const uint8_t*, const uint8_t*, uint8_t);
+typedef void (*onDataRx_t)(const uint8_t*, const uint8_t*, uint8_t, size_t);
 #endif
 
 class SecureSensorGatewayClass
@@ -57,6 +57,7 @@ class SecureSensorGatewayClass
      int txLedOnTime;
      int rxLedOnTime;
      onDataRx_t notifyData;
+     bool useCounter = false;
 
      
      bool serverHello (const uint8_t *key, Node *node);
@@ -72,7 +73,7 @@ class SecureSensorGatewayClass
      void getStatus (u8 *mac_addr, u8 status);
 
  public:
-     void begin (Comms_halClass *comm);
+     void begin (Comms_halClass *comm, bool useDataCounter = false);
      void handle ();
      void setTxLed (uint8_t led, time_t onTime = 100);
      void setRxLed (uint8_t led, time_t onTime = 100);

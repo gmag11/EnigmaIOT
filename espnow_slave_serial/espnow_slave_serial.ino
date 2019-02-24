@@ -9,7 +9,7 @@
 #define BLUE_LED 2
 #define RED_LED 16
 
-void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length) {
+void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, size_t lostMessages) {
     char macstr[18];
     mac2str (mac, macstr);
     Serial.println ();
@@ -18,6 +18,9 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length) {
         Serial.print ((char)buffer[i]);
     }
     Serial.println ();
+    if (lostMessages > 0) {
+        Serial.printf ("%u lost messages\n", lostMessages);
+    }
     Serial.println ();
 }
 
@@ -27,7 +30,7 @@ void setup () {
     initWiFi ();
     SecureSensorGateway.setRxLed (BLUE_LED);
     SecureSensorGateway.setTxLed (RED_LED);
-    SecureSensorGateway.begin (&Espnow_hal);
+    SecureSensorGateway.begin (&Espnow_hal,true);
     SecureSensorGateway.onDataRx (processRxData);
 }
 

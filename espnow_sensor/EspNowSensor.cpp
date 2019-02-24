@@ -9,7 +9,7 @@ void EspNowSensorClass::setLed (uint8_t led, time_t onTime) {
     ledOnTime = onTime;
 }
 
-void EspNowSensorClass::begin (Comms_halClass *comm) {
+void EspNowSensorClass::begin (Comms_halClass *comm, bool useCounter) {
     pinMode (led, OUTPUT);
     digitalWrite (led, HIGH);
 
@@ -18,14 +18,9 @@ void EspNowSensorClass::begin (Comms_halClass *comm) {
     comm->begin (gateway,channel);
     comm->onDataRcvd (rx_cb);
     comm->onDataSent (tx_cb);
+    this->useCounter = useCounter;
 
-    //Crypto.getDH1 ();
-    //node.setStatus (INIT);
-    //uint8_t macAddress[6];
-    //if (wifi_get_macaddr (0, macAddress)) {
-    //    node.setMacAddress (macAddress);
-    //}
-    clientHello (/*Crypto.getPubDHKey ()*/);
+    clientHello ();
 
 }
 
@@ -265,21 +260,21 @@ bool EspNowSensorClass::sendData (const uint8_t *data, size_t len) {
 bool EspNowSensorClass::dataMessage (const uint8_t *data, size_t len) {
     /*
     * --------------------------------------------------------------------------------------
-    *| msgType (1) | IV (16) | length (2) | NodeId (2) | Random (4) | Data (....) | CRC (4) |
+    *| msgType (1) | IV (16) | length (2) | NodeId (2) | Counter (2) | Data (....) | CRC (4) |
     * --------------------------------------------------------------------------------------
     */
 
     uint8_t buffer[200];
     uint32_t crc32;
-    uint32_t nonce;
+    uint32_t counter;
     uint16_t nodeId = node.getNodeId ();
 
     uint8_t *msgType_p = buffer;
     uint8_t *iv_p = buffer + 1;
     uint8_t *length_p = buffer + 1 + IV_LENGTH;
     uint8_t *nodeId_p = buffer + 1 + IV_LENGTH + sizeof (int16_t);
-    uint8_t *nonce_p = buffer + 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t);
-    uint8_t *data_p = buffer + 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + RANDOM_LENGTH;
+    uint8_t *counter_p = buffer + 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t);
+    uint8_t *data_p = buffer + 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + sizeof (int16_t);
 
     if (!data) {
         return false;
@@ -293,13 +288,19 @@ bool EspNowSensorClass::dataMessage (const uint8_t *data, size_t len) {
 
     memcpy (nodeId_p, &nodeId, sizeof (uint16_t));
 
-    nonce = Crypto.random ();
+    if (useCounter) {
+        counter = node.getLastMessageCounter() + 1;
+        node.setLastMessageCounter (counter);
+    }
+    else {
+        counter = Crypto.random ();
+    }
 
-    memcpy (nonce_p, (uint8_t *)&nonce, RANDOM_LENGTH);
+    memcpy (counter_p, &counter, sizeof(uint16_t));
 
     memcpy (data_p, data, len);
 
-    uint16_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + RANDOM_LENGTH + len;
+    uint16_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + sizeof (uint16_t) + len;
 
     memcpy (length_p, &packet_length, sizeof (uint16_t));
 
@@ -366,6 +367,7 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
                 // mark node as registered
                 node.setKeyValid (true);
                 node.setKeyValidFrom (millis ());
+                node.setLastMessageCounter (0);
                 node.setStatus (REGISTERED);
 #if DEBUG_LEVEL >= INFO
                 node.printToSerial (&DEBUG_ESP_PORT);

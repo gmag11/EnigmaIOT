@@ -56,6 +56,7 @@ protected:
     uint8_t channel = 3;
     Comms_halClass *comm;
     onDataRx_t notifyData;
+    bool useCounter = false;
 
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
     bool clientHello (/*const uint8_t *key*/);
@@ -71,7 +72,7 @@ protected:
 
 
 public:
-    void begin (Comms_halClass *comm);
+    void begin (Comms_halClass *comm, bool useCounter = false);
     void handle ();
     void setLed (uint8_t led, time_t onTime = 100);
     bool sendData (const uint8_t *data, size_t len);

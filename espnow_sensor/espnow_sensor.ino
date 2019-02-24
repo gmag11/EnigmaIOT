@@ -6,7 +6,7 @@ void setup () {
     Serial.begin (115200); Serial.println (); Serial.println ();
 
     EspNowSensor.setLed (BLUE_LED);
-    EspNowSensor.begin (&Espnow_hal);
+    EspNowSensor.begin (&Espnow_hal,true);
 }
 
 void loop () {
