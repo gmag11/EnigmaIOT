@@ -1,6 +1,5 @@
 // 
 // 
-// 
 
 #include "EspNowSensor.h"
 
@@ -26,6 +25,7 @@ void EspNowSensorClass::begin (Comms_halClass *comm, bool useCounter) {
 
 void EspNowSensorClass::handle () {
 #define LED_PERIOD 100
+#define RECONNECTION_PERIOD 10000
     static unsigned long blueOntime;
 
     if (led >= 0) {
@@ -37,6 +37,13 @@ void EspNowSensorClass::handle () {
 
         if (!digitalRead (led) && millis () - blueOntime > ledOnTime) {
             digitalWrite (led, HIGH);
+        }
+    }
+
+    static time_t lastRegistration;
+    if (!node.isRegistered ()) {
+        if (millis () - lastRegistration > RECONNECTION_PERIOD) {
+            clientHello ();
         }
     }
 
