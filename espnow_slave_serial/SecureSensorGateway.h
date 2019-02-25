@@ -17,7 +17,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#define MAX_KEY_VALIDITY 60000
+#define MAX_KEY_VALIDITY 600000
 
 enum messageType_t {
     SENSOR_DATA = 0x01,

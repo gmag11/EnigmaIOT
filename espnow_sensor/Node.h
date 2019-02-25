@@ -28,6 +28,7 @@ struct node_instance {
     uint8_t key[32];
     uint16_t lastMessageCounter;
     time_t keyValidFrom;
+    time_t lastMessageTime;
     status_t status = UNREGISTERED;
     bool keyValid = false;
 };
@@ -56,6 +57,12 @@ public:
     }
     void setKeyValidFrom (time_t keyValidFrom) {
         this->keyValidFrom = keyValidFrom;
+    }
+    time_t getLastMessageTime () {
+        return lastMessageTime;
+    }
+    void setLastMessageTime () {
+        lastMessageTime = millis ();
     }
     uint16_t getLastMessageCounter () {
         return lastMessageCounter;
@@ -95,6 +102,7 @@ protected:
     time_t keyValidFrom;
     bool keyValid = false;
     status_t status = UNREGISTERED;
+    time_t lastMessageTime;
 
     void setMacAddress (const uint8_t *macAddress);
 

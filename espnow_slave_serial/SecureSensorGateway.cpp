@@ -63,6 +63,16 @@ void SecureSensorGatewayClass::handle () {
         digitalWrite (txled, HIGH);
     }
 
+#define MAX_INACTIVITY 86400000U
+    // Clean up dead nodes
+    for (int i = 0; i < NUM_NODES; i++) {
+        Node *node = nodelist.getNodeFromID (i);
+        if (node->isRegistered () && millis () - node->getLastMessageTime () > MAX_INACTIVITY) {
+            // TODO. Trigger node expired event
+            node->reset ();
+        }
+    }
+
 }
 
 void SecureSensorGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count) {
@@ -84,10 +94,8 @@ void SecureSensorGatewayClass::manageMessage (const uint8_t* mac, const uint8_t*
 
     switch (buf[0]) {
     case CLIENT_HELLO:
-        // TODO: Do no accept new Client Hello if registration is on process on any node
-        // TODO: Check message length
+        // TODO: Do no accept new Client Hello if registration is on process on any node??
         DEBUG_INFO (" <------- CLIENT HELLO");
-        //espNowError = esp_now_add_peer (const_cast<uint8_t *>(mac), ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
         if (espNowError == 0) {
             if (processClientHello (mac, buf, count, node)) {
                 node->setStatus (WAIT_FOR_KEY_EXCH_FINISHED);
@@ -106,20 +114,18 @@ void SecureSensorGatewayClass::manageMessage (const uint8_t* mac, const uint8_t*
         } else {
             DEBUG_ERROR ("Error adding peer %d", espNowError);
         }
-        //esp_now_del_peer (const_cast<uint8_t *>(mac));
         break;
     case KEY_EXCHANGE_FINISHED:
-        // TODO: Check message length
-        // TODO: Check that ongoing registration belongs to this mac address
         if (node->getStatus () == WAIT_FOR_KEY_EXCH_FINISHED) {
             DEBUG_INFO (" <------- KEY EXCHANGE FINISHED");
-            //espNowError = esp_now_add_peer (const_cast<uint8_t *>(mac), ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
             if (espNowError == 0) {
                 if (processKeyExchangeFinished (mac, buf, count, node)) {
                     if (cipherFinished (node)) {
                         node->setStatus (REGISTERED);
                         node->setKeyValidFrom (millis ());
                         node->setLastMessageCounter (0);
+                        node->setLastMessageTime ();
+                        // TODO. Trigger new node event
 #if DEBUG_LEVEL >= INFO
                         nodelist.printToSerial (&DEBUG_ESP_PORT);
 #endif
@@ -131,7 +137,6 @@ void SecureSensorGatewayClass::manageMessage (const uint8_t* mac, const uint8_t*
                     node->reset ();
                 }
             }
-            //esp_now_del_peer (const_cast<uint8_t *>(mac));
         } else {
             DEBUG_INFO (" <------- unsolicited KEY EXCHANGE FINISHED");
         }
@@ -139,8 +144,8 @@ void SecureSensorGatewayClass::manageMessage (const uint8_t* mac, const uint8_t*
     case SENSOR_DATA:
         DEBUG_INFO (" <------- DATA");
         if (node->getStatus () == REGISTERED) {
-            //espNowError = esp_now_add_peer (mac, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
             if (processDataMessage (mac, buf, count, node)) {
+                node->setLastMessageTime ();
                 DEBUG_INFO ("Data OK");
                 DEBUG_VERBOSE ("Key valid from %u ms", millis () - node->getKeyValidFrom ());
                 if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
@@ -238,9 +243,6 @@ bool SecureSensorGatewayClass::processKeyExchangeFinished (const uint8_t mac[6],
 
     memcpy (&keyExchangeFinished_msg, buf, KEFMSG_LEN);
 
-    //iv = (uint8_t *)(buf + 1);
-
-    //uint8_t *crypt_buf = (uint8_t *)(buf + 1 + IV_LENGTH);
     Crypto.decryptBuffer (
         (uint8_t *)&(keyExchangeFinished_msg.random),
         (uint8_t *)&(keyExchangeFinished_msg.random),
@@ -284,8 +286,6 @@ bool SecureSensorGatewayClass::cipherFinished (Node *node) {
     uint32_t crc32;
     uint32_t random;
 
-    //memset (buffer, 0, CFMSG_LEN);
-
     cipherFinished_msg.msgType = CYPHER_FINISHED; // Server hello message
 
     CryptModule::random (cipherFinished_msg.iv, IV_LENGTH);
@@ -301,8 +301,6 @@ bool SecureSensorGatewayClass::cipherFinished (Node *node) {
     crc32 = CRC32::calculate ((uint8_t *)&cipherFinished_msg, CFMSG_LEN - CRC_LENGTH);
     DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
-    // int is little indian mode on ESP platform
-    //uint8_t *crcField = (uint8_t*)(buffer + crc_idx);
     memcpy (&(cipherFinished_msg.crc), (uint8_t *)&crc32, CRC_LENGTH);
 
     DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
