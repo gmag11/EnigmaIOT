@@ -43,6 +43,7 @@ void EspNowSensorClass::handle () {
     static time_t lastRegistration;
     if (!node.isRegistered ()) {
         if (millis () - lastRegistration > RECONNECTION_PERIOD) {
+            node.reset ();
             clientHello ();
         }
     }
