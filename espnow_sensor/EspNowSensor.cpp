@@ -390,7 +390,8 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
     case INVALIDATE_KEY:
         DEBUG_INFO (" <------- INVALIDATE KEY");
         processInvalidateKey (mac, buf, count);
-        clientHello ();
+        node.reset ();
+        //clientHello ();
     }
 }
 
