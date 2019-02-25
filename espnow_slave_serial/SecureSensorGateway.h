@@ -38,9 +38,13 @@ enum invalidateReason_t {
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t* , const uint8_t* , uint8_t, size_t)> onDataRx_t;
+typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, uint16_t lostMessages)> onDataRx_t;
+typedef std::function<void (uint8_t* mac)> onNewNode_t;
+typedef std::function<void (uint8_t* mac, invalidateReason_t reason)> onNodeDisconnected_t;
 #else
 typedef void (*onDataRx_t)(const uint8_t*, const uint8_t*, uint8_t, size_t);
+typedef void (*onNewNode_t)(const uint8_t*);
+typedef void (*onNodeDisconnected_t)(const uint8_t*, invalidateReason_t);
 #endif
 
 class SecureSensorGatewayClass
@@ -57,13 +61,15 @@ class SecureSensorGatewayClass
      int txLedOnTime;
      int rxLedOnTime;
      onDataRx_t notifyData;
+     onNewNode_t notifyNewNode;
+     onNodeDisconnected_t notifyNodeDisconnection;
      bool useCounter = false;
 
      
      bool serverHello (const uint8_t *key, Node *node);
      bool checkCRC (const uint8_t *buf, size_t count, const uint32_t *crc);
      bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
-     bool invalidateKey (Node *node, uint8_t reason);
+     bool invalidateKey (Node *node, invalidateReason_t reason);
      bool cipherFinished (Node *node);
      bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
      bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
@@ -79,6 +85,12 @@ class SecureSensorGatewayClass
      void setRxLed (uint8_t led, time_t onTime = 100);
      void onDataRx (onDataRx_t handler) {
          notifyData = handler;
+     }
+     void onNewNode (onNewNode_t handler) {
+         notifyNewNode = handler;
+     }
+     void onNodeDisconnected (onNodeDisconnected_t handler) {
+         notifyNodeDisconnection = handler;
      }
 
 

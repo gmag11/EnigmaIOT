@@ -125,6 +125,9 @@ void SecureSensorGatewayClass::manageMessage (const uint8_t* mac, const uint8_t*
                         node->setKeyValidFrom (millis ());
                         node->setLastMessageCounter (0);
                         node->setLastMessageTime ();
+                        if (notifyNewNode) {
+                            notifyNewNode (node->getMacAddress ());
+                        }
                         // TODO. Trigger new node event
 #if DEBUG_LEVEL >= INFO
                         nodelist.printToSerial (&DEBUG_ESP_PORT);
@@ -322,7 +325,7 @@ bool SecureSensorGatewayClass::cipherFinished (Node *node) {
     return comm->send (node->getMacAddress (), (uint8_t *)&cipherFinished_msg, CFMSG_LEN) == 0;
 }
 
-bool  SecureSensorGatewayClass::invalidateKey (Node *node, uint8_t reason) {
+bool  SecureSensorGatewayClass::invalidateKey (Node *node, invalidateReason_t reason) {
     /*
     * --------------------------
     *| msgType (1) | reason (1) |
@@ -346,6 +349,10 @@ bool  SecureSensorGatewayClass::invalidateKey (Node *node, uint8_t reason) {
     //memcpy (&invalidateKey_msg.crc, (uint8_t *)&crc, CRC_LENGTH);
     DEBUG_VERBOSE ("Invalidate Key message: %s", printHexBuffer ((uint8_t *)&invalidateKey_msg, IKMSG_LEN));
     DEBUG_INFO (" -------> INVALIDATE_KEY");
+    if (notifyNodeDisconnection) {
+        uint8_t *mac = node->getMacAddress ();
+        notifyNodeDisconnection (mac, reason);
+    }
     return comm->send (node->getMacAddress (), (uint8_t *)&invalidateKey_msg, IKMSG_LEN) == 0;
 }
 
