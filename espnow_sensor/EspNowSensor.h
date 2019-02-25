@@ -39,15 +39,19 @@ typedef messageType messageType_t;
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t*, const uint8_t*, uint8_t)> onDataRx_t;
+typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len)> onDataRx_t;
+typedef std::function<void ()> onConnected_t;
+typedef std::function<void ()> onDisconnected_t;
 #else
 typedef void (*onDataRx_t)(const uint8_t*, const uint8_t*, uint8_t);
+typedef void (*onConnected_t)();
+typedef void (*onDisconnected_t)();
 #endif
 
 class EspNowSensorClass
 {
 protected:
-    uint8_t gateway[6] = { 0x5E, 0xCF, 0x7F, 0x80, 0x34, 0x75 };
+    uint8_t gateway[6];
     Node node;
     bool flashBlue = false;
     int flashLed = 2;
@@ -56,6 +60,8 @@ protected:
     uint8_t channel = 3;
     Comms_halClass *comm;
     onDataRx_t notifyData;
+    onConnected_t notifyConnection;
+    onDisconnected_t notifyDisconnection;
     bool useCounter = false;
 
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
@@ -72,12 +78,18 @@ protected:
 
 
 public:
-    void begin (Comms_halClass *comm, bool useCounter = false);
+    void begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter = false);
     void handle ();
     void setLed (uint8_t led, time_t onTime = 100);
     bool sendData (const uint8_t *data, size_t len);
     void onDataRx (onDataRx_t handler) {
         notifyData = handler;
+    }
+    void onConnected (onConnected_t handler) {
+        notifyConnection = handler;
+    }
+    void onDisconnected (onDisconnected_t handler) {
+        notifyDisconnection = handler;
     }
 };
 

@@ -8,10 +8,11 @@ void EspNowSensorClass::setLed (uint8_t led, time_t onTime) {
     ledOnTime = onTime;
 }
 
-void EspNowSensorClass::begin (Comms_halClass *comm, bool useCounter) {
+void EspNowSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter) {
     pinMode (led, OUTPUT);
     digitalWrite (led, HIGH);
 
+    memcpy (this->gateway, gateway, comm->getAddressLength ());
     initWiFi ();
     this->comm = comm;
     comm->begin (gateway,channel);
@@ -43,6 +44,7 @@ void EspNowSensorClass::handle () {
     static time_t lastRegistration;
     if (!node.isRegistered ()) {
         if (millis () - lastRegistration > RECONNECTION_PERIOD) {
+            lastRegistration = millis ();
             node.reset ();
             clientHello ();
         }
@@ -261,8 +263,8 @@ bool EspNowSensorClass::sendData (const uint8_t *data, size_t len) {
     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
         DEBUG_INFO ("Data sent: %s", printHexBuffer (data, len));
         dataMessage ((uint8_t *)data, len);
+        flashBlue = true;
     }
-    flashBlue = true;
 }
 
 bool EspNowSensorClass::dataMessage (const uint8_t *data, size_t len) {
@@ -380,6 +382,9 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
 #if DEBUG_LEVEL >= INFO
                 node.printToSerial (&DEBUG_ESP_PORT);
 #endif
+                if (notifyConnection) {
+                    notifyConnection ();
+                }
                 // TODO: Store node data on EEPROM, SPIFFS or RTCMEM
             } else {
                 node.reset ();
@@ -392,7 +397,10 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
         DEBUG_INFO (" <------- INVALIDATE KEY");
         processInvalidateKey (mac, buf, count);
         node.reset ();
-        //clientHello ();
+        if (notifyDisconnection) {
+            notifyDisconnection ();
+        }
+        clientHello ();
     }
 }
 
