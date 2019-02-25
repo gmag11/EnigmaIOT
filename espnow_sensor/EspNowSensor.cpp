@@ -400,7 +400,7 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
         if (notifyDisconnection) {
             notifyDisconnection ();
         }
-        clientHello ();
+        //clientHello ();
     }
 }
 
