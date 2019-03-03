@@ -18,18 +18,17 @@ void setup () {
     EspNowSensor.onConnected (connectEventHandler);
     EspNowSensor.onDisconnected (disconnectEventHandler);
     EspNowSensor.begin (&Espnow_hal, gateway);
+
+    char *message = "Hello World!!!";
+
+    Serial.printf ("Trying to send: %s\n", message);
+    EspNowSensor.sendData ((uint8_t *)message, strlen (message));
+
+    EspNowSensor.sleep (5000000);
 }
 
 void loop () {
 
-    static time_t lastMessage;
-    char *message = "Hello World!!!";
-
     EspNowSensor.handle ();
 
-    if (millis () - lastMessage > 5000) {
-        lastMessage = millis ();
-        Serial.printf ("Trying to send: %s\n",message);
-        EspNowSensor.sendData ((uint8_t *)message, strlen (message));
-    }
 }

@@ -58,6 +58,11 @@ void EspNowSensorClass::handle () {
         }
     }
 
+    if (sleepRequested && millis () - node.getLastMessageTime () > 1000 && node.isRegistered()) {
+        ESP.deepSleep (sleepTime, RF_NO_CAL);
+    }
+
+
     static time_t lastRegistration;
     if (!node.isRegistered ()) {
         if (millis () - lastRegistration > RECONNECTION_PERIOD) {
@@ -282,6 +287,12 @@ bool EspNowSensorClass::sendData (const uint8_t *data, size_t len) {
         dataMessage ((uint8_t *)data, len);
         flashBlue = true;
     }
+}
+
+void EspNowSensorClass::sleep (uint64_t time)
+{
+    sleepTime = time;
+    sleepRequested = true;
 }
 
 bool EspNowSensorClass::dataMessage (const uint8_t *data, size_t len) {

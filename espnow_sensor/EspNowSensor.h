@@ -71,6 +71,8 @@ protected:
     onDisconnected_t notifyDisconnection;
     bool useCounter = true;
     rtcmem_data_t rtcmem_data;
+    bool sleepRequested = false;
+    uint64_t sleepTime;
 
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
     bool clientHello (/*const uint8_t *key*/);
@@ -99,6 +101,7 @@ public:
     void onDisconnected (onDisconnected_t handler) {
         notifyDisconnection = handler;
     }
+    void sleep (uint64_t time);
 };
 
 extern EspNowSensorClass EspNowSensor;
