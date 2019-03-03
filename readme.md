@@ -1,6 +1,6 @@
 # EnigmaIoT
 
-![EnigmaIoT Logo](logo/logo text under.svg)
+![EnigmaIoT Logo](logo/logo%20text%20under.svg)
 
 ## Introduction
 
