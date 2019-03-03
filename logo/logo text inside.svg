@@ -15,7 +15,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="EnigmaIOT2b.svg">
+   sodipodi:docname="logo text inside.svg">
   <defs
      id="defs2">
     <inkscape:path-effect
@@ -100,7 +100,7 @@
      inkscape:cx="385.78899"
      inkscape:cy="900.28358"
      inkscape:document-units="mm"
-     inkscape:current-layer="g1548"
+     inkscape:current-layer="layer1"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
@@ -142,7 +142,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
