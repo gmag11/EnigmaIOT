@@ -1,7 +1,7 @@
 // 
 // 
 
-#include "EspNowSensor.h"
+#include "EnigmaIOTSensor.h"
 
 void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
     this->led = led;
