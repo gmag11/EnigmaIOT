@@ -17,7 +17,7 @@ void setup () {
     EspNowSensor.setLed (BLUE_LED);
     EspNowSensor.onConnected (connectEventHandler);
     EspNowSensor.onDisconnected (disconnectEventHandler);
-    EspNowSensor.begin (&Espnow_hal, gateway, true);
+    EspNowSensor.begin (&Espnow_hal, gateway);
 }
 
 void loop () {

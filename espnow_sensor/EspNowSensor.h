@@ -69,7 +69,7 @@ protected:
     onDataRx_t notifyData;
     onConnected_t notifyConnection;
     onDisconnected_t notifyDisconnection;
-    bool useCounter = false;
+    bool useCounter = true;
     rtcmem_data_t rtcmem_data;
 
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
@@ -86,7 +86,7 @@ protected:
 
 
 public:
-    void begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter = false);
+    void begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter = true);
     void handle ();
     void setLed (uint8_t led, time_t onTime = 100);
     bool sendData (const uint8_t *data, size_t len);

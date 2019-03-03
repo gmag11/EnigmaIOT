@@ -44,7 +44,7 @@ void setup () {
     SecureSensorGateway.setTxLed (RED_LED);
     SecureSensorGateway.onNewNode (newNodeConnected);
     SecureSensorGateway.onNodeDisconnected (nodeDisconnected);
-    SecureSensorGateway.begin (&Espnow_hal,true);
+    SecureSensorGateway.begin (&Espnow_hal);
     SecureSensorGateway.onDataRx (processRxData);
 }
 

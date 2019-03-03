@@ -63,7 +63,7 @@ class SecureSensorGatewayClass
      onDataRx_t notifyData;
      onNewNode_t notifyNewNode;
      onNodeDisconnected_t notifyNodeDisconnection;
-     bool useCounter = false;
+     bool useCounter = true;
 
      
      bool serverHello (const uint8_t *key, Node *node);
@@ -79,7 +79,7 @@ class SecureSensorGatewayClass
      void getStatus (u8 *mac_addr, u8 status);
 
  public:
-     void begin (Comms_halClass *comm, bool useDataCounter = false);
+     void begin (Comms_halClass *comm, bool useDataCounter = true);
      void handle ();
      void setTxLed (uint8_t led, time_t onTime = 100);
      void setRxLed (uint8_t led, time_t onTime = 100);
