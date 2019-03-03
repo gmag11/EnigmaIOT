@@ -1,10 +1,12 @@
-# WhisperSensor
+# EnigmaIoT
+
+![EnigmaIoT Logo](logo/logo text under.svg)
 
 ## Introduction
 
-**WhisperSensor** is an open source solution for wireless multi sensor systems. It has two main components, **node** and **gateway**.
+**EnigmaIoT** is an open source solution for wireless multi sensor systems. It has two main components, multiple **nodes** and one **gateway**.
 
-A number of nodes with one or more sensors each one communicate in a **secure** way to a single gateway in a star network using Whisper protocol.
+A number of nodes with one or more sensors each one communicate in a **secure** way to a central gateway in a star network using EnigmaIoT protocol.
 
 This protocol has been designed with security on mind. All sensor data is encripted with a random key that changes periodically. Key is unique for each node and dinamically calculated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.
 
@@ -17,20 +19,21 @@ But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So 
 ## Features
 
 - Encripted communication
-- Dynamic shared key
-- Number of nodes is only limited by memory on gateway (56 bytes per node).
+- Dynamic key, shared between one node and gateway. Keys are independent for each node
+- Number of nodes is only limited by memory on gateway (56 bytes per node)
 - Key is never on air so it is not interceptable
-- Avoid repeatability attack having  a new random initialization vector on every message
-- Automatic node attachment
-- Avoid rogue node, rogue gateway and man-in-the-middle attack. Not yet done.
-- Plugabble phisical layer communication. Right now only ESP-NOW protocol is developed
-- Using ESP-NOW only esp8266 is needed.
+- Key expiration and renewal is managed transparently
+- Avoid repeatability attack having a new random initialization vector on every message
+- Automatic and transparent node attachment
+- Avoid rogue node, rogue gateway and man-in-the-middle attack. **TO-DO**
+- Plugabble phisical layer communication. Right now only ESP-NOW protocol is developed but you can easily add more communication alternatives
+- When using ESP-NOW only esp8266 is needed. No more electronics apart from sensor.
 - Optional data message counter to detect lost or repeated messages.
 - Designed as two libraries (one for gateway, one for node) for easier use.
 - Selectable crypto algorhithm
-- Gateway does not store keys only on RAM. They are lost on power cycle.
-- Downlink available. It is queued and sent just after node send a data message. TODO
-- Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place but SPIFFS or EEPROM use is possible. TODO
+- Gateway does not store keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on
+- Downlink available. It is queued and sent just after node send a data message. **TO-DO**
+- Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place but SPIFFS or EEPROM would be possible. **Under test**
 
 ## Design
 
@@ -38,9 +41,9 @@ But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So 
 
 Software Layers
 
-### Whisper protocol
+### EnigmaIoT protocol
 
-The named Whisper protocol is designed to use encripted communication without the need to hardcode the key. It uses Diffie Hellman algorythm to calculate a shared key.
+The named EnigmaIoT protocol is designed to use encripted communication without the need to hardcode the key. It uses Diffie Hellman algorythm to calculate a shared key.
 
 The process starts with node anouncing itself with a Client Hello message. It tells the gateway its intention to establish a new shared key. It sends Diffie Hellman public part to be used on gateway to calculate the key.
 
@@ -64,5 +67,5 @@ All nodes and gateway are identified by its MAC address. No name is assigned so 
 
 ### Data protocol
 
-CayenneLPP and JSON. TODO
+CayenneLPP and JSON. **TO-DO**
 
