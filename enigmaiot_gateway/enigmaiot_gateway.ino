@@ -2,7 +2,7 @@
 #include <CayenneLPP.h>
 
 #include <CayenneLPPDec.h>
-#include "SecureSensorGateway.h"
+#include "EnigmaIOTGateway.h"
 #include "espnow_hal.h"
 
 
@@ -40,14 +40,14 @@ void setup () {
     Serial.begin (115200); Serial.println (); Serial.println ();
 
     initWiFi ();
-    SecureSensorGateway.setRxLed (BLUE_LED);
-    SecureSensorGateway.setTxLed (RED_LED);
-    SecureSensorGateway.onNewNode (newNodeConnected);
-    SecureSensorGateway.onNodeDisconnected (nodeDisconnected);
-    SecureSensorGateway.begin (&Espnow_hal);
-    SecureSensorGateway.onDataRx (processRxData);
+    EnigmaIOTGateway.setRxLed (BLUE_LED);
+    EnigmaIOTGateway.setTxLed (RED_LED);
+    EnigmaIOTGateway.onNewNode (newNodeConnected);
+    EnigmaIOTGateway.onNodeDisconnected (nodeDisconnected);
+    EnigmaIOTGateway.begin (&Espnow_hal);
+    EnigmaIOTGateway.onDataRx (processRxData);
 }
 
 void loop () {
-    SecureSensorGateway.handle ();
+    EnigmaIOTGateway.handle ();
 }

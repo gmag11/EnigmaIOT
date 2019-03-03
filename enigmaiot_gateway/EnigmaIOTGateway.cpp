@@ -2,7 +2,7 @@
 // 
 // 
 
-#include "SecureSensorGateway.h"
+#include "EnigmaIOTGateway.h"
 
 
 void EnigmaIOTGatewayClass::setTxLed (uint8_t led, time_t onTime) {
