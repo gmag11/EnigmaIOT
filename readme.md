@@ -39,7 +39,7 @@ But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So 
 
 ### System Design
 
-Software Layers
+![Software Layers](doc/system_layers.png)
 
 ### EnigmaIoT protocol
 
