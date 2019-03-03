@@ -1,7 +1,7 @@
-// SecureSensorGateway.h
+// EnigmaIOTGateway.h
 
-#ifndef _SECURESENSORGATEWAY_h
-#define _SECURESENSORGATEWAY_h
+#ifndef _ENIGMAIOTGATEWAY_h
+#define _ENIGMAIOTGATEWAY_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "arduino.h"
@@ -47,7 +47,7 @@ typedef void (*onNewNode_t)(const uint8_t*);
 typedef void (*onNodeDisconnected_t)(const uint8_t*, invalidateReason_t);
 #endif
 
-class SecureSensorGatewayClass
+class EnigmaIOTGatewayClass
 {
  protected:
      uint8_t myPublicKey[KEY_LENGTH];
@@ -96,7 +96,7 @@ class SecureSensorGatewayClass
 
 };
 
-extern SecureSensorGatewayClass SecureSensorGateway;
+extern EnigmaIOTGatewayClass EnigmaIOTGateway;
 
 #endif
 

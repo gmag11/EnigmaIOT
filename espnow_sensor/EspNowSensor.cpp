@@ -3,12 +3,12 @@
 
 #include "EspNowSensor.h"
 
-void EspNowSensorClass::setLed (uint8_t led, time_t onTime) {
+void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
     this->led = led;
     ledOnTime = onTime;
 }
 
-void EspNowSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter) {
+void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter) {
     pinMode (led, OUTPUT);
     digitalWrite (led, HIGH);
 
@@ -41,7 +41,7 @@ void EspNowSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool useC
 
 }
 
-void EspNowSensorClass::handle () {
+void EnigmaIOTSensorClass::handle () {
 #define LED_PERIOD 100
 #define RECONNECTION_PERIOD 10000
     static unsigned long blueOntime;
@@ -74,15 +74,15 @@ void EspNowSensorClass::handle () {
 
 }
 
-void EspNowSensorClass::rx_cb (u8 *mac_addr, u8 *data, u8 len) {
-    EspNowSensor.manageMessage (mac_addr, data, len);
+void EnigmaIOTSensorClass::rx_cb (u8 *mac_addr, u8 *data, u8 len) {
+    EnigmaIOTSensor.manageMessage (mac_addr, data, len);
 }
 
-void EspNowSensorClass::tx_cb (u8 *mac_addr, u8 status) {
-    EspNowSensor.getStatus (mac_addr, status);
+void EnigmaIOTSensorClass::tx_cb (u8 *mac_addr, u8 status) {
+    EnigmaIOTSensor.getStatus (mac_addr, status);
 }
 
-bool EspNowSensorClass::checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
+bool EnigmaIOTSensorClass::checkCRC (const uint8_t *buf, size_t count, uint32_t *crc) {
     uint32 recvdCRC;
 
     memcpy (&recvdCRC, crc, sizeof (uint32_t));
@@ -92,7 +92,7 @@ bool EspNowSensorClass::checkCRC (const uint8_t *buf, size_t count, uint32_t *cr
     return (_crc == recvdCRC);
 }
 
-bool EspNowSensorClass::clientHello () {
+bool EnigmaIOTSensorClass::clientHello () {
     /*
     * -------------------------------------------------------
     *| msgType (1) | random (16) | DH Kmaster (32) | CRC (4) |
@@ -147,7 +147,7 @@ bool EspNowSensorClass::clientHello () {
 }
 
 
-bool EspNowSensorClass::processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count) {
     /*
     * ------------------------------------------------------
     *| msgType (1) | random (16) | DH Kslave (32) | CRC (4) |
@@ -187,7 +187,7 @@ bool EspNowSensorClass::processServerHello (const uint8_t mac[6], const uint8_t*
     return true;
 }
 
-bool EspNowSensorClass::processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool EnigmaIOTSensorClass::processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count) {
     /*
     * -----------------------------------------------------------
     *| msgType (1) | IV (16) | nodeId (2) | random (4) | CRC (4) |
@@ -238,7 +238,7 @@ bool EspNowSensorClass::processCipherFinished (const uint8_t mac[6], const uint8
     return true;
 }
 
-bool EspNowSensorClass::keyExchangeFinished () {
+bool EnigmaIOTSensorClass::keyExchangeFinished () {
     /*
     * ----------------------------------------------
     *| msgType (1) | IV (16) | random (4) | CRC (4) |
@@ -281,7 +281,7 @@ bool EspNowSensorClass::keyExchangeFinished () {
     return comm->send (gateway, (uint8_t *)&(keyExchangeFinished_msg), KEFMSG_LEN) == 0;
 }
 
-bool EspNowSensorClass::sendData (const uint8_t *data, size_t len) {
+bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len) {
     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
         DEBUG_INFO ("Data sent: %s", printHexBuffer (data, len));
         dataMessage ((uint8_t *)data, len);
@@ -289,13 +289,13 @@ bool EspNowSensorClass::sendData (const uint8_t *data, size_t len) {
     }
 }
 
-void EspNowSensorClass::sleep (uint64_t time)
+void EnigmaIOTSensorClass::sleep (uint64_t time)
 {
     sleepTime = time;
     sleepRequested = true;
 }
 
-bool EspNowSensorClass::dataMessage (const uint8_t *data, size_t len) {
+bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len) {
     /*
     * --------------------------------------------------------------------------------------
     *| msgType (1) | IV (16) | length (2) | NodeId (2) | Counter (2) | Data (....) | CRC (4) |
@@ -373,7 +373,7 @@ bool EspNowSensorClass::dataMessage (const uint8_t *data, size_t len) {
     return comm->send (gateway, buffer, packet_length + CRC_LENGTH) == 0;
 }
 
-bool EspNowSensorClass::processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool EnigmaIOTSensorClass::processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count) {
 #define IKMSG_LEN 2
     if (buf && count < IKMSG_LEN) {
         return false;
@@ -382,7 +382,7 @@ bool EspNowSensorClass::processInvalidateKey (const uint8_t mac[6], const uint8_
     return true;
 }
 
-void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, uint8_t count) {
+void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, uint8_t count) {
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     DEBUG_VERBOSE ("Received data: %s", printHexBuffer (const_cast<uint8_t *>(buf), count));
     flashBlue = true;
@@ -450,10 +450,10 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
     }
 }
 
-void EspNowSensorClass::getStatus (u8 *mac_addr, u8 status) {
+void EnigmaIOTSensorClass::getStatus (u8 *mac_addr, u8 status) {
     DEBUG_VERBOSE ("SENDStatus %s", status==0?"OK":"ERROR");
 }
 
 
-EspNowSensorClass EspNowSensor;
+EnigmaIOTSensorClass EnigmaIOTSensor;
 

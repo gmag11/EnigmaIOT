@@ -5,21 +5,21 @@
 #include "SecureSensorGateway.h"
 
 
-void SecureSensorGatewayClass::setTxLed (uint8_t led, time_t onTime) {
+void EnigmaIOTGatewayClass::setTxLed (uint8_t led, time_t onTime) {
     this->txled = led;
     txLedOnTime = onTime;
     pinMode (txled, OUTPUT);
     digitalWrite (txled, HIGH);
 }
 
-void SecureSensorGatewayClass::setRxLed (uint8_t led, time_t onTime) {
+void EnigmaIOTGatewayClass::setRxLed (uint8_t led, time_t onTime) {
     this->rxled = led;
     rxLedOnTime = onTime;
     pinMode (rxled, OUTPUT);
     digitalWrite (rxled, HIGH);
 }
 
-void SecureSensorGatewayClass::begin (Comms_halClass *comm, bool useDataCounter) {
+void EnigmaIOTGatewayClass::begin (Comms_halClass *comm, bool useDataCounter) {
     this->comm = comm;
     this->useCounter = useDataCounter;
     comm->begin (NULL, 0, COMM_GATEWAY);
@@ -27,19 +27,19 @@ void SecureSensorGatewayClass::begin (Comms_halClass *comm, bool useDataCounter)
     comm->onDataSent (tx_cb);
 }
 
-void SecureSensorGatewayClass::rx_cb (u8 *mac_addr, u8 *data, u8 len) {
-    SecureSensorGateway.manageMessage (mac_addr, data, len);
+void EnigmaIOTGatewayClass::rx_cb (u8 *mac_addr, u8 *data, u8 len) {
+    EnigmaIOTGateway.manageMessage (mac_addr, data, len);
 }
 
-void SecureSensorGatewayClass::tx_cb (u8 *mac_addr, u8 status) {
-    SecureSensorGateway.getStatus (mac_addr, status);
+void EnigmaIOTGatewayClass::tx_cb (u8 *mac_addr, u8 status) {
+    EnigmaIOTGateway.getStatus (mac_addr, status);
 }
 
-void SecureSensorGatewayClass::getStatus (u8 *mac_addr, u8 status) {
+void EnigmaIOTGatewayClass::getStatus (u8 *mac_addr, u8 status) {
     DEBUG_VERBOSE ("SENDStatus %s", status == 0 ? "OK" : "ERROR");
 }
 
-void SecureSensorGatewayClass::handle () {
+void EnigmaIOTGatewayClass::handle () {
     static unsigned long rxOntime;
     static unsigned long txOntime;
 
@@ -75,7 +75,7 @@ void SecureSensorGatewayClass::handle () {
 
 }
 
-void SecureSensorGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count) {
+void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count) {
     Node *node;
 
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
@@ -165,7 +165,7 @@ void SecureSensorGatewayClass::manageMessage (const uint8_t* mac, const uint8_t*
     }
 }
 
-bool SecureSensorGatewayClass::processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
+bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
     /*
     * ---------------------------------------------------------------------------------------
     *| msgType (1) | IV (16) | length (2) | NodeId (2) | Counter (2) | Data (....) | CRC (4) |
@@ -221,7 +221,7 @@ bool SecureSensorGatewayClass::processDataMessage (const uint8_t mac[6], const u
 
 }
 
-bool SecureSensorGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
+bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
     /*
     * ----------------------------------------------
     *| msgType (1) | IV (16) | random (4) | CRC (4) |
@@ -269,7 +269,7 @@ bool SecureSensorGatewayClass::processKeyExchangeFinished (const uint8_t mac[6],
 
 }
 
-bool SecureSensorGatewayClass::cipherFinished (Node *node) {
+bool EnigmaIOTGatewayClass::cipherFinished (Node *node) {
     /*
     * -----------------------------------------------------------
     *| msgType (1) | IV (16) | nodeId (2) | random (4) | CRC (4) |
@@ -325,7 +325,7 @@ bool SecureSensorGatewayClass::cipherFinished (Node *node) {
     return comm->send (node->getMacAddress (), (uint8_t *)&cipherFinished_msg, CFMSG_LEN) == 0;
 }
 
-bool  SecureSensorGatewayClass::invalidateKey (Node *node, invalidateReason_t reason) {
+bool  EnigmaIOTGatewayClass::invalidateKey (Node *node, invalidateReason_t reason) {
     /*
     * --------------------------
     *| msgType (1) | reason (1) |
@@ -356,7 +356,7 @@ bool  SecureSensorGatewayClass::invalidateKey (Node *node, invalidateReason_t re
     return comm->send (node->getMacAddress (), (uint8_t *)&invalidateKey_msg, IKMSG_LEN) == 0;
 }
 
-bool SecureSensorGatewayClass::processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
+bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
     /*
     * -------------------------------------------------------
     *| msgType (1) | random (16) | DH Kmaster (32) | CRC (4) |
@@ -407,7 +407,7 @@ bool SecureSensorGatewayClass::processClientHello (const uint8_t mac[6], const u
 }
 
 
-bool SecureSensorGatewayClass::serverHello (const uint8_t *key, Node *node) {
+bool EnigmaIOTGatewayClass::serverHello (const uint8_t *key, Node *node) {
     /*
     * ------------------------------------------------------
     *| msgType (1) | random (16) | DH Kslave (32) | CRC (4) |
@@ -463,7 +463,7 @@ bool SecureSensorGatewayClass::serverHello (const uint8_t *key, Node *node) {
     }
 }
 
-bool SecureSensorGatewayClass::checkCRC (const uint8_t *buf, size_t count, const uint32_t *crc) {
+bool EnigmaIOTGatewayClass::checkCRC (const uint8_t *buf, size_t count, const uint32_t *crc) {
     uint32_t recvdCRC;
 
     memcpy (&recvdCRC, crc, sizeof (uint32_t)); // Use of memcpy is a must to ensure code does not try to read non memory aligned int
@@ -473,5 +473,5 @@ bool SecureSensorGatewayClass::checkCRC (const uint8_t *buf, size_t count, const
 }
 
 
-SecureSensorGatewayClass SecureSensorGateway;
+EnigmaIOTGatewayClass EnigmaIOTGateway;
 

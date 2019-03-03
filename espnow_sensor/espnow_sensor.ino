@@ -14,21 +14,21 @@ void disconnectEventHandler () {
 void setup () {
     Serial.begin (115200); Serial.println (); Serial.println ();
 
-    EspNowSensor.setLed (BLUE_LED);
-    EspNowSensor.onConnected (connectEventHandler);
-    EspNowSensor.onDisconnected (disconnectEventHandler);
-    EspNowSensor.begin (&Espnow_hal, gateway);
+    EnigmaIOTSensor.setLed (BLUE_LED);
+    EnigmaIOTSensor.onConnected (connectEventHandler);
+    EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
+    EnigmaIOTSensor.begin (&Espnow_hal, gateway);
 
     char *message = "Hello World!!!";
 
     Serial.printf ("Trying to send: %s\n", message);
-    EspNowSensor.sendData ((uint8_t *)message, strlen (message));
+    EnigmaIOTSensor.sendData ((uint8_t *)message, strlen (message));
 
-    EspNowSensor.sleep (5000000);
+    EnigmaIOTSensor.sleep (5000000);
 }
 
 void loop () {
 
-    EspNowSensor.handle ();
+    EnigmaIOTSensor.handle ();
 
 }

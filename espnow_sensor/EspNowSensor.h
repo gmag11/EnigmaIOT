@@ -1,9 +1,8 @@
-// EspNowSensor.h
+// EnigmaIOTSensor.h
 
-#ifndef _ESPNOWSENSOR_h
-#define _ESPNOWSENSOR_h
+#ifndef _ENIGMAIOTSENSOR_h
+#define _ENIGMAIOTSENSOR_h
 
-//#include <WifiEspNow.h>
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"
 #else
@@ -55,7 +54,7 @@ typedef void (*onConnected_t)();
 typedef void (*onDisconnected_t)();
 #endif
 
-class EspNowSensorClass
+class EnigmaIOTSensorClass
 {
 protected:
     uint8_t gateway[6];
@@ -104,7 +103,7 @@ public:
     void sleep (uint64_t time);
 };
 
-extern EspNowSensorClass EspNowSensor;
+extern EnigmaIOTSensorClass EnigmaIOTSensor;
 
 #endif
 
