@@ -8,7 +8,7 @@
 
 A number of nodes with one or more sensors each one communicate in a **secure** way to a central gateway in a star network using EnigmaIoT protocol.
 
-This protocol has been designed with security on mind. All sensor data is encripted with a random key that changes periodically. Key is unique for each node and dinamically calculated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.
+This protocol has been designed with security on mind. All sensor data is encrypted with a random key that changes periodically. Key is unique for each node and dinamically calculated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.
 
 I designed this because I was seaching for a way to have a relatively high number of nodes at home. I thought about using WiFi butit would overload my home router. So I looked for an alternative. I thought about LoRa or cheap 2.4GHz modules but I wanted the simplest solution in terms of hardware.
 
@@ -18,7 +18,7 @@ But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So 
 
 ## Features
 
-- Encripted communication
+- Encrypted communication
 - Dynamic key, shared between one node and gateway. Keys are independent for each node
 - Number of nodes is only limited by memory on gateway (56 bytes per node)
 - Key is never on air so it is not interceptable
@@ -43,7 +43,7 @@ But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So 
 
 ### EnigmaIoT protocol
 
-The named EnigmaIoT protocol is designed to use encripted communication without the need to hardcode the key. It uses Diffie Hellman algorythm to calculate a shared key.
+The named EnigmaIoT protocol is designed to use encrypted communication without the need to hardcode the key. It uses Diffie Hellman algorythm to calculate a shared key.
 
 The process starts with node anouncing itself with a Client Hello message. It tells the gateway its intention to establish a new shared key. It sends Diffie Hellman public part to be used on gateway to calculate the key.
 
