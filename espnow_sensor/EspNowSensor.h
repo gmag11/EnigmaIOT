@@ -35,6 +35,13 @@ enum invalidateReason_t {
     KEY_EXPIRED = 0x05
 };
 
+struct rtcmem_data_t {
+    uint32_t crc32;
+    uint8_t nodeKey[KEY_LENGTH];
+    uint16_t lastMessageCounter;
+    uint8_t nodeId;
+};
+
 typedef messageType messageType_t;
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
@@ -63,6 +70,7 @@ protected:
     onConnected_t notifyConnection;
     onDisconnected_t notifyDisconnection;
     bool useCounter = false;
+    rtcmem_data_t rtcmem_data;
 
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
     bool clientHello (/*const uint8_t *key*/);

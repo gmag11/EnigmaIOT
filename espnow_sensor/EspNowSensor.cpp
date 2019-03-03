@@ -20,7 +20,24 @@ void EspNowSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool useC
     comm->onDataSent (tx_cb);
     this->useCounter = useCounter;
 
-    clientHello ();
+    if (ESP.rtcUserMemoryRead (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
+        DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t *)rtcmem_data, sizeof (rtcmem_data)));
+    }
+    if (!checkCRC ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t), &rtcmem_data.crc32)) {
+        clientHello ();
+    } else {
+        node.setEncryptionKey (rtcmem_data.nodeKey);
+        node.setKeyValid (true);
+        node.setLastMessageCounter (rtcmem_data.lastMessageCounter);
+        node.setLastMessageTime ();
+        node.setStatus (REGISTERED);
+        uint8_t macAddress[6];
+        if (wifi_get_macaddr (0, macAddress)) {
+            node.setMacAddress (macAddress);
+        }
+        node.setKeyValidFrom (millis ());
+        node.setNodeId (rtcmem_data.nodeId);
+    }
 
 }
 
@@ -301,6 +318,7 @@ bool EspNowSensorClass::dataMessage (const uint8_t *data, size_t len) {
     if (useCounter) {
         counter = node.getLastMessageCounter() + 1;
         node.setLastMessageCounter (counter);
+        rtcmem_data.lastMessageCounter = counter;
     }
     else {
         counter = Crypto.random ();
@@ -333,6 +351,13 @@ bool EspNowSensorClass::dataMessage (const uint8_t *data, size_t len) {
     DEBUG_VERBOSE ("Encrypted data message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
 
     DEBUG_INFO (" -------> DATA");
+
+    if (useCounter) {
+        rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+        if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
+            DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)rtcmem_data, sizeof (rtcmem_data)));
+        }
+    }
 
     return comm->send (gateway, buffer, packet_length + CRC_LENGTH) == 0;
 }
@@ -379,6 +404,15 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
                 node.setKeyValidFrom (millis ());
                 node.setLastMessageCounter (0);
                 node.setStatus (REGISTERED);
+                
+                memcpy (rtcmem_data.nodeKey, node.getEncriptionKey (), KEY_LENGTH);
+                rtcmem_data.lastMessageCounter = 0;
+                rtcmem_data.nodeId = node.getNodeId ();
+                rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+                if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
+                    DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)rtcmem_data, sizeof (rtcmem_data)));
+                }
+
 #if DEBUG_LEVEL >= INFO
                 node.printToSerial (&DEBUG_ESP_PORT);
 #endif
@@ -386,6 +420,7 @@ void EspNowSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, u
                     notifyConnection ();
                 }
                 // TODO: Store node data on EEPROM, SPIFFS or RTCMEM
+                
             } else {
                 node.reset ();
             }
