@@ -17,6 +17,8 @@
 #endif
 #include "Comms_hal.h"
 
+#define MAX_MESSAGE_LENGTH 200;
+
 class Espnow_halClass : public Comms_halClass
 {
  protected:
@@ -37,6 +39,9 @@ class Espnow_halClass : public Comms_halClass
     void onDataSent (comms_hal_sent_data dataRcvd);
     uint8_t getAddressLength () {
         return sizeof(gateway);
+    }
+    size_t getMaxMessageLength () {
+        return MAX_MESSAGE_LENGTH;
     }
 
 };

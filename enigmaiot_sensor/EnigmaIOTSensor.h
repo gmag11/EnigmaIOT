@@ -27,6 +27,7 @@ enum messageType {
 };
 
 enum invalidateReason_t {
+    UNKNOWN_ERROR = 0x00,
     WRONG_CLIENT_HELLO = 0x01,
     WRONG_EXCHANGE_FINISHED = 0x02,
     WRONG_DATA = 0x03,
@@ -54,6 +55,8 @@ typedef void (*onConnected_t)();
 typedef void (*onDisconnected_t)();
 #endif
 
+#define MAX_MESSAGE_LENGTH 200
+
 class EnigmaIOTSensorClass
 {
 protected:
@@ -72,12 +75,15 @@ protected:
     rtcmem_data_t rtcmem_data;
     bool sleepRequested = false;
     uint64_t sleepTime;
+    uint8_t dataMessageSent[MAX_MESSAGE_LENGTH];
+    uint8_t dataMessageSentLength = 0;
+    invalidateReason_t invalidateReason = KEY_EXPIRED;
 
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
     bool clientHello (/*const uint8_t *key*/);
     bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count);
     bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count);
-    bool processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    invalidateReason_t processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count);
     bool keyExchangeFinished ();
     bool dataMessage (const uint8_t *data, size_t len);
     void manageMessage (const uint8_t *mac, const uint8_t* buf, uint8_t count);

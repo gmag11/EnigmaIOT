@@ -21,7 +21,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool u
     this->useCounter = useCounter;
 
     if (ESP.rtcUserMemoryRead (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
-        DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t *)rtcmem_data, sizeof (rtcmem_data)));
+        DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
     }
     if (!checkCRC ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t), &rtcmem_data.crc32)) {
         clientHello ();
@@ -42,8 +42,10 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool u
 }
 
 void EnigmaIOTSensorClass::handle () {
-#define LED_PERIOD 100
-#define RECONNECTION_PERIOD 10000
+    const uint16_t LED_PERIOD = 100;
+    const uint16_t RECONNECTION_PERIOD = 500;
+    const uint16_t DOWNLINK_WAIT_TIME = 500;
+
     static unsigned long blueOntime;
 
     if (led >= 0) {
@@ -58,14 +60,16 @@ void EnigmaIOTSensorClass::handle () {
         }
     }
 
-    if (sleepRequested && millis () - node.getLastMessageTime () > 1000 && node.isRegistered()) {
-        ESP.deepSleep (sleepTime, RF_NO_CAL);
+    if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered()) {
+        DEBUG_VERBOSE ("Go to sleep for %u ms", sleepTime / 1000);
+        ESP.deepSleepInstant (sleepTime, RF_NO_CAL);
     }
 
 
     static time_t lastRegistration;
-    if (!node.isRegistered ()) {
+    if (node.getStatus()== UNREGISTERED) {
         if (millis () - lastRegistration > RECONNECTION_PERIOD) {
+            DEBUG_VERBOSE ("Current node status: %d", node.getStatus ());
             lastRegistration = millis ();
             node.reset ();
             clientHello ();
@@ -282,6 +286,9 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
 }
 
 bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len) {
+    memcpy (dataMessageSent, data, len);
+    dataMessageSentLength = len;
+
     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
         DEBUG_INFO ("Data sent: %s", printHexBuffer (data, len));
         dataMessage ((uint8_t *)data, len);
@@ -291,6 +298,7 @@ bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len) {
 
 void EnigmaIOTSensorClass::sleep (uint64_t time)
 {
+    DEBUG_VERBOSE ("Sleep programmed for %u ms", time/1000);
     sleepTime = time;
     sleepRequested = true;
 }
@@ -366,20 +374,21 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len) {
     if (useCounter) {
         rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
         if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
-            DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)rtcmem_data, sizeof (rtcmem_data)));
+            DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
         }
     }
 
     return comm->send (gateway, buffer, packet_length + CRC_LENGTH) == 0;
 }
 
-bool EnigmaIOTSensorClass::processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+invalidateReason_t EnigmaIOTSensorClass::processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count) {
 #define IKMSG_LEN 2
     if (buf && count < IKMSG_LEN) {
-        return false;
+        return UNKNOWN_ERROR;
     }
     DEBUG_VERBOSE ("Invalidate key request. Reason: %u", buf[1]);
-    return true;
+    uint8_t reason = buf[1];
+    return (invalidateReason_t)reason;
 }
 
 void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf, uint8_t count) {
@@ -421,7 +430,7 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
                 rtcmem_data.nodeId = node.getNodeId ();
                 rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
                 if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
-                    DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)rtcmem_data, sizeof (rtcmem_data)));
+                    DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
                 }
 
 #if DEBUG_LEVEL >= INFO
@@ -429,6 +438,15 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
 #endif
                 if (notifyConnection) {
                     notifyConnection ();
+                }
+                // Resend last message in case of it is still pending to be sent.
+                // If key expired it was successfully sent before so retransmission is not needed 
+                if (invalidateReason < KEY_EXPIRED && dataMessageSentLength > 0) {
+                    if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
+                        DEBUG_INFO ("Data sent: %s", printHexBuffer (dataMessageSent, dataMessageSentLength));
+                        dataMessage ((uint8_t *)dataMessageSent, dataMessageSentLength);
+                        flashBlue = true;
+                    }
                 }
                 // TODO: Store node data on EEPROM, SPIFFS or RTCMEM
                 
@@ -441,7 +459,7 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
         break;
     case INVALIDATE_KEY:
         DEBUG_INFO (" <------- INVALIDATE KEY");
-        processInvalidateKey (mac, buf, count);
+        invalidateReason = processInvalidateKey (mac, buf, count);
         node.reset ();
         if (notifyDisconnection) {
             notifyDisconnection ();

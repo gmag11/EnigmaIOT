@@ -29,6 +29,7 @@ enum messageType_t {
 };
 
 enum invalidateReason_t {
+    UNKNOWN_ERROR = 0x00,
     WRONG_CLIENT_HELLO = 0x01,
     WRONG_EXCHANGE_FINISHED = 0x02,
     WRONG_DATA = 0x03,
