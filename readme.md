@@ -16,6 +16,18 @@ ESP8266 microcontroller implements a protocol known as ESP-NOW. It is a point to
 
 But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So I thought that I could implement encryption on payload but I found many problems I should solve to grade this as "secure enough".
 
+## Project requirements
+
+During this project conception I decided that it should fulfil this list of requirements.
+
+- Use the simplest hardware, based on ESP8266.
+- Secure by design. Make use of a secure channel for data transmission.
+- Automatic dynamic key agreement.
+- Do not require connection to the Internet.
+- Able to use deep sleep.
+- Enough wireless range for a house
+- Support for a high number of nodes
+
 ## Features
 
 - Encrypted communication
@@ -32,7 +44,7 @@ But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So 
 - Designed as two libraries (one for gateway, one for node) for easier use.
 - Selectable crypto algorhithm
 - Gateway does not store keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on
-- Downlink available. It is queued and sent just after node send a data message. **TO-DO**
+- Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message. **TO-DO**
 - Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place but SPIFFS or EEPROM would be possible. **Under test**
 
 ## Design
@@ -67,5 +79,10 @@ All nodes and gateway are identified by its MAC address. No name is assigned so 
 
 ### Data protocol
 
-CayenneLPP and JSON. **TO-DO**
+Although it is not mandatory, use of [CayenneLPP format](https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload) is recommended for sensor data compactness.
 
+You may use [CayenneLPP encoder library](https://github.com/sabas1080/CayenneLPP) on sensor node and [CayenneLPP decoder library](https://github.com/gmag11/CayenneLPPdec) for decoding on Gateway.
+
+Example gateway code expands data message to JSON data, to be used easily as payload on a MQTT publish message to a broker. For JSON generation ArduinoJSON library is required.
+
+In any case you can use your own format or even raw unencoded data. Take care of maximum message length that communications layer uses. For ESP-NOW it is about 200 bytes.
