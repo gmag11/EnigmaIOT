@@ -77,7 +77,7 @@ protected:
     uint64_t sleepTime;
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH];
     uint8_t dataMessageSentLength = 0;
-    invalidateReason_t invalidateReason = KEY_EXPIRED;
+    invalidateReason_t invalidateReason = UNKNOWN_ERROR;
 
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
     bool clientHello (/*const uint8_t *key*/);
