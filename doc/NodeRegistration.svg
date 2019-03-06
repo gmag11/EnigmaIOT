@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
-<svg width="22cm" height="22cm" viewBox="249 92 423 422" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="22cm" height="24cm" viewBox="249 92 423 466" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <g>
     <rect style="fill: #ffffff" x="250.5" y="155" width="98" height="27"/>
     <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="250.5" y="155" width="98" height="27"/>
   </g>
-  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="356.5" y1="139" x2="357.5" y2="505"/>
-  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="558.5" y1="139" x2="559.5" y2="505"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="356.5" y1="139" x2="357" y2="540"/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="558.5" y1="139" x2="559" y2="543"/>
   <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="258.05" y="172">
     <tspan x="258.05" y="172">Node is started</tspan>
   </text>
@@ -109,8 +109,8 @@
   <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="410.5" y="464.6">
     <tspan x="410.5" y="464.6">Data (encrypted)</tspan>
   </text>
-  <text font-size="17.5994" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="448" y="511">
-    <tspan x="448" y="511">...</tspan>
+  <text font-size="17.5994" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="447" y="555">
+    <tspan x="447" y="555">...</tspan>
   </text>
   <g>
     <rect style="fill: #ffffff" x="267.576" y="410" width="76.85" height="54"/>
@@ -120,4 +120,12 @@
       <tspan x="306.001" y="449.8">(optional)</tspan>
     </text>
   </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="557.736" y1="486.976" x2="365.472" y2="486.024"/>
+    <polygon style="fill: #000000" points="357.972,485.987 367.997,481.036 365.472,486.024 367.947,491.036 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="357.972,485.987 367.997,481.036 365.472,486.024 367.947,491.036 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="395" y="503">
+    <tspan x="395" y="503">Downlink data (encrypted)</tspan>
+  </text>
 </svg>

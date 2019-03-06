@@ -45,13 +45,19 @@ During this project conception I decided that it should fulfil this list of requ
 - Selectable crypto algorhithm
 - Gateway does not store keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on
 - Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message. **TO-DO**
-- Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place but SPIFFS or EEPROM would be possible. **Under test**
+- Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place, and it is the one currently implemented, but SPIFFS or EEPROM would be possible. **Under test**
 
 ## Design
 
 ### System Design
 
+System functions are divided in three layers: application, link and physical layer.
+
 ![Software Layers](doc/system_layers.png)
+
+- Application layer is not controlled by EnigmaIoT protocol but main program. User may choose whatever data format. A good option is to use CayenneLPP format but any other format or even raw data may be used. The only limit is the maximum packet length that, for ESP-NOW is around 200 bytes.
+- Link layer is the one that add privacy and security. It manages connection between nodes and gateway in a transparent way. It does key agreement and node registration and checks the correctness of data messages. In case of any error it automatically start a new registration process. On this layer, data packets are encrypted using calculated symetric key.
+- Physical layer currently uses connectionless ESP-NOW. But a hardware abstaction layer has been designed so it is possible to develop interfaces for any other layer 1 technology like LoRa or nRF24F01 radios.
 
 ### EnigmaIoT protocol
 
@@ -77,7 +83,65 @@ After that node may start new key agreement sending a new Client Hello message.
 
 All nodes and gateway are identified by its MAC address. No name is assigned so no configuration is needed on node. Function assignment has to be done in a  higher level.
 
-### Data protocol
+## State diagram for nodes and Gateway
+
+![Sensor State Diagram](doc/StateDiagram-Sensor.svg)
+
+![Gateway State Diagram](doc/StateDiagram-Gateway.svg)
+
+## Message format specification
+
+### Client Hello message
+
+![Client Hello message format](doc/ClientHello.png)
+
+### Server Hello message
+
+![Server Hello message format](doc/ServerHello.png)
+
+### Key Exchange Finished message
+
+![Key Exchange Finished message format](doc/KeyExchangeFinished.png)
+
+### Cypher Finished message
+
+![Cypher Finished message format](doc/CypherFinished.png)
+
+### Sensor Data message
+
+![Sensor Data message format](doc/SensorData.png)
+
+### Sensor Command message (downlink)
+
+![Sensor Command message format](doc/SensorCommand-Downlink.png)
+
+### Invalidate Key message
+
+![Invalidate Key message format](doc/InvalidateKey.png)
+
+## Protocol procedures
+
+### Normal node registration and sensor data exchange
+
+![Normal node registration message sequence](doc/NodeRegistration.svg)
+
+### Incomplete Registration
+
+![Incomplete Registration message sequence](doc/RegistrationIncomplete.svg)
+
+### Node Not Registered
+
+![Node Not Registered message sequence](doc/NodeNotRegistered.svg)
+
+### Key Expiration
+
+![KeyExpiration message sequence](doc/KeyExpiration.svg)
+
+### Node Registration Collision
+
+![Node Registration Collision message sequence](doc/NodeRegistrationCollision.svg)
+
+## Data format
 
 Although it is not mandatory, use of [CayenneLPP format](https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload) is recommended for sensor data compactness.
 
