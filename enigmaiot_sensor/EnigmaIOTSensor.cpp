@@ -67,7 +67,8 @@ void EnigmaIOTSensorClass::handle () {
 
 
     static time_t lastRegistration;
-    if (node.getStatus () == WAIT_FOR_SERVER_HELLO) {
+    status_t status = node.getStatus ();
+    if (status == WAIT_FOR_SERVER_HELLO || status == WAIT_FOR_CIPHER_FINISHED) {
         if (millis () - lastRegistration > (RECONNECTION_PERIOD*10)) {
             DEBUG_VERBOSE ("Current node status: %d", node.getStatus ());
             lastRegistration = millis ();
