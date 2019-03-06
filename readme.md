@@ -53,7 +53,7 @@ During this project conception I decided that it should fulfil this list of requ
 
 System functions are divided in three layers: application, link and physical layer.
 
-![Software Layers](doc/system_layers.png)
+![Software Layers](https://github.com/gmag11/EnigmaIOT/raw/master/doc/system_layers.png)
 
 - Application layer is not controlled by EnigmaIoT protocol but main program. User may choose whatever data format. A good option is to use CayenneLPP format but any other format or even raw data may be used. The only limit is the maximum packet length that, for ESP-NOW is around 200 bytes.
 - Link layer is the one that add privacy and security. It manages connection between nodes and gateway in a transparent way. It does key agreement and node registration and checks the correctness of data messages. In case of any error it automatically start a new registration process. On this layer, data packets are encrypted using calculated symetric key.
@@ -85,9 +85,9 @@ All nodes and gateway are identified by its MAC address. No name is assigned so 
 
 ## State diagram for nodes and Gateway
 
-![Sensor State Diagram](doc/StateDiagram-Sensor.svg)
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/doc/StateDiagram-Sensor.svg?sanitize=true" alt="Sensor State Diagram" width="800"/>
 
-![Gateway State Diagram](doc/StateDiagram-Gateway.svg)
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/doc/StateDiagram-Gateway.svg?sanitize=true" alt="Gateway State Diagram" width="800"/>
 
 ## Message format specification
 
