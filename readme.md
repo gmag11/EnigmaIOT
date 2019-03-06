@@ -1,6 +1,6 @@
 # EnigmaIoT
 
-<img src="logo/logo%20text%20under.svg" alt="EnigmaIoT Logo" width="50%"/>
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/logo/logo%20text%20under.svg?sanitize=true" alt="EnigmaIoT Logo" width="50%"/>
 
 ## Introduction
 
