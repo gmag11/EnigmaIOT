@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="87cm" height="32cm" viewBox="144 -50 1738 623" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <ellipse style="fill: #ffffff" cx="573.933" cy="53.9664" rx="58.0673" ry="33.0336"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="573.933" cy="53.9664" rx="58.0673" ry="33.0336"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="573.933" y="58.7664">
+      <tspan x="573.933" y="58.7664">Init</tspan>
+    </text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="809.248" cy="222.771" rx="67.0536" ry="30.3147"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="809.248" cy="222.771" rx="67.0536" ry="30.3147"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="809.248" y="219.571">
+      <tspan x="809.248" y="219.571">Waiting for</tspan>
+      <tspan x="809.248" y="235.571">Server Hello</tspan>
+    </text>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="575.529,113.666 653.071,148.601 575.529,183.536 497.986,148.601 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="575.529,113.666 653.071,148.601 575.529,183.536 497.986,148.601 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="575.529" y="153.401">
+      <tspan x="575.529" y="153.401">Stored Key?</tspan>
+    </text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="574.838" y1="87.7804" x2="575.27" y2="103.933"/>
+    <polygon style="fill: #000000" points="575.47,111.43 570.205,101.568 575.27,103.933 580.201,101.3 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="575.47,111.43 570.205,101.568 575.27,103.933 580.201,101.3 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="653.072,148.601 653.072,149 809.248,149 809.248,182.72 "/>
+    <polygon style="fill: #000000" points="809.248,190.22 804.248,180.22 809.248,182.72 814.248,180.22 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="809.248,190.22 804.248,180.22 809.248,182.72 814.248,180.22 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="655" y="141">
+    <tspan x="655" y="141">No</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="704" y="136">
+    <tspan x="704" y="136">ClientHello</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="809.248" y1="253.086" x2="779.564" y2="293.191"/>
+    <polygon style="fill: #000000" points="775.102,299.219 777.032,288.206 779.564,293.191 785.07,294.156 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="775.102,299.219 777.032,288.206 779.564,293.191 785.07,294.156 "/>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 863.839,250.318 A 32.5125,32.5125 0 1 0 856.662,201.336"/>
+    <polygon style="fill: #000000" points="858.136,245.887 868.489,250.11 863.081,251.526 860.97,256.703 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="858.136,245.887 868.489,250.11 863.081,251.526 860.97,256.703 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="853" y="192">
+    <tspan x="853" y="192">Waiting for 1 sec</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="759" y="275">
+    <tspan x="759" y="275">Send Key exchange finished</tspan>
+  </text>
+  <g>
+    <ellipse style="fill: #ffffff" cx="749.474" cy="333.844" rx="71.1181" ry="33.9797"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="749.474" cy="333.844" rx="71.1181" ry="33.9797"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="749.474" y="330.644">
+      <tspan x="749.474" y="330.644">Waiting for</tspan>
+      <tspan x="749.474" y="346.644">Cipher Finished</tspan>
+    </text>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 807.387,363.445 A 33.5473,33.5473 0 1 0 799.762,309.816"/>
+    <polygon style="fill: #000000" points="801.364,359.432 812.015,362.83 806.735,364.666 805.037,369.992 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="801.364,359.432 812.015,362.83 806.735,364.666 805.037,369.992 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="866" y="339">
+    <tspan x="866" y="339">Waiting for 1 sec</tspan>
+  </text>
+  <g>
+    <ellipse style="fill: #ffffff" cx="299.933" cy="176.5" rx="50.0673" ry="29.5"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="299.933" cy="176.5" rx="50.0673" ry="29.5"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="299.933" y="181.3">
+      <tspan x="299.933" y="181.3">Sleep</tspan>
+    </text>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 722.258 365.238 C 666.706,365.238 693.445,430 647.629,430"/>
+    <polygon style="fill: #000000" points="640.129,430 650.129,425 647.629,430 650.129,435 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="640.129,430 650.129,425 647.629,430 650.129,435 "/>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 296.435 146.143 C 290.503,94.6434 451.78,53.9664 505.124,53.9664"/>
+    <polygon style="fill: #000000" points="512.624,53.9664 502.624,58.9664 505.124,53.9664 502.624,48.9664 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="512.624,53.9664 502.624,58.9664 505.124,53.9664 502.624,48.9664 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="575.53" y1="183.536" x2="576.823" y2="400.272"/>
+    <polygon style="fill: #000000" points="576.867,407.772 571.808,397.802 576.823,400.272 581.808,397.742 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="576.867,407.772 571.808,397.802 576.823,400.272 581.808,397.742 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="549" y="201">
+    <tspan x="549" y="201">Yes</tspan>
+  </text>
+  <g>
+    <ellipse style="fill: #ffffff" cx="357.932" cy="403.402" rx="66.2304" ry="31.4157"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="357.932" cy="403.402" rx="66.2304" ry="31.4157"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="357.932" y="408.202">
+      <tspan x="357.932" y="408.202">Wait for downlink</tspan>
+    </text>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 516.117 434.005 C 440.117,439.005 471.339,460.215 412.976,430.976"/>
+    <polygon style="fill: #000000" points="406.27,427.617 417.45,427.625 412.976,430.976 412.971,436.566 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="406.27,427.617 417.45,427.625 412.976,430.976 412.971,436.566 "/>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 304.089,374.834 A 34.5888,34.5888 0 1 0 311.1,425.616"/>
+    <polygon style="fill: #000000" points="309.664,379.472 299.409,375.019 304.847,373.723 307.074,368.596 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="309.664,379.472 299.409,375.019 304.847,373.723 307.074,368.596 "/>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 361.99 371.049 C 367.058,330.649 277.971,235.762 285.52,215.392"/>
+    <polygon style="fill: #000000" points="288.126,208.359 289.339,219.473 285.52,215.392 279.963,215.999 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="288.126,208.359 289.339,219.473 285.52,215.392 279.963,215.999 "/>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 395.022 376.535 C 430.09,351.135 416.917,347.006 424.97,307.546"/>
+    <polygon style="fill: #000000" points="426.47,300.197 429.369,310.995 424.97,307.546 419.571,308.995 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="426.47,300.197 429.369,310.995 424.97,307.546 419.571,308.995 "/>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 428.315 267.993 C 415.961,221.959 402.235,176.5 360.704,176.5"/>
+    <polygon style="fill: #000000" points="353.204,176.5 363.204,171.5 360.704,176.5 363.204,181.5 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="353.204,176.5 363.204,171.5 360.704,176.5 363.204,181.5 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="688" y="402">
+    <tspan x="688" y="402">Save cypher data</tspan>
+    <tspan x="688" y="418"></tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="144" y="401">
+    <tspan x="144" y="401">Waiting for 20 ms</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="431" y="350">
+    <tspan x="431" y="350">Downlink received</tspan>
+  </text>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 752.267 239.717 C 649.169,270.381 391.052,90.4545 334.063,144.27"/>
+    <polygon style="fill: #000000" points="328.61,149.419 332.448,138.918 334.063,144.27 339.313,146.189 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="328.61,149.419 332.448,138.918 334.063,144.27 339.313,146.189 "/>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 684.486 318.826 C 551.012,287.982 439.95,126.735 352.055,157.974"/>
+    <polygon style="fill: #000000" points="344.989,160.486 352.737,152.426 352.055,157.974 356.086,161.848 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="344.989,160.486 352.737,152.426 352.055,157.974 356.086,161.848 "/>
+  </g>
+  <text font-size="12.5758" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="425.454" y="131.955">
+    <tspan x="425.454" y="131.955">Timeout or</tspan>
+    <tspan x="425.454" y="147.674">error</tspan>
+  </text>
+  <text font-size="12.5758" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="634.356" y="282.282">
+    <tspan x="634.356" y="282.282">Timeout or</tspan>
+    <tspan x="634.356" y="298.002">error</tspan>
+  </text>
+  <text font-size="12.5758" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="258.476" y="304.144">
+    <tspan x="258.476" y="304.144">Timeout or</tspan>
+    <tspan x="258.476" y="319.864">error</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="517.1" y="411" width="119.8" height="38"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="517.1" y="411" width="119.8" height="38"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="577" y="434.8">
+      <tspan x="577" y="434.8">Send sensor data</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="371.25" y="259" width="119.5" height="38"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="371.25" y="259" width="119.5" height="38"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="431" y="282.8">
+      <tspan x="431" y="282.8">Process downlink</tspan>
+    </text>
+  </g>
+  <text font-size="33.8667" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="511" y="-16">
+    <tspan x="511" y="-16">Sensor</tspan>
+  </text>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1718.97" cy="54.0336" rx="58.0673" ry="33.0336"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1718.97" cy="54.0336" rx="58.0673" ry="33.0336"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1718.97" y="58.8336">
+      <tspan x="1718.97" y="58.8336">Init</tspan>
+    </text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1710.95" cy="253.464" rx="74.5239" ry="33.692"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1710.95" cy="253.464" rx="74.5239" ry="33.692"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1710.95" y="250.264">
+      <tspan x="1710.95" y="250.264">Waiting for</tspan>
+      <tspan x="1710.95" y="266.264">Sensor Mesages</tspan>
+    </text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1717.6" y1="88.0429" x2="1712.74" y2="209.057"/>
+    <polygon style="fill: #000000" points="1712.44,216.551 1707.84,206.358 1712.74,209.057 1717.83,206.76 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1712.44,216.551 1707.84,206.358 1712.74,209.057 1717.83,206.76 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1541.98" y="332.15" width="111.05" height="60"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1541.98" y="332.15" width="111.05" height="60"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1597.5" y="366.95">
+      <tspan x="1597.5" y="366.95">Clasify Message</tspan>
+    </text>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1713.17 288.107 C 1716.21,335.793 1691.67,362.15 1663.74,362.15"/>
+    <polygon style="fill: #000000" points="1656.24,362.15 1666.24,357.15 1663.74,362.15 1666.24,367.15 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1656.24,362.15 1666.24,357.15 1663.74,362.15 1666.24,367.15 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1343.78" y="405.15" width="106.95" height="54"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1343.78" y="405.15" width="106.95" height="54"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1397.25" y="428.95">
+      <tspan x="1397.25" y="428.95">Process Sensor</tspan>
+      <tspan x="1397.25" y="444.95">data</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1357" y="301.15" width="93.726" height="54"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1357" y="301.15" width="93.726" height="54"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1403.86" y="324.95">
+      <tspan x="1403.86" y="324.95">Process</tspan>
+      <tspan x="1403.86" y="340.95">Client Hello</tspan>
+    </text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1541.05" y1="352.239" x2="1461.31" y2="338.236"/>
+    <polygon style="fill: #000000" points="1453.92,336.939 1464.63,333.744 1461.31,338.236 1462.9,343.593 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1453.92,336.939 1464.63,333.744 1461.31,338.236 1462.9,343.593 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1540.97" y1="381.91" x2="1460.92" y2="409.895"/>
+    <polygon style="fill: #000000" points="1453.84,412.37 1461.63,404.35 1460.92,409.895 1464.93,413.79 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1453.84,412.37 1461.63,404.35 1460.92,409.895 1464.93,413.79 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1475" y="331.15">
+    <tspan x="1475" y="331.15">Client hello</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1473" y="429.15">
+    <tspan x="1473" y="429.15">Sensor Message</tspan>
+  </text>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1409.27 460.142 C 1482.27,630.142 1990.16,349.936 1780.31,277.43"/>
+    <polygon style="fill: #000000" points="1773.23,274.981 1784.31,273.521 1780.31,277.43 1781.04,282.972 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1773.23,274.981 1784.31,273.521 1780.31,277.43 1781.04,282.972 "/>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="1212.93" cy="248.393" rx="93.0506" ry="36.501"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1212.93" cy="248.393" rx="93.0506" ry="36.501"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1212.93" y="245.193">
+      <tspan x="1212.93" y="245.193">Waiting</tspan>
+      <tspan x="1212.93" y="261.193">Key Exchange finished</tspan>
+    </text>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1356.01 328.15 C 1306.73,328.15 1261.47,344.849 1235.77,293.791"/>
+    <polygon style="fill: #000000" points="1232.4,287.091 1241.36,293.776 1235.77,293.791 1232.43,298.271 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1232.4,287.091 1241.36,293.776 1235.77,293.791 1232.43,298.271 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1207" y="345.15">
+    <tspan x="1207" y="345.15">Send server hello</tspan>
+  </text>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1451.73 303.101 C 1545.35,254.101 1527.03,253.464 1625.72,253.464"/>
+    <polygon style="fill: #000000" points="1633.22,253.464 1623.22,258.464 1625.72,253.464 1623.22,248.464 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1633.22,253.464 1623.22,258.464 1625.72,253.464 1623.22,248.464 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1498" y="256.15">
+    <tspan x="1498" y="256.15">Error</tspan>
+  </text>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1597.9 331.15 C 1598.4,292.15 1596.1,288.141 1638.73,275.27"/>
+    <polygon style="fill: #000000" points="1645.91,273.102 1637.78,280.779 1638.73,275.27 1634.89,271.206 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1645.91,273.102 1637.78,280.779 1638.73,275.27 1634.89,271.206 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1609" y="309.15">
+    <tspan x="1609" y="309.15">Error</tspan>
+  </text>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1304.84 240.558 C 1471.91,226.314 1486.64,209.581 1632.04,238.025"/>
+    <polygon style="fill: #000000" points="1639.4,239.465 1628.62,242.452 1632.04,238.025 1630.54,232.638 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1639.4,239.465 1628.62,242.452 1632.04,238.025 1630.54,232.638 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1435" y="220.15">
+    <tspan x="1435" y="220.15">Timeout</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="1311" y="79.15" width="109" height="49"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1311" y="79.15" width="109" height="49"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1365.5" y="108.45">
+      <tspan x="1365.5" y="108.45">Store keys</tspan>
+    </text>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1207.65 210.963 C 1199.72,154.719 1259.37,103.65 1300.29,103.65"/>
+    <polygon style="fill: #000000" points="1307.79,103.65 1297.79,108.65 1300.29,103.65 1297.79,98.65 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1307.79,103.65 1297.79,108.65 1300.29,103.65 1297.79,98.65 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1096" y="153.15">
+    <tspan x="1096" y="153.15">Send cipher finished</tspan>
+  </text>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1421.01" y1="127.721" x2="1647.32" y2="225.866"/>
+    <polygon style="fill: #000000" points="1654.2,228.85 1643.03,229.459 1647.32,225.866 1647.01,220.285 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1654.2,228.85 1643.03,229.459 1647.32,225.866 1647.01,220.285 "/>
+  </g>
+  <text font-size="33.8667" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="1470" y="-9.85">
+    <tspan x="1470" y="-9.85">Gateway</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1609" y="478">
+    <tspan x="1609" y="478">Error</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="1194" y="405.15" width="99.125" height="54"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1194" y="405.15" width="99.125" height="54"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1243.56" y="428.95">
+      <tspan x="1243.56" y="428.95">Send MQTT</tspan>
+      <tspan x="1243.56" y="444.95">message</tspan>
+    </text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1343.78" y1="432.15" x2="1302.86" y2="432.15"/>
+    <polygon style="fill: #000000" points="1295.36,432.15 1305.36,427.15 1302.86,432.15 1305.36,437.15 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1295.36,432.15 1305.36,427.15 1302.86,432.15 1305.36,437.15 "/>
+  </g>
+  <g>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1252.75 460.136 C 1354.19,768.986 2159.46,348.507 1788.94,269.989"/>
+    <polygon style="fill: #000000" points="1781.6,268.434 1792.42,265.616 1788.94,269.989 1790.34,275.399 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1781.6,268.434 1792.42,265.616 1788.94,269.989 1790.34,275.399 "/>
+  </g>
+</svg>
