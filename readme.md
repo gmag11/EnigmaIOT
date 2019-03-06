@@ -1,6 +1,6 @@
 # EnigmaIoT
 
-![EnigmaIoT Logo](logo/logo%20text%20under.svg)
+<img src="logo/logo%20text%20under.svg" alt="EnigmaIoT Logo" width="50%"/>
 
 ## Introduction
 
@@ -123,23 +123,27 @@ All nodes and gateway are identified by its MAC address. No name is assigned so 
 
 ### Normal node registration and sensor data exchange
 
-![Normal node registration message sequence](doc/NodeRegistration.svg)
+<img src="doc/NodeRegistration.svg" alt="Normal node registration message sequence" width="400"/>
 
 ### Incomplete Registration
 
-![Incomplete Registration message sequence](doc/RegistrationIncomplete.svg)
+<img src="doc/RegistrationIncomplete.svg" alt="Incomplete Registration message sequence" width="400"/>
 
 ### Node Not Registered
 
-![Node Not Registered message sequence](doc/NodeNotRegistered.svg)
+<img src="doc/NodeNotRegistered.svg" alt="Node Not Registered message sequence" width="400"/>
 
 ### Key Expiration
 
-![KeyExpiration message sequence](doc/KeyExpiration.svg)
+<img src="doc/KeyExpiration.svg" alt="KeyExpiration message sequence" width="400"/>
 
 ### Node Registration Collision
 
-![Node Registration Collision message sequence](doc/NodeRegistrationCollision.svg)
+<img src="doc/NodeRegistrationCollision.svg" alt="Node Registration Collision message sequence" width="600"/>
+
+### Wrong Data Counter
+
+<img src="doc/WrongCounter.svg" alt="Wrong Counter message sequence" width="400"/>
 
 ## Data format
 
