@@ -93,57 +93,57 @@ All nodes and gateway are identified by its MAC address. No name is assigned so 
 
 ### Client Hello message
 
-![Client Hello message format](doc/ClientHello.png)
+![Client Hello message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/ClientHello.png)
 
 ### Server Hello message
 
-![Server Hello message format](doc/ServerHello.png)
+![Server Hello message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/ServerHello.png)
 
 ### Key Exchange Finished message
 
-![Key Exchange Finished message format](doc/KeyExchangeFinished.png)
+![Key Exchange Finished message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/KeyExchangeFinished.png)
 
 ### Cypher Finished message
 
-![Cypher Finished message format](doc/CypherFinished.png)
+![Cypher Finished message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/CypherFinished.png)
 
 ### Sensor Data message
 
-![Sensor Data message format](doc/SensorData.png)
+![Sensor Data message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/SensorData.png)
 
 ### Sensor Command message (downlink)
 
-![Sensor Command message format](doc/SensorCommand-Downlink.png)
+![Sensor Command message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/SensorCommand-Downlink.png)
 
 ### Invalidate Key message
 
-![Invalidate Key message format](doc/InvalidateKey.png)
+![Invalidate Key message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/InvalidateKey.png)
 
 ## Protocol procedures
 
 ### Normal node registration and sensor data exchange
 
-<img src="doc/NodeRegistration.svg" alt="Normal node registration message sequence" width="400"/>
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/doc/NodeRegistration.svg?sanitize=true" alt="Normal node registration message sequence" width="400"/>
 
 ### Incomplete Registration
 
-<img src="doc/RegistrationIncomplete.svg" alt="Incomplete Registration message sequence" width="400"/>
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/doc/RegistrationIncomplete.svg?sanitize=true" alt="Incomplete Registration message sequence" width="400"/>
 
 ### Node Not Registered
 
-<img src="doc/NodeNotRegistered.svg" alt="Node Not Registered message sequence" width="400"/>
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/doc/NodeNotRegistered.svg?sanitize=true" alt="Node Not Registered message sequence" width="400"/>
 
 ### Key Expiration
 
-<img src="doc/KeyExpiration.svg" alt="KeyExpiration message sequence" width="400"/>
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/doc/KeyExpiration.svg?sanitize=true" alt="KeyExpiration message sequence" width="400"/>
 
 ### Node Registration Collision
 
-<img src="doc/NodeRegistrationCollision.svg" alt="Node Registration Collision message sequence" width="600"/>
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/doc/NodeRegistrationCollision.svg?sanitize=true" alt="Node Registration Collision message sequence" width="600"/>
 
 ### Wrong Data Counter
 
-<img src="doc/WrongCounter.svg" alt="Wrong Counter message sequence" width="400"/>
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/doc/WrongCounter.svg?sanitize=true" alt="Wrong Counter message sequence" width="400"/>
 
 ## Data format
 
