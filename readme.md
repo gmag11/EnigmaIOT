@@ -24,7 +24,8 @@ During this project conception I decided that it should fulfil this list of requ
 - Secure by design. Make use of a secure channel for data transmission.
 - Automatic dynamic key agreement.
 - Do not require connection to the Internet.
-- Able to use deep sleep.
+- Do not overload my home WiFi infrastructure.
+- Able to use deep sleep to run on batteries.
 - Enough wireless range for a house
 - Support for a high number of nodes
 
