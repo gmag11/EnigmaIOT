@@ -56,13 +56,15 @@ System functions are divided in three layers: application, link and physical lay
 
 ![Software Layers](https://github.com/gmag11/EnigmaIOT/raw/master/doc/system_layers.png)
 
-- Application layer is not controlled by EnigmaIoT protocol but main program. User may choose whatever data format. A good option is to use CayenneLPP format but any other format or even raw data may be used. The only limit is the maximum packet length that, for ESP-NOW is around 200 bytes.
-- Link layer is the one that add privacy and security. It manages connection between nodes and gateway in a transparent way. It does key agreement and node registration and checks the correctness of data messages. In case of any error it automatically start a new registration process. On this layer, data packets are encrypted using calculated symetric key.
-- Physical layer currently uses connectionless ESP-NOW. But a hardware abstaction layer has been designed so it is possible to develop interfaces for any other layer 1 technology like LoRa or nRF24F01 radios.
+- **Application layer** is not controlled by EnigmaIoT protocol but main program. User may choose whatever data format. A good option is to use CayenneLPP format but any other format or even raw data may be used. The only limit is the maximum packet length that, for ESP-NOW is around 200 bytes.
+
+- **Link layer** is the one that add privacy and security. It manages connection between nodes and gateway in a transparent way. It does key agreement and node registration and checks the correctness of data messages. In case of any error it automatically start a new registration process. On this layer, data packets are encrypted using calculated symetric key.
+
+- **Physical layer** currently uses connectionless ESP-NOW. But a hardware abstaction layer has been designed so it is possible to develop interfaces for any other layer 1 technology like LoRa or nRF24F01 radios.
 
 ### EnigmaIoT protocol
 
-The named EnigmaIoT protocol is designed to use encrypted communication without the need to hardcode the key. It uses Diffie Hellman algorythm to calculate a shared key.
+The named **EnigmaIoT protocol** is designed to use encrypted communication without the need to hardcode the key. It uses [Diffie Hellman](https://security.stackexchange.com/a/196480) algorythm to calculate a shared key.
 
 The process starts with node anouncing itself with a Client Hello message. It tells the gateway its intention to establish a new shared key. It sends Diffie Hellman public part to be used on gateway to calculate the key.
 
