@@ -190,7 +190,7 @@ A user may program their own output format modifying gateway main program. For m
 ```
 <configurable prefix>/<node address>/sensordata/<json data>
 ```
-A prefix is configured on gateway to allow several sensor coexist in the same LAN. After that address and data are sent.
+A prefix is configured on gateway to allow several sensor networks to coexist in the same subnet. After that address and data are sent.
 
 Future upgrades could add statistical messages like message rate and packer error rate, this feature is under study now and it is now on development yet.
 
