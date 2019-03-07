@@ -78,6 +78,8 @@ When key is marked as valid node may start sending sensor data.
 
 Optionally gateway can send data to node. As node may be sleeping between communications, downlink messages has to be sent just after uplink data. So, one downlink message is queued until node communicates. Node waits some milliseconds before sleep for downlink data.
 
+In case of nodes that do not sleep (like actuators) gateway can send downlink data in any moment. Sleepy node is signalled during node registration on a bit on Key Exchange Finished message. It is set to 1 to signal that node will sleep just after sending data.
+
 Key is forced to change every period. Gateway decides the moment to invalidate each node key. If so, it sends an invalidate key as downlink, after next data message communication.
 
 After that node may start new key agreement sending a new Client Hello message.
@@ -96,29 +98,53 @@ All nodes and gateway are identified by its MAC address. No name is assigned so 
 
 ![Client Hello message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/ClientHello.png)
 
+Client hello is sent by node to start registration procedure. It includes the public key to be used on Diffie Hellman algorithm to calculate the key. A random filled 16 byte field is reserved for future use.
+
+This message is sent unencrypted.
+
 ### Server Hello message
 
 ![Server Hello message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/ServerHello.png)
+
+After receiving and checking Client Hello message, gateway responds with a Server Hello message. It carries gateway's public key to let node calculate key using DH. There is a random 16 byte field reserved for future use.
+
+Server Hello message is sen unencrypted.
 
 ### Key Exchange Finished message
 
 ![Key Exchange Finished message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/KeyExchangeFinished.png)
 
+After node has calculated shared key it generates a Key Exchange Finished message filled with random data and a CRC. These fields are encrypted using shared key and an initialization value (IV) that is sent unencrypted.
+
+It is used by gateway to check that calculated shared key is correct.
+
 ### Cypher Finished message
 
 ![Cypher Finished message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/CypherFinished.png)
+
+After gateway has decoded correctly Key Exchange Finished message, it build a Cypher Finished message to let node check that key is correct. Gateway assings node a NodeID. It is signalled as a 2 byte field.
 
 ### Sensor Data message
 
 ![Sensor Data message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/SensorData.png)
 
-### Sensor Command message (downlink)
+Sensor data is always encrypted using shaerd key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.
+
+Total message length is included on a 2 byte field.
+
+### Sensor Command message (downlink) **Under development**
 
 ![Sensor Command message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/SensorCommand-Downlink.png)
+
+Gateway can send commands to an individual node in a similar way as sensor data is sent by nodes. For nodes that can be slept between consecutive data messages, this commands are queued and sent just after a data message is received.
 
 ### Invalidate Key message
 
 ![Invalidate Key message format](https://github.com/gmag11/EnigmaIOT/raw/master/doc/InvalidateKey.png)
+
+After every data message from nodes, gateway evaluates key integrity and validity. In case of any error decoding the packet gateways ignores data and reply with this message indicating the reason that caused error. Node must start a new registration procedure in order to send data again. After this new registration node resends the last data message.
+
+A gateway defines a key validity period after that a node key is marked as expired. In a message is received after that is processed normally but an Invalidate Key message indicating key expiration as reason. Node then starts a registration procedure but does not retry communication.
 
 ## Protocol procedures
 
@@ -155,3 +181,15 @@ You may use [CayenneLPP encoder library](https://github.com/sabas1080/CayenneLPP
 Example gateway code expands data message to JSON data, to be used easily as payload on a MQTT publish message to a broker. For JSON generation ArduinoJSON library is required.
 
 In any case you can use your own format or even raw unencoded data. Take care of maximum message length that communications layer uses. For ESP-NOW it is about 200 bytes.
+
+## Output data from gateway
+
+A user may program their own output format modifying gateway main program. For my use case gateway outputs MQTT messages in this format:
+```
+<configurable prefix>/<node address>/sensordata/<json data>
+```
+A prefix is configured on gateway to allow several sensor coexist in the same LAN. After that address and data are sent.
+
+Future upgrades could add statistical messages like message rate and packer error rate, this feature is under study now and it is now on development yet.
+
+If ESP-NOW is used for node communication, ESP8266 cannot use WiFi in a reliable way. That's why in this case gateway will be formed by two ESP8266 linked by serial port. First one will output MQTT data in form of ascii strings and second one will forward them to MQTT broker.
