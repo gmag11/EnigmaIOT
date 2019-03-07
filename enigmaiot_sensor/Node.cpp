@@ -87,6 +87,7 @@ void Node::reset () {
     lastMessageCounter = 0;
     keyValidFrom = 0;
     status = UNREGISTERED;
+    sleepyNode = true;
 }
 
 Node::Node () :

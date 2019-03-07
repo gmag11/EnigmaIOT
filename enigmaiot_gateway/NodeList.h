@@ -31,6 +31,7 @@ struct node_instance {
     time_t lastMessageTime;
     status_t status = UNREGISTERED;
     bool keyValid = false;
+    bool sleepyNode = true;
 };
 
 typedef struct node_instance node_t;
@@ -90,6 +91,14 @@ public:
 
     void reset ();
 
+    void setSleepy (bool sleepy) {
+        sleepyNode = sleepy;
+    }
+
+    bool getSleepy () {
+        return sleepyNode;
+    }
+
 protected:
 #define KEYLENGTH 32
     uint8_t mac[6];
@@ -100,6 +109,7 @@ protected:
     bool keyValid = false;
     status_t status = UNREGISTERED;
     time_t lastMessageTime;
+    bool sleepyNode = true;
 
     void setMacAddress (const uint8_t *macAddress) {
         if (macAddress) {

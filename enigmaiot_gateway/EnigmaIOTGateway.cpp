@@ -63,7 +63,7 @@ void EnigmaIOTGatewayClass::handle () {
         digitalWrite (txled, HIGH);
     }
 
-#define MAX_INACTIVITY 86400000U
+#define MAX_INACTIVITY 86400000U // 1 day
     // Clean up dead nodes
     for (int i = 0; i < NUM_NODES; i++) {
         Node *node = nodelist.getNodeFromID (i);
@@ -223,9 +223,9 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
 
 bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
     /*
-    * ----------------------------------------------
-    *| msgType (1) | IV (16) | random (4) | CRC (4) |
-    * ----------------------------------------------
+    * -------------------------------------------------------------------------
+    *| msgType (1) | IV (16) | random (31 bits) | SleepyNode (1 bit) | CRC (4) |
+    * -------------------------------------------------------------------------
     */
 
     struct __attribute__ ((packed, aligned (1))) {
@@ -238,6 +238,7 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
 #define KEFMSG_LEN sizeof(keyExchangeFinished_msg)
 
     uint32_t crc32;
+    bool sleepyNode;
 
     if (count < KEFMSG_LEN) {
         DEBUG_WARN ("Wrong message");
@@ -265,8 +266,12 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
         return false;
     }
 
-    return true;
+    sleepyNode = (keyExchangeFinished_msg.random & 0x00000001U) == 1;
+    node->setSleepy (sleepyNode);
 
+    DEBUG_VERBOSE ("This is a %s node", sleepyNode?"sleepy":"always awaken");
+
+    return true;
 }
 
 bool EnigmaIOTGatewayClass::cipherFinished (Node *node) {

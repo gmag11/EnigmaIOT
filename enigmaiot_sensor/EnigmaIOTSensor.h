@@ -93,7 +93,7 @@ protected:
 
 
 public:
-    void begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter = true);
+    void begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter = true, bool sleepy = true);
     void handle ();
     void setLed (uint8_t led, time_t onTime = 100);
     bool sendData (const uint8_t *data, size_t len);

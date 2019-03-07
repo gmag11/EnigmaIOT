@@ -8,7 +8,7 @@ void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
     ledOnTime = onTime;
 }
 
-void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter) {
+void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter, bool sleepy) {
     pinMode (led, OUTPUT);
     digitalWrite (led, HIGH);
 
@@ -19,6 +19,8 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool u
     comm->onDataRcvd (rx_cb);
     comm->onDataSent (tx_cb);
     this->useCounter = useCounter;
+
+    node.setSleepy (sleepy);
 
     if (ESP.rtcUserMemoryRead (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
         DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
@@ -255,9 +257,9 @@ bool EnigmaIOTSensorClass::processCipherFinished (const uint8_t mac[6], const ui
 
 bool EnigmaIOTSensorClass::keyExchangeFinished () {
     /*
-    * ----------------------------------------------
-    *| msgType (1) | IV (16) | random (4) | CRC (4) |
-    * ----------------------------------------------
+    * -------------------------------------------------------------------------
+    *| msgType (1) | IV (16) | random (31 bits) | SleepyNode (1 bit) | CRC (4) |
+    * -------------------------------------------------------------------------
     */
 
     struct __attribute__ ((packed, aligned (1))) {
@@ -279,6 +281,13 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
     DEBUG_VERBOSE ("IV: %s", printHexBuffer (keyExchangeFinished_msg.iv, IV_LENGTH));
 
     random = Crypto.random ();
+
+    if (node.getSleepy ()) {
+        random = random | 0x00000001U; // Signal sleepy node
+    }
+    else {
+        random = random & 0xFFFFFFFEU; // Signal always awake node
+    }
 
     memcpy (&(keyExchangeFinished_msg.random), &random, RANDOM_LENGTH);
 
