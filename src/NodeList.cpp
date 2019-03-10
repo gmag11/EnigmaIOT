@@ -33,7 +33,7 @@ void Node::printToSerial (Stream *port)
     mac2str (mac, macstr);
     port->printf ("\tMAC Address: %s\n", macstr);
     port->printf ("\tLast counter: %u\n", lastMessageCounter);
-    port->printf ("\tKey valid from: %u ms ago\n", millis () - keyValidFrom);
+    port->printf ("\tKey valid from: %lu ms ago\n", (millis () - keyValidFrom));
     port->printf ("\tKey: %s\n", keyValid ? "Valid" : "Invalid");
     port->print ("\tStatus: ");
     switch (status) {
@@ -74,10 +74,10 @@ Node::Node () :
 }
 
 Node::Node (node_t nodeData) :
-    keyValid (nodeData.keyValid),
-    keyValidFrom (nodeData.keyValidFrom),
     lastMessageCounter (nodeData.lastMessageCounter),
     nodeId (nodeData.nodeId),
+    keyValidFrom (nodeData.keyValidFrom),
+    keyValid (nodeData.keyValid),
     status (nodeData.status)
 {
     memcpy (key, nodeData.key, sizeof (uint16_t));
@@ -215,7 +215,7 @@ Node * NodeList::getNewNode (const uint8_t * mac)
     } else {
         for (int i = 0; i < NUM_NODES; i++) {
             if (nodes[i].status == UNREGISTERED) {
-                nodes[i].setMacAddress (mac);
+                nodes[i].setMacAddress (const_cast<uint8_t *>(mac));
                 return &(nodes[i]);
             }
         }

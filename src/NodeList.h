@@ -111,13 +111,13 @@ public:
 protected:
 #define KEYLENGTH 32
     uint8_t mac[6];
-    uint16_t nodeId;
     uint8_t key[KEYLENGTH];
     uint16_t lastMessageCounter;
-    time_t keyValidFrom;
-    bool keyValid = false;
+    uint16_t nodeId;
+    timer_t keyValidFrom;
+    bool keyValid;
     status_t status = UNREGISTERED;
-    time_t lastMessageTime;
+    timer_t lastMessageTime;
     bool sleepyNode = true;
 
     friend class NodeList;

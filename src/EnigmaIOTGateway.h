@@ -8,7 +8,7 @@
 #else
 	#include "WProgram.h"
 #endif
-//#include <WifiEspNow.h>
+#include "lib/config.h"
 #include "lib/cryptModule.h"
 #include "lib/helperFunctions.h"
 #include "comms_hal.h"
@@ -16,8 +16,6 @@
 #include <CRC32.h>
 #include <cstddef>
 #include <cstdint>
-
-#define MAX_KEY_VALIDITY 60000
 
 enum messageType_t {
     SENSOR_DATA = 0x01,
@@ -59,8 +57,8 @@ class EnigmaIOTGatewayClass
      Comms_halClass *comm;
      int8_t txled = -1;
      int8_t rxled = -1;
-     int txLedOnTime;
-     int rxLedOnTime;
+     unsigned long txLedOnTime;
+     unsigned long rxLedOnTime;
      onDataRx_t notifyData;
      onNewNode_t notifyNewNode;
      onNodeDisconnected_t notifyNodeDisconnection;

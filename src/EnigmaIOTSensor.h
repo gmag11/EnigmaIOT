@@ -9,6 +9,7 @@
 #include "WProgram.h"
 #endif
 
+#include "lib/config.h"
 #include "lib/cryptModule.h"
 #include "lib/helperFunctions.h"
 #include "comms_hal.h"
@@ -55,8 +56,6 @@ typedef void (*onConnected_t)();
 typedef void (*onDisconnected_t)();
 #endif
 
-#define MAX_MESSAGE_LENGTH 200
-
 class EnigmaIOTSensorClass
 {
 protected:
@@ -65,7 +64,7 @@ protected:
     bool flashBlue = false;
     int flashLed = 2;
     int8_t led = -1;
-    int ledOnTime;
+    unsigned int ledOnTime;
     uint8_t channel = 3;
     Comms_halClass *comm;
     onDataRx_t notifyData;

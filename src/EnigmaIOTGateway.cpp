@@ -172,7 +172,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
     * ---------------------------------------------------------------------------------------
     */
 
-    uint8_t msgType_idx = 0;
+    //uint8_t msgType_idx = 0;
     uint8_t iv_idx = 1;
     uint8_t length_idx = iv_idx + IV_LENGTH;
     uint8_t nodeId_idx = length_idx + sizeof (int16_t);
@@ -180,10 +180,10 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
     uint8_t data_idx = counter_idx + sizeof (int16_t);
     uint8_t crc_idx = count - CRC_LENGTH;
 
-    uint8_t *iv;
+    //uint8_t *iv;
     uint32_t crc32;
     uint16_t counter;
-    size_t lostMessages;
+    size_t lostMessages = 0;
 
     Crypto.decryptBuffer (
         const_cast<uint8_t *>(&buf[length_idx]),
@@ -409,6 +409,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
         DEBUG_ERROR ("DH2 error with %s", macstr);
         return false;
     }
+    return true;
 }
 
 

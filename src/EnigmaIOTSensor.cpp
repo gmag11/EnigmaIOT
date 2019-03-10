@@ -44,10 +44,6 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool u
 }
 
 void EnigmaIOTSensorClass::handle () {
-    const uint16_t LED_PERIOD = 100;
-    const uint16_t RECONNECTION_PERIOD = 500;
-    const uint16_t DOWNLINK_WAIT_TIME = 500;
-
     static unsigned long blueOntime;
 
     if (led >= 0) {
@@ -180,7 +176,7 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
 
 #define SHMSG_LEN sizeof(serverHello_msg)
 
-    uint8_t myPublicKey[KEY_LENGTH];
+    //uint8_t myPublicKey[KEY_LENGTH];
     uint32_t crc32;
 
     if (count < SHMSG_LEN) {
@@ -311,9 +307,10 @@ bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len) {
 
     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
         DEBUG_INFO ("Data sent: %s", printHexBuffer (data, len));
-        dataMessage ((uint8_t *)data, len);
         flashBlue = true;
+        return dataMessage ((uint8_t *)data, len);
     }
+    return false;
 }
 
 void EnigmaIOTSensorClass::sleep (uint64_t time)

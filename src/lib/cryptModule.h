@@ -10,12 +10,12 @@
 #endif
 
 #define RANDOM_32 0x3FF20E44
-#define KEY_LENGTH 32U
-#define IV_LENGTH 16U
-#define RANDOM_LENGTH sizeof(uint32_t)
-#define CRC_LENGTH sizeof(uint32_t)
+const uint8_t KEY_LENGTH = 32;
+const uint8_t IV_LENGTH = 16;
+const uint8_t RANDOM_LENGTH = sizeof (uint32_t);
+const uint8_t CRC_LENGTH = sizeof (uint32_t);
 //#define BLOCK_SIZE 16U
-#define BUFFER_SIZE 255U
+const uint8_t BUFFER_SIZE = 255;
 
 class CryptModule {
 public:

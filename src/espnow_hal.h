@@ -17,7 +17,7 @@
 #endif
 #include "Comms_hal.h"
 
-#define MAX_MESSAGE_LENGTH 200;
+#define MAX_MESSAGE_LENGTH 250;
 
 class Espnow_halClass : public Comms_halClass
 {

@@ -1,9 +1,7 @@
-#include <ArduinoJson.h>
 #include <CayenneLPP.h>
-
 #include <CayenneLPPDec.h>
-#include "EnigmaIOTGateway.h"
-#include "espnow_hal.h"
+#include <EnigmaIOTGateway.h>
+#include <espnow_hal.h>
 
 
 #define BLUE_LED 2
