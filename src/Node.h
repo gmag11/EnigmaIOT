@@ -1,7 +1,7 @@
-// NodeList.h
+// Node.h
 
-#ifndef _NODELIST_h
-#define _NODELIST_h
+#ifndef _NODE_h
+#define _NODE_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "arduino.h"
@@ -46,6 +46,9 @@ public:
     uint16_t getNodeId () {
         return nodeId;
     }
+    void setNodeId (uint16_t nodeId) {
+        this->nodeId = nodeId;
+    }
     uint8_t *getEncriptionKey () {
         return key;
     }
@@ -63,11 +66,17 @@ public:
     void setLastMessageTime () {
         lastMessageTime = millis ();
     }
-    uint16_t getLastMessageCounter(){
+    uint16_t getLastMessageCounter () {
         return lastMessageCounter;
     }
     void setLastMessageCounter (uint16_t counter) {
         lastMessageCounter = counter;
+    }
+
+    void setMacAddress (uint8_t *macAddress) {
+        if (macAddress) {
+            memcpy (mac, macAddress, 6);
+        }
     }
 
     bool isKeyValid () {
@@ -111,49 +120,7 @@ protected:
     time_t lastMessageTime;
     bool sleepyNode = true;
 
-    void setMacAddress (const uint8_t *macAddress) {
-        if (macAddress) {
-            memcpy (mac, macAddress, 6);
-        }
-    }
-
-    friend class NodeList;
 };
-
-
-
-class NodeList {
-#define NUM_NODES 20
-public:
-    NodeList ();
-
-    Node *getNodeFromID (uint16_t nodeId);
-
-    Node *getNodeFromMAC (const uint8_t* mac);
-    
-    Node *findEmptyNode ();
-    
-    uint16_t countActiveNodes ();
-    
-    bool unregisterNode (uint16_t nodeId);
-    
-    bool unregisterNode (const uint8_t* mac);
-    
-    bool unregisterNode (Node *node);
-
-    Node *getNextActiveNode (uint16_t nodeId);
-
-    Node *getNextActiveNode (Node node);
-
-    Node *getNewNode (const uint8_t* mac);
-
-    void printToSerial (Stream *port);
-
-protected:
-    Node nodes[NUM_NODES];
-
-};
-
 
 #endif
 

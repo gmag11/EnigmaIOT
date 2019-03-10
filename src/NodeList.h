@@ -1,7 +1,7 @@
-// Node.h
+// NodeList.h
 
-#ifndef _NODE_h
-#define _NODE_h
+#ifndef _NODELIST_h
+#define _NODELIST_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "arduino.h"
@@ -53,6 +53,7 @@ public:
         return key;
     }
     void setEncryptionKey (const uint8_t* key);
+
     time_t getKeyValidFrom () {
         return keyValidFrom;
     }
@@ -71,7 +72,12 @@ public:
     void setLastMessageCounter (uint16_t counter) {
         lastMessageCounter = counter;
     }
-    void setMacAddress (uint8_t *mac);
+
+    void setMacAddress (uint8_t *macAddress) {
+        if (macAddress) {
+            memcpy (mac, macAddress, 6);
+        }
+    }
 
     bool isKeyValid () {
         return keyValid;
@@ -114,9 +120,43 @@ protected:
     time_t lastMessageTime;
     bool sleepyNode = true;
 
-    void setMacAddress (const uint8_t *macAddress);
+    friend class NodeList;
+};
+
+
+
+class NodeList {
+#define NUM_NODES 20
+public:
+    NodeList ();
+
+    Node *getNodeFromID (uint16_t nodeId);
+
+    Node *getNodeFromMAC (const uint8_t* mac);
+    
+    Node *findEmptyNode ();
+    
+    uint16_t countActiveNodes ();
+    
+    bool unregisterNode (uint16_t nodeId);
+    
+    bool unregisterNode (const uint8_t* mac);
+    
+    bool unregisterNode (Node *node);
+
+    Node *getNextActiveNode (uint16_t nodeId);
+
+    Node *getNextActiveNode (Node node);
+
+    Node *getNewNode (const uint8_t* mac);
+
+    void printToSerial (Stream *port);
+
+protected:
+    Node nodes[NUM_NODES];
 
 };
+
 
 #endif
 

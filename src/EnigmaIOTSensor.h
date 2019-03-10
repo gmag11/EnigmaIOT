@@ -13,7 +13,7 @@
 #include "lib/helperFunctions.h"
 #include "comms_hal.h"
 #include <CRC32.h>
-#include "Node.h"
+#include "NodeList.h"
 #include <cstddef>
 #include <cstdint>
 

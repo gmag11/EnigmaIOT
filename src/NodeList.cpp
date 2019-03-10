@@ -74,14 +74,24 @@ Node::Node () :
 }
 
 Node::Node (node_t nodeData) :
-    keyValid(nodeData.keyValid), 
-    keyValidFrom(nodeData.keyValidFrom), 
-    lastMessageCounter(nodeData.lastMessageCounter), 
-    nodeId(nodeData.nodeId), 
-    status(nodeData.status)
+    keyValid (nodeData.keyValid),
+    keyValidFrom (nodeData.keyValidFrom),
+    lastMessageCounter (nodeData.lastMessageCounter),
+    nodeId (nodeData.nodeId),
+    status (nodeData.status)
 {
     memcpy (key, nodeData.key, sizeof (uint16_t));
     memcpy (mac, nodeData.mac, 6);
+}
+
+void Node::reset () {
+    memset (mac, 0, 6);
+    memset (key, 0, KEYLENGTH);
+    keyValid = false;
+    lastMessageCounter = 0;
+    keyValidFrom = 0;
+    status = UNREGISTERED;
+    sleepyNode = true;
 }
 
 NodeList::NodeList () {
@@ -135,16 +145,6 @@ uint16_t NodeList::countActiveNodes ()
         }
     }
     return counter;
-}
-
-void Node::reset () {
-    memset (mac, 0, 6);
-    memset (key, 0, KEYLENGTH);
-    keyValid = false;
-    lastMessageCounter = 0;
-    keyValidFrom = 0;
-    status = UNREGISTERED;
-    sleepyNode = true;
 }
 
 bool NodeList::unregisterNode (uint16_t nodeId)

@@ -21,22 +21,10 @@ node_t Node::getNodeData () {
     memcpy (thisNode.mac, mac, 6);
     thisNode.nodeId = nodeId;
     thisNode.lastMessageCounter = lastMessageCounter;
-    //thisNode.registered = registered;
     thisNode.status = status;
-}
 
-void Node::setMacAddress (uint8_t *mac) {
-    if (mac) {
-        memcpy (this->mac, mac, 6);
-    }
+    return thisNode;
 }
-
-void Node::setMacAddress (const uint8_t *macAddress) {
-    if (macAddress) {
-        memcpy (mac, macAddress, 6);
-    }
-}
-
 
 void Node::printToSerial (Stream *port)
 {
@@ -80,6 +68,23 @@ void Node::printToSerial (Stream *port)
     port->println ();
 }
 
+Node::Node () :
+    keyValid (false),
+    status (UNREGISTERED)
+{
+}
+
+Node::Node (node_t nodeData) :
+    keyValid (nodeData.keyValid),
+    keyValidFrom (nodeData.keyValidFrom),
+    lastMessageCounter (nodeData.lastMessageCounter),
+    nodeId (nodeData.nodeId),
+    status (nodeData.status)
+{
+    memcpy (key, nodeData.key, sizeof (uint16_t));
+    memcpy (mac, nodeData.mac, 6);
+}
+
 void Node::reset () {
     memset (mac, 0, 6);
     memset (key, 0, KEYLENGTH);
@@ -90,22 +95,5 @@ void Node::reset () {
     sleepyNode = true;
 }
 
-Node::Node () :
-    keyValid (false),
-    status (UNREGISTERED)
-    //registered (false)
-{
-}
 
-Node::Node (node_t nodeData) :
-    keyValid (nodeData.keyValid),
-    keyValidFrom (nodeData.keyValidFrom),
-    lastMessageCounter (nodeData.lastMessageCounter),
-    nodeId (nodeData.nodeId),
-    status (nodeData.status)
-    //registered(nodeData.registered)
-{
-    memcpy (key, nodeData.key, sizeof (uint16_t));
-    memcpy (mac, nodeData.mac, 6);
-}
 
