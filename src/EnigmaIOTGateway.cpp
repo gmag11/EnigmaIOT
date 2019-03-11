@@ -330,7 +330,7 @@ bool EnigmaIOTGatewayClass::cipherFinished (Node *node) {
     return comm->send (node->getMacAddress (), (uint8_t *)&cipherFinished_msg, CFMSG_LEN) == 0;
 }
 
-bool  EnigmaIOTGatewayClass::invalidateKey (Node *node, invalidateReason_t reason) {
+bool  EnigmaIOTGatewayClass::invalidateKey (Node *node, gwInvalidateReason_t reason) {
     /*
     * --------------------------
     *| msgType (1) | reason (1) |

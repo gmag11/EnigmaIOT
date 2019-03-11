@@ -17,7 +17,7 @@
 #include <cstddef>
 #include <cstdint>
 
-enum messageType_t {
+enum gatewayMessageType_t {
     SENSOR_DATA = 0x01,
     CLIENT_HELLO = 0xFF,
     SERVER_HELLO = 0xFE,
@@ -26,7 +26,7 @@ enum messageType_t {
     INVALIDATE_KEY = 0xFB
 };
 
-enum invalidateReason_t {
+enum gwInvalidateReason_t {
     UNKNOWN_ERROR = 0x00,
     WRONG_CLIENT_HELLO = 0x01,
     WRONG_EXCHANGE_FINISHED = 0x02,
@@ -37,13 +37,13 @@ enum invalidateReason_t {
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, uint16_t lostMessages)> onDataRx_t;
+typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, uint16_t lostMessages)> onGwDataRx_t;
 typedef std::function<void (uint8_t* mac)> onNewNode_t;
-typedef std::function<void (uint8_t* mac, invalidateReason_t reason)> onNodeDisconnected_t;
+typedef std::function<void (uint8_t* mac, gwInvalidateReason_t reason)> onNodeDisconnected_t;
 #else
-typedef void (*onDataRx_t)(const uint8_t*, const uint8_t*, uint8_t, size_t);
+typedef void (*onGwDataRx_t)(const uint8_t*, const uint8_t*, uint8_t, size_t);
 typedef void (*onNewNode_t)(const uint8_t*);
-typedef void (*onNodeDisconnected_t)(const uint8_t*, invalidateReason_t);
+typedef void (*onNodeDisconnected_t)(const uint8_t*, gwInvalidateReason_t);
 #endif
 
 class EnigmaIOTGatewayClass
@@ -59,7 +59,7 @@ class EnigmaIOTGatewayClass
      int8_t rxled = -1;
      unsigned long txLedOnTime;
      unsigned long rxLedOnTime;
-     onDataRx_t notifyData;
+     onGwDataRx_t notifyData;
      onNewNode_t notifyNewNode;
      onNodeDisconnected_t notifyNodeDisconnection;
      bool useCounter = true;
@@ -68,7 +68,7 @@ class EnigmaIOTGatewayClass
      bool serverHello (const uint8_t *key, Node *node);
      bool checkCRC (const uint8_t *buf, size_t count, const uint32_t *crc);
      bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
-     bool invalidateKey (Node *node, invalidateReason_t reason);
+     bool invalidateKey (Node *node, gwInvalidateReason_t reason);
      bool cipherFinished (Node *node);
      bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
      bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
@@ -82,7 +82,7 @@ class EnigmaIOTGatewayClass
      void handle ();
      void setTxLed (uint8_t led, time_t onTime = 100);
      void setRxLed (uint8_t led, time_t onTime = 100);
-     void onDataRx (onDataRx_t handler) {
+     void onDataRx (onGwDataRx_t handler) {
          notifyData = handler;
      }
      void onNewNode (onNewNode_t handler) {

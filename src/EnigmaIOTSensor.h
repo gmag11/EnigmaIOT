@@ -18,7 +18,7 @@
 #include <cstddef>
 #include <cstdint>
 
-enum messageType {
+enum sensorMessageType {
     SENSOR_DATA = 0x01,
     CLIENT_HELLO = 0xFF,
     SERVER_HELLO = 0xFE,
@@ -27,7 +27,7 @@ enum messageType {
     INVALIDATE_KEY = 0xFB
 };
 
-enum invalidateReason_t {
+enum sensorInvalidateReason_t {
     UNKNOWN_ERROR = 0x00,
     WRONG_CLIENT_HELLO = 0x01,
     WRONG_EXCHANGE_FINISHED = 0x02,
@@ -43,18 +43,23 @@ struct rtcmem_data_t {
     uint8_t nodeId;
 };
 
-typedef messageType messageType_t;
+typedef sensorMessageType sensorMessageType_t;
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len)> onDataRx_t;
+typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len)> onSensorDataRx_t;
 typedef std::function<void ()> onConnected_t;
 typedef std::function<void ()> onDisconnected_t;
 #else
-typedef void (*onDataRx_t)(const uint8_t*, const uint8_t*, uint8_t);
+typedef void (*onSensorDataRx_t)(const uint8_t*, const uint8_t*, uint8_t);
 typedef void (*onConnected_t)();
 typedef void (*onDisconnected_t)();
 #endif
+
+/**
+  * @brief Main sensor node class. Manages communication with gateway and allows sending and receiving user data
+  *
+  */
 
 class EnigmaIOTSensorClass
 {
@@ -67,7 +72,7 @@ protected:
     unsigned int ledOnTime;
     uint8_t channel = 3;
     Comms_halClass *comm;
-    onDataRx_t notifyData;
+    onSensorDataRx_t notifyData;
     onConnected_t notifyConnection;
     onDisconnected_t notifyDisconnection;
     bool useCounter = true;
@@ -76,13 +81,12 @@ protected:
     uint64_t sleepTime;
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH];
     uint8_t dataMessageSentLength = 0;
-    invalidateReason_t invalidateReason = UNKNOWN_ERROR;
-
+    sensorInvalidateReason_t invalidateReason = UNKNOWN_ERROR;
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
     bool clientHello (/*const uint8_t *key*/);
     bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count);
     bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count);
-    invalidateReason_t processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    sensorInvalidateReason_t processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count);
     bool keyExchangeFinished ();
     bool dataMessage (const uint8_t *data, size_t len);
     void manageMessage (const uint8_t *mac, const uint8_t* buf, uint8_t count);
@@ -96,7 +100,7 @@ public:
     void handle ();
     void setLed (uint8_t led, time_t onTime = 100);
     bool sendData (const uint8_t *data, size_t len);
-    void onDataRx (onDataRx_t handler) {
+    void onDataRx (onSensorDataRx_t handler) {
         notifyData = handler;
     }
     void onConnected (onConnected_t handler) {

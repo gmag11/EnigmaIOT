@@ -28,7 +28,7 @@ void newNodeConnected (uint8_t* mac) {
     Serial.printf ("New node connected: %s\n", macstr);
 }
 
-void nodeDisconnected (uint8_t* mac, invalidateReason_t reason) {
+void nodeDisconnected (uint8_t* mac, gwInvalidateReason_t reason) {
     char macstr[18];
     mac2str (mac, macstr);
     Serial.printf ("Node %s disconnected. Reason %u\n", macstr, reason);
