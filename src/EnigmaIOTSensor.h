@@ -24,29 +24,38 @@
 #include <cstddef>
 #include <cstdint>
 
+/**
+  * @brief Message code definition
+  */
 enum sensorMessageType {
-    SENSOR_DATA = 0x01,
-    CLIENT_HELLO = 0xFF,
-    SERVER_HELLO = 0xFE,
-    KEY_EXCHANGE_FINISHED = 0xFD,
-    CYPHER_FINISHED = 0xFC,
-    INVALIDATE_KEY = 0xFB
+    SENSOR_DATA = 0x01, /**< Data message from sensor node */
+    CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
+    SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
+    KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
+    CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
+    INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
 };
 
+/**
+  * @brief Key invalidation reason definition
+  */
 enum sensorInvalidateReason_t {
-    UNKNOWN_ERROR = 0x00,
-    WRONG_CLIENT_HELLO = 0x01,
-    WRONG_EXCHANGE_FINISHED = 0x02,
-    WRONG_DATA = 0x03,
-    UNREGISTERED_NODE = 0x04,
-    KEY_EXPIRED = 0x05
+    UNKNOWN_ERROR = 0x00, /**< Unknown error. Not used by the moment */
+    WRONG_CLIENT_HELLO = 0x01, /**< ClientHello message received was invalid */
+    WRONG_EXCHANGE_FINISHED = 0x02, /**< KeyExchangeFinished message received was invalid. Probably this means an error on shared key */
+    WRONG_DATA = 0x03, /**< Data message received could not be decrypted successfuly */
+    UNREGISTERED_NODE = 0x04, /**< Data received from an unregistered node*/
+    KEY_EXPIRED = 0x05 /**< Node key has reached maximum validity time */
 };
 
+/**
+  * @brief Context data to be stored con persistent storage to be used after wake from sleep mode
+  */
 struct rtcmem_data_t {
-    uint32_t crc32;
-    uint8_t nodeKey[KEY_LENGTH];
-    uint16_t lastMessageCounter;
-    uint8_t nodeId;
+    uint32_t crc32; /**< CRC to check RTC data integrity */
+    uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
+    uint16_t lastMessageCounter; /**< Node last message counter */
+    uint8_t nodeId; /**< Node identification */
 };
 
 typedef sensorMessageType sensorMessageType_t;
@@ -70,12 +79,11 @@ typedef void (*onDisconnected_t)();
 class EnigmaIOTSensorClass
 {
 protected:
-    uint8_t gateway[6];
-    Node node;
-    bool flashBlue = false;
-    int flashLed = 2;
-    int8_t led = -1;
-    unsigned int ledOnTime;
+    uint8_t gateway[6]; /**< Gateway MAC address to sent messages to */
+    Node node; /**< Sensor node abstraction to store context */
+    bool flashBlue = false; /**< If true Tx LED will be flashed */
+    int8_t led = -1; /**< IO Pin that corresponds to Tx LED. Default value disables LED. It is initialized with `setLed` method */
+    unsigned int ledOnTime; /**< Time that LED is On during flash. Initalized on `setLed` */
     uint8_t channel = 3;
     Comms_halClass *comm;
     onSensorDataRx_t notifyData;
