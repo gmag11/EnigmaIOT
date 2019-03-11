@@ -84,15 +84,15 @@ protected:
     bool flashBlue = false; /**< If true Tx LED will be flashed */
     int8_t led = -1; /**< IO Pin that corresponds to Tx LED. Default value disables LED. It is initialized with `setLed` method */
     unsigned int ledOnTime; /**< Time that LED is On during flash. Initalized on `setLed` */
-    uint8_t channel = 3;
-    Comms_halClass *comm;
-    onSensorDataRx_t notifyData;
-    onConnected_t notifyConnection;
-    onDisconnected_t notifyDisconnection;
-    bool useCounter = true;
-    rtcmem_data_t rtcmem_data;
-    bool sleepRequested = false;
-    uint64_t sleepTime;
+    uint8_t channel = 3; /**< Comms channel to transmit on */
+    Comms_halClass *comm; /**< Comms abstraction layer */
+    onSensorDataRx_t notifyData; /**< Callback that will be called on every message reception */
+    onConnected_t notifyConnection; /**< Callback that will be called anytime a new node is registered */
+    onDisconnected_t notifyDisconnection; /**< Callback that will be called anytime a node is disconnected */
+    bool useCounter = true; /**< `true` means that data message counter will be used to mark message order */
+    rtcmem_data_t rtcmem_data; /**< Context data to be stored on persistent storage */
+    bool sleepRequested = false; /**< `true` means that this node will sleep as soon a message is sent and downlink wait time has passed */
+    uint64_t sleepTime; /**< Time in microseconds that this node will be slept between measurements */
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH];
     uint8_t dataMessageSentLength = 0;
     sensorInvalidateReason_t invalidateReason = UNKNOWN_ERROR;
