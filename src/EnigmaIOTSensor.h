@@ -1,4 +1,10 @@
-// EnigmaIOTSensor.h
+/**
+  * @file EnigmaIOTSensor.h
+  * @version 0.0.1
+  * @date 09/03/2019
+  * @author German Martin
+  * @brief Library to build a node for EnigmaIoT system
+  */
 
 #ifndef _ENIGMAIOTSENSOR_h
 #define _ENIGMAIOTSENSOR_h
@@ -82,10 +88,47 @@ protected:
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH];
     uint8_t dataMessageSentLength = 0;
     sensorInvalidateReason_t invalidateReason = UNKNOWN_ERROR;
+
+    /**
+      * @brief Check that a given CRC matches to calulated value from a buffer
+      * @param buf Pointer to the buffer that contains the stream to calculate CRC
+      * @param count Buffer length in number of bytes 
+      * @param crc Received CRC to check against calculation
+      * @return Returns `true` if CRC check was successful. `false` otherwise  
+      */
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
-    bool clientHello (/*const uint8_t *key*/);
+
+    /**
+      * @brief Build a **ClientHello** messange and send it to gateway
+      * @return Returns `true` if ClientHello message was successfully sent. `false` otherwise
+      */
+    bool clientHello ();
+
+    /**
+      * @brief Gets a buffer containing a **ServerHello** message and process it. It uses that message to calculate a shared key using Diffie Hellman algorithm
+      * @param mac MAC address where this message was received from
+      * @param buf Pointer to the buffer that contains the message
+      * @param count Message length in number of bytes of ServerHello message
+      * @return Returns `true` if message syntax is correct and key was successfuly calculated `false` otherwise
+      */
     bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count);
+
+    /**
+      * @brief Gets a buffer containing a **CipherFinished** message and process it. It checks that gateway key is correct by decrypting this message random payload
+      * @param mac MAC address where this message was received from
+      * @param buf Pointer to the buffer that contains the message
+      * @param count Message length in number of bytes of CipherFinished message
+      * @return Returns `true` if message syntax is correct and key was successfuly calculated `false` otherwise
+      */
     bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    
+    /**
+      * @brief Gets a buffer containing an **InvalidateKey** message and process it. This trigger a new key agreement to start
+      * @param mac MAC address where this message was received from
+      * @param buf Pointer to the buffer that contains the message
+      * @param count Message length in number of bytes of InvalidateKey message
+      * @return Returns the reason because key is not valid anymore. Check possible values in sensorInvalidateReason_t
+      */
     sensorInvalidateReason_t processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count);
     bool keyExchangeFinished ();
     bool dataMessage (const uint8_t *data, size_t len);
