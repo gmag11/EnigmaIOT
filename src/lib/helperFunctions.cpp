@@ -32,8 +32,10 @@ void initWiFi () {
 
 #define MACSTR "%02X:%02X:%02X:%02X:%02X:%02X"
 
-bool mac2str (const uint8_t *mac, const char *buffer) {
+const char *mac2str (const uint8_t *mac, const char *buffer) {
     if (mac && buffer) {
         sprintf (const_cast<char *>(buffer), MACSTR, MAC2STR (mac));
+        return buffer;
     }
+    return NULL;
 }

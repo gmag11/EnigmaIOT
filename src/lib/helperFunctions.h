@@ -19,7 +19,7 @@
 
 char* printHexBuffer (const uint8_t *buffer, uint16_t len);
 
-bool mac2str (const uint8_t *mac, const char *buffer);
+const char *mac2str (const uint8_t *mac, const char *buffer);
 
 void initWiFi ();
 

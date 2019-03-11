@@ -53,7 +53,7 @@ uint32_t CryptModule::random () {
 
 uint8_t *CryptModule::random (const uint8_t *buf, size_t len) {
     if (buf) {
-        for (int i = 0; i < len; i += sizeof (uint32_t)) {
+        for (unsigned int i = 0; i < len; i += sizeof (uint32_t)) {
             uint32 rnd = random ();
             if (i < len - (len % sizeof (int32_t))) {
                 memcpy (const_cast<uint8_t *>(buf) + i, &rnd, sizeof (uint32_t));

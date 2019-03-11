@@ -185,6 +185,7 @@ bool NodeList::unregisterNode (Node *node)
             return false;
         }
     }
+    return false;
 }
 
 Node * NodeList::getNextActiveNode (uint16_t nodeId)
