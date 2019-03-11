@@ -269,11 +269,10 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
 
     uint32_t crc32;
     uint32_t random;
-    uint8_t *iv;
 
     keyExchangeFinished_msg.msgType = KEY_EXCHANGE_FINISHED;
 
-    iv = Crypto.random (keyExchangeFinished_msg.iv, IV_LENGTH);
+    Crypto.random (keyExchangeFinished_msg.iv, IV_LENGTH);
     DEBUG_VERBOSE ("IV: %s", printHexBuffer (keyExchangeFinished_msg.iv, IV_LENGTH));
 
     random = Crypto.random ();
