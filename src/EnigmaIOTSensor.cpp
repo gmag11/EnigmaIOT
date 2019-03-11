@@ -458,7 +458,7 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
                 }
                 // Resend last message in case of it is still pending to be sent.
                 // If key expired it was successfully sent before so retransmission is not needed 
-                if (sensorInvalidateReason < KEY_EXPIRED && dataMessageSentLength > 0) {
+                if (invalidateReason < KEY_EXPIRED && dataMessageSentLength > 0) {
                     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
                         DEBUG_INFO ("Data sent: %s", printHexBuffer (dataMessageSent, dataMessageSentLength));
                         dataMessage ((uint8_t *)dataMessageSent, dataMessageSentLength);
@@ -476,7 +476,7 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
         break;
     case INVALIDATE_KEY:
         DEBUG_INFO (" <------- INVALIDATE KEY");
-        sensorInvalidateReason = processInvalidateKey (mac, buf, count);
+        invalidateReason = processInvalidateKey (mac, buf, count);
         node.reset ();
         if (notifyDisconnection) {
             notifyDisconnection ();
