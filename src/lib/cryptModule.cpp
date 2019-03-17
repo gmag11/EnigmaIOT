@@ -1,6 +1,3 @@
-// 
-// 
-// 
 //#include <Crypto.h>
 #include <CFB.h>
 #include <CryptoLW.h>
@@ -80,6 +77,7 @@ bool CryptModule::getDH2 (const uint8_t* remotePubKey) {
 		DEBUG_WARN ("DH2 error");
 		return false;
 	}
+    memset (publicDHKey, 0, KEY_LENGTH); // delete public key from memory
 	
 	return true;
 }
