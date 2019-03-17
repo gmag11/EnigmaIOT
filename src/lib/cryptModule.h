@@ -4,6 +4,8 @@
   * @date 09/03/2019
   * @author German Martin
   * @brief Crypto library that implements EnigmaIoT encryption, decryption and key agreement fuctions
+  *
+  * Uses [Arduino CryptoLib](https://rweather.github.io/arduinolibs/crypto.html) library
   */
 
 #ifndef _CRYPTMODULE_h
@@ -26,6 +28,7 @@ const uint8_t BUFFER_SIZE = 255;
 /**
   * @brief EnigmaIoT Crypto module. Wraps Arduino CryptoLib classes and methods
   *
+  * Uses [Arduino CryptoLib](https://rweather.github.io/arduinolibs/crypto.html) library
   */
 class CryptModule {
 public:
