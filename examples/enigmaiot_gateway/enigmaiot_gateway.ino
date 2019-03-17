@@ -1,3 +1,11 @@
+/**
+  * @file enigmaiot_gateway.ino
+  * @version 0.0.1
+  * @date 09/03/2019
+  * @author German Martin
+  * @brief Gateway based on EnigmaIoT over ESP-NOW
+  */
+
 #include <CayenneLPP.h>
 #include <CayenneLPPDec.h>
 #include <EnigmaIOTGateway.h>

@@ -10,7 +10,6 @@
 #ifndef _ESPNOW_HAL_h
 #define _ESPNOW_HAL_h
 
-//#include <WifiEspNow.h>
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "arduino.h"
 #else
