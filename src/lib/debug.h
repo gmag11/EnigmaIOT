@@ -1,15 +1,27 @@
-// debug.h
+/**
+  * @brief Auxiliary functions for debugging over Serial
+  *
+  * Format used on debug functions is the same as `printf()`. Check source code for usage examples
+  * Debug calls will be enabled or disabled automatically before compiling according defined `DEBUG_LEVEL`.
+  *
+  * If `DEBUG_ESP_PORT` is not defined library will give no debug output at all
+  *
+  * @file debug.h
+  * @version 0.0.1
+  * @date 09/03/2019
+  * @author German Martin
+  */
 
 #ifndef _DEBUG_h
 #define _DEBUG_h
 
 //#define DEBUG_ESP_PORT Serial
 
-#define NO_DEBUG	0
-#define ERROR	1
-#define WARN	2
-#define INFO	3
-#define VERBOSE	4
+#define NO_DEBUG	0 ///< @brief Debug level that will give no debug output
+#define ERROR	1 ///< @brief Debug level that will give error messages
+#define WARN	2 ///< @brief Debug level that will give error and warning messages
+#define INFO	3 ///< @brief Debug level that will give error, warning and info messages
+#define VERBOSE	4 ///< @brief Debug level that will give all defined messages
 
 #define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%u] %u free (%s:%d) ",millis(),ESP.getFreeHeap(),__FUNCTION__,__LINE__);
 
