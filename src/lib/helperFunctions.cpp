@@ -30,6 +30,7 @@ void initWiFi () {
 
 }
 
+#undef MACSTR
 #define MACSTR "%02X:%02X:%02X:%02X:%02X:%02X"
 
 const char *mac2str (const uint8_t *mac, const char *buffer) {
