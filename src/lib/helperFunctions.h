@@ -1,4 +1,10 @@
-// helperFunctions.h
+/**
+  * @file helperFunctions.h
+  * @version 0.0.1
+  * @date 09/03/2019
+  * @author German Martin
+  * @brief Auxiliary function definition
+  */
 
 #ifndef _HELPERFUNCTIONS_h
 #define _HELPERFUNCTIONS_h
@@ -17,10 +23,28 @@
 #include "config.h"
 #include "debug.h"
 
+/**
+  * @brief Debug helper function that generates a string that represent a buffer hexadecimal values
+  * @param buffer Pointer to the buffer
+  * @param len Buffer length in number of bytes
+  * @return Returns a pointer to the generated string.
+  *
+  * String has to be used inmediatelly. At least before calling `printHexBuffer()` again as it uses a static buffer to hold string.
+  * It will be overwritten on next call.
+  */
 char* printHexBuffer (const uint8_t *buffer, uint16_t len);
 
+/**
+  * @brief Debug helper function that generates a string that represent a MAC address
+  * @param mac Pointer to the MAC address
+  * @param buffer Buffer that will store resulting address. It must be 18 bytes long at least
+  * @return Returns a pointer to input buffer after writting MAC address on human readable format
+  */
 const char *mac2str (const uint8_t *mac, const char *buffer);
 
+/**
+  * @brief Initalizes WiFi interfaces on ESP8266 or ESP32
+  */
 void initWiFi ();
 
 #endif

@@ -4,7 +4,8 @@
 
 #include "helperFunctions.h"
 
-#define MAX_STR_LEN 200
+#define MAX_STR_LEN 200 ///< @brief Key length used by selected crypto algorythm
+
 char *printHexBuffer (const uint8_t *buffer, uint16_t len) {
 	static char tempStr[MAX_STR_LEN];
 	int charIndex = 0;
