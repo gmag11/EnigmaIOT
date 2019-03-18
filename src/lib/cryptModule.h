@@ -23,7 +23,7 @@ const uint8_t IV_LENGTH = 16; ///< @brief Initalization vector length used by se
 const uint8_t RANDOM_LENGTH = sizeof (uint32_t); ///< @brief Length of random number generator values
 const uint8_t CRC_LENGTH = sizeof (uint32_t); ///< @brief Length of CRC
 //#define BLOCK_SIZE 16U
-const uint8_t BUFFER_SIZE = 255; 
+//const uint8_t BUFFER_SIZE = 255; 
 
 /**
   * @brief EnigmaIoT Crypto module. Wraps Arduino CryptoLib classes and methods
@@ -108,7 +108,7 @@ protected:
     uint8_t publicDHKey[KEY_LENGTH]; ///< @brief Temporary public key store used during key agreement
 };
 
-extern CryptModule Crypto;
+extern CryptModule Crypto; ///< @brief Singleton Crypto class instance
 
 #endif
 
