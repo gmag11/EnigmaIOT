@@ -16,6 +16,8 @@ ESP8266 microcontroller implements a protocol known as ESP-NOW. It is a point to
 
 But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So I thought that I could implement encryption on payload but I found many problems I should solve to grade this as "secure enough".
 
+Find library documentation on https://gmag11.github.io/EnigmaIOT
+
 ## Project requirements
 
 During this project conception I decided that it should fulfil this list of requirements.
