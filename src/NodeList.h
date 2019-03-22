@@ -97,17 +97,40 @@ public:
     uint8_t *getEncriptionKey () {
         return key;
     }
+
+    /**
+      * @brief Sets encryption key
+      * @param key New key
+      */
     void setEncryptionKey (const uint8_t* key);
 
+    /**
+      * @brief Gets last time that key was agreed with gateway
+      * @return Time in milliseconds of last key agreement
+      */
     time_t getKeyValidFrom () {
         return keyValidFrom;
     }
+
+    /**
+      * @brief Sets time when key was agreed with gateway
+      * @param keyValidFrom Time on key agreement
+      */
     void setKeyValidFrom (time_t keyValidFrom) {
         this->keyValidFrom = keyValidFrom;
     }
+
+    /**
+      * @brief Gets last time that node sent a message
+      * @return Time in milliseconds of last received node message
+      */
     time_t getLastMessageTime () {
         return lastMessageTime;
     }
+
+    /**
+      * @brief Sets current moment as last node message time
+      */
     void setLastMessageTime () {
         lastMessageTime = millis ();
     }
