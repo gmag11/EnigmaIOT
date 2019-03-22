@@ -134,44 +134,104 @@ public:
     void setLastMessageTime () {
         lastMessageTime = millis ();
     }
+
+    /**
+      * @brief Gets counter for last received message from node
+      * @return Message counter
+      */
     uint16_t getLastMessageCounter () {
         return lastMessageCounter;
     }
+
+    /**
+      * @brief Sets counter for last received message from node
+      * @param counter Message counter
+      */
     void setLastMessageCounter (uint16_t counter) {
         lastMessageCounter = counter;
     }
 
+    /**
+      * @brief Sets node address
+      * @param macAddress Node address
+      */
     void setMacAddress (uint8_t *macAddress) {
         if (macAddress) {
             memcpy (mac, macAddress, 6);
         }
     }
 
+    /**
+      * @brief Gets shared key validity for this node
+      * @return `true` if node shared key is valid. `false` otherwise
+      */
     bool isKeyValid () {
         return keyValid;
     }
+
+    /**
+      * @brief Sets shared key validity for this node
+      * @param status node key validity
+      */
     void setKeyValid (bool status) {
         keyValid = status;
     }
+
+    /**
+      * @brief Gets registration state of this node
+      * @return `true` if node is registered on gateway. `false` otherwise
+      */
     bool isRegistered () {
         return status == REGISTERED;
     }
+
+    /**
+      * @brief Gets status for finite state machine that represents node
+      * @return Node status
+      */
     status_t getStatus () {
         return status;
     }
+
+    /**
+      * @brief Sets status for finite state machine that represents node
+      * @param status Node status
+      */
     void setStatus (status_t status) {
         this->status = status;
     }
+
+    /**
+      * @brief Gets a struct that represents node object. May be used for node serialization
+      * @return Node struct
+      */
     node_t getNodeData ();
 
-    void printToSerial (Stream *port);
+    /**
+      * @brief Dumps node data to the given stream, Serial by default. This method may be used for debugging
+      * @param port Stream to print data to
+      */
+    void printToSerial (Stream *port = &Serial);
 
+    /**
+      * @brief Resets all node fields to a default initial and not registered state
+      */
     void reset ();
 
+    /**
+      * @brief Sets node working mode regarding battery saving strategy. If node is sleepy it will turn into deep sleep
+      * after sending a message. In this case it will wait for a short while for a downlink message from gateway
+      * @param sleepy `true` if node sleeps after sending a message and wait for downlink. `false` if downlink may happen in any moment
+      */
     void setSleepy (bool sleepy) {
         sleepyNode = sleepy;
     }
 
+    /**
+      * @brief Gets node working mode regarding battery saving strategy. If node is sleepy it will turn into deep sleep
+      * after sending a message. In this case it will wait for a short while for a downlink message from gateway
+      * @return `true` if node sleeps after sending a message and wait for downlink. `false` if downlink may happen in any moment
+      */
     bool getSleepy () {
         return sleepyNode;
     }
