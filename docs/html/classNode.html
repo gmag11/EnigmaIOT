@@ -97,14 +97,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a61ac445d996a9304b34fc78a2514364f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets <a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> encryption key.  <a href="#a61ac445d996a9304b34fc78a2514364f">More...</a><br /></td></tr>
 <tr class="separator:a61ac445d996a9304b34fc78a2514364f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7b7337fdc178fe350ac4ce2f4675040"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#ae7b7337fdc178fe350ac4ce2f4675040">setEncryptionKey</a> (const uint8_t *<a class="el" href="classNode.html#a53347829b3b32c4fdfd6ec5cd35d219e">key</a>)</td></tr>
+<tr class="memdesc:ae7b7337fdc178fe350ac4ce2f4675040"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets encryption key.  <a href="#ae7b7337fdc178fe350ac4ce2f4675040">More...</a><br /></td></tr>
 <tr class="separator:ae7b7337fdc178fe350ac4ce2f4675040"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30a8e0aaad582a1baa269c6641150586"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a30a8e0aaad582a1baa269c6641150586">getKeyValidFrom</a> ()</td></tr>
+<tr class="memdesc:a30a8e0aaad582a1baa269c6641150586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets last time that key was agreed with gateway.  <a href="#a30a8e0aaad582a1baa269c6641150586">More...</a><br /></td></tr>
 <tr class="separator:a30a8e0aaad582a1baa269c6641150586"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65284f939ba9d70cff90e7e508ac1a13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a65284f939ba9d70cff90e7e508ac1a13">setKeyValidFrom</a> (time_t <a class="el" href="classNode.html#afad1c640f8fc2623996d3d2a174ad763">keyValidFrom</a>)</td></tr>
+<tr class="memdesc:a65284f939ba9d70cff90e7e508ac1a13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets time when key was agreed with gateway.  <a href="#a65284f939ba9d70cff90e7e508ac1a13">More...</a><br /></td></tr>
 <tr class="separator:a65284f939ba9d70cff90e7e508ac1a13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15877a320c33f77402c5700774d936cc"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a15877a320c33f77402c5700774d936cc">getLastMessageTime</a> ()</td></tr>
+<tr class="memdesc:a15877a320c33f77402c5700774d936cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets last time that node sent a message.  <a href="#a15877a320c33f77402c5700774d936cc">More...</a><br /></td></tr>
 <tr class="separator:a15877a320c33f77402c5700774d936cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7d5f900dd1290910a30692175dc8e23"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#ae7d5f900dd1290910a30692175dc8e23">setLastMessageTime</a> ()</td></tr>
+<tr class="memdesc:ae7d5f900dd1290910a30692175dc8e23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets current moment as last node message time.  <a href="#ae7d5f900dd1290910a30692175dc8e23">More...</a><br /></td></tr>
 <tr class="separator:ae7d5f900dd1290910a30692175dc8e23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5c31a536cb60a6c86dec8524117f50e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#ab5c31a536cb60a6c86dec8524117f50e">getLastMessageCounter</a> ()</td></tr>
 <tr class="separator:ab5c31a536cb60a6c86dec8524117f50e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -277,7 +282,10 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00102">102</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Gets last time that key was agreed with gateway. </p>
+<dl class="section return"><dt>Returns</dt><dd>Time in milliseconds of last key agreement </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00111">111</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -304,7 +312,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00114">114</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00137">137</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -331,7 +339,10 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00108">108</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Gets last time that node sent a message. </p>
+<dl class="section return"><dt>Returns</dt><dd>Time in milliseconds of last received node message </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00127">127</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -437,7 +448,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00152">152</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00175">175</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -464,7 +475,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00136">136</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00159">159</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -491,7 +502,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00127">127</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00150">150</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -518,7 +529,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00133">133</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00156">156</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -577,6 +588,14 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets encryption key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>New key </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00008">8</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
@@ -605,7 +624,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00130">130</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00153">153</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -633,7 +652,15 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00105">105</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Sets time when key was agreed with gateway. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">keyValidFrom</td><td>Time on key agreement </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00119">119</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -661,7 +688,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00117">117</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00140">140</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -688,7 +715,9 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00111">111</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Sets current moment as last node message time. </p>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00134">134</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -716,7 +745,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00121">121</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00144">144</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -780,7 +809,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00148">148</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00171">171</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -808,7 +837,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00139">139</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00162">162</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -833,7 +862,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00168">168</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00191">191</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -860,7 +889,7 @@ Friends</h2></td></tr>
 
 <p>Shared key. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00159">159</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00182">182</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -886,7 +915,7 @@ Friends</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> shared key valid. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00163">163</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00186">186</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -912,7 +941,7 @@ Friends</h2></td></tr>
 
 <p>Last time that <a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> and Gateway agreed a key. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00162">162</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00185">185</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -938,7 +967,7 @@ Friends</h2></td></tr>
 
 <p>Last message counter state for specific <a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00160">160</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00183">183</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -964,7 +993,7 @@ Friends</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> state. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00165">165</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00188">188</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -990,7 +1019,7 @@ Friends</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> address. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00158">158</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00181">181</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1016,7 +1045,7 @@ Friends</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> identifier asigned by gateway. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00161">161</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00184">184</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1042,7 +1071,7 @@ Friends</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> sleepy definition. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00166">166</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00189">189</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1066,7 +1095,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00164">164</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00187">187</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
