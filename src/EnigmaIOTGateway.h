@@ -19,6 +19,7 @@
 
 enum gatewayMessageType_t {
     SENSOR_DATA = 0x01,
+    DOWNSTREAM_DATA = 0x02,
     CLIENT_HELLO = 0xFF,
     SERVER_HELLO = 0xFE,
     KEY_EXCHANGE_FINISHED = 0xFD,
@@ -72,6 +73,7 @@ class EnigmaIOTGatewayClass
      bool cipherFinished (Node *node);
      bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
      bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
+     bool downstreamDataMessage (Node *node, const uint8_t *data, size_t len);
      void manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count);
      static void rx_cb (u8 *mac_addr, u8 *data, u8 len);
      static void tx_cb (u8 *mac_addr, u8 status);
@@ -85,6 +87,15 @@ class EnigmaIOTGatewayClass
      void onDataRx (onGwDataRx_t handler) {
          notifyData = handler;
      }
+
+     /**
+      * @brief Starts a downstream data message transmission
+      * @param mac Node address
+      * @param data Payload buffer
+      * @param len Payload length
+      */
+     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len);
+
      void onNewNode (onNewNode_t handler) {
          notifyNewNode = handler;
      }

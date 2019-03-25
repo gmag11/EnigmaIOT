@@ -28,6 +28,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, u
         Serial.printf ("%u lost messages\n", lostMessages);
     }
     Serial.println ();
+    EnigmaIOTGateway.sendDownstream ((uint8_t *)mac, (uint8_t *)"ACK", 4);
 }
 
 void newNodeConnected (uint8_t* mac) {

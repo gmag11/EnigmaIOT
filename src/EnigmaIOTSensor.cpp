@@ -397,6 +397,62 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len) {
     return comm->send (gateway, buffer, packet_length + CRC_LENGTH) == 0;
 }
 
+bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+    /*
+    * -------------------------------------------------------------------------
+    *| msgType (1) | IV (16) | length (2) | NodeId (2) | Data (....) | CRC (4) |
+    * -------------------------------------------------------------------------
+    */
+
+    //uint8_t msgType_idx = 0;
+    uint8_t iv_idx = 1;
+    uint8_t length_idx = iv_idx + IV_LENGTH;
+    uint8_t nodeId_idx = length_idx + sizeof (int16_t);
+    uint8_t data_idx = nodeId_idx + sizeof (int16_t);
+    uint8_t crc_idx = count - CRC_LENGTH;
+
+    //uint8_t *iv;
+    uint32_t crc32;
+    size_t lostMessages = 0;
+
+    Crypto.decryptBuffer (
+        const_cast<uint8_t *>(&buf[length_idx]),
+        const_cast<uint8_t *>(&buf[length_idx]),
+        count - length_idx,
+        const_cast<uint8_t *>(&buf[iv_idx]),
+        IV_LENGTH,
+        node.getEncriptionKey (),
+        KEY_LENGTH
+    );
+    DEBUG_VERBOSE ("Decripted downstream message: %s", printHexBuffer (buf, count));
+
+    //memcpy (&counter, &buf[counter_idx], sizeof (uint16_t));
+    //if (useCounter) {
+    //    if (counter > node->getLastMessageCounter ()) {
+    //        lostMessages = counter - node->getLastMessageCounter () - 1;
+    //        node->setLastMessageCounter (counter);
+    //    }
+    //    else {
+    //        return false;
+    //    }
+    //}
+
+    memcpy (&crc32, &buf[crc_idx], CRC_LENGTH);
+
+    if (!checkCRC (buf, count - 4, &crc32)) {
+        DEBUG_WARN ("Wrong CRC");
+        return false;
+    }
+
+    if (notifyData) {
+        notifyData (mac, &buf[data_idx], crc_idx - data_idx);
+    }
+
+    return true;
+
+}
+
+
 sensorInvalidateReason_t EnigmaIOTSensorClass::processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count) {
 #define IKMSG_LEN 2
     if (buf && count < IKMSG_LEN) {
@@ -480,7 +536,13 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
         if (notifyDisconnection) {
             notifyDisconnection ();
         }
-        //clientHello ();
+        break;
+    case DOWNSTREAM_DATA:
+        DEBUG_INFO (" <------- DOWNSTREAM DATA");
+        if (processDownstreamData (mac, buf, count)) {
+            DEBUG_INFO ("Downstream Data OK");
+        }
+        break;
     }
 }
 

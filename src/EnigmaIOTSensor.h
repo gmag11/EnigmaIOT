@@ -29,6 +29,7 @@
   */
 enum sensorMessageType {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
+    DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
     CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
@@ -156,6 +157,15 @@ protected:
     bool dataMessage (const uint8_t *data, size_t len);
 
     /**
+      * @brief Processes downstream data from gateway
+      * @param mac Gateway address
+      * @param data Buffer to store received payload
+      * @param len Length of payload data
+      * @return Returns `true` if message could be correcly decoded
+      */
+    bool processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count);
+
+    /**
       * @brief Process every received message.
       *
       * It starts clasiffying message usint the first byte. After that it passes it to the corresponding method for decoding 
@@ -164,6 +174,12 @@ protected:
       * @param count Length of message in number of bytes
       */
     void manageMessage (const uint8_t *mac, const uint8_t* buf, uint8_t count);
+
+    /**
+      * @brief Functrion to debug send status.
+      * @param mac_addr Address of message sender
+      * @param status Result status code
+      */
     void getStatus (u8 *mac_addr, u8 status);
 
     /**

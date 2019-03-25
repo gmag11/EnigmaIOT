@@ -19,6 +19,16 @@ void EnigmaIOTGatewayClass::setRxLed (uint8_t led, time_t onTime) {
     digitalWrite (rxled, HIGH);
 }
 
+bool EnigmaIOTGatewayClass::sendDownstream (uint8_t * mac, const uint8_t * data, size_t len) {
+    Node * node = nodelist.getNodeFromMAC (mac);
+
+    if (node) {
+        return downstreamDataMessage (node, data, len);
+    }  else {
+        return false;
+    }
+}
+
 void EnigmaIOTGatewayClass::begin (Comms_halClass *comm, bool useDataCounter) {
     this->comm = comm;
     this->useCounter = useDataCounter;
@@ -196,9 +206,9 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
     );
     DEBUG_VERBOSE ("Decripted data message: %s", printHexBuffer (buf, count));
 
-    memcpy (&counter, &buf[counter_idx], sizeof(uint16_t));
+    memcpy (&counter, &buf[counter_idx], sizeof (uint16_t));
     if (useCounter) {
-        if (counter > node->getLastMessageCounter()) {
+        if (counter > node->getLastMessageCounter ()) {
             lostMessages = counter - node->getLastMessageCounter () - 1;
             node->setLastMessageCounter (counter);
         } else {
@@ -220,6 +230,89 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
     return true;
 
 }
+
+bool EnigmaIOTGatewayClass::downstreamDataMessage (Node *node, const uint8_t *data, size_t len) {
+    /*
+    * --------------------------------------------------------------------------
+    *| msgType (1) | IV (16) | length (2) | NodeId (2)  | Data (....) | CRC (4) |
+    * --------------------------------------------------------------------------
+    */
+
+    uint8_t buffer[200];
+    uint32_t crc32;
+
+    if (!node->isRegistered ()) {
+        DEBUG_VERBOSE ("Error sending downstream. Node is not registered");
+        return false;
+    }
+
+    uint16_t nodeId = node->getNodeId ();
+
+    uint8_t *msgType_p = buffer;
+    uint8_t *iv_p = buffer + 1;
+    uint8_t *length_p = buffer + 1 + IV_LENGTH;
+    uint8_t *nodeId_p = buffer + 1 + IV_LENGTH + sizeof (int16_t);
+    uint8_t *data_p = buffer + 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t);
+
+    if (!data) {
+        return false;
+    }
+
+    *msgType_p = (uint8_t)DOWNSTREAM_DATA;
+
+    CryptModule::random (iv_p, IV_LENGTH);
+
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (iv_p, IV_LENGTH));
+
+    memcpy (nodeId_p, &nodeId, sizeof (uint16_t));
+
+    //if (useCounter) {
+    //    counter = node.getLastMessageCounter () + 1;
+    //    node.setLastMessageCounter (counter);
+    //    rtcmem_data.lastMessageCounter = counter;
+    //}
+    //else {
+    //    counter = Crypto.random ();
+    //}
+
+    //memcpy (counter_p, &counter, sizeof (uint16_t));
+
+    memcpy (data_p, data, len);
+
+    uint16_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + len;
+
+    memcpy (length_p, &packet_length, sizeof (uint16_t));
+
+    crc32 = CRC32::calculate (buffer, packet_length);
+    DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
+
+    uint8_t *crc_p = (uint8_t*)(buffer + packet_length);
+
+    memcpy (crc_p, &crc32, CRC_LENGTH);
+
+    DEBUG_VERBOSE ("Downlink message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
+
+    uint8_t *crypt_buf = length_p; // buffer + 1 + IV_LENGTH;
+
+    size_t cryptLen = packet_length + CRC_LENGTH - 1 - IV_LENGTH;
+
+    Crypto.encryptBuffer (crypt_buf, crypt_buf, cryptLen, iv_p, IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Encrypted downlink message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
+
+    DEBUG_INFO (" -------> DOWNLINK DATA");
+
+    //if (useCounter) {
+    //    rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+    //    if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
+    //        DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
+    //    }
+    //}
+    flashTx = true;
+
+    return comm->send (node->getMacAddress (), buffer, packet_length + CRC_LENGTH) == 0;
+}
+
 
 bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
     /*
@@ -269,7 +362,7 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
     sleepyNode = (keyExchangeFinished_msg.random & 0x00000001U) == 1;
     node->setSleepy (sleepyNode);
 
-    DEBUG_VERBOSE ("This is a %s node", sleepyNode?"sleepy":"always awaken");
+    DEBUG_VERBOSE ("This is a %s node", sleepyNode ? "sleepy" : "always awaken");
 
     return true;
 }
@@ -314,12 +407,12 @@ bool EnigmaIOTGatewayClass::cipherFinished (Node *node) {
     DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
 
     Crypto.encryptBuffer (
-        (uint8_t *)&(cipherFinished_msg.nodeId), 
-        (uint8_t *)&(cipherFinished_msg.nodeId), 
+        (uint8_t *)&(cipherFinished_msg.nodeId),
+        (uint8_t *)&(cipherFinished_msg.nodeId),
         2 + RANDOM_LENGTH + CRC_LENGTH,
-        cipherFinished_msg.iv, 
-        IV_LENGTH, 
-        node->getEncriptionKey (), 
+        cipherFinished_msg.iv,
+        IV_LENGTH,
+        node->getEncriptionKey (),
         KEY_LENGTH
     );
 
