@@ -16,13 +16,17 @@
 #define RED_LED 16
 
 void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, uint16_t lostMessages) {
+    StaticJsonBuffer<256> jsonBuffer;
+    JsonArray& root = jsonBuffer.createArray ();
+
     char macstr[18];
     mac2str (mac, macstr);
     Serial.println ();
     Serial.printf ("Data from %s --> %s\n", macstr, printHexBuffer (buffer, length));
-    for (int i = 0; i < length; i++) {
-        Serial.print ((char)buffer[i]);
-    }
+
+    CayenneLPPDec::ParseLPP (buffer, length, root);
+    root.prettyPrintTo (Serial);
+
     Serial.println ();
     if (lostMessages > 0) {
         Serial.printf ("%u lost messages\n", lostMessages);
