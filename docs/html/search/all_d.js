@@ -7,6 +7,7 @@ var searchData=
   ['processcipherfinished',['processCipherFinished',['../classEnigmaIOTSensorClass.html#afa01e608909a74a2ab03c1715631d594',1,'EnigmaIOTSensorClass']]],
   ['processclienthello',['processClientHello',['../classEnigmaIOTGatewayClass.html#ac087b89ea5e8a62688e3d11b4e7be345',1,'EnigmaIOTGatewayClass']]],
   ['processdatamessage',['processDataMessage',['../classEnigmaIOTGatewayClass.html#a480e84207c060bb5a80d2e28542b8154',1,'EnigmaIOTGatewayClass']]],
+  ['processdownstreamdata',['processDownstreamData',['../classEnigmaIOTSensorClass.html#a53c88f8f72825f26a5c39da567f586a4',1,'EnigmaIOTSensorClass']]],
   ['processinvalidatekey',['processInvalidateKey',['../classEnigmaIOTSensorClass.html#ac232abe8c29f115acfb080e65e4511ff',1,'EnigmaIOTSensorClass']]],
   ['processkeyexchangefinished',['processKeyExchangeFinished',['../classEnigmaIOTGatewayClass.html#a8cd84d9c5577cd2fcb3a17a1c8f6108a',1,'EnigmaIOTGatewayClass']]],
   ['processserverhello',['processServerHello',['../classEnigmaIOTSensorClass.html#ad074353ba790ddfd4214b39b517861df',1,'EnigmaIOTSensorClass']]],

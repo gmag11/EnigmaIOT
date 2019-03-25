@@ -2,6 +2,7 @@ var searchData=
 [
   ['send',['send',['../classComms__halClass.html#aed3ab92c7b30c82dfed79678389ec8f5',1,'Comms_halClass::send()'],['../classEspnow__halClass.html#a6f999980dc49223a524e7b8da0bd4cdc',1,'Espnow_halClass::send()']]],
   ['senddata',['sendData',['../classEnigmaIOTSensorClass.html#a66162b98fc51e16f36c53c4eddd83f04',1,'EnigmaIOTSensorClass']]],
+  ['senddownstream',['sendDownstream',['../classEnigmaIOTGatewayClass.html#aea5bb47064d6c942ef58714b4bac1976',1,'EnigmaIOTGatewayClass']]],
   ['sensor_5fdata',['SENSOR_DATA',['../EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613aa8ba55203a30122cc271cc66b2909b21',1,'SENSOR_DATA():&#160;EnigmaIOTGateway.h'],['../EnigmaIOTSensor_8h.html#a1574d1ea842b8efa5966b430ee334a81aa8ba55203a30122cc271cc66b2909b21',1,'SENSOR_DATA():&#160;EnigmaIOTSensor.h']]],
   ['sensorinvalidatereason_5ft',['sensorInvalidateReason_t',['../EnigmaIOTSensor_8h.html#aec9e5a1bf0ed7f6cb25f7b940fa8d939',1,'EnigmaIOTSensor.h']]],
   ['sensormessagetype',['sensorMessageType',['../EnigmaIOTSensor_8h.html#a1574d1ea842b8efa5966b430ee334a81',1,'EnigmaIOTSensor.h']]],

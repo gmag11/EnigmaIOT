@@ -159,8 +159,8 @@ protected:
     /**
       * @brief Processes downstream data from gateway
       * @param mac Gateway address
-      * @param data Buffer to store received payload
-      * @param len Length of payload data
+      * @param buf Buffer to store received payload
+      * @param count Length of payload data
       * @return Returns `true` if message could be correcly decoded
       */
     bool processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count);

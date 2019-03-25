@@ -2,6 +2,7 @@ var searchData=
 [
   ['send',['send',['../classComms__halClass.html#aed3ab92c7b30c82dfed79678389ec8f5',1,'Comms_halClass::send()'],['../classEspnow__halClass.html#a6f999980dc49223a524e7b8da0bd4cdc',1,'Espnow_halClass::send()']]],
   ['senddata',['sendData',['../classEnigmaIOTSensorClass.html#a66162b98fc51e16f36c53c4eddd83f04',1,'EnigmaIOTSensorClass']]],
+  ['senddownstream',['sendDownstream',['../classEnigmaIOTGatewayClass.html#aea5bb47064d6c942ef58714b4bac1976',1,'EnigmaIOTGatewayClass']]],
   ['serverhello',['serverHello',['../classEnigmaIOTGatewayClass.html#aec8a0e96ff309d34ef19a5eaa66c40e0',1,'EnigmaIOTGatewayClass']]],
   ['setencryptionkey',['setEncryptionKey',['../classNode.html#ae7b7337fdc178fe350ac4ce2f4675040',1,'Node']]],
   ['setkeyvalid',['setKeyValid',['../classNode.html#a81ded601038e157ecb03daa7fb85242d',1,'Node']]],
