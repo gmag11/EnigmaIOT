@@ -6,7 +6,6 @@
   * @brief Gateway based on EnigmaIoT over ESP-NOW
   */
 
-#include <CayenneLPP.h>
 #include <CayenneLPPDec.h>
 #include <EnigmaIOTGateway.h>
 #include <espnow_hal.h>
@@ -21,30 +20,36 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, u
 
     char macstr[18];
     mac2str (mac, macstr);
-    Serial.println ();
-    Serial.printf ("Data from %s --> %s\n", macstr, printHexBuffer (buffer, length));
+    //Serial.printf ("Data from %s --> %s\n", macstr, printHexBuffer (buffer, length));
 
     CayenneLPPDec::ParseLPP (buffer, length, root);
-    root.prettyPrintTo (Serial);
+    //root.prettyPrintTo (Serial);
+    //Serial.println ();
+    Serial.printf ("~/%s/data/", macstr);
+    root.printTo (Serial);
 
     Serial.println ();
     if (lostMessages > 0) {
-        Serial.printf ("%u lost messages\n", lostMessages);
+        //Serial.printf ("%u lost messages\n", lostMessages);
+        Serial.printf ("~/%s/debug/lostmessages/%u\n", macstr,lostMessages);
     }
-    Serial.println ();
-    EnigmaIOTGateway.sendDownstream ((uint8_t *)mac, (uint8_t *)"ACK", 4);
+    //Serial.println ();
+    memcpy (tempmac, mac, 6);
 }
 
 void newNodeConnected (uint8_t* mac) {
     char macstr[18];
     mac2str (mac, macstr);
-    Serial.printf ("New node connected: %s\n", macstr);
+    //Serial.printf ("New node connected: %s\n", macstr);
+    Serial.printf ("~/%s/hello\n", macstr);
 }
 
 void nodeDisconnected (uint8_t* mac, gwInvalidateReason_t reason) {
     char macstr[18];
     mac2str (mac, macstr);
-    Serial.printf ("Node %s disconnected. Reason %u\n", macstr, reason);
+    //Serial.printf ("Node %s disconnected. Reason %u\n", macstr, reason);
+    Serial.printf ("~/%s/bye/%u\n", macstr, reason);
+
 }
 
 void setup () {
@@ -60,5 +65,13 @@ void setup () {
 }
 
 void loop () {
+    //static time_t lastDownstream;
+
     EnigmaIOTGateway.handle ();
+
+    //if (millis () - lastDownstream > 80000) {
+    //    lastDownstream = millis ();
+    //    EnigmaIOTGateway.sendDownstream (tempmac, (uint8_t *)"ACK", 4);
+    //}
+
 }
