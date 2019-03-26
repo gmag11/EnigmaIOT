@@ -34,7 +34,6 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, u
         Serial.printf ("~/%s/debug/lostmessages/%u\n", macstr,lostMessages);
     }
     //Serial.println ();
-    memcpy (tempmac, mac, 6);
 }
 
 void newNodeConnected (uint8_t* mac) {
@@ -65,13 +64,7 @@ void setup () {
 }
 
 void loop () {
-    //static time_t lastDownstream;
 
     EnigmaIOTGateway.handle ();
-
-    //if (millis () - lastDownstream > 80000) {
-    //    lastDownstream = millis ();
-    //    EnigmaIOTGateway.sendDownstream (tempmac, (uint8_t *)"ACK", 4);
-    //}
 
 }
