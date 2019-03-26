@@ -152,6 +152,8 @@ After every data message from nodes, gateway evaluates key integrity and validit
 
 A gateway defines a key validity period after that a node key is marked as expired. In a message is received after that is processed normally but an Invalidate Key message indicating key expiration as reason. Node then starts a registration procedure but does not retry communication.
 
+Invalidate Key message is always sent unencrypted.
+
 ## Protocol procedures
 
 ### Normal node registration and sensor data exchange

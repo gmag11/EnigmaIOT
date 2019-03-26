@@ -168,7 +168,7 @@ $(function() {
 </div>
 <p>Sensor data is always encrypted using shaerd key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.</p>
 <p>Total message length is included on a 2 byte field.</p>
-<h3>Sensor Command message (downlink) <b>Under development</b></h3>
+<h3>Sensor Command message (downlink)</h3>
 <div class="image">
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorCommand-Downlink.png" alt="Sensor Command message format"/>
 </div>
@@ -180,6 +180,7 @@ $(function() {
 </div>
 <p>After every data message from nodes, gateway evaluates key integrity and validity. In case of any error decoding the packet gateways ignores data and reply with this message indicating the reason that caused error. <a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> must start a new registration procedure in order to send data again. After this new registration node resends the last data message.</p>
 <p>A gateway defines a key validity period after that a node key is marked as expired. In a message is received after that is processed normally but an Invalidate Key message indicating key expiration as reason. <a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> then starts a registration procedure but does not retry communication.</p>
+<p>Invalidate Key message is always sent unencrypted.</p>
 <h2>Protocol procedures</h2>
 <h3>Normal node registration and sensor data exchange</h3>
 <div class="image">
