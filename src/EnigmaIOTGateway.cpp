@@ -100,6 +100,8 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 
     flashRx = true;
 
+    //node->packetNumber++;
+
     int espNowError = 0;
 
     switch (buf[0]) {
@@ -206,10 +208,13 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
     );
     DEBUG_VERBOSE ("Decripted data message: %s", printHexBuffer (buf, count));
 
+    node->packetNumber++;
+
     memcpy (&counter, &buf[counter_idx], sizeof (uint16_t));
     if (useCounter) {
         if (counter > node->getLastMessageCounter ()) {
             lostMessages = counter - node->getLastMessageCounter () - 1;
+            node->packetErrors += lostMessages;
             node->setLastMessageCounter (counter);
         } else {
             return false;
@@ -220,6 +225,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
 
     if (!checkCRC (buf, count - 4, &crc32)) {
         DEBUG_WARN ("Wrong CRC");
+        node->packetErrors++;
         return false;
     }
 
@@ -238,6 +244,16 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
 
     return true;
 
+}
+
+double EnigmaIOTGatewayClass::getPER (uint8_t *address) {
+    Node *node = nodelist.getNewNode (address);
+
+    if (node->packetNumber > 0) {
+        node->per = (double)node->packetErrors / (double)node->packetNumber;
+    }
+
+    return node->per;
 }
 
 bool EnigmaIOTGatewayClass::downstreamDataMessage (Node *node, const uint8_t *data, size_t len) {

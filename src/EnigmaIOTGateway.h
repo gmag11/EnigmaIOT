@@ -87,6 +87,8 @@ class EnigmaIOTGatewayClass
          notifyData = handler;
      }
 
+     double getPER (uint8_t *address);
+
      /**
       * @brief Starts a downstream data message transmission
       * @param mac Node address

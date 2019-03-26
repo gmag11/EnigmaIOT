@@ -33,6 +33,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, u
         //Serial.printf ("%u lost messages\n", lostMessages);
         Serial.printf ("~/%s/debug/lostmessages/%u\n", macstr,lostMessages);
     }
+    Serial.printf ("~/%s/debug/per/%e\n", macstr, EnigmaIOTGateway.getPER((uint8_t*)mac));
     //Serial.println ();
 }
 
@@ -64,7 +65,5 @@ void setup () {
 }
 
 void loop () {
-
     EnigmaIOTGateway.handle ();
-
 }

@@ -240,6 +240,10 @@ public:
     size_t qMessageLength;  ///< @brief Queued message length
     bool qMessagePending = false; ///< @brief `True` if message should be sent just after next data message
 
+    uint32_t packetNumber = 0;
+    uint32_t packetErrors = 0;
+    double per = 0;
+
 protected:
 #define KEYLENGTH 32
     uint8_t mac[6]; ///< @brief Node address
