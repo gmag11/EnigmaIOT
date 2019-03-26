@@ -104,7 +104,7 @@ $(function() {
 <li>Designed as two libraries (one for gateway, one for node) for easier use.</li>
 <li>Selectable crypto algorhithm</li>
 <li>Gateway does not store keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on</li>
-<li>Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message. <b>TO-DO</b></li>
+<li>Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message.</li>
 <li>Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place, and it is the one currently implemented, but SPIFFS or EEPROM would be possible. <b>Under test</b></li>
 </ul>
 <h2>Design</h2>
@@ -173,6 +173,7 @@ $(function() {
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorCommand-Downlink.png" alt="Sensor Command message format"/>
 </div>
 <p>Gateway can send commands to an individual node in a similar way as sensor data is sent by nodes. For nodes that can be slept between consecutive data messages, this commands are queued and sent just after a data message is received.</p>
+<p>Only last message is queued. In case Gateway tries to send a new message, old one gets deleted and overriden by the new one.</p>
 <h3>Invalidate Key message</h3>
 <div class="image">
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/InvalidateKey.png" alt="Invalidate Key message format"/>

@@ -64,7 +64,6 @@ class EnigmaIOTGatewayClass
      onNewNode_t notifyNewNode;
      onNodeDisconnected_t notifyNodeDisconnection;
      bool useCounter = true;
-
      
      bool serverHello (const uint8_t *key, Node *node);
      bool checkCRC (const uint8_t *buf, size_t count, const uint32_t *crc);

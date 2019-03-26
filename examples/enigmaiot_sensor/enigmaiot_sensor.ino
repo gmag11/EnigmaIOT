@@ -46,7 +46,7 @@ void setup () {
 
     Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
     //EnigmaIOTSensor.sendData ((uint8_t *)message, strlen (message));
-    EnigmaIOTSensor.sendData (msg.getBuffer(), msg.getSize());
+    EnigmaIOTSensor.sendData (msg.getBuffer (), msg.getSize ());
 
     EnigmaIOTSensor.sleep (SLEEP_TIME);
 }

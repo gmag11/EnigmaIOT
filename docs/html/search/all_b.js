@@ -1,7 +1,7 @@
 var searchData=
 [
   ['no_5fdebug',['NO_DEBUG',['../debug_8h.html#a424f1b989129c5519f4df8f61ad6dcaf',1,'debug.h']]],
-  ['node',['Node',['../classNode.html',1,'Node'],['../classEnigmaIOTGatewayClass.html#a69e6d53334b842b054fc9e3cfdbb6067',1,'EnigmaIOTGatewayClass::node()'],['../classEnigmaIOTSensorClass.html#ad6ce6c154c16e61977f5801ef5f9d697',1,'EnigmaIOTSensorClass::node()'],['../classNode.html#ad7a34779cad45d997bfd6d3d8043c75f',1,'Node::Node()'],['../classNode.html#a45db0ed8c3ce61c3cee9d2070e20493f',1,'Node::Node(node_t nodeData)']]],
+  ['node',['Node',['../classNode.html',1,'Node'],['../classNode.html#ad7a34779cad45d997bfd6d3d8043c75f',1,'Node::Node()'],['../classNode.html#a45db0ed8c3ce61c3cee9d2070e20493f',1,'Node::Node(node_t nodeData)'],['../classEnigmaIOTGatewayClass.html#a69e6d53334b842b054fc9e3cfdbb6067',1,'EnigmaIOTGatewayClass::node()'],['../classEnigmaIOTSensorClass.html#ad6ce6c154c16e61977f5801ef5f9d697',1,'EnigmaIOTSensorClass::node()']]],
   ['node_5finstance',['node_instance',['../structnode__instance.html',1,'']]],
   ['node_5fstatus',['node_status',['../NodeList_8h.html#a8dd9280b6a6e53e65414115f47b0df6a',1,'NodeList.h']]],
   ['node_5ft',['node_t',['../NodeList_8h.html#a58096abbef18f4a4463c37694ee408f6',1,'NodeList.h']]],

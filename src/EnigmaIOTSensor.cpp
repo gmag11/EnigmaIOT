@@ -394,7 +394,7 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len) {
         }
     }
 
-    return comm->send (gateway, buffer, packet_length + CRC_LENGTH) == 0;
+    return (comm->send (gateway, buffer, packet_length + CRC_LENGTH) == 0);
 }
 
 bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count) {

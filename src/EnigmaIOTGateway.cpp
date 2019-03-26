@@ -227,6 +227,15 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
         notifyData (mac, &buf[data_idx], crc_idx - data_idx, lostMessages);
     }
 
+    if (node->getSleepy ()) {
+        if (node->qMessagePending) {
+            DEBUG_INFO (" -------> DOWNLINK QUEUED DATA");
+            flashTx = true;
+            node->qMessagePending = false;
+            return comm->send (node->getMacAddress (), node->queuedMessage, node->qMessageLength) == 0;
+        }
+    }
+
     return true;
 
 }
@@ -238,7 +247,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node *node, const uint8_t *da
     * --------------------------------------------------------------------------
     */
 
-    uint8_t buffer[200];
+    static uint8_t buffer[200];
     uint32_t crc32;
 
     if (!node->isRegistered ()) {
@@ -300,17 +309,17 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node *node, const uint8_t *da
 
     DEBUG_VERBOSE ("Encrypted downlink message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
 
-    DEBUG_INFO (" -------> DOWNLINK DATA");
-
-    //if (useCounter) {
-    //    rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-    //    if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
-    //        DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
-    //    }
-    //}
-    flashTx = true;
-
-    return comm->send (node->getMacAddress (), buffer, packet_length + CRC_LENGTH) == 0;
+    if (node->getSleepy ()) { // Queue message if node may be sleeping
+        node->queuedMessage = buffer;
+        node->qMessageLength = packet_length + CRC_LENGTH;
+        node->qMessagePending = true;
+        return true;
+    }
+    else {
+        DEBUG_INFO (" -------> DOWNLINK DATA");
+        flashTx = true;
+        return comm->send (node->getMacAddress (), buffer, packet_length + CRC_LENGTH) == 0;
+    }
 }
 
 

@@ -47,7 +47,7 @@ During this project conception I decided that it should fulfil this list of requ
 - Designed as two libraries (one for gateway, one for node) for easier use.
 - Selectable crypto algorhithm
 - Gateway does not store keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on
-- Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message. **TO-DO**
+- Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message.
 - Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place, and it is the one currently implemented, but SPIFFS or EEPROM would be possible. **Under test**
 
 ## Design
@@ -141,6 +141,8 @@ Total message length is included on a 2 byte field.
 ![Sensor Command message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorCommand-Downlink.png)
 
 Gateway can send commands to an individual node in a similar way as sensor data is sent by nodes. For nodes that can be slept between consecutive data messages, this commands are queued and sent just after a data message is received.
+
+Only last message is queued. In case Gateway tries to send a new message, old one gets deleted and overriden by the new one.
 
 ### Invalidate Key message
 
