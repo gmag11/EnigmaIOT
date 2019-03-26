@@ -136,7 +136,7 @@ Sensor data is always encrypted using shaerd key and IV. Apart from payload this
 
 Total message length is included on a 2 byte field.
 
-### Sensor Command message (downlink) **Under development**
+### Sensor Command message (downlink)
 
 ![Sensor Command message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorCommand-Downlink.png)
 
