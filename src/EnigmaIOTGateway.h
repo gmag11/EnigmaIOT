@@ -88,6 +88,9 @@ class EnigmaIOTGatewayClass
      }
 
      double getPER (uint8_t *address);
+     uint32_t getTotalPackets (uint8_t *address);
+     uint32_t getErrorPackets (uint8_t *address);
+     double getPacketsHour (uint8_t *address);
 
      /**
       * @brief Starts a downstream data message transmission

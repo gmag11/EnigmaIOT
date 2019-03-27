@@ -25,15 +25,20 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, u
     CayenneLPPDec::ParseLPP (buffer, length, root);
     //root.prettyPrintTo (Serial);
     //Serial.println ();
-    Serial.printf ("~/%s/data/", macstr);
+    Serial.printf ("~/%s/data;", macstr);
     root.printTo (Serial);
 
     Serial.println ();
     if (lostMessages > 0) {
-        //Serial.printf ("%u lost messages\n", lostMessages);
-        Serial.printf ("~/%s/debug/lostmessages/%u\n", macstr,lostMessages);
+        //serial.printf ("%u lost messages\n", lostmessages);
+        Serial.printf ("~/%s/debug/lostmessages;%u\n", macstr, lostMessages);
     }
-    Serial.printf ("~/%s/debug/per/%e\n", macstr, EnigmaIOTGateway.getPER((uint8_t*)mac));
+    Serial.printf ("~/%s/status;{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%f}\n",
+        macstr, 
+        EnigmaIOTGateway.getPER((uint8_t*)mac), 
+        EnigmaIOTGateway.getErrorPackets((uint8_t*)mac),
+        EnigmaIOTGateway.getTotalPackets((uint8_t*)mac),
+        EnigmaIOTGateway.getPacketsHour((uint8_t*)mac));
     //Serial.println ();
 }
 
@@ -48,7 +53,7 @@ void nodeDisconnected (uint8_t* mac, gwInvalidateReason_t reason) {
     char macstr[18];
     mac2str (mac, macstr);
     //Serial.printf ("Node %s disconnected. Reason %u\n", macstr, reason);
-    Serial.printf ("~/%s/bye/%u\n", macstr, reason);
+    Serial.printf ("~/%s/bye;{\"reason\":%u}\n", macstr, reason);
 
 }
 

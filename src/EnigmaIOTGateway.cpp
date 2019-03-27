@@ -160,6 +160,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
         DEBUG_INFO (" <------- DATA");
         if (node->getStatus () == REGISTERED) {
             if (processDataMessage (mac, buf, count, node)) {
+                node->packetsHour = (double)1 / ((millis () - node->getLastMessageTime ()) / (double)3600000);
                 node->setLastMessageTime ();
                 DEBUG_INFO ("Data OK");
                 DEBUG_VERBOSE ("Key valid from %u ms", millis () - node->getKeyValidFrom ());
@@ -255,6 +256,25 @@ double EnigmaIOTGatewayClass::getPER (uint8_t *address) {
 
     return node->per;
 }
+
+uint32_t EnigmaIOTGatewayClass::getTotalPackets (uint8_t *address) {
+    Node *node = nodelist.getNewNode (address);
+
+    return node->packetNumber;
+}
+
+uint32_t EnigmaIOTGatewayClass::getErrorPackets (uint8_t *address) {
+    Node *node = nodelist.getNewNode (address);
+
+    return node->packetErrors;
+}
+
+double EnigmaIOTGatewayClass::getPacketsHour (uint8_t *address) {
+    Node *node = nodelist.getNewNode (address);
+
+    return node->packetsHour;
+}
+
 
 bool EnigmaIOTGatewayClass::downstreamDataMessage (Node *node, const uint8_t *data, size_t len) {
     /*

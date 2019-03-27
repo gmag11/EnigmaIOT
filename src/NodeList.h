@@ -243,6 +243,7 @@ public:
     uint32_t packetNumber = 0;
     uint32_t packetErrors = 0;
     double per = 0;
+    double packetsHour = 0;
 
 protected:
 #define KEYLENGTH 32
