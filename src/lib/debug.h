@@ -21,7 +21,8 @@
 #define ERROR	1 ///< @brief Debug level that will give error messages
 #define WARN	2 ///< @brief Debug level that will give error and warning messages
 #define INFO	3 ///< @brief Debug level that will give error, warning and info messages
-#define VERBOSE	4 ///< @brief Debug level that will give all defined messages
+#define DBG	    4 ///< @brief Debug level that will give error, warning,info AND dbg messages
+#define VERBOSE	5 ///< @brief Debug level that will give all defined messages
 
 #define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%u] %u free (%s:%d) ",millis(),ESP.getFreeHeap(),__FUNCTION__,__LINE__);
 
@@ -32,6 +33,12 @@
 #define DEBUG_VERBOSE(...) DEBUG_ESP_PORT.print("V "); DEBUG_LINE_PREFIX(); DEBUG_ESP_PORT.printf( __VA_ARGS__ ); DEBUG_ESP_PORT.println()
 #else
 #define DEBUG_VERBOSE(...)
+#endif
+
+#if DEBUG_LEVEL >= DBG
+#define DEBUG_DBG(...) DEBUG_ESP_PORT.print("D "); DEBUG_LINE_PREFIX(); DEBUG_ESP_PORT.printf( __VA_ARGS__ ); DEBUG_ESP_PORT.println()
+#else
+#define DEBUG_DBG(...)
 #endif
 
 #if DEBUG_LEVEL >= INFO
