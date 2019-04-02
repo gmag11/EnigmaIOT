@@ -107,9 +107,14 @@ void loop()
                 Serial.println ();
             }
             Serial.printf ("Publish %s : %s\n",topic.c_str(), data.c_str());
-            if (client.publish (topic.c_str (), data.c_str ())) {
-                Serial.println ("Publish OK");
-            }  else {
+            if (client.beginPublish (topic.c_str (), data.length (), false)) {
+                client.write ((const uint8_t *)data.c_str (), data.length ());
+                if (client.endPublish() == 1) {
+                    Serial.println ("Publish OK");
+                } else {
+                    Serial.println ("Publish error");
+                }
+            } else {
                 Serial.println ("Publish error");
             }
         }
