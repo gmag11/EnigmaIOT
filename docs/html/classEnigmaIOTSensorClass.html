@@ -83,7 +83,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ad429c9d6b530fc34622109c851fd9f2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initalizes communication basic data and starts node registration.  <a href="#ad429c9d6b530fc34622109c851fd9f2f">More...</a><br /></td></tr>
 <tr class="separator:ad429c9d6b530fc34622109c851fd9f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae9fad86d2a2a409f98a22016a85e381"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#aae9fad86d2a2a409f98a22016a85e381">handle</a> ()</td></tr>
-<tr class="memdesc:aae9fad86d2a2a409f98a22016a85e381"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method should be called periodically for instance inside <code>loop()</code> function. It is used for internal node maintenance tasks.  <a href="#aae9fad86d2a2a409f98a22016a85e381">More...</a><br /></td></tr>
+<tr class="memdesc:aae9fad86d2a2a409f98a22016a85e381"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method should be called periodically for instance inside <code><a class="el" href="enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop()</a></code> function. It is used for internal node maintenance tasks.  <a href="#aae9fad86d2a2a409f98a22016a85e381">More...</a><br /></td></tr>
 <tr class="separator:aae9fad86d2a2a409f98a22016a85e381"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b81bcdafcd5e2d1f0443668ec0e9b68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#a3b81bcdafcd5e2d1f0443668ec0e9b68">setLed</a> (uint8_t <a class="el" href="classEnigmaIOTSensorClass.html#a4feaa9f155e6ba6bc3a285af6c7cbfaf">led</a>, time_t onTime=100)</td></tr>
 <tr class="memdesc:a3b81bcdafcd5e2d1f0443668ec0e9b68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a LED to be flashed every time a message is transmitted.  <a href="#a3b81bcdafcd5e2d1f0443668ec0e9b68">More...</a><br /></td></tr>
@@ -149,7 +149,7 @@ Static Protected Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:aa23a4d05eee44beb862682e3ea9ab1ac"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#aa23a4d05eee44beb862682e3ea9ab1ac">gateway</a> [6]</td></tr>
-<tr class="memdesc:aa23a4d05eee44beb862682e3ea9ab1ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gateway MAC address to sent messages to.  <a href="#aa23a4d05eee44beb862682e3ea9ab1ac">More...</a><br /></td></tr>
+<tr class="memdesc:aa23a4d05eee44beb862682e3ea9ab1ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gateway address to sent messages to.  <a href="#aa23a4d05eee44beb862682e3ea9ab1ac">More...</a><br /></td></tr>
 <tr class="separator:aa23a4d05eee44beb862682e3ea9ab1ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6ce6c154c16e61977f5801ef5f9d697"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classNode.html">Node</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#ad6ce6c154c16e61977f5801ef5f9d697">node</a></td></tr>
 <tr class="memdesc:ad6ce6c154c16e61977f5801ef5f9d697"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor node abstraction to store context.  <a href="#ad6ce6c154c16e61977f5801ef5f9d697">More...</a><br /></td></tr>
@@ -255,7 +255,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <p>This condition is signalled to Gateway during registration so that downlink messages are managed diferently. On non sleepy nodes a downlink data message can be sent on any moment as node will be always awake. But for nodes that sleep, normally those that are powered with batteries, downlink message will be queued on gateway and sent just after an uplink data message from node has been sent </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00011">11</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00016">16</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -310,7 +310,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if CRC check was successful. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00098">98</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00103">103</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -340,7 +340,7 @@ Protected Attributes</h2></td></tr>
 <p>Build a <b>ClientHello</b> messange and send it to gateway. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if ClientHello message was successfully sent. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00108">108</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00113">113</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -388,7 +388,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly sent </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00322">322</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00327">327</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -435,7 +435,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00549">549</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00554">554</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -454,9 +454,9 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>This method should be called periodically for instance inside <code>loop()</code> function. It is used for internal node maintenance tasks. </p>
+<p>This method should be called periodically for instance inside <code><a class="el" href="enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop()</a></code> function. It is used for internal node maintenance tasks. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00046">46</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00051">51</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -486,7 +486,7 @@ Protected Attributes</h2></td></tr>
 <p>Build and send a <b>keyExchangeFinished</b> message. </p>
 <p>It includes some random data that is encrypted with a CRC to check integrity. This message is used to let Gateway if this node generated the correct shared key. </p><dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly sent </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00254">254</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00259">259</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -540,7 +540,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00466">466</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00471">471</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -569,7 +569,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Defines a function callback that will be called everytime node is registered on gateway. </p>
-<p>Use example: </p><div class="fragment"><div class="line"><span class="comment">// First define the callback function</span></div><div class="line"><span class="keywordtype">void</span> connectEventHandler () {</div><div class="line">  <span class="comment">// Do whatever you need to process disconnecion</span></div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> setup () {</div><div class="line">  .....</div><div class="line">  <span class="comment">// Now register function as data message handler</span></div><div class="line">  <a class="code" href="EnigmaIOTSensor_8cpp.html#a88a62c62a87971903417287b1b917a20">EnigmaIOTSensor</a>.<a class="code" href="classEnigmaIOTSensorClass.html#abc43b1a7a07c09b20478b918c9ee2e79">onConnected</a> (connectEventHandler);</div><div class="line">  .....</div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> loop {</div><div class="line">  .....</div><div class="line">}</div></div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
+<p>Use example: </p><div class="fragment"><div class="line"><span class="comment">// First define the callback function</span></div><div class="line"><span class="keywordtype">void</span> <a class="code" href="enigmaiot__sensor_8ino.html#a940f8c4df553df52c9145ef2df107ad3">connectEventHandler</a> () {</div><div class="line">  <span class="comment">// Do whatever you need to process disconnecion</span></div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> <a class="code" href="enigmaiot__gateway_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> () {</div><div class="line">  .....</div><div class="line">  <span class="comment">// Now register function as data message handler</span></div><div class="line">  <a class="code" href="EnigmaIOTSensor_8cpp.html#a88a62c62a87971903417287b1b917a20">EnigmaIOTSensor</a>.<a class="code" href="classEnigmaIOTSensorClass.html#abc43b1a7a07c09b20478b918c9ee2e79">onConnected</a> (<a class="code" href="enigmaiot__sensor_8ino.html#a940f8c4df553df52c9145ef2df107ad3">connectEventHandler</a>);</div><div class="line">  .....</div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> <a class="code" href="enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a> {</div><div class="line">  .....</div><div class="line">}</div></div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">handler</td><td>Pointer to the function </td></tr>
   </table>
@@ -605,7 +605,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Defines a function callback that will be called on every downlink data message that is received from gateway. </p>
-<p>Use example: </p><div class="fragment"><div class="line"><span class="comment">// First define the callback function</span></div><div class="line"><span class="keywordtype">void</span> processRxData (<span class="keyword">const</span> uint8_t* mac, <span class="keyword">const</span> uint8_t* buffer, uint8_t length) {</div><div class="line">  <span class="comment">// Do whatever you need with received data</span></div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> setup () {</div><div class="line">  .....</div><div class="line">  <span class="comment">// Now register function as data message handler</span></div><div class="line">  <a class="code" href="EnigmaIOTSensor_8cpp.html#a88a62c62a87971903417287b1b917a20">EnigmaIOTSensor</a>.<a class="code" href="classEnigmaIOTSensorClass.html#abbdb3e0b4a47b285a35430dcc38246e7">onDataRx</a> (processRxData);</div><div class="line">  .....</div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> loop {</div><div class="line">  .....</div><div class="line">}</div></div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
+<p>Use example: </p><div class="fragment"><div class="line"><span class="comment">// First define the callback function</span></div><div class="line"><span class="keywordtype">void</span> <a class="code" href="enigmaiot__gateway_8ino.html#a3d1862e85b946eaac15c4f8aa4ecbcd8">processRxData</a> (<span class="keyword">const</span> uint8_t* mac, <span class="keyword">const</span> uint8_t* buffer, uint8_t length) {</div><div class="line">  <span class="comment">// Do whatever you need with received data</span></div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> <a class="code" href="enigmaiot__gateway_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> () {</div><div class="line">  .....</div><div class="line">  <span class="comment">// Now register function as data message handler</span></div><div class="line">  <a class="code" href="EnigmaIOTSensor_8cpp.html#a88a62c62a87971903417287b1b917a20">EnigmaIOTSensor</a>.<a class="code" href="classEnigmaIOTSensorClass.html#abbdb3e0b4a47b285a35430dcc38246e7">onDataRx</a> (<a class="code" href="enigmaiot__gateway_8ino.html#a3d1862e85b946eaac15c4f8aa4ecbcd8">processRxData</a>);</div><div class="line">  .....</div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> <a class="code" href="enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a> {</div><div class="line">  .....</div><div class="line">}</div></div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">handler</td><td>Pointer to the function </td></tr>
   </table>
@@ -642,7 +642,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Defines a function callback that will be called everytime node is disconnected from gateway. </p>
 <p>Deregistration is always started by gateway due syntax or encryption error or in case of key validity is over.</p>
-<p>Use example: </p><div class="fragment"><div class="line"><span class="comment">// First define the callback function</span></div><div class="line"><span class="keywordtype">void</span> disconnectEventHandler () {</div><div class="line">  <span class="comment">// Do whatever you need to process disconnecion</span></div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> setup () {</div><div class="line">  .....</div><div class="line">  <span class="comment">// Now register function as data message handler</span></div><div class="line">  <a class="code" href="EnigmaIOTSensor_8cpp.html#a88a62c62a87971903417287b1b917a20">EnigmaIOTSensor</a>.<a class="code" href="classEnigmaIOTSensorClass.html#a36a60078a2b6dda3ed3f832547534fc3">onDisconnected</a> (disconnectEventHandler);</div><div class="line">  .....</div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> loop {</div><div class="line">  .....</div><div class="line">}</div></div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
+<p>Use example: </p><div class="fragment"><div class="line"><span class="comment">// First define the callback function</span></div><div class="line"><span class="keywordtype">void</span> <a class="code" href="enigmaiot__sensor_8ino.html#a6f74da8da4899c962666353e8cb4e3d6">disconnectEventHandler</a> () {</div><div class="line">  <span class="comment">// Do whatever you need to process disconnecion</span></div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> <a class="code" href="enigmaiot__gateway_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> () {</div><div class="line">  .....</div><div class="line">  <span class="comment">// Now register function as data message handler</span></div><div class="line">  <a class="code" href="EnigmaIOTSensor_8cpp.html#a88a62c62a87971903417287b1b917a20">EnigmaIOTSensor</a>.<a class="code" href="classEnigmaIOTSensorClass.html#a36a60078a2b6dda3ed3f832547534fc3">onDisconnected</a> (<a class="code" href="enigmaiot__sensor_8ino.html#a6f74da8da4899c962666353e8cb4e3d6">disconnectEventHandler</a>);</div><div class="line">  .....</div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> <a class="code" href="enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a> {</div><div class="line">  .....</div><div class="line">}</div></div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">handler</td><td>Pointer to the function </td></tr>
   </table>
@@ -704,7 +704,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message syntax is correct and key was successfuly calculated <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00203">203</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00208">208</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -759,7 +759,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00400">400</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00405">405</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -814,7 +814,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns the reason because key is not valid anymore. Check possible values in sensorInvalidateReason_t </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00456">456</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00461">461</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -867,9 +867,9 @@ Protected Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly sent </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00163">163</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00168">168</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -923,7 +923,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00090">90</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00095">95</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -962,7 +962,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00303">303</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00308">308</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1001,7 +1001,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00006">6</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00011">11</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1029,7 +1029,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00315">315</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00320">320</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1076,7 +1076,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00094">94</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00099">99</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1231,7 +1231,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gateway MAC address to sent messages to. </p>
+<p>Gateway address to sent messages to. </p>
 
 <p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00082">82</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
 

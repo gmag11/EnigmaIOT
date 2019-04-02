@@ -1,15 +1,16 @@
 var searchData=
 [
-  ['peertype_5ft',['peerType_t',['../Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4',1,'Comms_hal.h']]],
-  ['printhexbuffer',['printHexBuffer',['../helperFunctions_8cpp.html#a34002f0936dac45b08bba5436ddc8a09',1,'printHexBuffer(const uint8_t *buffer, uint16_t len):&#160;helperFunctions.cpp'],['../helperFunctions_8h.html#a34002f0936dac45b08bba5436ddc8a09',1,'printHexBuffer(const uint8_t *buffer, uint16_t len):&#160;helperFunctions.cpp']]],
-  ['printtoserial',['printToSerial',['../classNode.html#a36b675e4186420fb1f8e324fc0987cbd',1,'Node::printToSerial()'],['../classNodeList.html#a239930df15810784dab9a3284730a35f',1,'NodeList::printToSerial()']]],
-  ['privatedhkey',['privateDHKey',['../classCryptModule.html#a34795afc7eeb1110a1672d496b3d55a3',1,'CryptModule']]],
-  ['processcipherfinished',['processCipherFinished',['../classEnigmaIOTSensorClass.html#afa01e608909a74a2ab03c1715631d594',1,'EnigmaIOTSensorClass']]],
-  ['processclienthello',['processClientHello',['../classEnigmaIOTGatewayClass.html#ac087b89ea5e8a62688e3d11b4e7be345',1,'EnigmaIOTGatewayClass']]],
-  ['processdatamessage',['processDataMessage',['../classEnigmaIOTGatewayClass.html#a480e84207c060bb5a80d2e28542b8154',1,'EnigmaIOTGatewayClass']]],
-  ['processdownstreamdata',['processDownstreamData',['../classEnigmaIOTSensorClass.html#a53c88f8f72825f26a5c39da567f586a4',1,'EnigmaIOTSensorClass']]],
-  ['processinvalidatekey',['processInvalidateKey',['../classEnigmaIOTSensorClass.html#ac232abe8c29f115acfb080e65e4511ff',1,'EnigmaIOTSensorClass']]],
-  ['processkeyexchangefinished',['processKeyExchangeFinished',['../classEnigmaIOTGatewayClass.html#a8cd84d9c5577cd2fcb3a17a1c8f6108a',1,'EnigmaIOTGatewayClass']]],
-  ['processserverhello',['processServerHello',['../classEnigmaIOTSensorClass.html#ad074353ba790ddfd4214b39b517861df',1,'EnigmaIOTSensorClass']]],
-  ['publicdhkey',['publicDHKey',['../classCryptModule.html#ae55611b17617615a79de5325d2c3c02d',1,'CryptModule']]]
+  ['onconnected',['onConnected',['../classEnigmaIOTSensorClass.html#abc43b1a7a07c09b20478b918c9ee2e79',1,'EnigmaIOTSensorClass']]],
+  ['onconnected_5ft',['onConnected_t',['../EnigmaIOTSensor_8h.html#a37ce04fd79315c001e113198fab23386',1,'EnigmaIOTSensor.h']]],
+  ['ondatarcvd',['onDataRcvd',['../classComms__halClass.html#a0db88323996d12342a9c60143d90c51f',1,'Comms_halClass::onDataRcvd()'],['../classEspnow__halClass.html#a08e6f8bf23cbdd6f2963b774894d53b9',1,'Espnow_halClass::onDataRcvd()']]],
+  ['ondatarx',['onDataRx',['../classEnigmaIOTGatewayClass.html#a2611c30452fc9785b3958eddca02daf8',1,'EnigmaIOTGatewayClass::onDataRx()'],['../classEnigmaIOTSensorClass.html#abbdb3e0b4a47b285a35430dcc38246e7',1,'EnigmaIOTSensorClass::onDataRx()']]],
+  ['ondatasent',['onDataSent',['../classComms__halClass.html#a393acd5ba5c49031b3c827f7cbce37fa',1,'Comms_halClass::onDataSent()'],['../classEspnow__halClass.html#a5457112b96701137d70065307dab2492',1,'Espnow_halClass::onDataSent()']]],
+  ['ondisconnected',['onDisconnected',['../classEnigmaIOTSensorClass.html#a36a60078a2b6dda3ed3f832547534fc3',1,'EnigmaIOTSensorClass']]],
+  ['ondisconnected_5ft',['onDisconnected_t',['../EnigmaIOTSensor_8h.html#ac989871ff2fef9419b7b3917b270ea26',1,'EnigmaIOTSensor.h']]],
+  ['ongwdatarx_5ft',['onGwDataRx_t',['../EnigmaIOTGateway_8h.html#a58ddea566f6a68b8ea1e38047ee8bc30',1,'EnigmaIOTGateway.h']]],
+  ['onnewnode',['onNewNode',['../classEnigmaIOTGatewayClass.html#a1726020bc65217b9ec4d01bb0216a526',1,'EnigmaIOTGatewayClass']]],
+  ['onnewnode_5ft',['onNewNode_t',['../EnigmaIOTGateway_8h.html#a38c8d84e6f10436c2ee0917dbbfdd768',1,'EnigmaIOTGateway.h']]],
+  ['onnodedisconnected',['onNodeDisconnected',['../classEnigmaIOTGatewayClass.html#a975c9b549e113deebe5581d5107d34b2',1,'EnigmaIOTGatewayClass']]],
+  ['onnodedisconnected_5ft',['onNodeDisconnected_t',['../EnigmaIOTGateway_8h.html#a38e49d51f3543a0183007f9bcf39777e',1,'EnigmaIOTGateway.h']]],
+  ['onsensordatarx_5ft',['onSensorDataRx_t',['../EnigmaIOTSensor_8h.html#a0cc35f87b85e305db04de5c4d77018c7',1,'EnigmaIOTSensor.h']]]
 ];

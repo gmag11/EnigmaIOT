@@ -1,3 +1,11 @@
+/**
+  * @file enigmaiot_sensor.ino
+  * @version 0.0.1
+  * @date 09/03/2019
+  * @author German Martin
+  * @brief Sensor node based on EnigmaIoT over ESP-NOW
+  */
+
 #include <EnigmaIOTSensor.h>
 #include <espnow_hal.h>
 #include <CayenneLPP.h>

@@ -1,4 +1,13 @@
-//#include <Crypto.h>
+/**
+  * @file cryptModule.cpp
+  * @version 0.0.1
+  * @date 09/03/2019
+  * @author German Martin
+  * @brief Crypto library that implements EnigmaIoT encryption, decryption and key agreement fuctions
+  *
+  * Uses [Arduino CryptoLib](https://rweather.github.io/arduinolibs/crypto.html) library
+  */
+
 #include <CFB.h>
 #include <CryptoLW.h>
 #include "cryptModule.h"

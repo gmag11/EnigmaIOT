@@ -1,4 +1,10 @@
-// config.h
+/**
+  * @file config.h
+  * @version 0.0.1
+  * @date 09/03/2019
+  * @author German Martin
+  * @brief Parameter configuration
+  */
 
 #ifndef _CONFIG_h
 #define _CONFIG_h

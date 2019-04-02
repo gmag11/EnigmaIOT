@@ -1,7 +1,10 @@
-// 
-// 
-// 
-
+/**
+  * @file NodeList.cpp
+  * @version 0.0.1
+  * @date 09/03/2019
+  * @author German Martin
+  * @brief EnigmaIoT sensor node management structures
+  */
 #include "NodeList.h"
 #include "lib/helperFunctions.h"
 

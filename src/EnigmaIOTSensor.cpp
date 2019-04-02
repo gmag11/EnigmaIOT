@@ -1,5 +1,10 @@
-// 
-// 
+/**
+  * @file EnigmaIOTSensor.cpp
+  * @version 0.0.1
+  * @date 09/03/2019
+  * @author German Martin
+  * @brief Library to build a node for EnigmaIoT system
+  */
 
 #include "EnigmaIOTSensor.h"
 

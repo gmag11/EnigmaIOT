@@ -4,6 +4,8 @@
   * @date 09/03/2019
   * @author German Martin
   * @brief Gateway based on EnigmaIoT over ESP-NOW
+  *
+  * Communicates with a serial to MQTT gateway to send data to any IoT platform
   */
 
 #include <CayenneLPPDec.h>

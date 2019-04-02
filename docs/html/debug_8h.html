@@ -91,7 +91,10 @@ Macros</h2></td></tr>
 <tr class="memitem:ae1103fea1e1b3c41ca3322d5389f7162"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#ae1103fea1e1b3c41ca3322d5389f7162">INFO</a>&#160;&#160;&#160;3</td></tr>
 <tr class="memdesc:ae1103fea1e1b3c41ca3322d5389f7162"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug level that will give error, warning and info messages.  <a href="#ae1103fea1e1b3c41ca3322d5389f7162">More...</a><br /></td></tr>
 <tr class="separator:ae1103fea1e1b3c41ca3322d5389f7162"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42f8c497a1968074f38bf5055c650dca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a42f8c497a1968074f38bf5055c650dca">VERBOSE</a>&#160;&#160;&#160;4</td></tr>
+<tr class="memitem:a49606be7356624568932ec81c0d429f4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a49606be7356624568932ec81c0d429f4">DBG</a>&#160;&#160;&#160;4</td></tr>
+<tr class="memdesc:a49606be7356624568932ec81c0d429f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug level that will give error, warning,info AND dbg messages.  <a href="#a49606be7356624568932ec81c0d429f4">More...</a><br /></td></tr>
+<tr class="separator:a49606be7356624568932ec81c0d429f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42f8c497a1968074f38bf5055c650dca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a42f8c497a1968074f38bf5055c650dca">VERBOSE</a>&#160;&#160;&#160;5</td></tr>
 <tr class="memdesc:a42f8c497a1968074f38bf5055c650dca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug level that will give all defined messages.  <a href="#a42f8c497a1968074f38bf5055c650dca">More...</a><br /></td></tr>
 <tr class="separator:a42f8c497a1968074f38bf5055c650dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1dce7190a83abe605dfafe85bf06d86b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a1dce7190a83abe605dfafe85bf06d86b">DEBUG_LINE_PREFIX</a>()&#160;&#160;&#160;DEBUG_ESP_PORT.printf (&quot;[%u] %u free (%s:%d) &quot;,millis(),ESP.getFreeHeap(),__FUNCTION__,__LINE__);</td></tr>
@@ -115,6 +118,24 @@ Macros</h2></td></tr>
 
 <p class="definition">Definition in file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a49606be7356624568932ec81c0d429f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49606be7356624568932ec81c0d429f4">&#9670;&nbsp;</a></span>DBG</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DBG&#160;&#160;&#160;4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Debug level that will give error, warning,info AND dbg messages. </p>
+
+<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00024">24</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
+
+</div>
+</div>
 <a id="a1113e83492a11aaddbea24646cf378ed"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1113e83492a11aaddbea24646cf378ed">&#9670;&nbsp;</a></span>DEBUG_ERROR</h2>
 
@@ -131,7 +152,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00058">58</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00065">65</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
 
 </div>
 </div>
@@ -151,7 +172,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00056">56</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00063">63</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
 
 </div>
 </div>
@@ -170,7 +191,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00026">26</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00027">27</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
 
 </div>
 </div>
@@ -190,7 +211,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00055">55</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00062">62</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
 
 </div>
 </div>
@@ -210,7 +231,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00057">57</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00064">64</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
 
 </div>
 </div>
@@ -275,14 +296,14 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define VERBOSE&#160;&#160;&#160;4</td>
+          <td class="memname">#define VERBOSE&#160;&#160;&#160;5</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Debug level that will give all defined messages. </p>
 
-<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00024">24</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="debug_8h_source.html#l00025">25</a> of file <a class="el" href="debug_8h_source.html">debug.h</a>.</p>
 
 </div>
 </div>

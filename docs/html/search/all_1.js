@@ -1,28 +1,5 @@
 var searchData=
 [
-  ['cfmsg_5flen',['CFMSG_LEN',['../EnigmaIOTGateway_8cpp.html#a04c103400e1dab568e92e33d563baa1d',1,'CFMSG_LEN():&#160;EnigmaIOTGateway.cpp'],['../EnigmaIOTSensor_8cpp.html#a04c103400e1dab568e92e33d563baa1d',1,'CFMSG_LEN():&#160;EnigmaIOTSensor.cpp']]],
-  ['channel',['channel',['../classEnigmaIOTSensorClass.html#a9cd4017262a13d7030faed27bac50a74',1,'EnigmaIOTSensorClass::channel()'],['../classEspnow__halClass.html#a21c29d9dc5643cebaa975302058a8694',1,'Espnow_halClass::channel()']]],
-  ['checkcrc',['checkCRC',['../classEnigmaIOTGatewayClass.html#a27b6357a7e3c2fb4817a8da897512a50',1,'EnigmaIOTGatewayClass::checkCRC()'],['../classEnigmaIOTSensorClass.html#a2169866121e8aded5e7970717acdaed8',1,'EnigmaIOTSensorClass::checkCRC()']]],
-  ['chmsg_5flen',['CHMSG_LEN',['../EnigmaIOTGateway_8cpp.html#a2bd3dd6873079bda9c22994760e817dc',1,'CHMSG_LEN():&#160;EnigmaIOTGateway.cpp'],['../EnigmaIOTSensor_8cpp.html#a2bd3dd6873079bda9c22994760e817dc',1,'CHMSG_LEN():&#160;EnigmaIOTSensor.cpp']]],
-  ['cipher',['cipher',['../cryptModule_8cpp.html#a474ae1b4cd1e7fe1952c2fe00226d758',1,'cryptModule.cpp']]],
-  ['cipherfinished',['cipherFinished',['../classEnigmaIOTGatewayClass.html#a0d71d0287206a7fe8919d00a2385e13e',1,'EnigmaIOTGatewayClass']]],
-  ['client_5fhello',['CLIENT_HELLO',['../EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a0c8da6c451065bed79ea70684e6f3fca',1,'CLIENT_HELLO():&#160;EnigmaIOTGateway.h'],['../EnigmaIOTSensor_8h.html#a1574d1ea842b8efa5966b430ee334a81a0c8da6c451065bed79ea70684e6f3fca',1,'CLIENT_HELLO():&#160;EnigmaIOTSensor.h']]],
-  ['clienthello',['clientHello',['../classEnigmaIOTSensorClass.html#a7df5872c61adb030459e2186e162956d',1,'EnigmaIOTSensorClass']]],
-  ['comm',['comm',['../classEnigmaIOTGatewayClass.html#ab049e20310e2a18bd1f8adc4ec975254',1,'EnigmaIOTGatewayClass::comm()'],['../classEnigmaIOTSensorClass.html#af9ae297c2db34105e0a0021241c0c509',1,'EnigmaIOTSensorClass::comm()']]],
-  ['comm_5fgateway',['COMM_GATEWAY',['../Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4a7ee38eec056c6cb849a066a7a4e9d3e0',1,'Comms_hal.h']]],
-  ['comm_5fsensor',['COMM_SENSOR',['../Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4ac3db8869f744d82732e37aafcd833616',1,'Comms_hal.h']]],
-  ['comms_5fhal_2eh',['Comms_hal.h',['../Comms__hal_8h.html',1,'']]],
-  ['comms_5fhal_5frcvd_5fdata',['comms_hal_rcvd_data',['../Comms__hal_8h.html#ac8b049d3b3d2982d35888d72d91624b6',1,'Comms_hal.h']]],
-  ['comms_5fhal_5fsent_5fdata',['comms_hal_sent_data',['../Comms__hal_8h.html#a40b35ffbe912f57d6ed1e37c500874a7',1,'Comms_hal.h']]],
-  ['comms_5fhalclass',['Comms_halClass',['../classComms__halClass.html',1,'']]],
-  ['config_2eh',['config.h',['../config_8h.html',1,'(Global Namespace)'],['../lib_2config_8h.html',1,'(Global Namespace)']]],
-  ['countactivenodes',['countActiveNodes',['../classNodeList.html#abb4895c5b9ae6b041c9102178de837c4',1,'NodeList']]],
-  ['crc32',['crc32',['../structrtcmem__data__t.html#a22c20e35a06410f1060c11ef669ab96a',1,'rtcmem_data_t']]],
-  ['crc_5flength',['CRC_LENGTH',['../cryptModule_8h.html#ab705865bb866bc5f070bbde9650eaa2a',1,'cryptModule.h']]],
-  ['cryptmodule',['CryptModule',['../classCryptModule.html',1,'']]],
-  ['cryptmodule_2ecpp',['cryptModule.cpp',['../cryptModule_8cpp.html',1,'']]],
-  ['cryptmodule_2eh',['cryptModule.h',['../cryptModule_8h.html',1,'']]],
-  ['crypto',['Crypto',['../cryptModule_8cpp.html#a2f63b7a310b37c1127e7b8cfcbb5eb22',1,'Crypto():&#160;cryptModule.cpp'],['../cryptModule_8h.html#a2f63b7a310b37c1127e7b8cfcbb5eb22',1,'Crypto():&#160;cryptModule.cpp']]],
-  ['cypher_5ffinished',['CYPHER_FINISHED',['../EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a81b7c098d68990e81d6777d42e80db52',1,'CYPHER_FINISHED():&#160;EnigmaIOTGateway.h'],['../EnigmaIOTSensor_8h.html#a1574d1ea842b8efa5966b430ee334a81a81b7c098d68990e81d6777d42e80db52',1,'CYPHER_FINISHED():&#160;EnigmaIOTSensor.h']]],
-  ['cypher_5ftype',['CYPHER_TYPE',['../cryptModule_8cpp.html#a60424869b9d0955e8745158aadcd95b0',1,'cryptModule.cpp']]]
+  ['begin',['begin',['../classComms__halClass.html#a10a4852b704badbc2902560a61dfdd78',1,'Comms_halClass::begin()'],['../classEnigmaIOTGatewayClass.html#aff5b0f2e410b3f6d6c7e763a87383a80',1,'EnigmaIOTGatewayClass::begin()'],['../classEnigmaIOTSensorClass.html#ad429c9d6b530fc34622109c851fd9f2f',1,'EnigmaIOTSensorClass::begin()'],['../classEspnow__halClass.html#a3be5f27842cd494620d6d42e2e7cd2c6',1,'Espnow_halClass::begin()']]],
+  ['blue_5fled',['BLUE_LED',['../enigmaiot__gateway_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a',1,'BLUE_LED():&#160;enigmaiot_gateway.ino'],['../enigmaiot__sensor_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a',1,'BLUE_LED():&#160;enigmaiot_sensor.ino']]]
 ];

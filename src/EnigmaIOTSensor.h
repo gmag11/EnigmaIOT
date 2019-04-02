@@ -79,7 +79,7 @@ typedef void (*onDisconnected_t)();
 class EnigmaIOTSensorClass
 {
 protected:
-    uint8_t gateway[6]; ///< @brief Gateway MAC address to sent messages to
+    uint8_t gateway[6]; ///< @brief Gateway address to sent messages to
     Node node; ///< @brief Sensor node abstraction to store context
     bool flashBlue = false; ///< @brief If true Tx LED will be flashed
     int8_t led = -1; ///< @brief IO Pin that corresponds to Tx LED. Default value disables LED. It is initialized with `setLed` method
@@ -117,7 +117,7 @@ protected:
       * @param mac Address where this message was received from
       * @param buf Pointer to the buffer that contains the message
       * @param count Message length in number of bytes of ServerHello message
-      * @return Returns `true` if message could be correcly sent
+      * @return Returns `true` if message could be correcly processed
       */
     bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count);
 

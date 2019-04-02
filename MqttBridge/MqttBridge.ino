@@ -1,8 +1,15 @@
-/*
-    Name:       MqttBridge.ino
-    Created:	29/03/2019 16:51:32
-    Author:     RSINT\MARTIN_G
-*/
+/**
+  * @file MqttBridge.ino
+  * @version 0.0.1
+  * @date 09/03/2019
+  * @author German Martin
+  * @brief Bridge for EnigmaIoT system to forward data from serial to MQTT broker
+  *
+  * Due to ESP-NOW limitations, it cannot be used with regular WiFi without problems. That's why this bridge is needed.
+  * It gets encoded data from serial port and forwards to a MQTT broker.
+  *
+  * Message format received over serial is in the form of lines like: `~\<address>\<subtopic>;<data>
+  */
 
 
 #include <PubSubClient.h>

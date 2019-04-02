@@ -4,7 +4,6 @@
   * @date 09/03/2019
   * @author German Martin
   * @brief ESP-NOW communication system abstraction layer. To be used on ESP8266 or ESP32 platforms
-  *
   */
 
 #ifndef _ESPNOW_HAL_h

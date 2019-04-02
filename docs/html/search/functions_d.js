@@ -1,6 +1,10 @@
 var searchData=
 [
-  ['random',['random',['../classCryptModule.html#a96b21ebe23b1914e09408bd3e41b34b0',1,'CryptModule::random()'],['../classCryptModule.html#a81975699307738712329b4ef8cb47675',1,'CryptModule::random(const uint8_t *buf, size_t len)']]],
-  ['reset',['reset',['../classNode.html#a7c565caad2fea0439f28d24887ac2498',1,'Node']]],
-  ['rx_5fcb',['rx_cb',['../classEnigmaIOTGatewayClass.html#a26f1b71f8a5c17a3c8283ebfb113bdc3',1,'EnigmaIOTGatewayClass::rx_cb()'],['../classEnigmaIOTSensorClass.html#ac0c5b5055dec1811959c0b992e2dcfe4',1,'EnigmaIOTSensorClass::rx_cb()'],['../classEspnow__halClass.html#a0f50cd83e6818030cb68cf59c4a32cf4',1,'Espnow_halClass::rx_cb()']]]
+  ['onconnected',['onConnected',['../classEnigmaIOTSensorClass.html#abc43b1a7a07c09b20478b918c9ee2e79',1,'EnigmaIOTSensorClass']]],
+  ['ondatarcvd',['onDataRcvd',['../classComms__halClass.html#a0db88323996d12342a9c60143d90c51f',1,'Comms_halClass::onDataRcvd()'],['../classEspnow__halClass.html#a08e6f8bf23cbdd6f2963b774894d53b9',1,'Espnow_halClass::onDataRcvd()']]],
+  ['ondatarx',['onDataRx',['../classEnigmaIOTGatewayClass.html#a2611c30452fc9785b3958eddca02daf8',1,'EnigmaIOTGatewayClass::onDataRx()'],['../classEnigmaIOTSensorClass.html#abbdb3e0b4a47b285a35430dcc38246e7',1,'EnigmaIOTSensorClass::onDataRx()']]],
+  ['ondatasent',['onDataSent',['../classComms__halClass.html#a393acd5ba5c49031b3c827f7cbce37fa',1,'Comms_halClass::onDataSent()'],['../classEspnow__halClass.html#a5457112b96701137d70065307dab2492',1,'Espnow_halClass::onDataSent()']]],
+  ['ondisconnected',['onDisconnected',['../classEnigmaIOTSensorClass.html#a36a60078a2b6dda3ed3f832547534fc3',1,'EnigmaIOTSensorClass']]],
+  ['onnewnode',['onNewNode',['../classEnigmaIOTGatewayClass.html#a1726020bc65217b9ec4d01bb0216a526',1,'EnigmaIOTGatewayClass']]],
+  ['onnodedisconnected',['onNodeDisconnected',['../classEnigmaIOTGatewayClass.html#a975c9b549e113deebe5581d5107d34b2',1,'EnigmaIOTGatewayClass']]]
 ];

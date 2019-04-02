@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['macstr',['MACSTR',['../helperFunctions_8cpp.html#ad6e69a2870c8f219cc679677af110849',1,'helperFunctions.cpp']]],
-  ['max_5finactivity',['MAX_INACTIVITY',['../EnigmaIOTGateway_8cpp.html#a88ac1bdd4ce7012d599f5d7e031012a3',1,'EnigmaIOTGateway.cpp']]],
-  ['max_5fkey_5fvalidity',['MAX_KEY_VALIDITY',['../config_8h.html#a74168aceb3fa9ec24d6fed419b7e8332',1,'MAX_KEY_VALIDITY():&#160;config.h'],['../lib_2config_8h.html#a74168aceb3fa9ec24d6fed419b7e8332',1,'MAX_KEY_VALIDITY():&#160;config.h']]],
-  ['max_5fmessage_5flength',['MAX_MESSAGE_LENGTH',['../config_8h.html#ab234d1358562b66925fb7223c087556b',1,'MAX_MESSAGE_LENGTH():&#160;config.h'],['../espnow__hal_8h.html#ab234d1358562b66925fb7223c087556b',1,'MAX_MESSAGE_LENGTH():&#160;espnow_hal.h'],['../lib_2config_8h.html#ab234d1358562b66925fb7223c087556b',1,'MAX_MESSAGE_LENGTH():&#160;config.h']]],
-  ['max_5fstr_5flen',['MAX_STR_LEN',['../helperFunctions_8cpp.html#a58ce36916c399104e18d32ff090f21c6',1,'helperFunctions.cpp']]]
+  ['kefmsg_5flen',['KEFMSG_LEN',['../EnigmaIOTGateway_8cpp.html#ae144e80be33739d3533beb48c5a65b26',1,'KEFMSG_LEN():&#160;EnigmaIOTGateway.cpp'],['../EnigmaIOTSensor_8cpp.html#ae144e80be33739d3533beb48c5a65b26',1,'KEFMSG_LEN():&#160;EnigmaIOTSensor.cpp']]],
+  ['keylength',['KEYLENGTH',['../NodeList_8h.html#a3ae473450072eb520d646fb8fd32369f',1,'NodeList.h']]]
 ];

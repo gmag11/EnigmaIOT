@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['node',['Node',['../classNode.html#ad7a34779cad45d997bfd6d3d8043c75f',1,'Node::Node()'],['../classNode.html#a45db0ed8c3ce61c3cee9d2070e20493f',1,'Node::Node(node_t nodeData)']]],
-  ['nodelist',['NodeList',['../classNodeList.html#a7cf92e8316f291e0a4e4ad608756887f',1,'NodeList']]]
+  ['loop',['loop',['../enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;enigmaiot_gateway.ino'],['../enigmaiot__sensor_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;enigmaiot_sensor.ino'],['../MqttBridge_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;MqttBridge.ino']]]
 ];
