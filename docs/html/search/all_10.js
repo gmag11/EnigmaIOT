@@ -5,7 +5,7 @@ var searchData=
   ['random_5flength',['RANDOM_LENGTH',['../cryptModule_8h.html#a164ce4566a4b31ef42907bf37f3e6654',1,'cryptModule.h']]],
   ['readme_2emd',['readme.md',['../readme_8md.html',1,'']]],
   ['reconnect',['reconnect',['../MqttBridge_8ino.html#a4bcd6ce7d04c38f8c4ff908d1fc50f86',1,'MqttBridge.ino']]],
-  ['reconnection_5fperiod',['RECONNECTION_PERIOD',['../config_8h.html#a51608ff9a5042e649b061ea81b8c151b',1,'RECONNECTION_PERIOD():&#160;config.h'],['../lib_2config_8h.html#a51608ff9a5042e649b061ea81b8c151b',1,'RECONNECTION_PERIOD():&#160;config.h']]],
+  ['reconnection_5fperiod',['RECONNECTION_PERIOD',['../config_8h.html#a51608ff9a5042e649b061ea81b8c151b',1,'config.h']]],
   ['red_5fled',['RED_LED',['../enigmaiot__gateway_8ino.html#a073dbcb7f5bc4f4b45dc048b55eaff3d',1,'enigmaiot_gateway.ino']]],
   ['registered',['REGISTERED',['../NodeList_8h.html#a8dd9280b6a6e53e65414115f47b0df6aa89af859e5ad61a519a9e407a67b26568',1,'NodeList.h']]],
   ['reset',['reset',['../classNode.html#a7c565caad2fea0439f28d24887ac2498',1,'Node']]],

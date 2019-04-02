@@ -4,6 +4,8 @@
   * @date 09/03/2019
   * @author German Martin
   * @brief Sensor node based on EnigmaIoT over ESP-NOW
+  *
+  * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
 
 #include <EnigmaIOTSensor.h>

@@ -16,7 +16,7 @@ var searchData=
   ['comms_5fhal_5frcvd_5fdata',['comms_hal_rcvd_data',['../Comms__hal_8h.html#ac8b049d3b3d2982d35888d72d91624b6',1,'Comms_hal.h']]],
   ['comms_5fhal_5fsent_5fdata',['comms_hal_sent_data',['../Comms__hal_8h.html#a40b35ffbe912f57d6ed1e37c500874a7',1,'Comms_hal.h']]],
   ['comms_5fhalclass',['Comms_halClass',['../classComms__halClass.html',1,'']]],
-  ['config_2eh',['config.h',['../config_8h.html',1,'(Global Namespace)'],['../lib_2config_8h.html',1,'(Global Namespace)']]],
+  ['config_2eh',['config.h',['../config_8h.html',1,'']]],
   ['connecteventhandler',['connectEventHandler',['../enigmaiot__sensor_8ino.html#a940f8c4df553df52c9145ef2df107ad3',1,'enigmaiot_sensor.ino']]],
   ['countactivenodes',['countActiveNodes',['../classNodeList.html#abb4895c5b9ae6b041c9102178de837c4',1,'NodeList']]],
   ['crc32',['crc32',['../structrtcmem__data__t.html#a22c20e35a06410f1060c11ef669ab96a',1,'rtcmem_data_t']]],

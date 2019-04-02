@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>EnigmaIOT: src/config.h File Reference</title>
+<title>EnigmaIOT: src/lib/config.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html">lib</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -73,13 +73,17 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Parameter configuration.  
+<a href="#details">More...</a></p>
+
 <p><a href="config_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ab234d1358562b66925fb7223c087556b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config_8h.html#ab234d1358562b66925fb7223c087556b">MAX_MESSAGE_LENGTH</a>&#160;&#160;&#160;250</td></tr>
 <tr class="separator:ab234d1358562b66925fb7223c087556b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74168aceb3fa9ec24d6fed419b7e8332"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config_8h.html#a74168aceb3fa9ec24d6fed419b7e8332">MAX_KEY_VALIDITY</a>&#160;&#160;&#160;60000</td></tr>
+<tr class="memitem:a74168aceb3fa9ec24d6fed419b7e8332"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config_8h.html#a74168aceb3fa9ec24d6fed419b7e8332">MAX_KEY_VALIDITY</a>&#160;&#160;&#160;86400000</td></tr>
+<tr class="memdesc:a74168aceb3fa9ec24d6fed419b7e8332"><td class="mdescLeft">&#160;</td><td class="mdescRight">1 day  <a href="#a74168aceb3fa9ec24d6fed419b7e8332">More...</a><br /></td></tr>
 <tr class="separator:a74168aceb3fa9ec24d6fed419b7e8332"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -89,7 +93,14 @@ Variables</h2></td></tr>
 <tr class="memitem:a52ec03c6ad068419f98e52f60718626e"><td class="memItemLeft" align="right" valign="top">const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config_8h.html#a52ec03c6ad068419f98e52f60718626e">DOWNLINK_WAIT_TIME</a> = 500</td></tr>
 <tr class="separator:a52ec03c6ad068419f98e52f60718626e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Parameter configuration. </p>
+<dl class="section version"><dt>Version</dt><dd>0.0.1 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>09/03/2019 </dd></dl>
+<dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
+
+<p class="definition">Definition in file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a74168aceb3fa9ec24d6fed419b7e8332"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a74168aceb3fa9ec24d6fed419b7e8332">&#9670;&nbsp;</a></span>MAX_KEY_VALIDITY</h2>
 
@@ -97,12 +108,14 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MAX_KEY_VALIDITY&#160;&#160;&#160;60000</td>
+          <td class="memname">#define MAX_KEY_VALIDITY&#160;&#160;&#160;86400000</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00010">10</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p>1 day </p>
+
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00016">16</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -118,7 +131,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00007">7</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00013">13</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -135,7 +148,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00014">14</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00020">20</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -151,7 +164,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00013">13</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00019">19</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>

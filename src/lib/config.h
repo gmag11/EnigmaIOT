@@ -13,7 +13,7 @@
 #define MAX_MESSAGE_LENGTH 250
 
 // Gateway configuration
-#define MAX_KEY_VALIDITY 86400000
+#define MAX_KEY_VALIDITY 86400000 ///< @brief 1 day
 
 // Sensor configuration
 const uint16_t RECONNECTION_PERIOD = 500;
