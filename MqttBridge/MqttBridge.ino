@@ -14,14 +14,14 @@
 
 #include <PubSubClient.h>
 #include <ESP8266WiFi.h>
-#include <CertStoreBearSSL.h>
-#include <BearSSLHelpers.h>
 #include "bridge_config.h"
 
 #ifndef BRIDGE_CONFIG_H
 #define SSID "ssid"
 #define PASSWD "passwd"
 #endif
+
+const char* BASE_TOPIC = "enigmaiot";
 
 WiFiClient espClient;
 PubSubClient client (espClient);
@@ -37,7 +37,8 @@ void reconnect () {
         if (client.connect (clientId.c_str (),MQTT_USER,MQTT_PASS)) {
             Serial.println ("connected");
             // Once connected, publish an announcement...
-            client.publish ("outTopic", "hello world");
+            String gwTopic = BASE_TOPIC + String("/gateway/hello");
+            client.publish (gwTopic.c_str(), "");
             // ... and resubscribe
             client.subscribe ("inTopic");
         }
@@ -93,15 +94,15 @@ void loop()
         if (message[0] == '~') {
             Serial.println ("New message");
             int end = message.indexOf (';');
-            topic = "enigmaiot" + message.substring (1, end);
+            topic = BASE_TOPIC + message.substring (1, end);
             Serial.printf ("Topic: %s", topic.c_str ());
             if (end < message.length () - 1) {
-                Serial.println ("With data");
+                Serial.println (" With data");
                 data = message.substring (end + 1);
                 Serial.printf (" -- Data: %s\n", data.c_str ());
             }
             else {
-                Serial.println ("Without data");
+                Serial.println (" Without data");
                 data = "";
                 Serial.println ();
             }
