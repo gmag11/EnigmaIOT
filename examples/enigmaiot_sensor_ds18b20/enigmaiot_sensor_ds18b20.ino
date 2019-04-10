@@ -54,19 +54,21 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length) {
         Serial.print ((char)buffer[i]);
     }
     Serial.println ();
-    Serial.print ("Device 0 Address: ");
-    printAddress (thermometer);
     Serial.println ();
-    sensors.setResolution (thermometer, resolution);
+}
 
-    Serial.print ("Device 0 Resolution: ");
-    Serial.print (sensors.getResolution (thermometer), DEC);
-    Serial.println ();
+void enigmaiotInit () {
+    EnigmaIOTSensor.setLed (BLUE_LED);
+    EnigmaIOTSensor.onConnected (connectEventHandler);
+    EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
+    EnigmaIOTSensor.onDataRx (processRxData);
+    EnigmaIOTSensor.begin (&Espnow_hal, gateway);
 }
 
 bool init_ds18b20 () {
     Serial.print ("Locating devices...");
     sensors.begin ();
+    sensors.setWaitForConversion (false);
     Serial.print ("Found ");
     Serial.print (sensors.getDeviceCount (), DEC);
     Serial.println (" devices.");
@@ -78,8 +80,13 @@ bool init_ds18b20 () {
     Serial.print ("Device 0 Address: ");
     printAddress (thermometer);
     Serial.println ();
-    sensors.setWaitForConversion (false);
+    Serial.print ("Device 0 Resolution: ");
+    Serial.print (sensors.getResolution (thermometer), DEC);
+    Serial.println ();
     Serial.printf ("Parasite %s\n", sensors.isParasitePowerMode () ? "ON" : "OFF");
+
+    Serial.println ();
+
     return true;
 }
 
@@ -114,25 +121,20 @@ void setup () {
 
     pinMode (ONE_WIRE_VCC, OUTPUT);
     digitalWrite (ONE_WIRE_VCC, HIGH);
-    //delay (100);
 
     init_ds18b20 ();
+    float temperature = readTemp (thermometer);
+    digitalWrite (ONE_WIRE_VCC, LOW);
 
-    EnigmaIOTSensor.setLed (BLUE_LED);
-    EnigmaIOTSensor.onConnected (connectEventHandler);
-    EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
-    EnigmaIOTSensor.onDataRx (processRxData);
-    EnigmaIOTSensor.begin (&Espnow_hal, gateway);
+    enigmaiotInit ();
 
     msg.addAnalogInput (0, (float)(ESP.getVcc ())/1000);
     Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
-    msg.addTemperature (1, readTemp(thermometer));
+    msg.addTemperature (1, temperature);
     //char *message = "Hello World!!!";
-    digitalWrite (ONE_WIRE_VCC, LOW);
-    //delay (100);
 
     Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
-    //EnigmaIOTSensor.sendData ((uint8_t *)message, strlen (message));
+
     EnigmaIOTSensor.sendData (msg.getBuffer (), msg.getSize ());
 
     EnigmaIOTSensor.sleep (SLEEP_TIME);
