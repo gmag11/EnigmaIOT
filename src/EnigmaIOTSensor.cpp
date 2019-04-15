@@ -13,7 +13,7 @@ void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
     ledOnTime = onTime;
 }
 
-void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter, bool sleepy) {
+void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_t *networkKey, bool useCounter, bool sleepy) {
     pinMode (led, OUTPUT);
     digitalWrite (led, HIGH);
 
@@ -24,6 +24,8 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool u
     comm->onDataRcvd (rx_cb);
     comm->onDataSent (tx_cb);
     this->useCounter = useCounter;
+
+    Crypto.setNetworkKey (networkKey);
 
     node.setSleepy (sleepy);
 

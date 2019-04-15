@@ -99,13 +99,30 @@ public:
     uint8_t* getPubDHKey () {
         return publicDHKey;
     }
+
+    /**
+      * @brief Sets network key used to protect key agreement against man in the middle and gateway or node spoofing
+      * @param key Pointer to network key
+      */
+    void setNetworkKey (uint8_t* key) {
+        memcpy (networkKey, key, KEY_LENGTH);
+    }
+
+    /**
+      * @brief Gets network key used to protect key agreement against man in the middle and gateway or node spoofing
+      * @return Pointer to network key
+      */
+    uint8_t* getNetworkKey () {
+        return networkKey;
+    }
     
     //static size_t getBlockSize ();
 
 
 protected:
     uint8_t privateDHKey[KEY_LENGTH]; ///< @brief Temporary private key store used during key agreement
-    uint8_t publicDHKey[KEY_LENGTH]; ///< @brief Temporary public key store used during key agreement
+    uint8_t publicDHKey[KEY_LENGTH];  ///< @brief Temporary public key store used during key agreement
+    uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
 };
 
 extern CryptModule Crypto; ///< @brief Singleton Crypto class instance

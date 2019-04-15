@@ -190,9 +190,10 @@ class EnigmaIOTGatewayClass
      /**
       * @brief Initalizes communication basic data and starts accepting node registration
       * @param comm Physical layer to be used on this network
+      * @param networkKey Network key to protect shared key agreement
       * @param useCounter Indicates if a counter is going to be added to every message data to check message sequence. `true` by default
       */
-     void begin (Comms_halClass *comm, bool useDataCounter = true);
+     void begin (Comms_halClass *comm, uint8_t *networkKey, bool useDataCounter = true);
 
      /**
       * @brief This method should be called periodically for instance inside `loop()` function.

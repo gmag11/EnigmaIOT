@@ -33,9 +33,10 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t * mac, const uint8_t * data,
     }
 }
 
-void EnigmaIOTGatewayClass::begin (Comms_halClass *comm, bool useDataCounter) {
+void EnigmaIOTGatewayClass::begin (Comms_halClass *comm, uint8_t *networkKey, bool useDataCounter) {
     this->comm = comm;
     this->useCounter = useDataCounter;
+    Crypto.setNetworkKey (networkKey);
     comm->begin (NULL, 0, COMM_GATEWAY);
     comm->onDataRcvd (rx_cb);
     comm->onDataSent (tx_cb);

@@ -204,6 +204,7 @@ public:
       * @brief Initalizes communication basic data and starts node registration
       * @param comm Physical layer to be used on this node network
       * @param gateway Gateway address
+      * @param networkKey Network key to protect shared key agreement
       * @param useCounter Indicates if a counter has to be added to every message data to check message sequence. `true` by default
       * @param sleepy Indicates if this node changes to low energy mode (sleep mode) after sending a data message. `true` by default
       *
@@ -212,7 +213,7 @@ public:
       * normally those that are powered with batteries, downlink message will be queued on gateway and sent just after an uplink data
       * message from node has been sent
       */
-    void begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter = true, bool sleepy = true);
+    void begin (Comms_halClass *comm, uint8_t *gateway, uint8_t *networkKey, bool useCounter = true, bool sleepy = true);
 
     /**
       * @brief This method should be called periodically for instance inside `loop()` function.
