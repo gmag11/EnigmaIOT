@@ -101,28 +101,27 @@ public:
     }
 
     /**
-      * @brief Sets network key used to protect key agreement against man in the middle and gateway or node spoofing
-      * @param key Pointer to network key
+      * @brief Encripts one or more blocks of memory using network key
+      * @param input Input buffer
+      * @param numBlocks Number of blocks to encrypt
+      * @return Input buffer
       */
-    void setNetworkKey (uint8_t* key) {
-        memcpy (networkKey, key, KEY_LENGTH);
-    }
+    static uint8_t *networkEncrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength);
 
     /**
-      * @brief Gets network key used to protect key agreement against man in the middle and gateway or node spoofing
-      * @return Pointer to network key
+      * @brief Decripts one or more blocks of memory using network key
+      * @param input Input buffer
+      * @param numBlocks Number of blocks to decrypt
+      * @return Input buffer
       */
-    uint8_t* getNetworkKey () {
-        return networkKey;
-    }
-    
+    static uint8_t *networkDecrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength);
+
     //static size_t getBlockSize ();
 
 
 protected:
     uint8_t privateDHKey[KEY_LENGTH]; ///< @brief Temporary private key store used during key agreement
     uint8_t publicDHKey[KEY_LENGTH];  ///< @brief Temporary public key store used during key agreement
-    uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
 };
 
 extern CryptModule Crypto; ///< @brief Singleton Crypto class instance

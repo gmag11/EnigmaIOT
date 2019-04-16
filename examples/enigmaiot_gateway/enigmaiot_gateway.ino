@@ -67,7 +67,7 @@ void setup () {
     EnigmaIOTGateway.setTxLed (RED_LED);
     EnigmaIOTGateway.onNewNode (newNodeConnected);
     EnigmaIOTGateway.onNodeDisconnected (nodeDisconnected);
-    EnigmaIOTGateway.begin (&Espnow_hal);
+    EnigmaIOTGateway.begin (&Espnow_hal, (uint8_t*)NETWORK_KEY);
     EnigmaIOTGateway.onDataRx (processRxData);
 }
 

@@ -96,6 +96,7 @@ protected:
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed
     uint8_t dataMessageSentLength = 0; ///< @brief Message length stored for use in case of message retransmission is needed
     sensorInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
+    uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer

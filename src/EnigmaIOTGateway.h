@@ -80,6 +80,7 @@ class EnigmaIOTGatewayClass
      onNewNode_t notifyNewNode; ///< @brief Callback function that will be invoked when a new node is connected
      onNodeDisconnected_t notifyNodeDisconnection; ///< @brief Callback function that will be invoked when a node gets disconnected
      bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
+     uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
      
      /**
       * @brief Build a **ServerHello** messange and send it to node

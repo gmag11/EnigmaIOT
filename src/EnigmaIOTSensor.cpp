@@ -25,7 +25,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
     comm->onDataSent (tx_cb);
     this->useCounter = useCounter;
 
-    Crypto.setNetworkKey (networkKey);
+    memcpy (this->networkKey, networkKey, KEY_LENGTH);
 
     node.setSleepy (sleepy);
 
@@ -156,6 +156,8 @@ bool EnigmaIOTSensorClass::clientHello () {
     DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
     memcpy (&(clientHello_msg.crc), &crc32, CRC_LENGTH);
+
+    CryptModule::networkEncrypt (clientHello_msg.iv, 3, networkKey, KEY_LENGTH);
 
     DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
 
