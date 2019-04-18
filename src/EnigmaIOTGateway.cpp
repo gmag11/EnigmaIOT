@@ -475,6 +475,10 @@ bool EnigmaIOTGatewayClass::cipherFinished (Node *node) {
 
     DEBUG_VERBOSE ("Encripted Cipher Finished message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
 
+    CryptModule::networkEncrypt (cipherFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Network encrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
+
     flashTx = true;
     DEBUG_INFO (" -------> CYPHER_FINISHED");
     return comm->send (node->getMacAddress (), (uint8_t *)&cipherFinished_msg, CFMSG_LEN) == 0;

@@ -242,6 +242,10 @@ bool EnigmaIOTSensorClass::processCipherFinished (const uint8_t mac[6], const ui
 
     memcpy (&cipherFinished_msg, buf, CFMSG_LEN);
 
+    CryptModule::networkDecrypt (cipherFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Network decrypted Server Hello message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
+
     Crypto.decryptBuffer (
         (uint8_t *)&(cipherFinished_msg.nodeId),
         (uint8_t *)&(cipherFinished_msg.nodeId),
