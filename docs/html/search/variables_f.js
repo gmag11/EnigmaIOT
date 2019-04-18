@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['usecounter',['useCounter',['../classEnigmaIOTGatewayClass.html#a24cc18886d923df0320b6ac4eac19028',1,'EnigmaIOTGatewayClass::useCounter()'],['../classEnigmaIOTSensorClass.html#a1315e688792578c58e5f60cf77250e7d',1,'EnigmaIOTSensorClass::useCounter()']]]
+  ['txled',['txled',['../classEnigmaIOTGatewayClass.html#a8d86390169309396f3d21149c3649453',1,'EnigmaIOTGatewayClass']]],
+  ['txledontime',['txLedOnTime',['../classEnigmaIOTGatewayClass.html#aacbd1597e7a6be2957ac4f3ade9dc243',1,'EnigmaIOTGatewayClass']]]
 ];
