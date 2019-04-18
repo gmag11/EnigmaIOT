@@ -104,6 +104,7 @@ class EnigmaIOTGatewayClass
       * @param mac Address where this message was received from
       * @param buf Pointer to the buffer that contains the message
       * @param count Message length in number of bytes of ClientHello message
+      * @param node Node entry that Client Hello message comes from
       * @return Returns `true` if message could be correcly processed
       */
      bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
@@ -121,7 +122,8 @@ class EnigmaIOTGatewayClass
       *
       * It includes some random data that is encrypted with a CRC to check integrity. This message is used to let node if gateway
       * generated the correct shared key.
-      * @param Node Node which key agreement is being made with
+      *
+      * @param node Node which key agreement is being made with
       * @return Returns `true` if message could be correcly sent
       */
      bool cipherFinished (Node *node);
@@ -142,12 +144,14 @@ class EnigmaIOTGatewayClass
       * @param mac Node address
       * @param buf Buffer to store received message
       * @param count Length of received data
+      * @param node Node that data message comes from
       * @return Returns `true` if message could be correcly decoded
       */
      bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
 
      /**
       * @brief Builds, encrypts and sends a **DownstreamData** message.
+      * @param node Node that downstream data message is going to
       * @param data Buffer to store payload to be sent
       * @param len Length of payload data
       * @return Returns `true` if message could be correcly sent or scheduled
@@ -192,7 +196,7 @@ class EnigmaIOTGatewayClass
       * @brief Initalizes communication basic data and starts accepting node registration
       * @param comm Physical layer to be used on this network
       * @param networkKey Network key to protect shared key agreement
-      * @param useCounter Indicates if a counter is going to be added to every message data to check message sequence. `true` by default
+      * @param useDataCounter Indicates if a counter is going to be added to every message data to check message sequence. `true` by default
       */
      void begin (Comms_halClass *comm, uint8_t *networkKey, bool useDataCounter = true);
 

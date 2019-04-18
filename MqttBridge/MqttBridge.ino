@@ -8,7 +8,7 @@
   * Due to ESP-NOW limitations, it cannot be used with regular WiFi without problems. That's why this bridge is needed.
   * It gets encoded data from serial port and forwards to a MQTT broker.
   *
-  * Message format received over serial is in the form of lines like: `~\<address>\<subtopic>;<data>
+  * Message format received over serial is in the form of lines like: `~\<address>\<subtopic>;<data>`
   */
 
 

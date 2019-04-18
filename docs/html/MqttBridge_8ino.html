@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">0.1.0</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
   </td>
@@ -101,10 +101,10 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Bridge for EnigmaIoT system to forward data from serial to MQTT broker. </p>
-<dl class="section version"><dt>Version</dt><dd>0.0.1 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.1.0 </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>09/03/2019 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin Due to ESP-NOW limitations, it cannot be used with regular WiFi without problems. That's why this bridge is needed. It gets encoded data from serial port and forwards to a MQTT broker.</dd></dl>
-<p>Message format received over serial is in the form of lines like: `~&lt;address&gt;&lt;subtopic&gt;;&lt;data&gt; </p>
+<p>Message format received over serial is in the form of lines like: <code>~\&lt;address&gt;\&lt;subtopic&gt;;&lt;data&gt;</code> </p>
 
 <p class="definition">Definition in file <a class="el" href="MqttBridge_8ino_source.html">MqttBridge.ino</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>

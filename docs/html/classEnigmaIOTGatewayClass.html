@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">0.1.0</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
   </td>
@@ -248,7 +248,7 @@ Protected Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">comm</td><td>Physical layer to be used on this network </td></tr>
     <tr><td class="paramname">networkKey</td><td>Network key to protect shared key agreement </td></tr>
-    <tr><td class="paramname">useCounter</td><td>Indicates if a counter is going to be added to every message data to check message sequence. <code>true</code> by default </td></tr>
+    <tr><td class="paramname">useDataCounter</td><td>Indicates if a counter is going to be added to every message data to check message sequence. <code>true</code> by default </td></tr>
   </table>
   </dd>
 </dl>
@@ -337,9 +337,10 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Build and send a <b>cipherFinished</b> message. </p>
-<p>It includes some random data that is encrypted with a CRC to check integrity. This message is used to let node if gateway generated the correct shared key. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>It includes some random data that is encrypted with a CRC to check integrity. This message is used to let node if gateway generated the correct shared key.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname"><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a></td><td><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> which key agreement is being made with </td></tr>
+    <tr><td class="paramname">node</td><td><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> which key agreement is being made with </td></tr>
   </table>
   </dd>
 </dl>
@@ -392,6 +393,7 @@ Protected Attributes</h2></td></tr>
 <p>Builds, encrypts and sends a <b>DownstreamData</b> message. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">node</td><td><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> that downstream data message is going to </td></tr>
     <tr><td class="paramname">data</td><td>Buffer to store payload to be sent </td></tr>
     <tr><td class="paramname">len</td><td>Length of payload data </td></tr>
   </table>
@@ -721,7 +723,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00244">244</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00248">248</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -757,7 +759,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00309">309</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00313">313</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -793,7 +795,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00338">338</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00342">342</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -849,6 +851,7 @@ Protected Attributes</h2></td></tr>
     <tr><td class="paramname">mac</td><td>Address where this message was received from </td></tr>
     <tr><td class="paramname">buf</td><td>Pointer to the buffer that contains the message </td></tr>
     <tr><td class="paramname">count</td><td>Message length in number of bytes of ClientHello message </td></tr>
+    <tr><td class="paramname">node</td><td><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> entry that Client Hello message comes from </td></tr>
   </table>
   </dd>
 </dl>
@@ -910,6 +913,7 @@ Protected Attributes</h2></td></tr>
     <tr><td class="paramname">mac</td><td><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> address </td></tr>
     <tr><td class="paramname">buf</td><td>Buffer to store received message </td></tr>
     <tr><td class="paramname">count</td><td>Length of received data </td></tr>
+    <tr><td class="paramname">node</td><td><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> that data message comes from </td></tr>
   </table>
   </dd>
 </dl>
