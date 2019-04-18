@@ -40,13 +40,16 @@ During this project conception I decided that it should fulfil this list of requ
 - [x] Key expiration and renewal is managed transparently
 - [x] Avoid repeatability attack having a new random initialization vector on every message
 - [x] Automatic and transparent node attachment
-- [x] Avoid rogue node, rogue gateway and man-in-the-middle attack
+- [x] Avoid rogue node, rogue gateway and man-in-the-middle attack.
+
+Notice that network key used to implement this feature is stored on flash. ESP8266 do not allow flash encryption so network key may be recovered reading flash. On the other side, ESP32 is able to encrypt flash memory, but EnigmaIoT is not still tested on it.
+
 - [x] Plugabble phisical layer communication. Right now only ESP-NOW protocol is developed but you can easily add more communication alternatives
 - [x] When using ESP-NOW only esp8266 is needed. No more electronics apart from sensor
 - [x] Optional data message counter to detect lost or repeated messages
 - [x] Designed as two libraries (one for gateway, one for node) for easier use.
 - [x] Selectable crypto algorhithm
-- [x] Gateway does not store keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on
+- [x] Node and Gateway do store shared keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on
 - [x] Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message
 - [x] Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place, and it is the one currently implemented, but SPIFFS or EEPROM would be possible. **Under test**
 
