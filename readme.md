@@ -12,7 +12,7 @@ This protocol has been designed with security on mind. All sensor data is encryp
 
 I designed this because I was seaching for a way to have a relatively high number of nodes at home. I thought about using WiFi butit would overload my home router. So I looked for an alternative. I thought about LoRa or cheap 2.4GHz modules but I wanted the simplest solution in terms of hardware.
 
-ESP8266 microcontroller implements a protocol known as ESP-NOW. It is a point to point protocol, based on special WiFi frames, that works in a connectionless way and every packet is short in time. Because of this it eases to have  the node feeded with batteries to have totally wireless sensors.
+ESP8266 microcontroller implements a protocol known as ESP-NOW. It is a point to point protocol, based on special WiFi frames, that works in a connectionless way and every packet is short in time. Because of this it eases to have a battery powered node so that it enables designing totally wireless sensors.
 
 But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So I thought that I could implement encryption on payload but I found many problems I should solve to grade this as "secure enough".
 
@@ -28,27 +28,27 @@ During this project conception I decided that it should fulfil this list of requ
 - Do not require connection to the Internet.
 - Do not overload my home WiFi infrastructure.
 - Able to use deep sleep to run on batteries.
-- Enough wireless range for a house
-- Support for a high number of nodes
+- Enough wireless range for a house.
+- Support for a high number of nodes.
 
 ## Features
 
-- Encrypted communication
-- Dynamic key, shared between one node and gateway. Keys are independent for each node
-- Number of nodes is only limited by memory on gateway (56 bytes per node)
-- Key is never on air so it is not interceptable
-- Key expiration and renewal is managed transparently
-- Avoid repeatability attack having a new random initialization vector on every message
-- Automatic and transparent node attachment
-- Avoid rogue node, rogue gateway and man-in-the-middle attack. **TO-DO**
-- Plugabble phisical layer communication. Right now only ESP-NOW protocol is developed but you can easily add more communication alternatives
-- When using ESP-NOW only esp8266 is needed. No more electronics apart from sensor.
-- Optional data message counter to detect lost or repeated messages.
-- Designed as two libraries (one for gateway, one for node) for easier use.
-- Selectable crypto algorhithm
-- Gateway does not store keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on
-- Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message.
-- Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place, and it is the one currently implemented, but SPIFFS or EEPROM would be possible. **Under test**
+- [x] Encrypted communication
+- [x] Dynamic key, shared between one node and gateway. Keys are independent for each node
+- [x] Number of nodes is only limited by memory on gateway (56 bytes per node)
+- [x] Key is never on air so it is not interceptable
+- [x] Key expiration and renewal is managed transparently
+- [x] Avoid repeatability attack having a new random initialization vector on every message
+- [x] Automatic and transparent node attachment
+- [x] Avoid rogue node, rogue gateway and man-in-the-middle attack
+- [x] Plugabble phisical layer communication. Right now only ESP-NOW protocol is developed but you can easily add more communication alternatives
+- [x] When using ESP-NOW only esp8266 is needed. No more electronics apart from sensor
+- [x] Optional data message counter to detect lost or repeated messages
+- [x] Designed as two libraries (one for gateway, one for node) for easier use.
+- [x] Selectable crypto algorhithm
+- [x] Gateway does not store keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on
+- [x] Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message
+- [x] Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place, and it is the one currently implemented, but SPIFFS or EEPROM would be possible. **Under test**
 
 ## Design
 
@@ -58,7 +58,7 @@ System functions are divided in three layers: application, link and physical lay
 
 ![Software Layers](https://github.com/gmag11/EnigmaIOT/raw/master/img/system_layers.png)
 
-- **Application layer** is not controlled by EnigmaIoT protocol but main program. User may choose whatever data format. A good option is to use CayenneLPP format but any other format or even raw data may be used. The only limit is the maximum packet length that, for ESP-NOW is around 200 bytes.
+- **Application layer** is not controlled by EnigmaIoT protocol but main program. User may choose whatever data format or final destination of payload. A good option is to use CayenneLPP format but any other format or even raw data may be used. The only limit is the maximum packet length that, for ESP-NOW is around 200 bytes.
 
 - **Link layer** is the one that add privacy and security. It manages connection between nodes and gateway in a transparent way. It does key agreement and node registration and checks the correctness of data messages. In case of any error it automatically start a new registration process. On this layer, data packets are encrypted using calculated symetric key.
 
@@ -72,11 +72,13 @@ The process starts with node anouncing itself with a Client Hello message. It te
 
 Gateway answers with Server Hello message that includes its public data for key calculation on node.
 
-Once key is caliculated, node send an encrypted message as Key Exchange Finished message. A 32 bit CRC is calculated and it is used for decryption test.
+Once key is calculated, node send an encrypted message as Key Exchange Finished message. A 32 bit CRC is calculated and it is used for decryption test.
 
 If gateway validates CRC correctly it answers with a Cipher Finished message. It carries a CRC too.
 
-In case of any error in the process gateway sends an Invalidate Key to reset to original status and forgets key.
+This process is protected with a 32 byte shared **network key**, used for **authentication**. If network key is not the same on gateway and node this will lead to CRC errors.
+
+In case of any error in this process gateway sends an Invalidate Key to reset to original status and forgets key.
 
 When key is marked as valid node may start sending sensor data.
 
@@ -182,7 +184,7 @@ Invalidate Key message is always sent unencrypted.
 
 ## Data format
 
-Although it is not mandatory, use of [CayenneLPP format](https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload) is recommended for sensor data compactness.
+Although it is not mandatory at all, use of [CayenneLPP format](https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload) is recommended for sensor data compactness.
 
 You may use [CayenneLPP encoder library](https://github.com/sabas1080/CayenneLPP) on sensor node and [CayenneLPP decoder library](https://github.com/gmag11/CayenneLPPdec) for decoding on Gateway.
 
@@ -192,12 +194,14 @@ In any case you can use your own format or even raw unencoded data. Take care of
 
 ## Output data from gateway
 
-A user may program their own output format modifying gateway main program. For my use case gateway outputs MQTT messages in this format:
+A user may program their own output format modifying gateway example program. For my use case gateway outputs MQTT messages in this format:
 ```
 <configurable prefix>/<node address>/sensordata/<json data>
 ```
 A prefix is configured on gateway to allow several sensor networks to coexist in the same subnet. After that address and data are sent.
 
-Future upgrades could add statistical messages like message rate and packer error rate, this feature is under study now and it is now on development yet.
-
+After every received message, gateway detects if any packet has been lost before and reports it using MQTT message using this format:
+```
+<configurable prefix>/<node address>/status/{"per":<packet error rate>,"lostmessages":<Number of lost messages>,"totalmessages":<Total number of messages>,"packetshour":<Packet rate>}
+```
 If ESP-NOW is used for node communication, ESP8266 cannot use WiFi in a reliable way. That's why in this case gateway will be formed by two ESP8266 linked by serial port. First one will output MQTT data in form of ascii strings and second one will forward them to MQTT broker.
