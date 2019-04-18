@@ -107,11 +107,12 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 
     //node->packetNumber++;
 
-    int espNowError = 0;
+    int espNowError = 0; // May I remove this??
 
     switch (buf[0]) {
     case CLIENT_HELLO:
         // TODO: Do no accept new Client Hello if registration is on process on any node??
+        // May cause undesired behaviour in case a node registration message is lost
         DEBUG_INFO (" <------- CLIENT HELLO");
         if (espNowError == 0) {
             if (processClientHello (mac, buf, count, node)) {
@@ -120,11 +121,13 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
                 if (serverHello (myPublicKey, node)) {
                     DEBUG_INFO ("Server Hello sent");
                 } else {
+                    node->reset ();
                     DEBUG_INFO ("Error sending Server Hello");
                 }
 
             } else {
-                invalidateKey (node, WRONG_CLIENT_HELLO);
+                // Ignore message in case of error
+                //invalidateKey (node, WRONG_CLIENT_HELLO);
                 node->reset ();
                 DEBUG_ERROR ("Error processing client hello");
             }
@@ -528,6 +531,10 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
     }
 
     memcpy (&clientHello_msg, buf, count);
+
+    CryptModule::networkDecrypt (clientHello_msg.iv, 3, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Netowrk decrypted Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
 
     memcpy (&crc32, &(clientHello_msg.crc), sizeof (uint32_t));
 

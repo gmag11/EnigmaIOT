@@ -104,6 +104,8 @@ public:
       * @brief Encripts one or more blocks of memory using network key
       * @param input Input buffer
       * @param numBlocks Number of blocks to encrypt
+      * @param key Network key. This has to be shared among every node and gateway on the network
+      * @param keyLength Length of network key in number of bytes.
       * @return Input buffer
       */
     static uint8_t *networkEncrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength);

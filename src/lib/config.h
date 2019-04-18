@@ -16,7 +16,7 @@
 #define MAX_KEY_VALIDITY 86400000 ///< @brief 1 day
 
 // Sensor configuration
-static const uint16_t RECONNECTION_PERIOD = 500;
+static const uint16_t RECONNECTION_PERIOD = 2500;
 static const uint16_t DOWNLINK_WAIT_TIME = 500;
 
 static const uint8_t NETWORK_KEY[32] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };

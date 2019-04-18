@@ -84,7 +84,7 @@ void EnigmaIOTSensorClass::handle () {
 
 
     if (node.getStatus()== UNREGISTERED) {
-        if (millis () - lastRegistration > (RECONNECTION_PERIOD)) {
+        if (millis () - lastRegistration > (RECONNECTION_PERIOD*10)) {
             DEBUG_VERBOSE ("Current node status: %d", node.getStatus ());
             lastRegistration = millis ();
             node.reset ();
@@ -157,9 +157,11 @@ bool EnigmaIOTSensorClass::clientHello () {
 
     memcpy (&(clientHello_msg.crc), &crc32, CRC_LENGTH);
 
+    DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
+
     CryptModule::networkEncrypt (clientHello_msg.iv, 3, networkKey, KEY_LENGTH);
 
-    DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
+    DEBUG_VERBOSE ("Netowrk encrypted Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
 
     node.setStatus (WAIT_FOR_SERVER_HELLO);
 
