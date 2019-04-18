@@ -197,9 +197,13 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
 
     memcpy (&serverHello_msg, buf, count);
 
+    CryptModule::networkDecrypt (serverHello_msg.iv, 3, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Network decrypted Server Hello message: %s", printHexBuffer ((uint8_t *)&serverHello_msg, SHMSG_LEN));
+
     memcpy (&crc32, &(serverHello_msg.crc), CRC_LENGTH);
 
-    if (!checkCRC (buf, count - CRC_LENGTH, &crc32)) {
+    if (!checkCRC ((uint8_t*)&serverHello_msg, SHMSG_LEN - CRC_LENGTH, &crc32)) {
         DEBUG_WARN ("Wrong CRC");
         return false;
     }

@@ -602,6 +602,11 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t *key, Node *node) {
     memcpy (&(serverHello_msg.crc), &crc32, CRC_LENGTH);
 
     DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t *)&serverHello_msg, SHMSG_LEN));
+    
+    CryptModule::networkEncrypt (serverHello_msg.iv, 3, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Network encrypted Server Hello message: %s", printHexBuffer ((uint8_t *)&serverHello_msg, SHMSG_LEN));
+
     flashTx = true;
 
 #ifdef DEBUG_ESP_PORT
