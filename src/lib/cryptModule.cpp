@@ -15,9 +15,11 @@
 #include <Curve25519.h>
 #include "helperFunctions.h"
 
-#define CYPHER_TYPE CFB<Speck>
+#define BLOCK_CYPHER Speck
+#define CYPHER_TYPE CFB<BLOCK_CYPHER>
 
 CYPHER_TYPE cipher;
+BLOCK_CYPHER netCipher;
 
 void CryptModule::decryptBuffer (uint8_t *output, const uint8_t *input, size_t length,
     const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen) {
@@ -52,6 +54,35 @@ void CryptModule::encryptBuffer (uint8_t *output, const uint8_t *input, size_t l
         DEBUG_ERROR ("Error in key or IV");
     }
 }
+
+uint8_t* CryptModule::networkEncrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength) {
+
+    uint8_t *tempBuffer = input;
+
+    netCipher.setKey (key, keyLength);
+    size_t blockSize = netCipher.blockSize ();
+
+    for (int i = 0; i < numBlocks; i++) {
+        netCipher.encryptBlock (tempBuffer, tempBuffer);
+        tempBuffer += blockSize;
+    }
+    return input;
+}
+
+uint8_t* CryptModule::networkDecrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength) {
+
+    uint8_t *tempBuffer = input;
+
+    netCipher.setKey (key, keyLength);
+    size_t blockSize = netCipher.blockSize ();
+
+    for (int i = 0; i < numBlocks; i++) {
+        netCipher.decryptBlock (tempBuffer, tempBuffer);
+        tempBuffer += blockSize;
+    }
+    return input;
+}
+
 
 uint32_t CryptModule::random () {
     return *(volatile uint32_t *)RANDOM_32;

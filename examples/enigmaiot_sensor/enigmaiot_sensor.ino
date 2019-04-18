@@ -48,7 +48,7 @@ void setup () {
     EnigmaIOTSensor.onConnected (connectEventHandler);
     EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
     EnigmaIOTSensor.onDataRx (processRxData);
-    EnigmaIOTSensor.begin (&Espnow_hal, gateway);
+    EnigmaIOTSensor.begin (&Espnow_hal, gateway, (uint8_t*)NETWORK_KEY);
 
     msg.addAnalogInput (0, (float)(ESP.getVcc ())/1000);
     Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);

@@ -80,6 +80,7 @@ class EnigmaIOTGatewayClass
      onNewNode_t notifyNewNode; ///< @brief Callback function that will be invoked when a new node is connected
      onNodeDisconnected_t notifyNodeDisconnection; ///< @brief Callback function that will be invoked when a node gets disconnected
      bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
+     uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
      
      /**
       * @brief Build a **ServerHello** messange and send it to node
@@ -190,9 +191,10 @@ class EnigmaIOTGatewayClass
      /**
       * @brief Initalizes communication basic data and starts accepting node registration
       * @param comm Physical layer to be used on this network
+      * @param networkKey Network key to protect shared key agreement
       * @param useCounter Indicates if a counter is going to be added to every message data to check message sequence. `true` by default
       */
-     void begin (Comms_halClass *comm, bool useDataCounter = true);
+     void begin (Comms_halClass *comm, uint8_t *networkKey, bool useDataCounter = true);
 
      /**
       * @brief This method should be called periodically for instance inside `loop()` function.

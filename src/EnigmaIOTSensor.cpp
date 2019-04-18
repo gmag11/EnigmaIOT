@@ -13,7 +13,7 @@ void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
     ledOnTime = onTime;
 }
 
-void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool useCounter, bool sleepy) {
+void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_t *networkKey, bool useCounter, bool sleepy) {
     pinMode (led, OUTPUT);
     digitalWrite (led, HIGH);
 
@@ -24,6 +24,8 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, bool u
     comm->onDataRcvd (rx_cb);
     comm->onDataSent (tx_cb);
     this->useCounter = useCounter;
+
+    memcpy (this->networkKey, networkKey, KEY_LENGTH);
 
     node.setSleepy (sleepy);
 
@@ -157,6 +159,10 @@ bool EnigmaIOTSensorClass::clientHello () {
 
     DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
 
+    CryptModule::networkEncrypt (clientHello_msg.iv, 3, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Netowrk encrypted Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
+
     node.setStatus (WAIT_FOR_SERVER_HELLO);
 
     DEBUG_INFO (" -------> CLIENT HELLO");
@@ -191,9 +197,13 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
 
     memcpy (&serverHello_msg, buf, count);
 
+    CryptModule::networkDecrypt (serverHello_msg.iv, 3, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Network decrypted Server Hello message: %s", printHexBuffer ((uint8_t *)&serverHello_msg, SHMSG_LEN));
+
     memcpy (&crc32, &(serverHello_msg.crc), CRC_LENGTH);
 
-    if (!checkCRC (buf, count - CRC_LENGTH, &crc32)) {
+    if (!checkCRC ((uint8_t*)&serverHello_msg, SHMSG_LEN - CRC_LENGTH, &crc32)) {
         DEBUG_WARN ("Wrong CRC");
         return false;
     }
@@ -231,6 +241,10 @@ bool EnigmaIOTSensorClass::processCipherFinished (const uint8_t mac[6], const ui
     }
 
     memcpy (&cipherFinished_msg, buf, CFMSG_LEN);
+
+    CryptModule::networkDecrypt (cipherFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Network decrypted Server Hello message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
 
     Crypto.decryptBuffer (
         (uint8_t *)&(cipherFinished_msg.nodeId),
@@ -301,6 +315,11 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
     Crypto.encryptBuffer ((uint8_t *)&(keyExchangeFinished_msg.random), (uint8_t *)&(keyExchangeFinished_msg.random), KEFMSG_LEN - IV_LENGTH - 1, keyExchangeFinished_msg.iv, IV_LENGTH, node.getEncriptionKey (), KEY_LENGTH);
 
     DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&(keyExchangeFinished_msg), KEFMSG_LEN));
+
+    CryptModule::networkEncrypt (keyExchangeFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Network encrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&keyExchangeFinished_msg, KEFMSG_LEN));
+
     DEBUG_INFO (" -------> KEY_EXCHANGE_FINISHED");
     return comm->send (gateway, (uint8_t *)&(keyExchangeFinished_msg), KEFMSG_LEN) == 0;
 }

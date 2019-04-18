@@ -33,9 +33,10 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t * mac, const uint8_t * data,
     }
 }
 
-void EnigmaIOTGatewayClass::begin (Comms_halClass *comm, bool useDataCounter) {
+void EnigmaIOTGatewayClass::begin (Comms_halClass *comm, uint8_t *networkKey, bool useDataCounter) {
     this->comm = comm;
     this->useCounter = useDataCounter;
+    memcpy (this->networkKey, networkKey, KEY_LENGTH);
     comm->begin (NULL, 0, COMM_GATEWAY);
     comm->onDataRcvd (rx_cb);
     comm->onDataSent (tx_cb);
@@ -106,11 +107,12 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 
     //node->packetNumber++;
 
-    int espNowError = 0;
+    int espNowError = 0; // May I remove this??
 
     switch (buf[0]) {
     case CLIENT_HELLO:
         // TODO: Do no accept new Client Hello if registration is on process on any node??
+        // May cause undesired behaviour in case a node registration message is lost
         DEBUG_INFO (" <------- CLIENT HELLO");
         if (espNowError == 0) {
             if (processClientHello (mac, buf, count, node)) {
@@ -119,11 +121,13 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
                 if (serverHello (myPublicKey, node)) {
                     DEBUG_INFO ("Server Hello sent");
                 } else {
+                    node->reset ();
                     DEBUG_INFO ("Error sending Server Hello");
                 }
 
             } else {
-                invalidateKey (node, WRONG_CLIENT_HELLO);
+                // Ignore message in case of error
+                //invalidateKey (node, WRONG_CLIENT_HELLO);
                 node->reset ();
                 DEBUG_ERROR ("Error processing client hello");
             }
@@ -389,6 +393,10 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
 
     memcpy (&keyExchangeFinished_msg, buf, KEFMSG_LEN);
 
+    CryptModule::networkDecrypt (keyExchangeFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Netowrk decrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)&keyExchangeFinished_msg, KEFMSG_LEN));
+
     Crypto.decryptBuffer (
         (uint8_t *)&(keyExchangeFinished_msg.random),
         (uint8_t *)&(keyExchangeFinished_msg.random),
@@ -400,7 +408,7 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
     );
 
     DEBUG_VERBOSE ("Decripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&keyExchangeFinished_msg, KEFMSG_LEN));
-
+    
     memcpy (&crc32, &(keyExchangeFinished_msg.crc), CRC_LENGTH);
 
     if (!checkCRC ((uint8_t *)&keyExchangeFinished_msg, KEFMSG_LEN - CRC_LENGTH, &crc32)) {
@@ -467,6 +475,10 @@ bool EnigmaIOTGatewayClass::cipherFinished (Node *node) {
 
     DEBUG_VERBOSE ("Encripted Cipher Finished message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
 
+    CryptModule::networkEncrypt (cipherFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Network encrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
+
     flashTx = true;
     DEBUG_INFO (" -------> CYPHER_FINISHED");
     return comm->send (node->getMacAddress (), (uint8_t *)&cipherFinished_msg, CFMSG_LEN) == 0;
@@ -527,6 +539,10 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
     }
 
     memcpy (&clientHello_msg, buf, count);
+
+    CryptModule::networkDecrypt (clientHello_msg.iv, 3, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Netowrk decrypted Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
 
     memcpy (&crc32, &(clientHello_msg.crc), sizeof (uint32_t));
 
@@ -594,6 +610,11 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t *key, Node *node) {
     memcpy (&(serverHello_msg.crc), &crc32, CRC_LENGTH);
 
     DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t *)&serverHello_msg, SHMSG_LEN));
+    
+    CryptModule::networkEncrypt (serverHello_msg.iv, 3, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Network encrypted Server Hello message: %s", printHexBuffer ((uint8_t *)&serverHello_msg, SHMSG_LEN));
+
     flashTx = true;
 
 #ifdef DEBUG_ESP_PORT
