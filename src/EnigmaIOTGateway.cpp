@@ -393,6 +393,10 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
 
     memcpy (&keyExchangeFinished_msg, buf, KEFMSG_LEN);
 
+    CryptModule::networkDecrypt (keyExchangeFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Netowrk decrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)&keyExchangeFinished_msg, KEFMSG_LEN));
+
     Crypto.decryptBuffer (
         (uint8_t *)&(keyExchangeFinished_msg.random),
         (uint8_t *)&(keyExchangeFinished_msg.random),
@@ -404,7 +408,7 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
     );
 
     DEBUG_VERBOSE ("Decripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&keyExchangeFinished_msg, KEFMSG_LEN));
-
+    
     memcpy (&crc32, &(keyExchangeFinished_msg.crc), CRC_LENGTH);
 
     if (!checkCRC ((uint8_t *)&keyExchangeFinished_msg, KEFMSG_LEN - CRC_LENGTH, &crc32)) {

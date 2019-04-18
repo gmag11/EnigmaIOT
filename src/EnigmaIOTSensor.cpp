@@ -311,6 +311,11 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
     Crypto.encryptBuffer ((uint8_t *)&(keyExchangeFinished_msg.random), (uint8_t *)&(keyExchangeFinished_msg.random), KEFMSG_LEN - IV_LENGTH - 1, keyExchangeFinished_msg.iv, IV_LENGTH, node.getEncriptionKey (), KEY_LENGTH);
 
     DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&(keyExchangeFinished_msg), KEFMSG_LEN));
+
+    CryptModule::networkEncrypt (keyExchangeFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+
+    DEBUG_VERBOSE ("Network encrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&keyExchangeFinished_msg, KEFMSG_LEN));
+
     DEBUG_INFO (" -------> KEY_EXCHANGE_FINISHED");
     return comm->send (gateway, (uint8_t *)&(keyExchangeFinished_msg), KEFMSG_LEN) == 0;
 }
