@@ -77,14 +77,14 @@ Node::Node () :
 }
 
 Node::Node (node_t nodeData) :
-    lastMessageCounter (nodeData.lastMessageCounter),
-    nodeId (nodeData.nodeId),
-    keyValidFrom (nodeData.keyValidFrom),
     keyValid (nodeData.keyValid),
     status (nodeData.status),
-    packetNumber (0),
-    packetErrors (0),
-    per (0.0)
+    lastMessageCounter (nodeData.lastMessageCounter),
+    nodeId (nodeData.nodeId),
+    keyValidFrom (nodeData.keyValidFrom)
+    //packetNumber (0),
+    //packetErrors (0),
+    //per (0.0)
 {
     memcpy (key, nodeData.key, sizeof (uint16_t));
     memcpy (mac, nodeData.mac, 6);

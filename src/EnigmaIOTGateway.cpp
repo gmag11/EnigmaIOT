@@ -171,7 +171,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
                 node->packetsHour = (double)1 / ((millis () - node->getLastMessageTime ()) / (double)3600000);
                 node->setLastMessageTime ();
                 DEBUG_INFO ("Data OK");
-                DEBUG_VERBOSE ("Key valid from %u ms", millis () - node->getKeyValidFrom ());
+                DEBUG_VERBOSE ("Key valid from %lu ms", millis () - node->getKeyValidFrom ());
                 if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
                     invalidateKey (node, KEY_EXPIRED);
                 }

@@ -24,7 +24,7 @@
 #define DBG	    4 ///< @brief Debug level that will give error, warning,info AND dbg messages
 #define VERBOSE	5 ///< @brief Debug level that will give all defined messages
 
-#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%u] %u free (%s:%d) ",millis(),ESP.getFreeHeap(),__FUNCTION__,__LINE__);
+#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%lu] %lu free (%s:%d) ",millis(),(unsigned long)ESP.getFreeHeap(),__FUNCTION__,__LINE__);
 
 #ifdef DEBUG_ESP_PORT
 
