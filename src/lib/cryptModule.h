@@ -1,6 +1,6 @@
 /**
   * @file cryptModule.h
-  * @version 0.0.1
+  * @version 0.1.0
   * @date 09/03/2019
   * @author German Martin
   * @brief Crypto library that implements EnigmaIoT encryption, decryption and key agreement fuctions
@@ -16,14 +16,11 @@
 #else
 	#include "WProgram.h"
 #endif
+#include "EnigmaIOTconfig.h"
 
 #define RANDOM_32 0x3FF20E44
-const uint8_t KEY_LENGTH = 32; ///< @brief Key length used by selected crypto algorythm
-const uint8_t IV_LENGTH = 16; ///< @brief Initalization vector length used by selected crypto algorythm
 const uint8_t RANDOM_LENGTH = sizeof (uint32_t); ///< @brief Length of random number generator values
 const uint8_t CRC_LENGTH = sizeof (uint32_t); ///< @brief Length of CRC
-//#define BLOCK_SIZE 16U
-//const uint8_t BUFFER_SIZE = 255; 
 
 /**
   * @brief EnigmaIoT Crypto module. Wraps Arduino CryptoLib classes and methods
@@ -114,6 +111,8 @@ public:
       * @brief Decripts one or more blocks of memory using network key
       * @param input Input buffer
       * @param numBlocks Number of blocks to decrypt
+      * @param key Network key. This has to be shared among every node and gateway on the network
+      * @param keyLength Length of network key in number of bytes.
       * @return Input buffer
       */
     static uint8_t *networkDecrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength);

@@ -1,6 +1,6 @@
 /**
   * @file cryptModule.cpp
-  * @version 0.0.1
+  * @version 0.1.0
   * @date 09/03/2019
   * @author German Martin
   * @brief Crypto library that implements EnigmaIoT encryption, decryption and key agreement fuctions
@@ -15,8 +15,8 @@
 #include <Curve25519.h>
 #include "helperFunctions.h"
 
-#define BLOCK_CYPHER Speck
-#define CYPHER_TYPE CFB<BLOCK_CYPHER>
+//#define BLOCK_CYPHER Speck
+//#define CYPHER_TYPE CFB<BLOCK_CYPHER>
 
 CYPHER_TYPE cipher;
 BLOCK_CYPHER netCipher;

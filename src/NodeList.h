@@ -1,6 +1,6 @@
 /**
   * @file NodeList.h
-  * @version 0.0.1
+  * @version 0.1.0
   * @date 09/03/2019
   * @author German Martin
   * @brief EnigmaIoT sensor node management structures
@@ -247,15 +247,15 @@ public:
 
 protected:
 #define KEYLENGTH 32
-    uint8_t mac[6]; ///< @brief Node address
-    uint8_t key[KEYLENGTH]; ///< @brief Shared key
+    bool keyValid; ///< @brief Node shared key valid
+    status_t status;
     uint16_t lastMessageCounter; ///< @brief Last message counter state for specific Node
     uint16_t nodeId; ///< @brief Node identifier asigned by gateway
     timer_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
-    bool keyValid; ///< @brief Node shared key valid
-    status_t status = UNREGISTERED;
-    timer_t lastMessageTime; ///< @brief Node state
     bool sleepyNode = true; ///< @brief Node sleepy definition
+    uint8_t mac[6]; ///< @brief Node address
+    uint8_t key[KEYLENGTH]; ///< @brief Shared key
+    timer_t lastMessageTime; ///< @brief Node state
 
     friend class NodeList;
 };

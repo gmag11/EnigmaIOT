@@ -1,6 +1,6 @@
 /**
   * @file EnigmaIOTSensor.cpp
-  * @version 0.0.1
+  * @version 0.1.0
   * @date 09/03/2019
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
@@ -66,7 +66,7 @@ void EnigmaIOTSensorClass::handle () {
     }
 
     if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered()) {
-        DEBUG_VERBOSE ("Go to sleep for %u ms", sleepTime / 1000);
+        DEBUG_VERBOSE ("Go to sleep for %lu ms", (unsigned long)(sleepTime / 1000));
         ESP.deepSleepInstant (sleepTime, RF_NO_CAL);
     }
 
@@ -338,7 +338,7 @@ bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len) {
 
 void EnigmaIOTSensorClass::sleep (uint64_t time)
 {
-    DEBUG_VERBOSE ("Sleep programmed for %u ms", time/1000);
+    DEBUG_VERBOSE ("Sleep programmed for %lu ms", (unsigned long)(time/1000));
     sleepTime = time;
     sleepRequested = true;
 }
@@ -437,7 +437,7 @@ bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const ui
 
     //uint8_t *iv;
     uint32_t crc32;
-    size_t lostMessages = 0;
+    //size_t lostMessages = 0;
 
     Crypto.decryptBuffer (
         const_cast<uint8_t *>(&buf[length_idx]),

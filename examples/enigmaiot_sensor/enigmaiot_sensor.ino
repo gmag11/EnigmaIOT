@@ -1,6 +1,6 @@
 /**
   * @file enigmaiot_sensor.ino
-  * @version 0.0.1
+  * @version 0.1.0
   * @date 09/03/2019
   * @author German Martin
   * @brief Sensor node based on EnigmaIoT over ESP-NOW

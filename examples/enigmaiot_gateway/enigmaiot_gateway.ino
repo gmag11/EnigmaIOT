@@ -1,6 +1,6 @@
 /**
   * @file enigmaiot_gateway.ino
-  * @version 0.0.1
+  * @version 0.1.0
   * @date 09/03/2019
   * @author German Martin
   * @brief Gateway based on EnigmaIoT over ESP-NOW
@@ -11,7 +11,6 @@
 #include <CayenneLPPDec.h>
 #include <EnigmaIOTGateway.h>
 #include <espnow_hal.h>
-
 
 #define BLUE_LED 2
 #define RED_LED 16
@@ -35,7 +34,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, u
         //serial.printf ("%u lost messages\n", lostmessages);
         Serial.printf ("~/%s/debug/lostmessages;%u\n", macstr, lostMessages);
     }
-    Serial.printf ("~/%s/status;{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%f}\n",
+    Serial.printf ("~/%s/status/{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%f}\n",
         macstr, 
         EnigmaIOTGateway.getPER((uint8_t*)mac), 
         EnigmaIOTGateway.getErrorPackets((uint8_t*)mac),

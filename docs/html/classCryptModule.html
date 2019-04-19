@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">0.1.0</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
   </td>
@@ -105,6 +105,12 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aff6d04cdf3ba58da4c234108724f3672"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCryptModule.html#aff6d04cdf3ba58da4c234108724f3672">encryptBuffer</a> (uint8_t *output, const uint8_t *input, size_t length, const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen)</td></tr>
 <tr class="memdesc:aff6d04cdf3ba58da4c234108724f3672"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encrypts a buffer using a shared key.  <a href="#aff6d04cdf3ba58da4c234108724f3672">More...</a><br /></td></tr>
 <tr class="separator:aff6d04cdf3ba58da4c234108724f3672"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9439e0f00c0fc43cde0195e731b59f73"><td class="memItemLeft" align="right" valign="top">static uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCryptModule.html#a9439e0f00c0fc43cde0195e731b59f73">networkEncrypt</a> (uint8_t *input, uint8_t numBlocks, uint8_t *key, uint8_t keyLength)</td></tr>
+<tr class="memdesc:a9439e0f00c0fc43cde0195e731b59f73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encripts one or more blocks of memory using network key.  <a href="#a9439e0f00c0fc43cde0195e731b59f73">More...</a><br /></td></tr>
+<tr class="separator:a9439e0f00c0fc43cde0195e731b59f73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a310142081f536b0aae5d8f8544ab831b"><td class="memItemLeft" align="right" valign="top">static uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCryptModule.html#a310142081f536b0aae5d8f8544ab831b">networkDecrypt</a> (uint8_t *input, uint8_t numBlocks, uint8_t *key, uint8_t keyLength)</td></tr>
+<tr class="memdesc:a310142081f536b0aae5d8f8544ab831b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decripts one or more blocks of memory using network key.  <a href="#a310142081f536b0aae5d8f8544ab831b">More...</a><br /></td></tr>
+<tr class="separator:a310142081f536b0aae5d8f8544ab831b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -199,7 +205,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00022">22</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00024">24</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -281,7 +287,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00039">39</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00041">41</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -302,7 +308,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Starts first stage of Diffie Hellman key agreement algorithm. </p>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00074">74</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00105">105</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -331,7 +337,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if calculation worked normally, <code>false</code> otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00081">81</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00112">112</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -395,6 +401,130 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a310142081f536b0aae5d8f8544ab831b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a310142081f536b0aae5d8f8544ab831b">&#9670;&nbsp;</a></span>networkDecrypt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t * CryptModule::networkDecrypt </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>numBlocks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>keyLength</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Decripts one or more blocks of memory using network key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>Input buffer </td></tr>
+    <tr><td class="paramname">numBlocks</td><td>Number of blocks to decrypt </td></tr>
+    <tr><td class="paramname">key</td><td>Network key. This has to be shared among every node and gateway on the network </td></tr>
+    <tr><td class="paramname">keyLength</td><td>Length of network key in number of bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Input buffer </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00072">72</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a9439e0f00c0fc43cde0195e731b59f73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9439e0f00c0fc43cde0195e731b59f73">&#9670;&nbsp;</a></span>networkEncrypt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t * CryptModule::networkEncrypt </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>numBlocks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>keyLength</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Encripts one or more blocks of memory using network key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>Input buffer </td></tr>
+    <tr><td class="paramname">numBlocks</td><td>Number of blocks to encrypt </td></tr>
+    <tr><td class="paramname">key</td><td>Network key. This has to be shared among every node and gateway on the network </td></tr>
+    <tr><td class="paramname">keyLength</td><td>Length of network key in number of bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Input buffer </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00058">58</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+
+</div>
+</div>
 <a id="a96b21ebe23b1914e09408bd3e41b34b0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a96b21ebe23b1914e09408bd3e41b34b0">&#9670;&nbsp;</a></span>random() <span class="overload">[1/2]</span></h2>
 
@@ -421,7 +551,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets a random number. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns a random number </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00056">56</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00087">87</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -469,7 +599,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns the same buffer used as input, filled with random data </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00060">60</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00091">91</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -496,7 +626,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Temporary private key store used during key agreement. </p>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00107">107</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00127">127</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
 
 </div>
 </div>
@@ -522,7 +652,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Temporary public key store used during key agreement. </p>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00108">108</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00128">128</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
 
 </div>
 </div>

@@ -1,6 +1,6 @@
 /**
   * @file EnigmaIOTSensor.h
-  * @version 0.0.1
+  * @version 0.1.0
   * @date 09/03/2019
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
@@ -15,7 +15,7 @@
 #include "WProgram.h"
 #endif
 
-#include "lib/config.h"
+#include "lib/EnigmaIoTconfig.h"
 #include "lib/cryptModule.h"
 #include "lib/helperFunctions.h"
 #include "comms_hal.h"

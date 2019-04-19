@@ -7,7 +7,7 @@
   * If `DEBUG_ESP_PORT` is not defined library will give no debug output at all
   *
   * @file debug.h
-  * @version 0.0.1
+  * @version 0.1.0
   * @date 09/03/2019
   * @author German Martin
   */
@@ -15,7 +15,7 @@
 #ifndef _DEBUG_h
 #define _DEBUG_h
 
-//#define DEBUG_ESP_PORT Serial
+#include <lib/EnigmaIoTconfig.h>
 
 #define NO_DEBUG	0 ///< @brief Debug level that will give no debug output
 #define ERROR	1 ///< @brief Debug level that will give error messages
@@ -24,10 +24,9 @@
 #define DBG	    4 ///< @brief Debug level that will give error, warning,info AND dbg messages
 #define VERBOSE	5 ///< @brief Debug level that will give all defined messages
 
-#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%u] %u free (%s:%d) ",millis(),ESP.getFreeHeap(),__FUNCTION__,__LINE__);
+#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%lu] %lu free (%s:%d) ",millis(),(unsigned long)ESP.getFreeHeap(),__FUNCTION__,__LINE__);
 
 #ifdef DEBUG_ESP_PORT
-#define DEBUG_LEVEL VERBOSE
 
 #if DEBUG_LEVEL >= VERBOSE
 #define DEBUG_VERBOSE(...) DEBUG_ESP_PORT.print("V "); DEBUG_LINE_PREFIX(); DEBUG_ESP_PORT.printf( __VA_ARGS__ ); DEBUG_ESP_PORT.println()
