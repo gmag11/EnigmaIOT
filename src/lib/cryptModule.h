@@ -16,14 +16,11 @@
 #else
 	#include "WProgram.h"
 #endif
+#include "EnigmaIOTconfig.h"
 
 #define RANDOM_32 0x3FF20E44
-const uint8_t KEY_LENGTH = 32; ///< @brief Key length used by selected crypto algorythm
-const uint8_t IV_LENGTH = 16; ///< @brief Initalization vector length used by selected crypto algorythm
 const uint8_t RANDOM_LENGTH = sizeof (uint32_t); ///< @brief Length of random number generator values
 const uint8_t CRC_LENGTH = sizeof (uint32_t); ///< @brief Length of CRC
-//#define BLOCK_SIZE 16U
-//const uint8_t BUFFER_SIZE = 255; 
 
 /**
   * @brief EnigmaIoT Crypto module. Wraps Arduino CryptoLib classes and methods

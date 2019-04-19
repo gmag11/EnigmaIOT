@@ -15,7 +15,7 @@
 #include "WProgram.h"
 #endif
 
-#include "lib/config.h"
+#include "lib/EnigmaIoTconfig.h"
 #include "lib/cryptModule.h"
 #include "lib/helperFunctions.h"
 #include "comms_hal.h"

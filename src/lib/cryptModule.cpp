@@ -15,8 +15,8 @@
 #include <Curve25519.h>
 #include "helperFunctions.h"
 
-#define BLOCK_CYPHER Speck
-#define CYPHER_TYPE CFB<BLOCK_CYPHER>
+//#define BLOCK_CYPHER Speck
+//#define CYPHER_TYPE CFB<BLOCK_CYPHER>
 
 CYPHER_TYPE cipher;
 BLOCK_CYPHER netCipher;

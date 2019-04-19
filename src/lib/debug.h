@@ -15,7 +15,7 @@
 #ifndef _DEBUG_h
 #define _DEBUG_h
 
-//#define DEBUG_ESP_PORT Serial
+#include <lib/EnigmaIoTconfig.h>
 
 #define NO_DEBUG	0 ///< @brief Debug level that will give no debug output
 #define ERROR	1 ///< @brief Debug level that will give error messages
@@ -27,7 +27,6 @@
 #define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%u] %u free (%s:%d) ",millis(),ESP.getFreeHeap(),__FUNCTION__,__LINE__);
 
 #ifdef DEBUG_ESP_PORT
-#define DEBUG_LEVEL VERBOSE
 
 #if DEBUG_LEVEL >= VERBOSE
 #define DEBUG_VERBOSE(...) DEBUG_ESP_PORT.print("V "); DEBUG_LINE_PREFIX(); DEBUG_ESP_PORT.printf( __VA_ARGS__ ); DEBUG_ESP_PORT.println()

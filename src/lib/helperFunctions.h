@@ -20,7 +20,7 @@
 #elif defined(ESP32)
 #include <WiFi.h>
 #endif
-#include "config.h"
+#include "EnigmaIoTconfig.h"
 #include "debug.h"
 
 /**
