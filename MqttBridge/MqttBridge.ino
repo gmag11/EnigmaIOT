@@ -11,7 +11,7 @@
   * Message format received over serial is in the form of lines like: `~\<address>\<subtopic>;<data>`
   */
 
-
+#include <Arduino.h>
 #include <PubSubClient.h>
 #include <ESP8266WiFi.h>
 #include "bridge_config.h"
@@ -34,8 +34,12 @@ WiFiClient espClient;
 PubSubClient client (espClient);
 
 void onDlData (const char* topic, byte* payload, unsigned int length) {
-	Serial.printf ("*%s;", topic);
-	for (int i = 0; i < length; i++) {
+	String topicStr (topic);
+
+	topicStr.replace (String (BASE_TOPIC), "");
+
+	Serial.printf ("*%s;", topicStr.c_str ());
+	for (unsigned int i = 0; i < length; i++) {
 		Serial.print ((char)(payload[i]));
 	}
 	Serial.println ();
@@ -62,45 +66,45 @@ void setClock () {
 #endif
 
 void reconnect () {
-    // Loop until we're reconnected
-    while (!client.connected ()) {
-        Serial.print ("Attempting MQTT connection...");
-        // Create a random client ID
-        String clientId = BASE_TOPIC + String (ESP.getChipId (), HEX);
+	// Loop until we're reconnected
+	while (!client.connected ()) {
+		Serial.print ("Attempting MQTT connection...");
+		// Create a random client ID
+		String clientId = BASE_TOPIC + String (ESP.getChipId (), HEX);
 		String gwTopic = BASE_TOPIC + String ("/gateway/status");
-        // Attempt to connect
+		// Attempt to connect
 #ifdef SECURE_MQTT
 		setClock ();
 #endif
-		if (client.connect (clientId.c_str (),MQTT_USER,MQTT_PASS,gwTopic.c_str(),0,1,"0",true)) {
-            Serial.println ("connected");
-            // Once connected, publish an announcement...
-            //String gwTopic = BASE_TOPIC + String("/gateway/hello");
-            client.publish (gwTopic.c_str(), "1");
-            // ... and resubscribe
+		if (client.connect (clientId.c_str (), MQTT_USER, MQTT_PASS, gwTopic.c_str (), 0, 1, "0", true)) {
+			Serial.println ("connected");
+			// Once connected, publish an announcement...
+			//String gwTopic = BASE_TOPIC + String("/gateway/hello");
+			client.publish (gwTopic.c_str (), "1");
+			// ... and resubscribe
 			String dlTopic = BASE_TOPIC + String ("/+/set/#");
-            client.subscribe (dlTopic.c_str());
+			client.subscribe (dlTopic.c_str ());
 			client.setCallback (onDlData);
-        }
-        else {
-            Serial.print ("failed, rc=");
-            Serial.print (client.state ());
-            Serial.println (" try again in 5 seconds");
-            // Wait 5 seconds before retrying
-            delay (5000);
-        }
-    }
+		}
+		else {
+			Serial.print ("failed, rc=");
+			Serial.print (client.state ());
+			Serial.println (" try again in 5 seconds");
+			// Wait 5 seconds before retrying
+			delay (5000);
+		}
+	}
 }
 
-void setup()
+void setup ()
 {
-    Serial.begin (115200);
-    WiFi.mode (WIFI_STA);
-    WiFi.begin (SSID, PASSWD);
-    while (WiFi.status () != WL_CONNECTED) {
-        delay (500);
-        Serial.print (".");
-    }
+	Serial.begin (115200);
+	WiFi.mode (WIFI_STA);
+	WiFi.begin (SSID, PASSWD);
+	while (WiFi.status () != WL_CONNECTED) {
+		delay (500);
+		Serial.print (".");
+	}
 #ifdef SECURE_MQTT
 	randomSeed (micros ());
 	espClient.setTrustAnchors (&cert);
@@ -109,74 +113,76 @@ void setup()
 
 }
 
-void loop()
+void loop ()
 {
-    String message;
-    String topic;
-    String data;
-    bool dataPresent = false;
+	String message;
+	String topic;
+	String data;
+	bool dataPresent = false;
 
-    if (!client.connected ()) {
-        Serial.println ("reconnect");
-        reconnect ();
-    }
-    
-    client.loop ();
+	if (!client.connected ()) {
+		Serial.println ("reconnect");
+		reconnect ();
+	}
 
-    while (Serial.available () != 0) {
-        message = Serial.readStringUntil ('\n');
-#ifdef BRIDGE_DEBUG
-        Serial.printf ("Message: %s\n", message.c_str());
-#endif
-        dataPresent = true;
-        if (message.length () > 0) {
-            break;
-        }
-    }
+	client.loop ();
 
-    if (dataPresent) {
-        dataPresent = false;
-        if (message[0] == '~') {
+	while (Serial.available () != 0) {
+		message = Serial.readStringUntil ('\n');
 #ifdef BRIDGE_DEBUG
-            Serial.println ("New message");
+		Serial.printf ("Message: %s\n", message.c_str ());
 #endif
-            int end = message.indexOf (';');
-            topic = BASE_TOPIC + message.substring (1, end);
+		dataPresent = true;
+		if (message.length () > 0) {
+			break;
+		}
+	}
+
+	if (dataPresent) {
+		dataPresent = false;
+		if (message[0] == '~') {
 #ifdef BRIDGE_DEBUG
-            Serial.printf ("Topic: %s", topic.c_str ());
+			Serial.println ("New message");
 #endif
-            if (end < message.length () - 1) {
-                data = message.substring (end + 1);
+			int end = message.indexOf (';');
+			topic = BASE_TOPIC + message.substring (1, end);
+#ifdef BRIDGE_DEBUG
+			Serial.printf ("Topic: %s", topic.c_str ());
+#endif
+			if (end < ((int)(message.length ()) - 1) && end > 0) {
+				data = message.substring (end + 1);
 #ifdef BRIDGE_DEBUG
 				Serial.println (" With data");
 				Serial.printf (" -- Data: %s\n", data.c_str ());
 #endif
-            }
-            else {
-               data = "";
+			}
+			else {
+				data = "";
 #ifdef BRIDGE_DEBUG
-			   Serial.println (" Without data");
-               Serial.println ();
+				Serial.println (" Without data");
+				Serial.println ();
 #endif
-            }
+			}
 #ifdef BRIDGE_DEBUG
-            Serial.printf ("Publish %s : %s\n",topic.c_str(), data.c_str());
+			Serial.printf ("Publish %s : %s\n", topic.c_str (), data.c_str ());
 #endif
 			if (client.beginPublish (topic.c_str (), data.length (), false)) {
-                client.write ((const uint8_t *)data.c_str (), data.length ());
-                if (client.endPublish() == 1) {
+				client.write ((const uint8_t*)data.c_str (), data.length ());
+				if (client.endPublish () == 1) {
 #ifdef BRIDGE_DEBUG
-                    Serial.println ("Publish OK");
-                } else {
-                    Serial.println ("Publish error");
+					Serial.println ("Publish OK");
+				}
+				else {
+					Serial.println ("Publish error");
 #endif
 				}
 #ifdef BRIDGE_DEBUG
-			} else {
-                Serial.println ("Publish error");
+			}
+			else {
+				Serial.println ("Publish error");
 #endif
 			}
-        }
-    }
+		}
+	}
 
 }
