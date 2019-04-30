@@ -62,7 +62,7 @@ void enigmaiotInit () {
     EnigmaIOTSensor.onConnected (connectEventHandler);
     EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
     EnigmaIOTSensor.onDataRx (processRxData);
-    EnigmaIOTSensor.begin (&Espnow_hal, gateway);
+    EnigmaIOTSensor.begin (&Espnow_hal, gateway, (uint8_t*)NETWORK_KEY);
 }
 
 bool init_ds18b20 () {
