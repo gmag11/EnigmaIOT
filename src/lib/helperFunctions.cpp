@@ -46,11 +46,66 @@ const char* mac2str (const uint8_t* mac, const char* buffer) {
 	return NULL;
 }
 
-int str2mac (const char* mac, uint8_t* values) {
-	if (6 == sscanf (mac, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &values[0], &values[1], &values[2], &values[3], &values[4], &values[5])) {
-		return 1;
+uint8_t* str2mac (const char* macAddrString, uint8_t* macBytes)
+{
+	const char cSep = ':';
+
+	for (int i = 0; i < 6; ++i)	{
+		unsigned int iNumber = 0;
+		char ch;
+
+		//Convert letter into lower case.
+		ch = tolower (*macAddrString++);
+
+		if ((ch < '0' || ch > '9') && (ch < 'a' || ch > 'f'))
+		{
+			return NULL;
+		}
+
+		//Convert into number. 
+		//       a. If character is digit then ch - '0'
+		//	b. else (ch - 'a' + 10) it is done 
+		//	because addition of 10 takes correct value.
+		iNumber = isdigit (ch) ? (ch - '0') : (ch - 'a' + 10);
+		ch = tolower (*macAddrString);
+
+		if ((i < 5 && ch != cSep) ||
+			(i == 5 && ch != '\0' && !isspace (ch)))
+		{
+			++macAddrString;
+
+			if ((ch < '0' || ch > '9') && (ch < 'a' || ch > 'f'))
+			{
+				return NULL;
+			}
+
+			iNumber <<= 4;
+			iNumber += isdigit (ch) ? (ch - '0') : (ch - 'a' + 10);
+			ch = *macAddrString;
+
+			if (i < 5 && ch != cSep)
+			{
+				return NULL;
+			}
+		}
+		/* Store result.  */
+		macBytes[i] = (unsigned char)iNumber;
+		/* Skip cSep.  */
+		++macAddrString;
 	}
-	else {
-		return 0;
-	}
+	return macBytes;
 }
+
+//int str2mac (const char* mac, uint8_t* values) {
+//	int error = std::sscanf (mac, "%02x:%02x:%02x:%02x:%02x:%02x", &values[0], &values[1], &values[2], &values[3], &values[4], &values[5]);
+//	Serial.printf ("Error: %d", error);
+//	if (error == 6) {
+//		for (int i = 0; i < 6; i++) {
+//			Serial.println (values[i]);
+//		}
+//		return 1;
+//	}
+//	else {
+//		return 0;
+//	}
+//}
