@@ -50,13 +50,21 @@ void onSerial (String message) {
 
 	DEBUG_INFO ("Downlink message: %s", message.c_str ());
 	String addressStr = message.substring (message.indexOf ('/') + 1, message.indexOf ('/', 2));
-	str2mac (addressStr.c_str (), addr);
+	DEBUG_INFO ("Address: %s", message.c_str ());
+	if (!str2mac (addressStr.c_str (), addr)) {
+		DEBUG_ERROR ("Not a mac address");
+		return;
+	}
 	String dataStr = message.substring (message.indexOf ('/', 2) + 1);
 	dataStr.trim ();
 
 	const void* data = dataStr.c_str ();
-	DEBUG_INFO ("Address: %s", addressStr.c_str ());
-	EnigmaIOTGateway.sendDownstream (addr, (uint8_t*)data, dataStr.length ());
+	if (!EnigmaIOTGateway.sendDownstream (addr, (uint8_t*)data, dataStr.length ())) {
+		DEBUG_ERROR ("Error sending esp_now message to %s", addressStr.c_str ());
+	}
+	else {
+		DEBUG_DBG ("Esp-now message sent or queued correctly");
+	}
 }
 
 void newNodeConnected (uint8_t * mac) {

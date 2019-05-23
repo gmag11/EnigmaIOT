@@ -29,6 +29,8 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t * mac, const uint8_t * data,
     if (node) {
         return downstreamDataMessage (node, data, len);
     }  else {
+		char addr[18];
+		DEBUG_ERROR ("Downlink destionation %s not found", mac2str (mac, addr));
         return false;
     }
 }
