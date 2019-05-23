@@ -52,6 +52,8 @@ void onSerial (String message) {
 	String addressStr = message.substring (message.indexOf ('/') + 1, message.indexOf ('/', 2));
 	str2mac (addressStr.c_str (), addr);
 	String dataStr = message.substring (message.indexOf ('/', 2) + 1);
+	dataStr.trim ();
+
 	const void* data = dataStr.c_str ();
 	DEBUG_INFO ("Address: %s", addressStr.c_str ());
 	EnigmaIOTGateway.sendDownstream (addr, (uint8_t*)data, dataStr.length ());
