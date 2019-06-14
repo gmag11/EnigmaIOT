@@ -50,7 +50,7 @@ void onSerial (String message) {
 
 	DEBUG_INFO ("Downlink message: %s", message.c_str ());
 	String addressStr = message.substring (message.indexOf ('/') + 1, message.indexOf ('/', 2));
-	DEBUG_INFO ("Address: %s", message.c_str ());
+	DEBUG_INFO ("Address: %s", addressStr.c_str ());
 	if (!str2mac (addressStr.c_str (), addr)) {
 		DEBUG_ERROR ("Not a mac address");
 		return;
