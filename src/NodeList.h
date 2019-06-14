@@ -14,6 +14,7 @@
 #else
 	#include "WProgram.h"
 #endif
+#include "lib/EnigmaIoTconfig.h"
 
 /**
   * @brief State definition for nodes
@@ -236,7 +237,7 @@ public:
         return sleepyNode;
     }
 
-    uint8_t *queuedMessage; ///< @brief Message queued for sending to node in case of sleepy mode
+    uint8_t queuedMessage[MAX_MESSAGE_LENGTH]; ///< @brief Message queued for sending to node in case of sleepy mode
     size_t qMessageLength;  ///< @brief Queued message length
     bool qMessagePending = false; ///< @brief `True` if message should be sent just after next data message
 

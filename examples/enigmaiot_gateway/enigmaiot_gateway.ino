@@ -58,8 +58,8 @@ void onSerial (String message) {
 	String dataStr = message.substring (message.indexOf ('/', 2) + 1);
 	dataStr.trim ();
 
-	const void* data = dataStr.c_str ();
-	if (!EnigmaIOTGateway.sendDownstream (addr, (uint8_t*)data, dataStr.length ())) {
+	uint8_t* data = (uint8_t*)dataStr.c_str ();
+	if (!EnigmaIOTGateway.sendDownstream (addr, data, dataStr.length ())) {
 		DEBUG_ERROR ("Error sending esp_now message to %s", addressStr.c_str ());
 	}
 	else {

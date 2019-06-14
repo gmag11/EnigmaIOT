@@ -293,7 +293,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node *node, const uint8_t *da
     * --------------------------------------------------------------------------
     */
 
-    static uint8_t buffer[200];
+    uint8_t buffer[MAX_MESSAGE_LENGTH];
     uint32_t crc32;
 
     if (!node->isRegistered ()) {
@@ -310,8 +310,13 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node *node, const uint8_t *da
     uint8_t *data_p = buffer + 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t);
 
     if (!data) {
+		DEBUG_ERROR ("Downlink message buffer empty", len);
         return false;
     }
+	if (len > MAX_MESSAGE_LENGTH - 25) {
+		DEBUG_ERROR ("Downlink message too long: %d bytes", len);
+		return false;
+	}
 
     *msgType_p = (uint8_t)DOWNSTREAM_DATA;
 
@@ -346,6 +351,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node *node, const uint8_t *da
     memcpy (crc_p, &crc32, CRC_LENGTH);
 
     DEBUG_VERBOSE ("Downlink message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
+	DEBUG_VERBOSE ("Message length: %d bytes", packet_length + CRC_LENGTH);
 
     uint8_t *crypt_buf = length_p; // buffer + 1 + IV_LENGTH;
 
@@ -356,7 +362,9 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node *node, const uint8_t *da
     DEBUG_VERBOSE ("Encrypted downlink message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
 
     if (node->getSleepy ()) { // Queue message if node may be sleeping
-        node->queuedMessage = buffer;
+		DEBUG_VERBOSE ("Node is sleepy. Queing message");
+		memcpy (node->queuedMessage,buffer, packet_length + CRC_LENGTH);
+        //node->queuedMessage = buffer;
         node->qMessageLength = packet_length + CRC_LENGTH;
         node->qMessagePending = true;
         return true;
