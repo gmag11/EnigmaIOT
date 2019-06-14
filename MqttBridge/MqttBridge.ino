@@ -24,6 +24,9 @@
 //#define BRIDGE_DEBUG
 
 const char* BASE_TOPIC = "enigmaiot";
+ETSTimer ledTimer;
+const int notifLed = BUILTIN_LED;
+boolean ledFlashing = false;
 
 #ifdef SECURE_MQTT
 BearSSL::X509List cert (DSTrootCA);
@@ -49,14 +52,14 @@ void onDlData (const char* topic, byte* payload, unsigned int length) {
 void setClock () {
 	configTime (2 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 #ifdef BRIDGE_DEBUG
-	Serial.print ("Waiting for NTP time sync: ");
+	Serial.print ("\nWaiting for NTP time sync: ");
 	time_t now = time (nullptr);
 	while (now < 8 * 3600 * 2) {
 		delay (500);
 		Serial.print (".");
 		now = time (nullptr);
 	}
-	Serial.println ("");
+	//Serial.println ("");
 	struct tm timeinfo;
 	gmtime_r (&now, &timeinfo);
 	Serial.print ("Current time: ");
@@ -68,6 +71,7 @@ void setClock () {
 void reconnect () {
 	// Loop until we're reconnected
 	while (!client.connected ()) {
+		startFlash(500);
 		Serial.print ("Attempting MQTT connection...");
 		// Create a random client ID
 		String clientId = BASE_TOPIC + String (ESP.getChipId (), HEX);
@@ -85,6 +89,7 @@ void reconnect () {
 			String dlTopic = BASE_TOPIC + String ("/+/set/#");
 			client.subscribe (dlTopic.c_str ());
 			client.setCallback (onDlData);
+			stopFlash ();
 		}
 		else {
 			Serial.print ("failed, rc=");
@@ -96,15 +101,39 @@ void reconnect () {
 	}
 }
 
+void flashLed (void *led) {
+	digitalWrite (*(int*)led, !digitalRead (*(int*)led));
+}
+
+void startFlash (int period) {
+	if (!ledFlashing) {
+		ledFlashing = true;
+		ets_timer_arm_new (&ledTimer, period, true, true);
+	}
+}
+
+void stopFlash () {
+	if (ledFlashing) {
+		ledFlashing = false;
+		ets_timer_disarm (&ledTimer);
+		digitalWrite (notifLed, HIGH);
+	}
+}
+
 void setup ()
 {
 	Serial.begin (115200);
+	ets_timer_setfn (&ledTimer, flashLed, (void*)&notifLed);
+	pinMode (BUILTIN_LED, OUTPUT);
+	digitalWrite (BUILTIN_LED, HIGH);
+	startFlash (500);
 	WiFi.mode (WIFI_STA);
 	WiFi.begin (SSID, PASSWD);
 	while (WiFi.status () != WL_CONNECTED) {
 		delay (500);
 		Serial.print (".");
 	}
+	//stopFlash ();
 #ifdef SECURE_MQTT
 	randomSeed (micros ());
 	espClient.setTrustAnchors (&cert);
