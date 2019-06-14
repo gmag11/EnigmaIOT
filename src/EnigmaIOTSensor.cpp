@@ -28,12 +28,14 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
     memcpy (this->networkKey, networkKey, KEY_LENGTH);
 
     node.setSleepy (sleepy);
+	DEBUG_VERBOSE ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
 
     if (ESP.rtcUserMemoryRead (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
         DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
     }
     if (!checkCRC ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t), &rtcmem_data.crc32)) {
-        clientHello ();
+		DEBUG_VERBOSE ("RTC Data is not valid. Calculating new key");
+		clientHello ();
     } else {
         node.setEncryptionKey (rtcmem_data.nodeKey);
         node.setKeyValid (true);
@@ -65,7 +67,7 @@ void EnigmaIOTSensorClass::handle () {
         }
     }
 
-    if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered()) {
+    if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered() && node.getSleepy()) {
         DEBUG_VERBOSE ("Go to sleep for %lu ms", (unsigned long)(sleepTime / 1000));
         ESP.deepSleepInstant (sleepTime, RF_NO_CAL);
     }
@@ -298,9 +300,11 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
 
     if (node.getSleepy ()) {
         random = random | 0x00000001U; // Signal sleepy node
+		DEBUG_VERBOSE ("Signal sleepy node");
     }
     else {
         random = random & 0xFFFFFFFEU; // Signal always awake node
+		DEBUG_VERBOSE ("Signal non sleepy node");
     }
 
     memcpy (&(keyExchangeFinished_msg.random), &random, RANDOM_LENGTH);
@@ -338,9 +342,13 @@ bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len) {
 
 void EnigmaIOTSensorClass::sleep (uint64_t time)
 {
-    DEBUG_VERBOSE ("Sleep programmed for %lu ms", (unsigned long)(time/1000));
-    sleepTime = time;
-    sleepRequested = true;
+	if (node.getSleepy ()) {
+		DEBUG_VERBOSE ("Sleep programmed for %lu ms", (unsigned long)(time / 1000));
+		sleepTime = time;
+		sleepRequested = true;
+	}
+	else
+		DEBUG_VERBOSE ("Node is non sleepy. Sleep rejected");
 }
 
 bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len) {
