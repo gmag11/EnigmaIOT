@@ -8,7 +8,7 @@
 
 #include "helperFunctions.h"
 
-#define MAX_STR_LEN 200 ///< @brief Key length used by selected crypto algorythm
+#define MAX_STR_LEN 1000 ///< @brief Key length used by selected crypto algorythm
 
 char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 	static char tempStr[MAX_STR_LEN];
@@ -17,7 +17,7 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 	memset (tempStr, 0, MAX_STR_LEN);
 
 	for (int i = 0; i < len; i++) {
-		if (i < MAX_STR_LEN - 1) {
+		if (charIndex < MAX_STR_LEN - 2) {
 			charIndex += sprintf (tempStr + charIndex, "%02X ", buffer[i]);
 		}
 	}
