@@ -476,6 +476,7 @@ bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const ui
         return false;
     }
 
+	DEBUG_VERBOSE ("Sending data notification. Payload length: %d", crc_idx - data_idx);
     if (notifyData) {
         notifyData (mac, &buf[data_idx], crc_idx - data_idx);
     }
