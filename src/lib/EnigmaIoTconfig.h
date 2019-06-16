@@ -19,6 +19,8 @@
 static const uint16_t RECONNECTION_PERIOD = 2500;
 static const uint16_t DOWNLINK_WAIT_TIME = 500;
 
+static const char ENIGMAIOT_PROT_VERS[] = "0.0.1";
+
 
 //Crypro configuration
 const uint8_t KEY_LENGTH = 32; ///< @brief Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing

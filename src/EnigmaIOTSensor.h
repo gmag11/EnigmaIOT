@@ -199,6 +199,15 @@ protected:
       */
     static void tx_cb (u8 *mac_addr, u8 status);
 
+	/**
+	  * @brief Processes internal sensor commands like
+	  * version information, OTA, settings tuning, etc
+	  * @param mac_addr Address of message sender
+	  * @param buf Message payload
+	  * @param len Payload length
+	  */
+	bool checkControlCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+
 
 public:
     /**

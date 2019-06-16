@@ -429,6 +429,21 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len) {
     return (comm->send (gateway, buffer, packet_length + CRC_LENGTH) == 0);
 }
 
+bool EnigmaIOTSensorClass::checkControlCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len) {
+	char* found = strstr ((char *)buf, "set/version");
+	if (found) {
+		DEBUG_DBG ("Version command received");
+		if (sendData ((uint8_t *)ENIGMAIOT_PROT_VERS, strlen (ENIGMAIOT_PROT_VERS))) {
+			DEBUG_DBG ("Version is %s", ENIGMAIOT_PROT_VERS);
+		}
+		else {
+			DEBUG_WARN ("Error sending version response");
+		}
+		return true;
+	}
+	return false;
+}
+
 bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count) {
     /*
     * -------------------------------------------------------------------------
@@ -475,6 +490,10 @@ bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const ui
         DEBUG_WARN ("Wrong CRC");
         return false;
     }
+
+	if (checkControlCommand (mac, &buf[data_idx], crc_idx - data_idx)) {
+		return true;
+	}
 
 	DEBUG_VERBOSE ("Sending data notification. Payload length: %d", crc_idx - data_idx);
     if (notifyData) {
