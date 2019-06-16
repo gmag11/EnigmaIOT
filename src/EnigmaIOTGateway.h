@@ -29,6 +29,7 @@
 enum gatewayMessageType_t {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
     DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
+	CONTROL_DATA = 0x03, /**< Internal ontrol message like OTA, settings configuration, etc */
     CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
@@ -142,9 +143,9 @@ class EnigmaIOTGatewayClass
      /**
       * @brief Processes data message from node
       * @param mac Node address
-      * @param buf Buffer to store received message
+      * @param buf Buffer that stores received message
       * @param count Length of received data
-      * @param node Node that data message comes from
+      * @param node Node where data message comes from
       * @return Returns `true` if message could be correcly decoded
       */
      bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
@@ -157,6 +158,16 @@ class EnigmaIOTGatewayClass
       * @return Returns `true` if message could be correcly sent or scheduled
       */
      bool downstreamDataMessage (Node *node, const uint8_t *data, size_t len);
+
+	 /**
+	 * @brief Processes control message from node
+	 * @param mac Node address
+	 * @param buf Buffer that stores received message
+	 * @param count Length of received data
+	 * @param node Node where data message comes from
+	 * @return Returns `true` if message could be correcly decoded
+	 */
+	 bool processControlMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node);
 
      /**
       * @brief Process every received message.

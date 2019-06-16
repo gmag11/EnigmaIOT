@@ -150,7 +150,6 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
                         if (notifyNewNode) {
                             notifyNewNode (node->getMacAddress ());
                         }
-                        // TODO. Trigger new node event
 #if DEBUG_LEVEL >= INFO
                         nodelist.printToSerial (&DEBUG_ESP_PORT);
 #endif
@@ -166,7 +165,20 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
             DEBUG_INFO (" <------- unsolicited KEY EXCHANGE FINISHED");
         }
         break;
-    case SENSOR_DATA:
+	case CONTROL_DATA:
+		DEBUG_INFO (" <------- CONTROL MESSAGE");
+		if (node->getStatus () == REGISTERED) {
+			if (processControlMessage (mac, buf, count, node)) {
+				DEBUG_INFO ("Control message OK");
+			} else {
+				invalidateKey (node, WRONG_DATA);
+				DEBUG_INFO ("Data not OK");
+			}
+		} else {
+			invalidateKey (node, UNREGISTERED_NODE);
+		}
+		break;
+	case SENSOR_DATA:
         DEBUG_INFO (" <------- DATA");
         if (node->getStatus () == REGISTERED) {
             if (processDataMessage (mac, buf, count, node)) {
@@ -186,6 +198,47 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
             invalidateKey (node, UNREGISTERED_NODE);
         }
     }
+}
+
+bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
+	/*
+	* ---------------------------------------------------------------------------------------
+	*| msgType (1) | IV (16) | length (2) | NodeId (2) | Counter (2) | Data (....) | CRC (4) |
+	* ---------------------------------------------------------------------------------------
+	*/
+
+	//uint8_t msgType_idx = 0;
+	uint8_t iv_idx = 1;
+	uint8_t length_idx = iv_idx + IV_LENGTH;
+	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
+	uint8_t counter_idx = nodeId_idx + sizeof (int16_t); // Counter is always 0
+	uint8_t data_idx = counter_idx + sizeof (int16_t);
+	uint8_t crc_idx = count - CRC_LENGTH;
+
+	//uint8_t *iv;
+	uint32_t crc32;
+	uint16_t counter;
+	size_t lostMessages = 0;
+
+	Crypto.decryptBuffer (
+		const_cast<uint8_t*>(&buf[length_idx]),
+		const_cast<uint8_t*>(&buf[length_idx]),
+		count - length_idx,
+		const_cast<uint8_t*>(&buf[iv_idx]),
+		IV_LENGTH,
+		node->getEncriptionKey (),
+		KEY_LENGTH
+	);
+	DEBUG_VERBOSE ("Decripted control message: %s", printHexBuffer (buf, count));
+	
+	memcpy (&crc32, &buf[crc_idx], CRC_LENGTH);
+	if (!checkCRC (buf, count - 4, &crc32)) {
+		DEBUG_WARN ("Wrong CRC");
+		node->packetErrors++;
+		return false;
+	}
+
+	//TODO Send message to Serial
 }
 
 bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
