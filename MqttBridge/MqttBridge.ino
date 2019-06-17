@@ -88,6 +88,8 @@ void reconnect () {
 			// ... and resubscribe
 			String dlTopic = BASE_TOPIC + String ("/+/set/#");
 			client.subscribe (dlTopic.c_str ());
+			dlTopic = BASE_TOPIC + String ("/+/get/#");
+			client.subscribe (dlTopic.c_str ());
 			client.setCallback (onDlData);
 			stopFlash ();
 		}
