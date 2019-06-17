@@ -30,7 +30,8 @@
 enum sensorMessageType {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
     DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
-    CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
+	CONTROL_DATA = 0x03, /**< Internal ontrol message like OTA, settings configuration, etc */
+	CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
     CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
@@ -155,7 +156,7 @@ protected:
       * @param len Length of payload data
       * @return Returns `true` if message could be correcly sent
       */
-    bool dataMessage (const uint8_t *data, size_t len);
+    bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false);
 
     /**
       * @brief Processes downstream data from gateway
@@ -208,6 +209,7 @@ protected:
 	  */
 	bool checkControlCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
+	bool sendData (const uint8_t* data, size_t len, bool controlMessage);
 
 public:
     /**
@@ -243,7 +245,9 @@ public:
       * @param data Payload buffer
       * @param len Payload length
       */
-    bool sendData (const uint8_t *data, size_t len);
+	bool sendData (const uint8_t* data, size_t len) {
+		return sendData (data, len, false);
+	}
 
     /**
       * @brief Defines a function callback that will be called on every downlink data message that is received from gateway

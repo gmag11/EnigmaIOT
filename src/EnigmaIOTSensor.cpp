@@ -328,14 +328,18 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
     return comm->send (gateway, (uint8_t *)&(keyExchangeFinished_msg), KEFMSG_LEN) == 0;
 }
 
-bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len) {
+bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len, bool controlMessage) {
     memcpy (dataMessageSent, data, len);
     dataMessageSentLength = len;
 
     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
-        DEBUG_INFO ("Data sent: %s", printHexBuffer (data, len));
+		if (controlMessage) {
+			DEBUG_INFO ("Control message sent: %s", printHexBuffer (data, len));
+		} else {
+			DEBUG_INFO ("Data sent: %s", printHexBuffer (data, len));
+		}
         flashBlue = true;
-        return dataMessage ((uint8_t *)data, len);
+		return dataMessage ((uint8_t*)data, len, controlMessage);
     }
     return false;
 }
@@ -351,7 +355,7 @@ void EnigmaIOTSensorClass::sleep (uint64_t time)
 		DEBUG_VERBOSE ("Node is non sleepy. Sleep rejected");
 }
 
-bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len) {
+bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool controlMessage) {
     /*
     * --------------------------------------------------------------------------------------
     *| msgType (1) | IV (16) | length (2) | NodeId (2) | Counter (2) | Data (....) | CRC (4) |
@@ -374,7 +378,11 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len) {
         return false;
     }
 
-    *msgType_p = (uint8_t)SENSOR_DATA;
+	if (controlMessage) { 
+		*msgType_p = (uint8_t)CONTROL_DATA; 
+	} else {
+		*msgType_p = (uint8_t)SENSOR_DATA;
+	}
 
     CryptModule::random (iv_p, IV_LENGTH);
 
@@ -382,16 +390,18 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len) {
 
     memcpy (nodeId_p, &nodeId, sizeof (uint16_t));
 
-    if (useCounter) {
-        counter = node.getLastMessageCounter() + 1;
-        node.setLastMessageCounter (counter);
-        rtcmem_data.lastMessageCounter = counter;
-    }
-    else {
-        counter = Crypto.random ();
-    }
+	if (!controlMessage) { // Control messages do not use counter
+		if (useCounter) {
+			counter = node.getLastMessageCounter () + 1;
+			node.setLastMessageCounter (counter);
+			rtcmem_data.lastMessageCounter = counter;
+		}
+		else {
+			counter = Crypto.random ();
+		}
 
-    memcpy (counter_p, &counter, sizeof(uint16_t));
+		memcpy (counter_p, &counter, sizeof (uint16_t));
+	}
 
     memcpy (data_p, data, len);
 
@@ -417,7 +427,11 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len) {
 
     DEBUG_VERBOSE ("Encrypted data message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
 
-    DEBUG_INFO (" -------> DATA");
+	if (controlMessage) {
+		DEBUG_INFO (" -------> CONTROL MESSAGE");
+	} else {
+		DEBUG_INFO (" -------> DATA");
+	}
 
     if (useCounter) {
         rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
@@ -430,10 +444,10 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len) {
 }
 
 bool EnigmaIOTSensorClass::checkControlCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len) {
-	char* found = strstr ((char *)buf, "set/version");
+	char* found = strstr ((char *)buf, "get/version");
 	if (found) {
 		DEBUG_DBG ("Version command received");
-		if (sendData ((uint8_t *)ENIGMAIOT_PROT_VERS, strlen (ENIGMAIOT_PROT_VERS))) {
+		if (sendData ((uint8_t *)ENIGMAIOT_PROT_VERS, strlen (ENIGMAIOT_PROT_VERS), true)) {
 			DEBUG_DBG ("Version is %s", ENIGMAIOT_PROT_VERS);
 		}
 		else {
