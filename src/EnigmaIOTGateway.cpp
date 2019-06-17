@@ -181,8 +181,8 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 	case SENSOR_DATA:
         DEBUG_INFO (" <------- DATA");
         if (node->getStatus () == REGISTERED) {
-            if (processDataMessage (mac, buf, count, node)) {
-                node->packetsHour = (double)1 / ((millis () - node->getLastMessageTime ()) / (double)3600000);
+			node->packetsHour = (double)1 / ((millis () - node->getLastMessageTime ()) / (double)3600000);
+			if (processDataMessage (mac, buf, count, node)) {
                 node->setLastMessageTime ();
                 DEBUG_INFO ("Data OK");
                 DEBUG_VERBOSE ("Key valid from %lu ms", millis () - node->getKeyValidFrom ());
