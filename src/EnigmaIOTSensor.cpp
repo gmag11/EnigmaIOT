@@ -96,11 +96,11 @@ void EnigmaIOTSensorClass::handle () {
 
 }
 
-void EnigmaIOTSensorClass::rx_cb (u8 *mac_addr, u8 *data, u8 len) {
+void EnigmaIOTSensorClass::rx_cb (uint8_t *mac_addr, uint8_t *data, uint8_t len) {
     EnigmaIOTSensor.manageMessage (mac_addr, data, len);
 }
 
-void EnigmaIOTSensorClass::tx_cb (u8 *mac_addr, u8 status) {
+void EnigmaIOTSensorClass::tx_cb (uint8_t *mac_addr, uint8_t status) {
     EnigmaIOTSensor.getStatus (mac_addr, status);
 }
 
@@ -612,7 +612,7 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
     }
 }
 
-void EnigmaIOTSensorClass::getStatus (u8 *mac_addr, u8 status) {
+void EnigmaIOTSensorClass::getStatus (uint8_t *mac_addr, uint8_t status) {
     DEBUG_VERBOSE ("SENDStatus %s", status==0?"OK":"ERROR");
 }
 

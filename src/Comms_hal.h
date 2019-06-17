@@ -24,8 +24,8 @@ enum peerType_t {
     COMM_GATEWAY /**< Peer acts as a gateway */
 };
 
-typedef void (*comms_hal_rcvd_data)(u8 *mac_addr, u8 *data, u8 len);
-typedef void (*comms_hal_sent_data)(u8 *mac_addr, u8 status);
+typedef void (*comms_hal_rcvd_data)(uint8_t *, uint8_t *, uint8_t );
+typedef void (*comms_hal_sent_data)(uint8_t *, uint8_t );
 
 /**
   * @brief Interface for communication subsystem abstraction layer definition
@@ -59,7 +59,7 @@ class Comms_halClass
        * @param len Data length in number of bytes
        * @return Returns sending status. 0 for success, any other value to indicate an error.
        */
-     virtual uint8_t send (u8 *da, u8 *data, int len) = 0;
+     virtual uint8_t send (uint8_t *da, uint8_t *data, int len) = 0;
 
      /**
        * @brief Attach a callback function to be run on every received message

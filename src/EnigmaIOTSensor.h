@@ -182,7 +182,7 @@ protected:
       * @param mac_addr Address of message sender
       * @param status Result status code
       */
-    void getStatus (u8 *mac_addr, u8 status);
+    void getStatus (uint8_t *mac_addr, uint8_t status);
 
     /**
       * @brief Function that will be called anytime this node receives a message
@@ -190,7 +190,7 @@ protected:
       * @param data Buffer that stores message bytes
       * @param len Length of message in number of bytes
       */
-    static void rx_cb (u8 *mac_addr, u8 *data, u8 len);
+    static void rx_cb (uint8_t *mac_addr, uint8_t *data, uint8_t len);
 
     /**
       * @brief Function that will be called anytime this node sends a message
@@ -198,7 +198,7 @@ protected:
       * @param mac_addr Address of message destination
       * @param status Result of sending process
       */
-    static void tx_cb (u8 *mac_addr, u8 status);
+    static void tx_cb (uint8_t *mac_addr, uint8_t status);
 
 	/**
 	  * @brief Processes internal sensor commands like
