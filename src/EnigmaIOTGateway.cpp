@@ -239,6 +239,15 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 	}
 
 	//TODO Send message to Serial
+
+	DEBUG_DBG ("Payload length: %d bytes\n", crc_idx - data_idx);
+	char macstr[18];
+	mac2str (mac, macstr);
+	Serial.printf ("~/%s/control/version;", macstr);
+	Serial.write ((uint8_t *)&(buf[data_idx]), crc_idx - data_idx);
+	Serial.println ();
+
+	return true;
 }
 
 bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node) {
@@ -363,7 +372,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node *node, const uint8_t *da
     uint8_t *data_p = buffer + 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t);
 
     if (!data) {
-		DEBUG_ERROR ("Downlink message buffer empty", len);
+		DEBUG_ERROR ("Downlink message buffer empty");
         return false;
     }
 	if (len > MAX_MESSAGE_LENGTH - 25) {
