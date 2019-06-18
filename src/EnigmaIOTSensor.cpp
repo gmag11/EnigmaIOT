@@ -40,7 +40,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
         node.setEncryptionKey (rtcmem_data.nodeKey);
         node.setKeyValid (true);
         node.setLastMessageCounter (rtcmem_data.lastMessageCounter);
-        node.setLastMessageTime ();
+        //node.setLastMessageTime ();
         node.setStatus (REGISTERED);
         uint8_t macAddress[6];
         if (wifi_get_macaddr (0, macAddress)) {
@@ -443,17 +443,22 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool co
     return (comm->send (gateway, buffer, packet_length + CRC_LENGTH) == 0);
 }
 
+bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len) {
+	DEBUG_DBG ("Version command received");
+	if (sendData ((uint8_t*)ENIGMAIOT_PROT_VERS, strlen (ENIGMAIOT_PROT_VERS), true)) {
+		DEBUG_DBG ("Version is %s", ENIGMAIOT_PROT_VERS);
+	}
+	else {
+		DEBUG_WARN ("Error sending version response");
+	}
+	return true;
+}
+
 bool EnigmaIOTSensorClass::checkControlCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len) {
-	char* found = strstr ((char *)buf, "get/version");
-	if (found) {
-		DEBUG_DBG ("Version command received");
-		if (sendData ((uint8_t *)ENIGMAIOT_PROT_VERS, strlen (ENIGMAIOT_PROT_VERS), true)) {
-			DEBUG_DBG ("Version is %s", ENIGMAIOT_PROT_VERS);
-		}
-		else {
-			DEBUG_WARN ("Error sending version response");
-		}
-		return true;
+	if (strstr ((char*)buf, "get/version")) {
+		return processVersionCommand (mac, buf, len);
+	}  else if (strstr ((char*)buf, "set/sleeptime")) {
+
 	}
 	return false;
 }

@@ -58,6 +58,9 @@ struct rtcmem_data_t {
     uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
     uint16_t lastMessageCounter; /**< Node last message counter */
     uint8_t nodeId; /**< Node identification */
+	uint8_t gateway[6]; /**< Gateway address */
+	uint8_t networkKey[KEY_LENGTH]; /**< Network key to encrypt dynamic key nogotiation */
+	time_t sleepTime; /**< Sleep time in milliseconds */
 };
 
 typedef sensorMessageType sensorMessageType_t;
@@ -200,6 +203,8 @@ protected:
       */
     static void tx_cb (uint8_t *mac_addr, uint8_t status);
 
+	bool processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+
 	/**
 	  * @brief Processes internal sensor commands like
 	  * version information, OTA, settings tuning, etc
@@ -225,7 +230,7 @@ public:
       * normally those that are powered with batteries, downlink message will be queued on gateway and sent just after an uplink data
       * message from node has been sent
       */
-    void begin (Comms_halClass *comm, uint8_t *gateway, uint8_t *networkKey, bool useCounter = true, bool sleepy = true);
+    void begin (Comms_halClass *comm, uint8_t *gateway = NULL, uint8_t *networkKey = NULL, bool useCounter = true, bool sleepy = true);
 
     /**
       * @brief This method should be called periodically for instance inside `loop()` function.

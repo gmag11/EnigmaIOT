@@ -49,10 +49,12 @@ void setup () {
 	EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
 	EnigmaIOTSensor.onDataRx (processRxData);
 	EnigmaIOTSensor.begin (&Espnow_hal, gateway, (uint8_t*)NETWORK_KEY);
+
+	// Read sensor data
 	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
 	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
 	msg.addTemperature (1, 20.34);
-	//char *message = "Hello World!!!";
+	// Read sensor data
 
 	Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
