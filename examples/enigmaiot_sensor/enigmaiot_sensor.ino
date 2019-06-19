@@ -10,7 +10,6 @@
 
 #include <Arduino.h>
 #include <EnigmaIOTSensor.h>
-#include <espnow.h>
 #include <espnow_hal.h>
 #include <CayenneLPP.h>
 #define BLUE_LED BUILTIN_LED
@@ -59,7 +58,11 @@ void setup () {
 
 	Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
-	EnigmaIOTSensor.sendData (msg.getBuffer (), msg.getSize ());
+	if (!EnigmaIOTSensor.sendData (msg.getBuffer (), msg.getSize ())) {
+		Serial.println ("---- Error sending data");
+	} else {
+		Serial.println ("---- Data sent");
+	}
 
 	EnigmaIOTSensor.sleep (SLEEP_TIME);
 }

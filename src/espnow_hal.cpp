@@ -35,7 +35,6 @@ void Espnow_halClass::initComms (peerType_t peerType)
 void Espnow_halClass::rx_cb (uint8_t * mac_addr, uint8_t * data, uint8_t len)
 {
     if (Espnow_hal.dataRcvd) {
-		esp_now_unregister_recv_cb ();
 		Espnow_hal.dataRcvd (mac_addr, data, len);
     }
 }
@@ -43,7 +42,6 @@ void Espnow_halClass::rx_cb (uint8_t * mac_addr, uint8_t * data, uint8_t len)
 void Espnow_halClass::tx_cb (uint8_t * mac_addr, uint8_t status)
 {
     if (Espnow_hal.sentResult) {
-		esp_now_unregister_send_cb ();
         Espnow_hal.sentResult (mac_addr, status);
     }
 }
@@ -58,6 +56,7 @@ void Espnow_halClass::begin (uint8_t* gateway, uint8_t channel, peerType_t peerT
 }
 
 void Espnow_halClass::stop () {
+	Serial.println ("-------------> STOP");
 	esp_now_unregister_recv_cb ();
 	esp_now_unregister_send_cb ();
 	esp_now_deinit ();

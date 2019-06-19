@@ -57,11 +57,10 @@ struct rtcmem_data_t {
     uint32_t crc32; /**< CRC to check RTC data integrity */
     uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
     uint16_t lastMessageCounter; /**< Node last message counter */
-    uint8_t nodeId; /**< Node identification */
+	uint16_t nodeId; /**< Node identification */
 	uint8_t channel; /**< WiFi channel used on ESP-NOW communication */
 	uint8_t gateway[6]; /**< Gateway address */
 	uint8_t networkKey[KEY_LENGTH]; /**< Network key to encrypt dynamic key nogotiation */
-	time_t sleepTime; /**< Sleep time in milliseconds */
 	bool sleepy; /**< Sleepy node */
 };
 

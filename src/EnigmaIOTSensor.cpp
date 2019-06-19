@@ -13,6 +13,26 @@ void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
     ledOnTime = onTime;
 }
 
+void dumpRtcData (rtcmem_data_t* data, uint8_t *gateway = NULL) {
+	Serial.println ("RTC MEM DATA:");
+	if (data) {
+		Serial.printf (" -- CRC: %s\n", printHexBuffer ((uint8_t*)&(data->crc32), sizeof (uint32_t)));
+		Serial.printf (" -- Node Key: %s\n", printHexBuffer (data->nodeKey, KEY_LENGTH));
+		Serial.printf (" -- Last message counter: %d\n", data->lastMessageCounter);
+		Serial.printf (" -- NodeID: %d\n", data->nodeId);
+		Serial.printf (" -- Channel: %d\n", data->channel);
+		char gwAddress[18];
+		Serial.printf (" -- Gateway: %s\n", mac2str(data->gateway,gwAddress));
+		if (gateway)
+			Serial.printf (" -- Gateway address: %s\n", mac2str (gateway, gwAddress));
+		Serial.printf (" -- Network Key: %s\n", printHexBuffer (data->networkKey, KEY_LENGTH));
+		Serial.printf (" -- Mode: %s\n", data->sleepy?"sleepy":"non sleepy");
+	}
+	else {
+		Serial.println ("rtcmem_data pointer is NULL");
+	}
+}
+
 bool EnigmaIOTSensorClass::loadRTCData () {
 	if (ESP.rtcUserMemoryRead (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
 		DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
@@ -24,7 +44,6 @@ bool EnigmaIOTSensorClass::loadRTCData () {
 		DEBUG_DBG ("RTC Data is not valid");
 		return false;
 	} else {
-		// TODO: dump config for debug
 		node.setEncryptionKey (rtcmem_data.nodeKey);
 		node.setKeyValid (true);
 		node.setKeyValidFrom (millis ());
@@ -32,14 +51,16 @@ bool EnigmaIOTSensorClass::loadRTCData () {
 		//node.setLastMessageTime ();
 		node.setNodeId (rtcmem_data.nodeId);
 		// setChannel (rtcmem_data.channel);
-        // setGateway (rtcmem_data.gateway);
+		channel = rtcmem_data.channel;
 		memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
-		// setNetworkKey (rtcmem_data.networkKey);
 		memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
-		// node.setSleepTime (rtcmem_data.sleepTime);
 		node.setSleepy (rtcmem_data.sleepy);
 		node.setStatus (REGISTERED);
 		DEBUG_DBG ("Set %s mode", node.getSleepy () ? "sleepy" : "non sleepy");
+#if DEBUG_LEVEL >= VERBOSE
+		dumpRtcData (&rtcmem_data,gateway);
+#endif
+
 	}
 	return true;
 
@@ -63,11 +84,16 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 		node.setMacAddress (macAddress);
 	}
 
-    node.setSleepy (sleepy);
+	node.setSleepy (sleepy);
 	DEBUG_DBG ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
 
 	if (loadRTCData ()) { // If data present on RTC sensor has waked up or it is just configured, continue
-		DEBUG_DBG ("RTC data loaded");
+		char gwAddress[18];
+		DEBUG_DBG ("RTC data loaded. Gateway: %s", mac2str (this->gateway, gwAddress));
+		uint8_t macAddress[6];
+		if (wifi_get_macaddr (0, macAddress)) {
+			node.setMacAddress (macAddress);
+		}
 		comm->begin (this->gateway, channel);
 		comm->onDataRcvd (rx_cb);
 		comm->onDataSent (tx_cb);
@@ -78,6 +104,18 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 			memcpy (rtcmem_data.gateway, gateway , comm->getAddressLength ());
 			memcpy (this->networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
 			memcpy (rtcmem_data.networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
+			uint8_t macAddress[6];
+			if (wifi_get_macaddr (0, macAddress)) {
+				node.setMacAddress (macAddress);
+			}
+			rtcmem_data.channel = channel;
+			rtcmem_data.sleepy = sleepy;
+			rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+			if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+				DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+				dumpRtcData (&rtcmem_data, this->gateway);
+			}
+
 		} else { // Try read from flash
 			if (loadFlashData ()) { // If data present on flash, read and continue
 				node.setStatus (REGISTERED); // ?????
@@ -96,11 +134,11 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 			}
 		}
 
+		comm->begin (this->gateway, channel);
 		comm->onDataRcvd (rx_cb);
 		comm->onDataSent (tx_cb);
-		comm->begin (this->gateway, channel);
 		//clientHello ();
-		DEBUG_DBG ("Client hello sent");
+		DEBUG_DBG ("Comms started");
 	}
 
 
@@ -400,7 +438,7 @@ bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len, bool contr
 			DEBUG_INFO ("Data sent: %s", printHexBuffer (data, len));
 		}
         flashBlue = true;
-		return dataMessage ((uint8_t*)data, len, controlMessage);
+		return dataMessage (data, len, controlMessage);
     }
     return false;
 }
@@ -411,9 +449,9 @@ void EnigmaIOTSensorClass::sleep (uint64_t time)
 		DEBUG_VERBOSE ("Sleep programmed for %lu ms", (unsigned long)(time / 1000));
 		sleepTime = time;
 		sleepRequested = true;
-	}
-	else
+	} else {
 		DEBUG_VERBOSE ("Node is non sleepy. Sleep rejected");
+	}
 }
 
 bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool controlMessage) {
@@ -493,12 +531,17 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool co
 	} else {
 		DEBUG_INFO (" -------> DATA");
 	}
+#if DEBUG_LEVEL >= VERBOSE
+	char macStr[18];
+	DEBUG_VERBOSE ("Destination address: %s", mac2str (gateway, macStr));
+#endif
 
     if (useCounter) {
         rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
         if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
             DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
-        }
+			dumpRtcData (&rtcmem_data);
+		}
     }
 
     return (comm->send (gateway, buffer, packet_length + CRC_LENGTH) == 0);
