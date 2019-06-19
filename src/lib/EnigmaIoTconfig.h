@@ -27,7 +27,7 @@ const uint8_t KEY_LENGTH = 32; ///< @brief Key length used by selected crypto al
 const uint8_t IV_LENGTH = 16; ///< @brief Initalization vector length used by selected crypto algorythm
 #define BLOCK_CYPHER Speck
 #define CYPHER_TYPE CFB<BLOCK_CYPHER>
-static const uint8_t NETWORK_KEY[32] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+static const uint8_t NETWORK_KEY[KEY_LENGTH] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 //Debug
 #define DEBUG_ESP_PORT Serial
