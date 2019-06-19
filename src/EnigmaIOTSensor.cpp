@@ -90,10 +90,6 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 	if (loadRTCData ()) { // If data present on RTC sensor has waked up or it is just configured, continue
 		char gwAddress[18];
 		DEBUG_DBG ("RTC data loaded. Gateway: %s", mac2str (this->gateway, gwAddress));
-		uint8_t macAddress[6];
-		if (wifi_get_macaddr (0, macAddress)) {
-			node.setMacAddress (macAddress);
-		}
 		comm->begin (this->gateway, channel);
 		comm->onDataRcvd (rx_cb);
 		comm->onDataSent (tx_cb);
@@ -104,10 +100,6 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 			memcpy (rtcmem_data.gateway, gateway , comm->getAddressLength ());
 			memcpy (this->networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
 			memcpy (rtcmem_data.networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
-			uint8_t macAddress[6];
-			if (wifi_get_macaddr (0, macAddress)) {
-				node.setMacAddress (macAddress);
-			}
 			rtcmem_data.channel = channel;
 			rtcmem_data.sleepy = sleepy;
 			rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
