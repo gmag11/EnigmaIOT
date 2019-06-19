@@ -217,8 +217,8 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 
 	//uint8_t *iv;
 	uint32_t crc32;
-	uint16_t counter;
-	size_t lostMessages = 0;
+	//uint16_t counter;
+	//size_t lostMessages = 0;
 
 	Crypto.decryptBuffer (
 		const_cast<uint8_t*>(&buf[length_idx]),

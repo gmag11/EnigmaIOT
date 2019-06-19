@@ -31,6 +31,6 @@ static const uint8_t NETWORK_KEY[KEY_LENGTH] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 //Debug
 #define DEBUG_ESP_PORT Serial
-#define DEBUG_LEVEL NO_DEBUG
+#define DEBUG_LEVEL VERBOSE
 
 #endif

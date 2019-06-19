@@ -10,6 +10,7 @@
 
 #include <Arduino.h>
 #include <EnigmaIOTSensor.h>
+#include <espnow.h>
 #include <espnow_hal.h>
 #include <CayenneLPP.h>
 #define BLUE_LED BUILTIN_LED

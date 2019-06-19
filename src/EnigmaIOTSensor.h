@@ -58,9 +58,11 @@ struct rtcmem_data_t {
     uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
     uint16_t lastMessageCounter; /**< Node last message counter */
     uint8_t nodeId; /**< Node identification */
+	uint8_t channel; /**< WiFi channel used on ESP-NOW communication */
 	uint8_t gateway[6]; /**< Gateway address */
 	uint8_t networkKey[KEY_LENGTH]; /**< Network key to encrypt dynamic key nogotiation */
 	time_t sleepTime; /**< Sleep time in milliseconds */
+	bool sleepy; /**< Sleepy node */
 };
 
 typedef sensorMessageType sensorMessageType_t;
@@ -110,6 +112,10 @@ protected:
       * @return Returns `true` if CRC check was successful. `false` otherwise  
       */
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
+	
+	bool loadRTCData ();
+
+	bool loadFlashData ();
 
     /**
       * @brief Build a **ClientHello** messange and send it to gateway
@@ -231,6 +237,8 @@ public:
       * message from node has been sent
       */
     void begin (Comms_halClass *comm, uint8_t *gateway = NULL, uint8_t *networkKey = NULL, bool useCounter = true, bool sleepy = true);
+
+	void stop ();
 
     /**
       * @brief This method should be called periodically for instance inside `loop()` function.

@@ -67,6 +67,8 @@ class Espnow_halClass : public Comms_halClass
       */
     void begin(uint8_t* gateway, uint8_t channel = 0, peerType_t peerType = COMM_SENSOR);
 
+	void stop ();
+
     /**
       * @brief Sends data to the other peer
       * @param da Destination address to send the message to

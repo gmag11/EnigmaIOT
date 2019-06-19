@@ -13,43 +13,103 @@ void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
     ledOnTime = onTime;
 }
 
+bool EnigmaIOTSensorClass::loadRTCData () {
+	if (ESP.rtcUserMemoryRead (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+		DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+	} else {
+		DEBUG_ERROR ("Error reading RTC memory");
+		return false;
+	}
+	if (!checkCRC ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t), &rtcmem_data.crc32)) {
+		DEBUG_DBG ("RTC Data is not valid");
+		return false;
+	} else {
+		// TODO: dump config for debug
+		node.setEncryptionKey (rtcmem_data.nodeKey);
+		node.setKeyValid (true);
+		node.setKeyValidFrom (millis ());
+		node.setLastMessageCounter (rtcmem_data.lastMessageCounter);
+		//node.setLastMessageTime ();
+		node.setNodeId (rtcmem_data.nodeId);
+		// setChannel (rtcmem_data.channel);
+        // setGateway (rtcmem_data.gateway);
+		memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
+		// setNetworkKey (rtcmem_data.networkKey);
+		memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
+		// node.setSleepTime (rtcmem_data.sleepTime);
+		node.setSleepy (rtcmem_data.sleepy);
+		node.setStatus (REGISTERED);
+		DEBUG_DBG ("Set %s mode", node.getSleepy () ? "sleepy" : "non sleepy");
+	}
+	return true;
+
+}
+
+bool EnigmaIOTSensorClass::loadFlashData () {
+	return false;
+}
+
 void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_t *networkKey, bool useCounter, bool sleepy) {
     pinMode (led, OUTPUT);
     digitalWrite (led, HIGH);
 
-    memcpy (this->gateway, gateway, comm->getAddressLength ());
-    initWiFi ();
-    this->comm = comm;
-    comm->begin (gateway,channel);
-    comm->onDataRcvd (rx_cb);
-    comm->onDataSent (tx_cb);
-    this->useCounter = useCounter;
+	initWiFi ();
+	this->comm = comm;
+	
+	this->useCounter = useCounter;
 
-    memcpy (this->networkKey, networkKey, KEY_LENGTH);
+	uint8_t macAddress[6];
+	if (wifi_get_macaddr (0, macAddress)) {
+		node.setMacAddress (macAddress);
+	}
 
     node.setSleepy (sleepy);
-	DEBUG_VERBOSE ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
+	DEBUG_DBG ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
 
-    if (ESP.rtcUserMemoryRead (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
-        DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
-    }
-    if (!checkCRC ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t), &rtcmem_data.crc32)) {
-		DEBUG_VERBOSE ("RTC Data is not valid. Calculating new key");
-		clientHello ();
-    } else {
-        node.setEncryptionKey (rtcmem_data.nodeKey);
-        node.setKeyValid (true);
-        node.setLastMessageCounter (rtcmem_data.lastMessageCounter);
-        //node.setLastMessageTime ();
-        node.setStatus (REGISTERED);
-        uint8_t macAddress[6];
-        if (wifi_get_macaddr (0, macAddress)) {
-            node.setMacAddress (macAddress);
-        }
-        node.setKeyValidFrom (millis ());
-        node.setNodeId (rtcmem_data.nodeId);
-    }
+	if (loadRTCData ()) { // If data present on RTC sensor has waked up or it is just configured, continue
+		DEBUG_DBG ("RTC data loaded");
+		comm->begin (this->gateway, channel);
+		comm->onDataRcvd (rx_cb);
+		comm->onDataSent (tx_cb);
+	} else { // No RTC data, first boot or not configured
+		if (gateway && networkKey) { // If connection data has been passed to library
+			DEBUG_DBG ("EnigmaIot started with config data con begin() call");
+			memcpy (this->gateway, gateway, comm->getAddressLength ()); // setGateway
+			memcpy (rtcmem_data.gateway, gateway , comm->getAddressLength ());
+			memcpy (this->networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
+			memcpy (rtcmem_data.networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
+		} else { // Try read from flash
+			if (loadFlashData ()) { // If data present on flash, read and continue
+				node.setStatus (REGISTERED); // ?????
+				DEBUG_DBG ("Flash data loaded");
+			} else { // Configuration empty. Enter config AP mode
+				DEBUG_DBG ("No flash data present. Starting Configuration AP");
+				// Start AP
+				if (true) {// AP config data OK
+					DEBUG_DBG ("Got configuration. Storing");
+					// Store data on RTC and flash
+					ESP.restart ();
+				} else { // Configuration error
+					DEBUG_ERROR ("Configuration error. Restarting");
+					ESP.restart ();
+				}
+			}
+		}
 
+		comm->onDataRcvd (rx_cb);
+		comm->onDataSent (tx_cb);
+		comm->begin (this->gateway, channel);
+		//clientHello ();
+		DEBUG_DBG ("Client hello sent");
+	}
+
+
+}
+
+
+void EnigmaIOTSensorClass::stop () {
+	comm->stop ();
+	DEBUG_DBG ("Communication layer uninitalized");
 }
 
 void EnigmaIOTSensorClass::handle () {
@@ -212,6 +272,7 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
 
     Crypto.getDH2 (serverHello_msg.publicKey);
     node.setEncryptionKey (serverHello_msg.publicKey);
+	memcpy (rtcmem_data.nodeKey, node.getEncriptionKey (), KEY_LENGTH);
     DEBUG_INFO ("Node key: %s", printHexBuffer (node.getEncriptionKey (), KEY_LENGTH));
 
     return true;

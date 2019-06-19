@@ -52,6 +52,8 @@ class Comms_halClass
        */
      virtual void begin (uint8_t* gateway, uint8_t channel, peerType_t peerType = COMM_SENSOR) = 0;
 
+	 virtual void stop () = 0;
+
      /**
        * @brief Sends data to the other peer
        * @param da Destination address to send the message to
