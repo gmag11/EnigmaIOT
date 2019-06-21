@@ -26,9 +26,13 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 
 void initWiFi () {
 	//WiFi.persistent (false);
+	DEBUG_DBG ("initWifi");
 	WiFi.mode (WIFI_AP);
-	WiFi.softAP ("ESPNOW", nullptr, 3);
+	DEBUG_DBG ("Mode set to AP");
+	//WiFi.softAP ("ESPNOW", nullptr, 3);
+	//DEBUG_DBG ("AP started");
 	WiFi.softAPdisconnect (false);
+	DEBUG_DBG ("AP Deactivated");
 
 	DEBUG_INFO ("AP MAC address of this device is %s", WiFi.softAPmacAddress ().c_str ());
 	DEBUG_INFO ("STA MAC address of this device is %s", WiFi.macAddress ().c_str ());

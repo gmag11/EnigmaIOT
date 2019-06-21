@@ -17,7 +17,7 @@
 
 // Sensor configuration
 static const uint16_t RECONNECTION_PERIOD = 2500;
-static const uint16_t DOWNLINK_WAIT_TIME = 500;
+static const uint16_t DOWNLINK_WAIT_TIME = 400;
 
 static const char ENIGMAIOT_PROT_VERS[] = "0.0.1";
 

@@ -43,11 +43,13 @@ void setup () {
 	CayenneLPP msg (20);
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
-
+	time_t start = millis ();
+	
 	EnigmaIOTSensor.setLed (BLUE_LED);
 	EnigmaIOTSensor.onConnected (connectEventHandler);
 	EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
 	EnigmaIOTSensor.onDataRx (processRxData);
+
 	EnigmaIOTSensor.begin (&Espnow_hal, gateway, (uint8_t*)NETWORK_KEY);
 
 	// Read sensor data
@@ -63,7 +65,7 @@ void setup () {
 	} else {
 		Serial.println ("---- Data sent");
 	}
-
+	Serial.printf ("Total time: %d ms\n", millis() - start);
 	EnigmaIOTSensor.sleep (SLEEP_TIME);
 }
 
