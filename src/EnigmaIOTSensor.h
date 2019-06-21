@@ -61,7 +61,9 @@ struct rtcmem_data_t {
 	uint8_t channel; /**< WiFi channel used on ESP-NOW communication */
 	uint8_t gateway[6]; /**< Gateway address */
 	uint8_t networkKey[KEY_LENGTH]; /**< Network key to encrypt dynamic key nogotiation */
+	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
 	bool sleepy; /**< Sleepy node */
+	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
 };
 
 typedef sensorMessageType sensorMessageType_t;

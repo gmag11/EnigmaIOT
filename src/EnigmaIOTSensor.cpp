@@ -18,6 +18,8 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t *gateway = NULL) {
 	if (data) {
 		Serial.printf (" -- CRC: %s\n", printHexBuffer ((uint8_t*)&(data->crc32), sizeof (uint32_t)));
 		Serial.printf (" -- Node Key: %s\n", printHexBuffer (data->nodeKey, KEY_LENGTH));
+		Serial.printf (" -- Node key is %svalid\n", data->nodeKeyValid ? "":"NOT ");
+		Serial.printf (" -- Node status is %s\n", data->nodeRegisterStatus == REGISTERED ? "REGISTERED" :"NOT REGISTERED");
 		Serial.printf (" -- Last message counter: %d\n", data->lastMessageCounter);
 		Serial.printf (" -- NodeID: %d\n", data->nodeId);
 		Serial.printf (" -- Channel: %d\n", data->channel);
@@ -45,17 +47,18 @@ bool EnigmaIOTSensorClass::loadRTCData () {
 		return false;
 	} else {
 		node.setEncryptionKey (rtcmem_data.nodeKey);
-		node.setKeyValid (true);
-		node.setKeyValidFrom (millis ());
+		node.setKeyValid (rtcmem_data.nodeKeyValid);
+		if (rtcmem_data.nodeKeyValid)
+		    node.setKeyValidFrom (millis ());
 		node.setLastMessageCounter (rtcmem_data.lastMessageCounter);
-		//node.setLastMessageTime ();
+		node.setLastMessageTime ();
 		node.setNodeId (rtcmem_data.nodeId);
 		// setChannel (rtcmem_data.channel);
 		channel = rtcmem_data.channel;
 		memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
 		memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
 		node.setSleepy (rtcmem_data.sleepy);
-		node.setStatus (REGISTERED);
+		node.setStatus (rtcmem_data.nodeRegisterStatus);
 		DEBUG_DBG ("Set %s mode", node.getSleepy () ? "sleepy" : "non sleepy");
 #if DEBUG_LEVEL >= VERBOSE
 		dumpRtcData (&rtcmem_data,gateway);
@@ -80,7 +83,8 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 	this->useCounter = useCounter;
 
 	uint8_t macAddress[6];
-	if (wifi_get_macaddr (0, macAddress)) {
+	
+	if (wifi_get_macaddr (SOFTAP_IF, macAddress)) {
 		node.setMacAddress (macAddress);
 	}
 
@@ -88,11 +92,14 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 	DEBUG_DBG ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
 
 	if (loadRTCData ()) { // If data present on RTC sensor has waked up or it is just configured, continue
+#if DEBUG_LEVEL >= DBG
 		char gwAddress[18];
 		DEBUG_DBG ("RTC data loaded. Gateway: %s", mac2str (this->gateway, gwAddress));
-		comm->begin (this->gateway, channel);
-		comm->onDataRcvd (rx_cb);
-		comm->onDataSent (tx_cb);
+#endif
+		//comm->begin (this->gateway, channel);
+		//comm->onDataRcvd (rx_cb);
+		//comm->onDataSent (tx_cb);
+		DEBUG_DBG (" -- Own address: %s\n", mac2str (node.getMacAddress (), gwAddress));
 	} else { // No RTC data, first boot or not configured
 		if (gateway && networkKey) { // If connection data has been passed to library
 			DEBUG_DBG ("EnigmaIot started with config data con begin() call");
@@ -100,9 +107,12 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 			memcpy (rtcmem_data.gateway, gateway , comm->getAddressLength ());
 			memcpy (this->networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
 			memcpy (rtcmem_data.networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
+			rtcmem_data.nodeKeyValid = false;
 			rtcmem_data.channel = channel;
 			rtcmem_data.sleepy = sleepy;
 			rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+			rtcmem_data.nodeRegisterStatus = UNREGISTERED;
+			// Is this needed ????
 			if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
 				DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
 				dumpRtcData (&rtcmem_data, this->gateway);
@@ -110,7 +120,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 
 		} else { // Try read from flash
 			if (loadFlashData ()) { // If data present on flash, read and continue
-				node.setStatus (REGISTERED); // ?????
+				node.setStatus (rtcmem_data.nodeRegisterStatus); // ?????
 				DEBUG_DBG ("Flash data loaded");
 			} else { // Configuration empty. Enter config AP mode
 				DEBUG_DBG ("No flash data present. Starting Configuration AP");
@@ -126,13 +136,14 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 			}
 		}
 
-		comm->begin (this->gateway, channel);
-		comm->onDataRcvd (rx_cb);
-		comm->onDataSent (tx_cb);
-		//clientHello ();
-		DEBUG_DBG ("Comms started");
 	}
 
+	comm->begin (this->gateway, channel);
+	comm->onDataRcvd (rx_cb);
+	comm->onDataSent (tx_cb);
+	if (!rtcmem_data.nodeKeyValid || (rtcmem_data.nodeRegisterStatus!=REGISTERED))
+		clientHello ();
+	DEBUG_DBG ("Comms started");
 
 }
 
@@ -167,7 +178,7 @@ void EnigmaIOTSensorClass::handle () {
     status_t status = node.getStatus ();
     if (status == WAIT_FOR_SERVER_HELLO || status == WAIT_FOR_CIPHER_FINISHED) {
         if (millis () - lastRegistration > (RECONNECTION_PERIOD*10)) {
-            DEBUG_VERBOSE ("Current node status: %d", node.getStatus ());
+            DEBUG_DBG ("Current node status: %d", node.getStatus ());
             lastRegistration = millis ();
             node.reset ();
             clientHello ();
@@ -224,8 +235,9 @@ bool EnigmaIOTSensorClass::clientHello () {
 
     Crypto.getDH1 ();
     node.setStatus (INIT);
+	rtcmem_data.nodeRegisterStatus = INIT;
     uint8_t macAddress[6];
-    if (wifi_get_macaddr (0, macAddress)) {
+    if (wifi_get_macaddr (SOFTAP_IF, macAddress)) {
         node.setMacAddress (macAddress);
     }
     uint8_t *key = Crypto.getPubDHKey ();
@@ -256,6 +268,7 @@ bool EnigmaIOTSensorClass::clientHello () {
     DEBUG_VERBOSE ("Netowrk encrypted Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
 
     node.setStatus (WAIT_FOR_SERVER_HELLO);
+	rtcmem_data.nodeRegisterStatus = WAIT_FOR_SERVER_HELLO;
 
     DEBUG_INFO (" -------> CLIENT HELLO");
 
@@ -438,7 +451,7 @@ bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len, bool contr
 void EnigmaIOTSensorClass::sleep (uint64_t time)
 {
 	if (node.getSleepy ()) {
-		DEBUG_VERBOSE ("Sleep programmed for %lu ms", (unsigned long)(time / 1000));
+		DEBUG_DBG ("Sleep programmed for %lu ms", (unsigned long)(time / 1000));
 		sleepTime = time;
 		sleepRequested = true;
 	} else {
@@ -646,6 +659,7 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
             if (processServerHello (mac, buf, count)) {
                 keyExchangeFinished ();
                 node.setStatus (WAIT_FOR_CIPHER_FINISHED);
+				rtcmem_data.nodeRegisterStatus = WAIT_FOR_CIPHER_FINISHED;
             } else {
                 node.reset ();
             }
@@ -660,9 +674,11 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
             if (processCipherFinished (mac, buf, count)) {
                 // mark node as registered
                 node.setKeyValid (true);
+				rtcmem_data.nodeKeyValid = true;
                 node.setKeyValidFrom (millis ());
                 node.setLastMessageCounter (0);
                 node.setStatus (REGISTERED);
+				rtcmem_data.nodeRegisterStatus = REGISTERED;
                 
                 memcpy (rtcmem_data.nodeKey, node.getEncriptionKey (), KEY_LENGTH);
                 rtcmem_data.lastMessageCounter = 0;
@@ -714,7 +730,11 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
 }
 
 void EnigmaIOTSensorClass::getStatus (uint8_t *mac_addr, uint8_t status) {
-    DEBUG_VERBOSE ("SENDStatus %s", status==0?"OK":"ERROR");
+	if (status == 0) {
+		DEBUG_DBG ("SENDStatus OK");
+	} else {
+		DEBUG_ERROR ("SENDStatus ERROR %d", status);
+	}
 }
 
 
