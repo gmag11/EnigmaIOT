@@ -99,7 +99,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 		//comm->begin (this->gateway, channel);
 		//comm->onDataRcvd (rx_cb);
 		//comm->onDataSent (tx_cb);
-		DEBUG_DBG (" -- Own address: %s\n", mac2str (node.getMacAddress (), gwAddress));
+		DEBUG_DBG ("Own address: %s", mac2str (node.getMacAddress (), gwAddress));
 	} else { // No RTC data, first boot or not configured
 		if (gateway && networkKey) { // If connection data has been passed to library
 			DEBUG_DBG ("EnigmaIot started with config data con begin() call");
@@ -114,8 +114,10 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 			rtcmem_data.nodeRegisterStatus = UNREGISTERED;
 			// Is this needed ????
 			if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+#if DEBUG_LEVEL >= VERBOSE
 				DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
 				dumpRtcData (&rtcmem_data, this->gateway);
+#endif
 			}
 
 		} else { // Try read from flash
@@ -169,7 +171,7 @@ void EnigmaIOTSensorClass::handle () {
     }
 
     if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered() && node.getSleepy()) {
-        DEBUG_VERBOSE ("Go to sleep for %lu ms", (unsigned long)(sleepTime / 1000));
+        DEBUG_INFO ("Go to sleep for %lu ms", (unsigned long)(sleepTime / 1000));
         ESP.deepSleepInstant (sleepTime, RF_NO_CAL);
     }
 
@@ -188,7 +190,7 @@ void EnigmaIOTSensorClass::handle () {
 
     if (node.getStatus()== UNREGISTERED) {
         if (millis () - lastRegistration > (RECONNECTION_PERIOD)) {
-            DEBUG_VERBOSE ("Current node status: %d", node.getStatus ());
+            DEBUG_DBG ("Current node status: %d", node.getStatus ());
             lastRegistration = millis ();
             node.reset ();
             clientHello ();
@@ -316,7 +318,7 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
     Crypto.getDH2 (serverHello_msg.publicKey);
     node.setEncryptionKey (serverHello_msg.publicKey);
 	memcpy (rtcmem_data.nodeKey, node.getEncriptionKey (), KEY_LENGTH);
-    DEBUG_INFO ("Node key: %s", printHexBuffer (node.getEncriptionKey (), KEY_LENGTH));
+    DEBUG_VERBOSE ("Node key: %s", printHexBuffer (node.getEncriptionKey (), KEY_LENGTH));
 
     return true;
 }
@@ -372,7 +374,7 @@ bool EnigmaIOTSensorClass::processCipherFinished (const uint8_t mac[6], const ui
 
     memcpy (&nodeId, &cipherFinished_msg.nodeId, sizeof (uint16_t));
     node.setNodeId (nodeId);
-    DEBUG_VERBOSE ("Node ID: %u", node.getNodeId ());
+    DEBUG_DBG ("Node ID: %u", node.getNodeId ());
     return true;
 }
 
@@ -404,11 +406,11 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
 
     if (node.getSleepy ()) {
         random = random | 0x00000001U; // Signal sleepy node
-		DEBUG_VERBOSE ("Signal sleepy node");
+		DEBUG_DBG ("Signal sleepy node");
     }
     else {
         random = random & 0xFFFFFFFEU; // Signal always awake node
-		DEBUG_VERBOSE ("Signal non sleepy node");
+		DEBUG_DBG ("Signal non sleepy node");
     }
 
     memcpy (&(keyExchangeFinished_msg.random), &random, RANDOM_LENGTH);
@@ -438,9 +440,9 @@ bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len, bool contr
 
     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
 		if (controlMessage) {
-			DEBUG_INFO ("Control message sent: %s", printHexBuffer (data, len));
+			DEBUG_VERBOSE ("Control message sent: %s", printHexBuffer (data, len));
 		} else {
-			DEBUG_INFO ("Data sent: %s", printHexBuffer (data, len));
+			DEBUG_VERBOSE ("Data sent: %s", printHexBuffer (data, len));
 		}
         flashBlue = true;
 		return dataMessage (data, len, controlMessage);
@@ -538,14 +540,16 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool co
 	}
 #if DEBUG_LEVEL >= VERBOSE
 	char macStr[18];
-	DEBUG_VERBOSE ("Destination address: %s", mac2str (gateway, macStr));
+	DEBUG_DBG ("Destination address: %s", mac2str (gateway, macStr));
 #endif
 
     if (useCounter) {
         rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
         if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
+#if DEBUG_LEVEL >= VERBOSE
             DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
 			dumpRtcData (&rtcmem_data);
+#endif
 		}
     }
 
@@ -638,7 +642,7 @@ sensorInvalidateReason_t EnigmaIOTSensorClass::processInvalidateKey (const uint8
     if (buf && count < IKMSG_LEN) {
         return UNKNOWN_ERROR;
     }
-    DEBUG_VERBOSE ("Invalidate key request. Reason: %u", buf[1]);
+    DEBUG_DBG ("Invalidate key request. Reason: %u", buf[1]);
     uint8_t reason = buf[1];
     return (sensorInvalidateReason_t)reason;
 }
@@ -698,7 +702,7 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
                 // If key expired it was successfully sent before so retransmission is not needed 
                 if (invalidateReason < KEY_EXPIRED && dataMessageSentLength > 0) {
                     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
-                        DEBUG_INFO ("Data sent: %s", printHexBuffer (dataMessageSent, dataMessageSentLength));
+                        DEBUG_VERBOSE ("Data sent: %s", printHexBuffer (dataMessageSent, dataMessageSentLength));
                         dataMessage ((uint8_t *)dataMessageSent, dataMessageSentLength);
                         flashBlue = true;
                     }
