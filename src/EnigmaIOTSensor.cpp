@@ -82,23 +82,21 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 	
 	this->useCounter = useCounter;
 
+	node.setSleepy (sleepy);
+	DEBUG_DBG ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
+
 	uint8_t macAddress[6];
 	
 	if (wifi_get_macaddr (SOFTAP_IF, macAddress)) {
 		node.setMacAddress (macAddress);
 	}
 
-	node.setSleepy (sleepy);
-	DEBUG_DBG ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
 
 	if (loadRTCData ()) { // If data present on RTC sensor has waked up or it is just configured, continue
 #if DEBUG_LEVEL >= DBG
 		char gwAddress[18];
 		DEBUG_DBG ("RTC data loaded. Gateway: %s", mac2str (this->gateway, gwAddress));
 #endif
-		//comm->begin (this->gateway, channel);
-		//comm->onDataRcvd (rx_cb);
-		//comm->onDataSent (tx_cb);
 		DEBUG_DBG ("Own address: %s", mac2str (node.getMacAddress (), gwAddress));
 	} else { // No RTC data, first boot or not configured
 		if (gateway && networkKey) { // If connection data has been passed to library
@@ -653,8 +651,15 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
     flashBlue = true;
 
     if (count <= 1) {
-        return;
+		DEBUG_ERROR ("Empty message received");
+		return;
     }
+
+	// All downlink messages should come from gateway
+	if (memcmp (mac, gateway, comm->getAddressLength ()) != 0) {
+		DEBUG_ERROR ("Message comes not from gateway");
+		return;
+	}
 
     switch (buf[0]) {
     case SERVER_HELLO:
