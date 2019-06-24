@@ -23,6 +23,8 @@
 #include "NodeList.h"
 #include <cstddef>
 #include <cstdint>
+#include <ESPAsyncWebServer.h>
+#include <ESPAsyncWiFiManager.h>
 
 /**
   * @brief Message code definition
@@ -117,6 +119,8 @@ protected:
 	bool loadRTCData ();
 
 	bool loadFlashData ();
+
+	bool configWiFiManager (rtcmem_data_t* data);
 
     /**
       * @brief Build a **ClientHello** messange and send it to gateway

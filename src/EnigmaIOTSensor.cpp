@@ -13,6 +13,18 @@ void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
     ledOnTime = onTime;
 }
 
+void clearRtcData (rtcmem_data_t* data) {
+	memset (data->nodeKey, 0, KEY_LENGTH);
+	data->lastMessageCounter = 0;
+	data->nodeId = 0;
+	data->channel = 3;
+	memset (data->gateway, 0, 6);
+	memset (data->networkKey, 0, KEY_LENGTH);
+	data->nodeRegisterStatus = UNREGISTERED;
+	data->sleepy = false;
+	data->nodeKeyValid = false;
+}
+
 void dumpRtcData (rtcmem_data_t* data, uint8_t *gateway = NULL) {
 	Serial.println ("RTC MEM DATA:");
 	if (data) {
@@ -40,10 +52,12 @@ bool EnigmaIOTSensorClass::loadRTCData () {
 		DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
 	} else {
 		DEBUG_ERROR ("Error reading RTC memory");
+		clearRtcData (&rtcmem_data);
 		return false;
 	}
 	if (!checkCRC ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t), &rtcmem_data.crc32)) {
 		DEBUG_DBG ("RTC Data is not valid");
+		clearRtcData (&rtcmem_data);
 		return false;
 	} else {
 		node.setEncryptionKey (rtcmem_data.nodeKey);
@@ -71,6 +85,47 @@ bool EnigmaIOTSensorClass::loadRTCData () {
 
 bool EnigmaIOTSensorClass::loadFlashData () {
 	return false;
+}
+
+
+bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t *data) {
+	AsyncWebServer server (80);
+	DNSServer dns;
+	char channel[4];
+	itoa ((int)(data->channel),channel,10);
+	DEBUG_DBG ("Channel: %s %d", channel, data->channel);
+	char gateway[18];
+	mac2str (data->gateway, gateway);
+	DEBUG_DBG ("Gateway Address: %s", gateway);
+	char networkKey[33] = "";
+	char sleepy[5] = "";
+
+	AsyncWiFiManager wifiManager (&server, &dns);
+	AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
+	AsyncWiFiManagerParameter gatewayParam ("gateway", "EnigmaIoT gateway", gateway, 18, "required type=\"text\" pattern=\"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$\"");
+	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"text\" maxlength=32");
+	AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
+
+	wifiManager.addParameter (&channelParam);
+	wifiManager.addParameter (&gatewayParam);
+	wifiManager.addParameter (&netKeyParam);
+	wifiManager.addParameter (&sleepyParam);
+	wifiManager.setDebugOutput (true);
+	wifiManager.setBreakAfterConfig (true);
+	boolean result = wifiManager.startConfigPortal ("AutoConnectAP");
+	if (result) {
+		data->lastMessageCounter = 0;
+		data->channel = atoi (channel);
+		str2mac (gateway, data->gateway);
+		memcpy (data->networkKey, networkKey, KEY_LENGTH);
+		data->nodeRegisterStatus = UNREGISTERED;
+		int sleepyVal = atoi (sleepy);
+		if (sleepyVal > 0) {
+			data->sleepy = true;
+		}
+		data->nodeKeyValid = false;
+	}
+	return result;
 }
 
 void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_t *networkKey, bool useCounter, bool sleepy) {
@@ -124,9 +179,14 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 				DEBUG_DBG ("Flash data loaded");
 			} else { // Configuration empty. Enter config AP mode
 				DEBUG_DBG ("No flash data present. Starting Configuration AP");
-				// Start AP
-				if (true) {// AP config data OK
+				if (configWiFiManager (&rtcmem_data)) {// AP config data OK
 					DEBUG_DBG ("Got configuration. Storing");
+					if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+#if DEBUG_LEVEL >= VERBOSE
+						DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+						dumpRtcData (&rtcmem_data, this->gateway);
+#endif
+					}
 					// Store data on RTC and flash
 					ESP.restart ();
 				} else { // Configuration error

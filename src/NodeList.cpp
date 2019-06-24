@@ -10,14 +10,14 @@
 
 void Node::setEncryptionKey (const uint8_t* key) {
     if (key) {
-        memcpy (this->key, key, KEYLENGTH);
+        memcpy (this->key, key, KEY_LENGTH);
     }
 }
 
 node_t Node::getNodeData () {
     node_t thisNode;
 
-    memcpy (thisNode.key, key, KEYLENGTH);
+    memcpy (thisNode.key, key, KEY_LENGTH);
     thisNode.keyValid = keyValid;
     thisNode.keyValidFrom = keyValidFrom;
     memcpy (thisNode.mac, mac, 6);
@@ -92,7 +92,7 @@ Node::Node (node_t nodeData) :
 
 void Node::reset () {
     memset (mac, 0, 6);
-    memset (key, 0, KEYLENGTH);
+    memset (key, 0, KEY_LENGTH);
     keyValid = false;
     lastMessageCounter = 0;
     keyValidFrom = 0;

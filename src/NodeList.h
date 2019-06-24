@@ -247,7 +247,7 @@ public:
     double packetsHour = 0;
 
 protected:
-#define KEYLENGTH 32
+//#define KEYLENGTH 32
     bool keyValid; ///< @brief Node shared key valid
     status_t status;
     uint16_t lastMessageCounter; ///< @brief Last message counter state for specific Node
@@ -255,7 +255,7 @@ protected:
     timer_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
     bool sleepyNode = true; ///< @brief Node sleepy definition
     uint8_t mac[6]; ///< @brief Node address
-    uint8_t key[KEYLENGTH]; ///< @brief Shared key
+    uint8_t key[KEY_LENGTH]; ///< @brief Shared key
     timer_t lastMessageTime; ///< @brief Node state
 
     friend class NodeList;
