@@ -88,7 +88,7 @@ typedef void (*onDisconnected_t)();
 class EnigmaIOTSensorClass
 {
 protected:
-    uint8_t gateway[6]; ///< @brief Gateway address to sent messages to
+    //uint8_t gateway[6]; ///< @brief Gateway address to sent messages to
     Node node; ///< @brief Sensor node abstraction to store context
     bool flashBlue = false; ///< @brief If true Tx LED will be flashed
     int8_t led = -1; ///< @brief IO Pin that corresponds to Tx LED. Default value disables LED. It is initialized with `setLed` method
@@ -105,7 +105,7 @@ protected:
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed
     uint8_t dataMessageSentLength = 0; ///< @brief Message length stored for use in case of message retransmission is needed
     sensorInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
-    uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
+    //uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer

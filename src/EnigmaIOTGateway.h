@@ -22,6 +22,8 @@
 #include <CRC32.h>
 #include <cstddef>
 #include <cstdint>
+#include <ESPAsyncWebServer.h>
+#include <ESPAsyncWiFiManager.h>
 
 /**
   * @brief Message code definition
@@ -202,6 +204,12 @@ class EnigmaIOTGatewayClass
       */
      void getStatus (u8 *mac_addr, u8 status);
 
+	 bool configWiFiManager ();
+
+	 bool loadFlashData ();
+
+	 bool saveFlashData ();
+
  public:
      /**
       * @brief Initalizes communication basic data and starts accepting node registration
@@ -209,7 +217,7 @@ class EnigmaIOTGatewayClass
       * @param networkKey Network key to protect shared key agreement
       * @param useDataCounter Indicates if a counter is going to be added to every message data to check message sequence. `true` by default
       */
-     void begin (Comms_halClass *comm, uint8_t *networkKey, bool useDataCounter = true);
+     void begin (Comms_halClass *comm, uint8_t *networkKey = NULL, bool useDataCounter = true);
 
      /**
       * @brief This method should be called periodically for instance inside `loop()` function.

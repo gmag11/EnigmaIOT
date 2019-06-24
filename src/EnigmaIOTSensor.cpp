@@ -69,13 +69,13 @@ bool EnigmaIOTSensorClass::loadRTCData () {
 		node.setNodeId (rtcmem_data.nodeId);
 		// setChannel (rtcmem_data.channel);
 		channel = rtcmem_data.channel;
-		memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
-		memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
+		//memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
+		//memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
 		node.setSleepy (rtcmem_data.sleepy);
 		node.setStatus (rtcmem_data.nodeRegisterStatus);
 		DEBUG_DBG ("Set %s mode", node.getSleepy () ? "sleepy" : "non sleepy");
 #if DEBUG_LEVEL >= VERBOSE
-		dumpRtcData (&rtcmem_data,gateway);
+		dumpRtcData (&rtcmem_data/*,gateway*/);
 #endif
 
 	}
@@ -94,11 +94,11 @@ bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t *data) {
 	char channel[4];
 	itoa ((int)(data->channel),channel,10);
 	DEBUG_DBG ("Channel: %s %d", channel, data->channel);
-	char gateway[18];
-	mac2str (data->gateway, gateway);
+	char gateway[18] = "BE:DD:C2:24:14:97";
+	//mac2str (data->gateway, gateway);
 	DEBUG_DBG ("Gateway Address: %s", gateway);
-	char networkKey[33] = "";
-	char sleepy[5] = "";
+	char networkKey[33] = "11111111112222222222333333333344";
+	char sleepy[5] = "10";
 
 	AsyncWiFiManager wifiManager (&server, &dns);
 	AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
@@ -111,15 +111,26 @@ bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t *data) {
 	wifiManager.addParameter (&netKeyParam);
 	wifiManager.addParameter (&sleepyParam);
 	wifiManager.setDebugOutput (true);
+	wifiManager.setConnectTimeout (30);
 	wifiManager.setBreakAfterConfig (true);
-	boolean result = wifiManager.startConfigPortal ("AutoConnectAP");
+	String apname = "EnigmaIoTSensor";
+	apname += ESP.getChipId ();
+
+	boolean result = wifiManager.startConfigPortal (apname.c_str());
 	if (result) {
+		DEBUG_DBG ("==== Config Portal result ====");
+		DEBUG_DBG ("Channel: %s", channelParam.getValue ());
+		DEBUG_DBG ("Gateway: %s", gatewayParam.getValue ());
+		DEBUG_DBG ("Network Key: %s", netKeyParam.getValue ());
+		DEBUG_DBG ("Sleppy time: %s", sleepyParam.getValue ());
+
 		data->lastMessageCounter = 0;
-		data->channel = atoi (channel);
-		str2mac (gateway, data->gateway);
-		memcpy (data->networkKey, networkKey, KEY_LENGTH);
+		data->channel = atoi (channelParam.getValue());
+		str2mac (gatewayParam.getValue(), data->gateway);
+		//memcpy (this->gateway, data->gateway, comm->getAddressLength ());
+		memcpy (data->networkKey, netKeyParam.getValue(), KEY_LENGTH);
 		data->nodeRegisterStatus = UNREGISTERED;
-		int sleepyVal = atoi (sleepy);
+		int sleepyVal = atoi (sleepyParam.getValue());
 		if (sleepyVal > 0) {
 			data->sleepy = true;
 		}
@@ -150,41 +161,42 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 	if (loadRTCData ()) { // If data present on RTC sensor has waked up or it is just configured, continue
 #if DEBUG_LEVEL >= DBG
 		char gwAddress[18];
-		DEBUG_DBG ("RTC data loaded. Gateway: %s", mac2str (this->gateway, gwAddress));
+		DEBUG_DBG ("RTC data loaded. Gateway: %s", mac2str (rtcmem_data.gateway, gwAddress));
 #endif
 		DEBUG_DBG ("Own address: %s", mac2str (node.getMacAddress (), gwAddress));
 	} else { // No RTC data, first boot or not configured
 		if (gateway && networkKey) { // If connection data has been passed to library
 			DEBUG_DBG ("EnigmaIot started with config data con begin() call");
-			memcpy (this->gateway, gateway, comm->getAddressLength ()); // setGateway
-			memcpy (rtcmem_data.gateway, gateway , comm->getAddressLength ());
-			memcpy (this->networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
+			//memcpy (this->gateway, gateway, comm->getAddressLength ()); // setGateway
+			memcpy (rtcmem_data.gateway, gateway , comm->getAddressLength ()); // setGateway
+			//memcpy (this->networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
 			memcpy (rtcmem_data.networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
 			rtcmem_data.nodeKeyValid = false;
 			rtcmem_data.channel = channel;
 			rtcmem_data.sleepy = sleepy;
-			rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 			rtcmem_data.nodeRegisterStatus = UNREGISTERED;
 			// Is this needed ????
-			if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
-#if DEBUG_LEVEL >= VERBOSE
-				DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
-				dumpRtcData (&rtcmem_data, this->gateway);
-#endif
-			}
+//			rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+//			if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+//#if DEBUG_LEVEL >= VERBOSE
+//				DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+//				dumpRtcData (&rtcmem_data/*, this->gateway*/);
+//#endif
+//			}
 
 		} else { // Try read from flash
 			if (loadFlashData ()) { // If data present on flash, read and continue
-				node.setStatus (rtcmem_data.nodeRegisterStatus); // ?????
+				node.setStatus (UNREGISTERED);
 				DEBUG_DBG ("Flash data loaded");
 			} else { // Configuration empty. Enter config AP mode
 				DEBUG_DBG ("No flash data present. Starting Configuration AP");
 				if (configWiFiManager (&rtcmem_data)) {// AP config data OK
 					DEBUG_DBG ("Got configuration. Storing");
+					rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 					if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
 #if DEBUG_LEVEL >= VERBOSE
 						DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
-						dumpRtcData (&rtcmem_data, this->gateway);
+						dumpRtcData (&rtcmem_data/*, this->gateway*/);
 #endif
 					}
 					// Store data on RTC and flash
@@ -198,7 +210,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 
 	}
 
-	comm->begin (this->gateway, channel);
+	comm->begin (rtcmem_data.gateway, channel);
 	comm->onDataRcvd (rx_cb);
 	comm->onDataSent (tx_cb);
 	if (!rtcmem_data.nodeKeyValid || (rtcmem_data.nodeRegisterStatus!=REGISTERED))
@@ -323,7 +335,7 @@ bool EnigmaIOTSensorClass::clientHello () {
 
     DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
 
-    CryptModule::networkEncrypt (clientHello_msg.iv, 3, networkKey, KEY_LENGTH);
+    CryptModule::networkEncrypt (clientHello_msg.iv, 3, rtcmem_data.networkKey, KEY_LENGTH);
 
     DEBUG_VERBOSE ("Netowrk encrypted Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN));
 
@@ -332,7 +344,7 @@ bool EnigmaIOTSensorClass::clientHello () {
 
     DEBUG_INFO (" -------> CLIENT HELLO");
 
-    return comm->send (gateway, (uint8_t*)&clientHello_msg, CHMSG_LEN) == 0;
+    return comm->send (rtcmem_data.gateway, (uint8_t*)&clientHello_msg, CHMSG_LEN) == 0;
 }
 
 
@@ -362,7 +374,7 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
 
     memcpy (&serverHello_msg, buf, count);
 
-    CryptModule::networkDecrypt (serverHello_msg.iv, 3, networkKey, KEY_LENGTH);
+    CryptModule::networkDecrypt (serverHello_msg.iv, 3, rtcmem_data.networkKey, KEY_LENGTH);
 
     DEBUG_VERBOSE ("Network decrypted Server Hello message: %s", printHexBuffer ((uint8_t *)&serverHello_msg, SHMSG_LEN));
 
@@ -408,7 +420,7 @@ bool EnigmaIOTSensorClass::processCipherFinished (const uint8_t mac[6], const ui
 
     memcpy (&cipherFinished_msg, buf, CFMSG_LEN);
 
-    CryptModule::networkDecrypt (cipherFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+    CryptModule::networkDecrypt (cipherFinished_msg.iv, 1, rtcmem_data.networkKey, KEY_LENGTH);
 
     DEBUG_VERBOSE ("Network decrypted Server Hello message: %s", printHexBuffer ((uint8_t *)&cipherFinished_msg, CFMSG_LEN));
 
@@ -484,12 +496,12 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
 
     DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&(keyExchangeFinished_msg), KEFMSG_LEN));
 
-    CryptModule::networkEncrypt (keyExchangeFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+    CryptModule::networkEncrypt (keyExchangeFinished_msg.iv, 1, rtcmem_data.networkKey, KEY_LENGTH);
 
     DEBUG_VERBOSE ("Network encrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t *)&keyExchangeFinished_msg, KEFMSG_LEN));
 
     DEBUG_INFO (" -------> KEY_EXCHANGE_FINISHED");
-    return comm->send (gateway, (uint8_t *)&(keyExchangeFinished_msg), KEFMSG_LEN) == 0;
+    return comm->send (rtcmem_data.gateway, (uint8_t *)&(keyExchangeFinished_msg), KEFMSG_LEN) == 0;
 }
 
 bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len, bool controlMessage) {
@@ -598,7 +610,7 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool co
 	}
 #if DEBUG_LEVEL >= VERBOSE
 	char macStr[18];
-	DEBUG_DBG ("Destination address: %s", mac2str (gateway, macStr));
+	DEBUG_DBG ("Destination address: %s", mac2str (rtcmem_data.gateway, macStr));
 #endif
 
     if (useCounter) {
@@ -611,7 +623,7 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool co
 		}
     }
 
-    return (comm->send (gateway, buffer, packet_length + CRC_LENGTH) == 0);
+    return (comm->send (rtcmem_data.gateway, buffer, packet_length + CRC_LENGTH) == 0);
 }
 
 bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len) {
@@ -716,7 +728,7 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
     }
 
 	// All downlink messages should come from gateway
-	if (memcmp (mac, gateway, comm->getAddressLength ()) != 0) {
+	if (memcmp (mac, rtcmem_data.gateway, comm->getAddressLength ()) != 0) {
 		DEBUG_ERROR ("Message comes not from gateway");
 		return;
 	}
