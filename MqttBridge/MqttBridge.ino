@@ -27,11 +27,11 @@
 //#define BRIDGE_DEBUG
 
 typedef struct {
-	char mqtt_server[40];
+	char mqtt_server[41];
 	int mqtt_port = 8883;
-	char mqtt_user[20];
-	char mqtt_pass[40];
-	char base_topic[20] = "enigmaiot";
+	char mqtt_user[21];
+	char mqtt_pass[41];
+	char base_topic[21] = "enigmaiot";
 } bridge_config_t;
 
 //const char* BASE_TOPIC = "enigmaiot";
@@ -136,18 +136,49 @@ void stopFlash () {
 	}
 }
 
-void configWiFiManager () {
+bool configWiFiManager () {
 	AsyncWebServer server (80);
 	DNSServer dns;
 
-	AsyncWiFiManager wifiManager (&server, &dns);
+	char port[10];
+	itoa (bridgeConfig.mqtt_port, port, 10);
+	//String (bridgeConfig.mqtt_port).toCharArray (port, 6);
 
-	boolean result = wifiManager.startConfigPortal ("EnigmaIoTMQTTBridge");
+	AsyncWiFiManager wifiManager (&server, &dns);
+	AsyncWiFiManagerParameter mqttServerParam ("mqttserver", "MQTT Server", bridgeConfig.mqtt_server, 41, "required type=\"text\" maxlength=40");
+	AsyncWiFiManagerParameter mqttPortParam ("mqttport", "MQTT Port", port, 6, "required type=\"number\" min=\"0\" max=\"65535\" step=\"1\"");
+	AsyncWiFiManagerParameter mqttUserParam ("mqttuser", "MQTT User", bridgeConfig.mqtt_user, 21, "required type=\"text\" maxlength=20");
+	AsyncWiFiManagerParameter mqttPassParam ("mqttpass", "MQTT Password", bridgeConfig.mqtt_pass, 41, "required type=\"text\" maxlength=40");
+	AsyncWiFiManagerParameter mqttBaseTopicParam ("mqtttopic", "MQTT Base Topic", bridgeConfig.base_topic, 21, "required type=\"text\" maxlength=20");
+
+	wifiManager.addParameter (&mqttServerParam);
+	wifiManager.addParameter (&mqttPortParam);
+	wifiManager.addParameter (&mqttUserParam);
+	wifiManager.addParameter (&mqttPassParam);
+	wifiManager.addParameter (&mqttBaseTopicParam);
+
+	wifiManager.setConnectTimeout (60);
+	String apname = "EnigmaIoTMQTTBridge" + String (ESP.getChipId (), 16);
+	boolean result = wifiManager.autoConnect (apname.c_str());
 
 	if (result) {
 		//DEBUG_DBG ("==== Config Portal result ====");
 		//DEBUG_DBG ("SSID: %s", wifiManager.);
+		memcpy (bridgeConfig.mqtt_server, mqttServerParam.getValue (), mqttServerParam.getValueLength ());
+		bridgeConfig.mqtt_port = atoi (mqttPortParam.getValue ());
+		memcpy (bridgeConfig.mqtt_user, mqttUserParam.getValue (), mqttUserParam.getValueLength ());
+		memcpy (bridgeConfig.mqtt_pass, mqttPassParam.getValue (), mqttPassParam.getValueLength ());
+		memcpy (bridgeConfig.base_topic, mqttBaseTopicParam.getValue (), mqttBaseTopicParam.getValueLength ());
 	}
+	return result;
+}
+
+bool loadBridgeConfig () {
+	return false;
+}
+
+bool saveBridgeConfig () {
+	return false;
 }
 
 void setup ()
@@ -157,13 +188,18 @@ void setup ()
 	pinMode (BUILTIN_LED, OUTPUT);
 	digitalWrite (BUILTIN_LED, HIGH);
 	startFlash (500);
-	configWiFiManager ();
-	WiFi.mode (WIFI_STA);
-	WiFi.begin (SSID, PASSWD);
-	while (WiFi.status () != WL_CONNECTED) {
-		delay (500);
-		Serial.print (".");
+	if (!loadBridgeConfig ()) {
+		if (configWiFiManager ()) {
+			if (!saveBridgeConfig ()) {
+			}
+		}
 	}
+	//WiFi.mode (WIFI_STA);
+	//WiFi.begin (SSID, PASSWD);
+	//while (WiFi.status () != WL_CONNECTED) {
+	//	delay (500);
+	//	Serial.print (".");
+	//}
 #ifdef SECURE_MQTT
 	randomSeed (micros ());
 	espClient.setTrustAnchors (&cert);
