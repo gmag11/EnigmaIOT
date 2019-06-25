@@ -108,6 +108,7 @@ void flashLed (void *led) {
 }
 
 void startFlash (int period) {
+	ets_timer_disarm (&ledTimer);
 	if (!ledFlashing) {
 		ledFlashing = true;
 		ets_timer_arm_new (&ledTimer, period, true, true);
