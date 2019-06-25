@@ -14,7 +14,10 @@
 #include <Arduino.h>
 #include <PubSubClient.h>
 #include <ESP8266WiFi.h>
+#include <ESPAsyncWebServer.h>
+#include <ESPAsyncWiFiManager.h>
 #include "bridge_config.h"
+
 
 #ifndef BRIDGE_CONFIG_H
 #define SSID "ssid"
@@ -23,10 +26,20 @@
 
 //#define BRIDGE_DEBUG
 
-const char* BASE_TOPIC = "enigmaiot";
+typedef struct {
+	char mqtt_server[40];
+	int mqtt_port = 8883;
+	char mqtt_user[20];
+	char mqtt_pass[40];
+	char base_topic[20] = "enigmaiot";
+} bridge_config_t;
+
+//const char* BASE_TOPIC = "enigmaiot";
 ETSTimer ledTimer;
 const int notifLed = BUILTIN_LED;
 boolean ledFlashing = false;
+
+bridge_config_t bridgeConfig;
 
 #ifdef SECURE_MQTT
 BearSSL::X509List cert (DSTrootCA);
@@ -39,7 +52,7 @@ PubSubClient client (espClient);
 void onDlData (const char* topic, byte* payload, unsigned int length) {
 	String topicStr (topic);
 
-	topicStr.replace (String (BASE_TOPIC), "");
+	topicStr.replace (String (bridgeConfig.base_topic), "");
 
 	Serial.printf ("*%s;", topicStr.c_str ());
 	for (unsigned int i = 0; i < length; i++) {
@@ -74,21 +87,21 @@ void reconnect () {
 		startFlash(500);
 		Serial.print ("Attempting MQTT connection...");
 		// Create a random client ID
-		String clientId = BASE_TOPIC + String (ESP.getChipId (), HEX);
-		String gwTopic = BASE_TOPIC + String ("/gateway/status");
+		String clientId = bridgeConfig.base_topic + String (ESP.getChipId (), HEX);
+		String gwTopic = bridgeConfig.base_topic + String ("/gateway/status");
 		// Attempt to connect
 #ifdef SECURE_MQTT
 		setClock ();
 #endif
-		if (client.connect (clientId.c_str (), MQTT_USER, MQTT_PASS, gwTopic.c_str (), 0, 1, "0", true)) {
+		if (client.connect (clientId.c_str (), bridgeConfig.mqtt_user, bridgeConfig.mqtt_pass, gwTopic.c_str (), 0, 1, "0", true)) {
 			Serial.println ("connected");
 			// Once connected, publish an announcement...
 			//String gwTopic = BASE_TOPIC + String("/gateway/hello");
 			client.publish (gwTopic.c_str (), "1");
 			// ... and resubscribe
-			String dlTopic = BASE_TOPIC + String ("/+/set/#");
+			String dlTopic = bridgeConfig.base_topic + String ("/+/set/#");
 			client.subscribe (dlTopic.c_str ());
-			dlTopic = BASE_TOPIC + String ("/+/get/#");
+			dlTopic = bridgeConfig.base_topic + String ("/+/get/#");
 			client.subscribe (dlTopic.c_str ());
 			client.setCallback (onDlData);
 			stopFlash ();
@@ -123,6 +136,20 @@ void stopFlash () {
 	}
 }
 
+void configWiFiManager () {
+	AsyncWebServer server (80);
+	DNSServer dns;
+
+	AsyncWiFiManager wifiManager (&server, &dns);
+
+	boolean result = wifiManager.startConfigPortal ("EnigmaIoTMQTTBridge");
+
+	if (result) {
+		//DEBUG_DBG ("==== Config Portal result ====");
+		//DEBUG_DBG ("SSID: %s", wifiManager.);
+	}
+}
+
 void setup ()
 {
 	Serial.begin (115200);
@@ -130,18 +157,18 @@ void setup ()
 	pinMode (BUILTIN_LED, OUTPUT);
 	digitalWrite (BUILTIN_LED, HIGH);
 	startFlash (500);
+	configWiFiManager ();
 	WiFi.mode (WIFI_STA);
 	WiFi.begin (SSID, PASSWD);
 	while (WiFi.status () != WL_CONNECTED) {
 		delay (500);
 		Serial.print (".");
 	}
-	//stopFlash ();
 #ifdef SECURE_MQTT
 	randomSeed (micros ());
 	espClient.setTrustAnchors (&cert);
 #endif
-	client.setServer (mqtt_server, mqtt_port);
+	client.setServer (bridgeConfig.mqtt_server, bridgeConfig.mqtt_port);
 
 }
 
@@ -177,7 +204,7 @@ void loop ()
 			Serial.println ("New message");
 #endif
 			int end = message.indexOf (';');
-			topic = BASE_TOPIC + message.substring (1, end);
+			topic = bridgeConfig.base_topic + message.substring (1, end);
 #ifdef BRIDGE_DEBUG
 			Serial.printf ("Topic: %s", topic.c_str ());
 #endif
