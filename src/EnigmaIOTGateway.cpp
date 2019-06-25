@@ -42,25 +42,29 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	AsyncWebServer server (80);
 	DNSServer dns;
 	char networkKey[33] = "";
+	char channel[4];
+	String (gwConfig.channel).toCharArray (channel, 4);
 
 	AsyncWiFiManager wifiManager (&server, &dns);
 	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"text\" maxlength=32");
+	AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
 
 	wifiManager.addParameter (&netKeyParam);
+	wifiManager.addParameter (&channelParam);
 	wifiManager.setDebugOutput (true);
 	wifiManager.setBreakAfterConfig (true);
 	boolean result = wifiManager.startConfigPortal ("EnigmaIoTGateway");
 	DEBUG_DBG ("==== Config Portal result ====");
 	DEBUG_DBG ("Network Key: %s", netKeyParam.getValue ());
+	DEBUG_DBG ("Channel: %s", channelParam.getValue ());
 	if (result) {
-		//if (netKeyParam.getValueLength () == KEY_LENGTH) {
 		uint8_t keySize = netKeyParam.getValueLength ();
 		if (netKeyParam.getValueLength () > KEY_LENGTH)
 			keySize = KEY_LENGTH;
 		memcpy (this->gwConfig.networkKey, netKeyParam.getValue (), keySize);
+		gwConfig.channel = atoi (channelParam.getValue ());
 		DEBUG_VERBOSE ("Raw network Key: %s", printHexBuffer(this->gwConfig.networkKey,KEY_LENGTH));
-		//}
-
+		DEBUG_VERBOSE ("WiFi ESP-NOW channel: %d", gwConfig.networkKey);
 	}
 
 	return result;
