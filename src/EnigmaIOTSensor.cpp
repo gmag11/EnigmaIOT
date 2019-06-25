@@ -7,6 +7,9 @@
   */
 
 #include "EnigmaIOTSensor.h"
+#include <FS.h>
+
+const char CONFIG_FILE[] = "/config.txt";
 
 void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
     this->led = led;
@@ -68,7 +71,7 @@ bool EnigmaIOTSensorClass::loadRTCData () {
 		node.setLastMessageTime ();
 		node.setNodeId (rtcmem_data.nodeId);
 		// setChannel (rtcmem_data.channel);
-		channel = rtcmem_data.channel;
+		//channel = rtcmem_data.channel;
 		//memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
 		//memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
 		node.setSleepy (rtcmem_data.sleepy);
@@ -84,7 +87,47 @@ bool EnigmaIOTSensorClass::loadRTCData () {
 }
 
 bool EnigmaIOTSensorClass::loadFlashData () {
+	//SPIFFS.remove (CONFIG_FILE); // Only for testing
+
+	if (SPIFFS.exists (CONFIG_FILE)) {
+		DEBUG_DBG ("Opening %s file", CONFIG_FILE);
+		File configFile = SPIFFS.open (CONFIG_FILE, "r");
+		if (configFile) {
+			DEBUG_DBG ("%s opened", CONFIG_FILE);
+			size_t size = configFile.size ();
+			if (size < sizeof(rtcmem_data)) {
+				DEBUG_WARN ("Config file is corrupted. Deleting");
+				SPIFFS.remove (CONFIG_FILE);
+				return false;
+			}
+			configFile.read ((uint8_t*)(&rtcmem_data), sizeof(rtcmem_data));
+			configFile.close ();
+			DEBUG_VERBOSE ("Configuration successfuly read: %s", printHexBuffer ((uint8_t*)&rtcmem_data, KEY_LENGTH));
+			return true;
+		}
+	}
+	else {
+		DEBUG_WARN ("%s do not exist", CONFIG_FILE);
+		return false;
+	}
+
 	return false;
+}
+
+bool EnigmaIOTSensorClass::saveFlashData () {
+	File configFile = SPIFFS.open (CONFIG_FILE, "w");
+	if (!configFile) {
+		DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
+		return false;
+	}
+	configFile.write ((uint8_t*)(&rtcmem_data), sizeof(rtcmem_data));
+	configFile.close ();
+	DEBUG_DBG ("Configuration saved to flash");
+#if DEBUG_LEVEL >= VERBOSE
+	dumpRtcData (&rtcmem_data/*,gateway*/);
+#endif
+
+	return true;
 }
 
 
@@ -97,7 +140,7 @@ bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t *data) {
 	char gateway[18] = "BE:DD:C2:24:14:97";
 	//mac2str (data->gateway, gateway);
 	DEBUG_DBG ("Gateway Address: %s", gateway);
-	char networkKey[33] = "11111111112222222222333333333344";
+	char networkKey[33] = "";
 	char sleepy[5] = "10";
 
 	AsyncWiFiManager wifiManager (&server, &dns);
@@ -128,13 +171,17 @@ bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t *data) {
 		data->channel = atoi (channelParam.getValue());
 		str2mac (gatewayParam.getValue(), data->gateway);
 		//memcpy (this->gateway, data->gateway, comm->getAddressLength ());
-		memcpy (data->networkKey, netKeyParam.getValue(), KEY_LENGTH);
+		uint8_t keySize = netKeyParam.getValueLength ();
+		if (netKeyParam.getValueLength () > KEY_LENGTH)
+			keySize = KEY_LENGTH;
+		memcpy (data->networkKey, netKeyParam.getValue(), keySize);
 		data->nodeRegisterStatus = UNREGISTERED;
 		int sleepyVal = atoi (sleepyParam.getValue());
 		if (sleepyVal > 0) {
 			data->sleepy = true;
 		}
 		data->nodeKeyValid = false;
+		data->crc32 = CRC32::calculate ((uint8_t*)(data->nodeKey), sizeof (rtcmem_data_t) - sizeof (uint32_t));
 	}
 	return result;
 }
@@ -156,8 +203,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 	if (wifi_get_macaddr (SOFTAP_IF, macAddress)) {
 		node.setMacAddress (macAddress);
 	}
-
-
+	
 	if (loadRTCData ()) { // If data present on RTC sensor has waked up or it is just configured, continue
 #if DEBUG_LEVEL >= DBG
 		char gwAddress[18];
@@ -172,7 +218,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 			//memcpy (this->networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
 			memcpy (rtcmem_data.networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
 			rtcmem_data.nodeKeyValid = false;
-			rtcmem_data.channel = channel;
+			//rtcmem_data.channel = channel;
 			rtcmem_data.sleepy = sleepy;
 			rtcmem_data.nodeRegisterStatus = UNREGISTERED;
 			// Is this needed ????
@@ -185,6 +231,10 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 //			}
 
 		} else { // Try read from flash
+			if (!SPIFFS.begin ()) {
+				DEBUG_ERROR ("Error mounting flash");
+				return;
+			}
 			if (loadFlashData ()) { // If data present on flash, read and continue
 				node.setStatus (UNREGISTERED);
 				DEBUG_DBG ("Flash data loaded");
@@ -199,7 +249,9 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 						dumpRtcData (&rtcmem_data/*, this->gateway*/);
 #endif
 					}
-					// Store data on RTC and flash
+					if (!saveFlashData ()) {
+						DEBUG_ERROR ("Error saving data on flash. Restarting");
+					}
 					ESP.restart ();
 				} else { // Configuration error
 					DEBUG_ERROR ("Configuration error. Restarting");
@@ -210,7 +262,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 
 	}
 
-	comm->begin (rtcmem_data.gateway, channel);
+	comm->begin (rtcmem_data.gateway, rtcmem_data.channel);
 	comm->onDataRcvd (rx_cb);
 	comm->onDataSent (tx_cb);
 	if (!rtcmem_data.nodeKeyValid || (rtcmem_data.nodeRegisterStatus!=REGISTERED))
@@ -507,6 +559,7 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
 bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len, bool controlMessage) {
     memcpy (dataMessageSent, data, len);
     dataMessageSentLength = len;
+	node.setLastMessageTime (); // Mark message time to start RX window start
 
     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
 		if (controlMessage) {

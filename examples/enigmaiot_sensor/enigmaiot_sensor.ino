@@ -50,7 +50,7 @@ void setup () {
 	EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
 	EnigmaIOTSensor.onDataRx (processRxData);
 
-	EnigmaIOTSensor.begin (&Espnow_hal/*, gateway, (uint8_t*)NETWORK_KEY*/);
+	EnigmaIOTSensor.begin (&Espnow_hal);
 
 	// Read sensor data
 	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);

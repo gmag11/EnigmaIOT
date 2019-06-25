@@ -60,7 +60,7 @@ struct rtcmem_data_t {
     uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
     uint16_t lastMessageCounter; /**< Node last message counter */
 	uint16_t nodeId; /**< Node identification */
-	uint8_t channel; /**< WiFi channel used on ESP-NOW communication */
+	uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
 	uint8_t gateway[6]; /**< Gateway address */
 	uint8_t networkKey[KEY_LENGTH]; /**< Network key to encrypt dynamic key nogotiation */
 	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
@@ -93,7 +93,7 @@ protected:
     bool flashBlue = false; ///< @brief If true Tx LED will be flashed
     int8_t led = -1; ///< @brief IO Pin that corresponds to Tx LED. Default value disables LED. It is initialized with `setLed` method
     unsigned int ledOnTime; ///< @brief Time that LED is On during flash. Initalized on `setLed`
-    uint8_t channel = 3; ///< @brief Comms channel to transmit on
+    //uint8_t channel = 3; ///< @brief Comms channel to transmit on
     Comms_halClass *comm; ///< @brief Comms abstraction layer
     onSensorDataRx_t notifyData; ///< @brief Callback that will be called on every message reception
     onConnected_t notifyConnection; ///< @brief Callback that will be called anytime a new node is registered
@@ -119,6 +119,8 @@ protected:
 	bool loadRTCData ();
 
 	bool loadFlashData ();
+
+	bool saveFlashData ();
 
 	bool configWiFiManager (rtcmem_data_t* data);
 

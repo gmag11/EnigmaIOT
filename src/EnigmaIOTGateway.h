@@ -74,7 +74,8 @@ class EnigmaIOTGatewayClass
      bool flashRx = false; ///< @brief `true` if Rx LED should flash
      node_t node; ///< @brief temporary store to keep node data while processing a message
      NodeList nodelist; ///< @brief Node database that keeps status and shared keys
-     Comms_halClass *comm; ///< @brief Instance of physical communication layer.
+     Comms_halClass *comm; ///< @brief Instance of physical communication layer
+	 uint8_t channel = DEFAULT_CHANNEL; ///< @brief Channel used for communications
      int8_t txled = -1; ///< @brief I/O pin to connect a led that flashes when gateway transmits data
      int8_t rxled = -1; ///< @brief I/O pin to connect a led that flashes when gateway receives data
      unsigned long txLedOnTime; ///< @brief Flash duration for Tx LED

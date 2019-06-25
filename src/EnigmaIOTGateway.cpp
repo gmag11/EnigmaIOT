@@ -136,7 +136,7 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 		}
 
 		//initWiFi ();
-		comm->begin (NULL, 0, COMM_GATEWAY);
+		comm->begin (NULL, channel, COMM_GATEWAY);
 		comm->onDataRcvd (rx_cb);
 		comm->onDataSent (tx_cb);
 	}
@@ -178,11 +178,10 @@ void EnigmaIOTGatewayClass::handle () {
 		digitalWrite (txled, HIGH);
 	}
 
-#define MAX_INACTIVITY 86400000U // 1 day
 	// Clean up dead nodes
 	for (int i = 0; i < NUM_NODES; i++) {
 		Node* node = nodelist.getNodeFromID (i);
-		if (node->isRegistered () && millis () - node->getLastMessageTime () > MAX_INACTIVITY) {
+		if (node->isRegistered () && millis () - node->getLastMessageTime () > MAX_NODE_INACTIVITY) {
 			// TODO. Trigger node expired event
 			node->reset ();
 		}
