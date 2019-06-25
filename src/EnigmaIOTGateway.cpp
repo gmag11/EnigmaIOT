@@ -57,8 +57,8 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 		uint8_t keySize = netKeyParam.getValueLength ();
 		if (netKeyParam.getValueLength () > KEY_LENGTH)
 			keySize = KEY_LENGTH;
-		memcpy (this->networkKey, netKeyParam.getValue (), keySize);
-		DEBUG_VERBOSE ("Raw network Key: %s", printHexBuffer(this->networkKey,KEY_LENGTH));
+		memcpy (this->gwConfig.networkKey, netKeyParam.getValue (), keySize);
+		DEBUG_VERBOSE ("Raw network Key: %s", printHexBuffer(this->gwConfig.networkKey,KEY_LENGTH));
 		//}
 
 	}
@@ -75,14 +75,14 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 		if (configFile) {
 			DEBUG_DBG ("%s opened", CONFIG_FILE);
 			size_t size = configFile.size ();
-			if (size < KEY_LENGTH) {
+			if (size < sizeof (gateway_config_t)) {
 				DEBUG_WARN ("Config file is corrupted. Deleting");
 				SPIFFS.remove (CONFIG_FILE);
 				return false;
 			}
-			configFile.read (networkKey, KEY_LENGTH);
+			configFile.read ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
 			configFile.close ();
-			DEBUG_VERBOSE ("Network Key successfuly read: %s", printHexBuffer (networkKey, KEY_LENGTH));
+			DEBUG_VERBOSE ("Gateway configuration successfuly read: %s", printHexBuffer ((uint8_t*)(&gwConfig), sizeof (gateway_config_t)));
 			return true;
 		}
 	}
@@ -100,9 +100,9 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 		DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
 		return false;
 	}
-	configFile.write (networkKey, KEY_LENGTH);
+	configFile.write ((uint8_t*)(&gwConfig), sizeof(gateway_config_t));
 	configFile.close ();
-	DEBUG_VERBOSE ("Network Key saved to flash: %s", printHexBuffer (networkKey, KEY_LENGTH));
+	DEBUG_VERBOSE ("Gateway configuration saved to flash: %s", printHexBuffer ((uint8_t*)(&gwConfig), sizeof (gateway_config_t)));
 	return true; 
 }
 
@@ -111,7 +111,7 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	this->useCounter = useDataCounter;
 
 	if (networkKey) {
-		memcpy (this->networkKey, networkKey, KEY_LENGTH);
+		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
 	}
 	else {
 		if (!SPIFFS.begin ()) {
@@ -136,7 +136,7 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 		}
 
 		//initWiFi ();
-		comm->begin (NULL, channel, COMM_GATEWAY);
+		comm->begin (NULL, gwConfig.channel, COMM_GATEWAY);
 		comm->onDataRcvd (rx_cb);
 		comm->onDataSent (tx_cb);
 	}
@@ -573,7 +573,7 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
 
 	memcpy (&keyExchangeFinished_msg, buf, KEFMSG_LEN);
 
-	CryptModule::networkDecrypt (keyExchangeFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+	CryptModule::networkDecrypt (keyExchangeFinished_msg.iv, 1, gwConfig.networkKey, KEY_LENGTH);
 
 	DEBUG_VERBOSE ("Netowrk decrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN));
 
@@ -655,7 +655,7 @@ bool EnigmaIOTGatewayClass::cipherFinished (Node* node) {
 
 	DEBUG_VERBOSE ("Encripted Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN));
 
-	CryptModule::networkEncrypt (cipherFinished_msg.iv, 1, networkKey, KEY_LENGTH);
+	CryptModule::networkEncrypt (cipherFinished_msg.iv, 1, gwConfig.networkKey, KEY_LENGTH);
 
 	DEBUG_VERBOSE ("Network encrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN));
 
@@ -720,7 +720,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 
 	memcpy (&clientHello_msg, buf, count);
 
-	CryptModule::networkDecrypt (clientHello_msg.iv, 3, networkKey, KEY_LENGTH);
+	CryptModule::networkDecrypt (clientHello_msg.iv, 3, gwConfig.networkKey, KEY_LENGTH);
 
 	DEBUG_VERBOSE ("Netowrk decrypted Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN));
 
@@ -792,7 +792,7 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 
 	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
 
-	CryptModule::networkEncrypt (serverHello_msg.iv, 3, networkKey, KEY_LENGTH);
+	CryptModule::networkEncrypt (serverHello_msg.iv, 3, gwConfig.networkKey, KEY_LENGTH);
 
 	DEBUG_VERBOSE ("Network encrypted Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
 

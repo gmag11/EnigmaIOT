@@ -62,6 +62,11 @@ typedef void (*onNewNode_t)(const uint8_t*);
 typedef void (*onNodeDisconnected_t)(const uint8_t*, gwInvalidateReason_t);
 #endif
 
+typedef struct {
+	uint8_t channel = DEFAULT_CHANNEL; ///< @brief Channel used for communications
+	uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
+} gateway_config_t;
+
 /**
   * @brief Main gateway class. Manages communication with nodes and sends data to upper layer
   *
@@ -75,7 +80,7 @@ class EnigmaIOTGatewayClass
      node_t node; ///< @brief temporary store to keep node data while processing a message
      NodeList nodelist; ///< @brief Node database that keeps status and shared keys
      Comms_halClass *comm; ///< @brief Instance of physical communication layer
-	 uint8_t channel = DEFAULT_CHANNEL; ///< @brief Channel used for communications
+	 //uint8_t channel = DEFAULT_CHANNEL; ///< @brief Channel used for communications
      int8_t txled = -1; ///< @brief I/O pin to connect a led that flashes when gateway transmits data
      int8_t rxled = -1; ///< @brief I/O pin to connect a led that flashes when gateway receives data
      unsigned long txLedOnTime; ///< @brief Flash duration for Tx LED
@@ -84,7 +89,8 @@ class EnigmaIOTGatewayClass
      onNewNode_t notifyNewNode; ///< @brief Callback function that will be invoked when a new node is connected
      onNodeDisconnected_t notifyNodeDisconnection; ///< @brief Callback function that will be invoked when a node gets disconnected
      bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
-     uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
+     //uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
+	 gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
      
      /**
       * @brief Build a **ServerHello** messange and send it to node
