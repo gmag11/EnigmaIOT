@@ -24,7 +24,7 @@
 #define PASSWD "passwd"
 #endif
 
-//#define BRIDGE_DEBUG
+#define BRIDGE_DEBUG
 
 typedef struct {
 	char mqtt_server[41];
@@ -40,6 +40,7 @@ const int notifLed = BUILTIN_LED;
 boolean ledFlashing = false;
 
 bridge_config_t bridgeConfig;
+const char CONFIG_FILE[] = "/config.txt";
 
 #ifdef SECURE_MQTT
 BearSSL::X509List cert (DSTrootCA);
@@ -162,8 +163,10 @@ bool configWiFiManager () {
 	boolean result = wifiManager.autoConnect (apname.c_str());
 
 	if (result) {
-		//DEBUG_DBG ("==== Config Portal result ====");
-		//DEBUG_DBG ("SSID: %s", wifiManager.);
+#ifdef BRIDGE_DEBUG
+		Serial.println ("==== Config Portal result ====");
+		Serial.printf ("SSID: %s\n", WiFi.SSID().c_str());
+#endif
 		memcpy (bridgeConfig.mqtt_server, mqttServerParam.getValue (), mqttServerParam.getValueLength ());
 		bridgeConfig.mqtt_port = atoi (mqttPortParam.getValue ());
 		memcpy (bridgeConfig.mqtt_user, mqttUserParam.getValue (), mqttUserParam.getValueLength ());
@@ -174,11 +177,57 @@ bool configWiFiManager () {
 }
 
 bool loadBridgeConfig () {
+	//SPIFFS.remove (CONFIG_FILE); // Only for testing
+
+	if (SPIFFS.exists (CONFIG_FILE)) {
+#ifdef BRIDGE_DEBUG
+		Serial.printf ("Opening %s file\n", CONFIG_FILE);
+#endif
+		File configFile = SPIFFS.open (CONFIG_FILE, "r");
+		if (configFile) {
+#ifdef BRIDGE_DEBUG
+			Serial.printf ("%s opened\n", CONFIG_FILE);
+#endif
+			size_t size = configFile.size ();
+			if (size < sizeof (bridge_config_t)) {
+#ifdef BRIDGE_DEBUG
+				Serial.println ("Config file is corrupted. Deleting");
+#endif
+				SPIFFS.remove (CONFIG_FILE);
+				return false;
+			}
+			configFile.read ((uint8_t*)(&bridgeConfig), sizeof (bridge_config_t));
+			configFile.close ();
+#ifdef BRIDGE_DEBUG
+			Serial.println ("Gateway configuration successfuly read");
+#endif
+			return true;
+		}
+	}
+	else {
+#ifdef BRIDGE_DEBUG
+		Serial.printf ("%s do not exist\n", CONFIG_FILE);
+#endif
+		return false;
+	}
+
 	return false;
 }
 
 bool saveBridgeConfig () {
-	return false;
+	File configFile = SPIFFS.open (CONFIG_FILE, "w");
+	if (!configFile) {
+#ifdef BRIDGE_DEBUG
+		Serial.printf ("Failed to open config file %s for writing\n", CONFIG_FILE);
+#endif
+		return false;
+	}
+	configFile.write ((uint8_t*)(&bridgeConfig), sizeof (bridge_config_t));
+	configFile.close ();
+#ifdef BRIDGE_DEBUG
+	Serial.println ("Gateway configuration saved to flash");
+#endif
+	return true;
 }
 
 void setup ()
@@ -191,6 +240,7 @@ void setup ()
 	if (!loadBridgeConfig ()) {
 		if (configWiFiManager ()) {
 			if (!saveBridgeConfig ()) {
+				ESP.reset ();
 			}
 		}
 	}
