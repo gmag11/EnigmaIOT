@@ -7,7 +7,9 @@
   */
 
 #include "EnigmaIOTGateway.h"
+#include <FS.h>
 
+const char CONFIG_FILE[] = "/config.txt";
 
 void EnigmaIOTGatewayClass::setTxLed (uint8_t led, time_t onTime) {
 	this->txled = led;
@@ -48,11 +50,16 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	wifiManager.setDebugOutput (true);
 	wifiManager.setBreakAfterConfig (true);
 	boolean result = wifiManager.startConfigPortal ("EnigmaIoTGateway");
-
+	DEBUG_DBG ("==== Config Portal result ====");
+	DEBUG_DBG ("Network Key: %s", netKeyParam.getValue ());
 	if (result) {
-		if (netKeyParam.getValueLength () == KEY_LENGTH) {
-			memcpy (this->networkKey, netKeyParam.getValue (), KEY_LENGTH);
-		}
+		//if (netKeyParam.getValueLength () == KEY_LENGTH) {
+		uint8_t keySize = netKeyParam.getValueLength ();
+		if (netKeyParam.getValueLength () > KEY_LENGTH)
+			keySize = KEY_LENGTH;
+		memcpy (this->networkKey, netKeyParam.getValue (), keySize);
+		DEBUG_VERBOSE ("Raw network Key: %s", printHexBuffer(this->networkKey,KEY_LENGTH));
+		//}
 
 	}
 
@@ -60,11 +67,43 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 }
 
 bool EnigmaIOTGatewayClass::loadFlashData () {
-	return false; // TODO
+	//SPIFFS.remove (CONFIG_FILE); // Only for testing
+
+	if (SPIFFS.exists (CONFIG_FILE)) {
+		DEBUG_DBG ("Opening %s file", CONFIG_FILE);
+		File configFile = SPIFFS.open (CONFIG_FILE, "r");
+		if (configFile) {
+			DEBUG_DBG ("%s opened", CONFIG_FILE);
+			size_t size = configFile.size ();
+			if (size < KEY_LENGTH) {
+				DEBUG_WARN ("Config file is corrupted. Deleting");
+				SPIFFS.remove (CONFIG_FILE);
+				return false;
+			}
+			configFile.read (networkKey, KEY_LENGTH);
+			configFile.close ();
+			DEBUG_VERBOSE ("Network Key successfuly read: %s", printHexBuffer (networkKey, KEY_LENGTH));
+			return true;
+		}
+	}
+	else {
+		DEBUG_WARN ("%s do not exist", CONFIG_FILE);
+		return false;
+	}
+
+	return false; 
 }
 
 bool EnigmaIOTGatewayClass::saveFlashData () {
-	return false; // TODO
+	File configFile = SPIFFS.open (CONFIG_FILE, "w");
+	if (!configFile) {
+		DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
+		return false;
+	}
+	configFile.write (networkKey, KEY_LENGTH);
+	configFile.close ();
+	DEBUG_VERBOSE ("Network Key saved to flash: %s", printHexBuffer (networkKey, KEY_LENGTH));
+	return true; 
 }
 
 void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bool useDataCounter) {
@@ -75,6 +114,10 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 		memcpy (this->networkKey, networkKey, KEY_LENGTH);
 	}
 	else {
+		if (!SPIFFS.begin ()) {
+			DEBUG_ERROR ("Error mounting flash");
+			return;
+		}
 		if (!loadFlashData ()) { // Load from flash
 			if (configWiFiManager ()) {
 				DEBUG_DBG ("Got configuration. Storing");
