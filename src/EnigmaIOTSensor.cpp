@@ -156,8 +156,7 @@ bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t *data) {
 	wifiManager.setDebugOutput (true);
 	wifiManager.setConnectTimeout (30);
 	wifiManager.setBreakAfterConfig (true);
-	String apname = "EnigmaIoTSensor";
-	apname += ESP.getChipId ();
+	String apname = "EnigmaIoTSensor"+String(ESP.getChipId (),16);
 
 	boolean result = wifiManager.startConfigPortal (apname.c_str());
 	if (result) {
