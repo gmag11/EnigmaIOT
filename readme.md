@@ -51,7 +51,11 @@ Notice that network key used to implement this feature is stored on flash. ESP82
 - [x] Selectable crypto algorhithm
 - [x] Node and Gateway do store shared keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on
 - [x] Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message
-- [x] Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place, and it is the one currently implemented, but SPIFFS or EEPROM would be possible. **Under test**
+- [x] Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place, and it is the one currently implemented, but SPIFFS or EEPROM would be possible.
+- [x] Initial configuration over WiFi portal on each device
+- [ ] Node configuration on service using control downlink commands (**in depvelopment**)
+- [ ] OTA over WiFi
+- [ ] OTA over MQTT/ESP-NOW (**under study**)
 
 ## Design
 
@@ -197,14 +201,58 @@ In any case you can use your own format or even raw unencoded data. Take care of
 
 ## Output data from gateway
 
+### Uplink messages
+
 A user may program their own output format modifying gateway example program. For my use case gateway outputs MQTT messages in this format:
 ```
-<configurable prefix>/<node address>/sensordata/<json data>
+<configurable prefix>/<node address>/sensordata <json data>
 ```
 A prefix is configured on gateway to allow several sensor networks to coexist in the same subnet. After that address and data are sent.
 
 After every received message, gateway detects if any packet has been lost before and reports it using MQTT message using this format:
 ```
-<configurable prefix>/<node address>/status/{"per":<packet error rate>,"lostmessages":<Number of lost messages>,"totalmessages":<Total number of messages>,"packetshour":<Packet rate>}
+<configurable prefix>/<node address>/status {"per":<packet error rate>,"lostmessages":<Number of lost messages>,"totalmessages":<Total number of messages>,"packetshour":<Packet rate>}
 ```
 If ESP-NOW is used for node communication, ESP8266 cannot use WiFi in a reliable way. That's why in this case gateway will be formed by two ESP8266 linked by serial port. First one will output MQTT data in form of ascii strings and second one will forward them to MQTT broker.
+
+### Downlink messages
+
+EnigmaIoT allows sending messages from gateway to nodes. In my implementation I use MQTT to trigger downlink messages too.
+
+To make it simpler, downlink messages use the same estructure than uplink.
+```
+<configurable prefix>/<node address>/<command> <data>
+```
+Node address means destination node address. Configurable prefix is the same used for uplink communication.
+
+Commands are developed by user, but some are reserved for control commands. An uplink message could be like this
+
+```
+enigmaiot/12:34:56:78:90:12/light ON
+```
+
+### Control messages
+
+Control messages are intended to set node specific settings, like sleep time, channel, trigger OTA update, etc. They are not passed to the main sketch but gateway treat them as normal downlink messages.
+
+Normally control commands trigger a response as an uplink message.
+
+This is the list of currently implemented control commands
+
+| Command | Response |
+| ------- | -------- |
+| `<configurable prefix>/<node address>/get/version` | `<configurable prefix>/<node address>/version <version>` |
+
+
+## External libraries
+
+- CRC32 -- https://github.com/bakercp/CRC32
+- ESPAsyncWebServer -- https://github.com/me-no-dev/ESPAsyncWebServer
+- ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager
+- Arduino Crypto Library -- https://github.com/rweather/arduinolibs
+  - This one needs a modification in order to run successfuly on ESP8266 Arduino core > 2.5.x. You have to change line 30 on `libraries/Crypto/BigNumberUtil.h` from `#if defined (__AVR__) || defined(ESP8266)` to `#if defined (__AVR__)`. Without this code will crash.
+  - There are some objects that cause conflicts if you are using windows due to capitalisation. Files `SHA1.cpp` and `SHA1.h` have to be deleted from `libraries/CryptoLegacy/src`
+- PubSubClient -- https://github.com/knolleary/pubsubclient
+- CayenneLPP -- https://github.com/sabas1080/CayenneLPP
+- CayenneLPPDec -- https://github.com/gmag11/CayenneLPPdec
+- ArduinoJSON 6 -- https://github.com/bblanchon/ArduinoJson
