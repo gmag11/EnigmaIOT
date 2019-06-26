@@ -18,11 +18,7 @@
 #include <ESPAsyncWiFiManager.h>
 #include "bridge_config.h"
 
-
-#ifndef BRIDGE_CONFIG_H
-#define SSID "ssid"
-#define PASSWD "passwd"
-#endif
+#define DEFAULT_BASE_TOPIC "enigmaiot"
 
 #define BRIDGE_DEBUG
 
@@ -31,10 +27,9 @@ typedef struct {
 	int mqtt_port = 8883;
 	char mqtt_user[21];
 	char mqtt_pass[41];
-	char base_topic[21] = "enigmaiot";
+	char base_topic[21] = DEFAULT_BASE_TOPIC;
 } bridge_config_t;
 
-//const char* BASE_TOPIC = "enigmaiot";
 ETSTimer ledTimer;
 const int notifLed = BUILTIN_LED;
 boolean ledFlashing = false;
