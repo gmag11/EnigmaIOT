@@ -41,6 +41,7 @@ boolean ledFlashing = false;
 
 bridge_config_t bridgeConfig;
 const char CONFIG_FILE[] = "/config.txt";
+bool shouldSaveConfig = false;
 
 #ifdef SECURE_MQTT
 BearSSL::X509List cert (DSTrootCA);
@@ -137,6 +138,14 @@ void stopFlash () {
 	}
 }
 
+void saveConfigCallback () {
+	shouldSaveConfig = true;
+#ifdef BRIDGE_DEBUG
+	Serial.println ("Should save configuration");
+#endif
+
+}
+
 bool configWiFiManager () {
 	AsyncWebServer server (80);
 	DNSServer dns;
@@ -158,11 +167,16 @@ bool configWiFiManager () {
 	wifiManager.addParameter (&mqttPassParam);
 	wifiManager.addParameter (&mqttBaseTopicParam);
 
-	wifiManager.setConnectTimeout (60);
+	wifiManager.setSaveConfigCallback (saveConfigCallback);
+	wifiManager.setConnectTimeout (30);
+	wifiManager.setConfigPortalTimeout (300);
+#ifndef BRIDGE_DEBUG
+	wifiManager.setDebugOutput (false);
+#endif
 	String apname = "EnigmaIoTMQTTBridge" + String (ESP.getChipId (), 16);
 	boolean result = wifiManager.autoConnect (apname.c_str());
 
-	if (result) {
+	if (shouldSaveConfig) {
 #ifdef BRIDGE_DEBUG
 		Serial.println ("==== Config Portal result ====");
 		Serial.printf ("SSID: %s\n", WiFi.SSID().c_str());
@@ -226,7 +240,7 @@ bool saveBridgeConfig () {
 	configFile.close ();
 #ifdef BRIDGE_DEBUG
 	Serial.println ("Gateway configuration saved to flash");
-#endif
+#endif 
 	return true;
 }
 
@@ -237,13 +251,38 @@ void setup ()
 	pinMode (BUILTIN_LED, OUTPUT);
 	digitalWrite (BUILTIN_LED, HIGH);
 	startFlash (500);
+	if (!SPIFFS.begin ()) {
+#ifdef BRIDGE_DEBUG
+		Serial.println ("Error starting filesystem. Formatting.");
+#endif
+		SPIFFS.format ();
+		delay (5000);
+		ESP.reset ();
+	}
 	if (!loadBridgeConfig ()) {
-		if (configWiFiManager ()) {
-			if (!saveBridgeConfig ()) {
-				ESP.reset ();
-			}
+#ifdef BRIDGE_DEBUG
+		Serial.println ("Cannot load configuration");
+#endif
+	}
+	if (!configWiFiManager ()) {
+#ifdef BRIDGE_DEBUG
+		Serial.println ("Error connecting to WiFi");
+#endif
+		delay (2000);
+		ESP.reset ();
+	}
+	if (shouldSaveConfig) {
+		if (!saveBridgeConfig ()) {
+#ifdef BRIDGE_DEBUG
+			Serial.println ("Error writting filesystem. Formatting.");
+#endif
+			SPIFFS.format ();
+			delay (5000);
+
+			ESP.reset ();
 		}
 	}
+	
 	//WiFi.mode (WIFI_STA);
 	//WiFi.begin (SSID, PASSWD);
 	//while (WiFi.status () != WL_CONNECTED) {
