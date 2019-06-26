@@ -102,7 +102,7 @@ void loop () {
 	while (Serial.available () != 0) {
 		message = Serial.readStringUntil ('\n');
 		message.trim ();
-		if (message[0] == '*') {
+		if (message[0] == '%') {
 			onSerial (message);
 		}
 	}

@@ -56,7 +56,7 @@ void onDlData (const char* topic, byte* payload, unsigned int length) {
 
 	topicStr.replace (String (bridgeConfig.base_topic), "");
 
-	Serial.printf ("*%s;", topicStr.c_str ());
+	Serial.printf ("%%%s;", topicStr.c_str ());
 	for (unsigned int i = 0; i < length; i++) {
 		Serial.print ((char)(payload[i]));
 	}
