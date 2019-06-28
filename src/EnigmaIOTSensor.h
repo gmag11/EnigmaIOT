@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTSensor.h
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
@@ -62,7 +62,7 @@ struct rtcmem_data_t {
 	uint16_t nodeId; /**< Node identification */
 	uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
 	uint8_t gateway[6]; /**< Gateway address */
-	uint8_t networkKey[KEY_LENGTH]; /**< Network key to encrypt dynamic key nogotiation */
+	uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
 	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
 	bool sleepy; /**< Sleepy node */
 	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
@@ -88,12 +88,10 @@ typedef void (*onDisconnected_t)();
 class EnigmaIOTSensorClass
 {
 protected:
-    //uint8_t gateway[6]; ///< @brief Gateway address to sent messages to
     Node node; ///< @brief Sensor node abstraction to store context
     bool flashBlue = false; ///< @brief If true Tx LED will be flashed
     int8_t led = -1; ///< @brief IO Pin that corresponds to Tx LED. Default value disables LED. It is initialized with `setLed` method
     unsigned int ledOnTime; ///< @brief Time that LED is On during flash. Initalized on `setLed`
-    //uint8_t channel = 3; ///< @brief Comms channel to transmit on
     Comms_halClass *comm; ///< @brief Comms abstraction layer
     onSensorDataRx_t notifyData; ///< @brief Callback that will be called on every message reception
     onConnected_t notifyConnection; ///< @brief Callback that will be called anytime a new node is registered
@@ -105,7 +103,6 @@ protected:
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed
     uint8_t dataMessageSentLength = 0; ///< @brief Message length stored for use in case of message retransmission is needed
     sensorInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
-    //uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -116,12 +113,28 @@ protected:
       */
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
 	
+	/**
+   * @brief Loads configuration from RTC data. Uses a CRC to check data integrity
+   * @return Returns `true` if data is valid. `false` otherwise
+   */
 	bool loadRTCData ();
 
+	/**
+    * @brief Loads configuration from flash memory
+    * @return Returns `true` if data was read successfuly. `false` otherwise
+    */
 	bool loadFlashData ();
 
+	/**
+	* @brief Saves configuration to flash memory
+	* @return Returns `true` if data could be written successfuly. `false` otherwise
+	*/
 	bool saveFlashData ();
 
+	/**
+	* @brief Starts configuration AP and web server and gets settings from it
+	* @return Returns `true` if data was been correctly configured. `false` otherwise
+	*/
 	bool configWiFiManager (rtcmem_data_t* data);
 
     /**
@@ -170,6 +183,7 @@ protected:
       * @brief Builds, encrypts and sends a **Data** message.
       * @param data Buffer to store payload to be sent
       * @param len Length of payload data
+	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
       * @return Returns `true` if message could be correcly sent
       */
     bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false);
@@ -221,12 +235,19 @@ protected:
 	/**
 	  * @brief Processes internal sensor commands like
 	  * version information, OTA, settings tuning, etc
-	  * @param mac_addr Address of message sender
+	  * @param mac Address of message sender
 	  * @param buf Message payload
 	  * @param len Payload length
 	  */
 	bool checkControlCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
+	/**
+	  * @brief Initiades data transmission distinguissing if it is payload or control data.
+	  * @param data Buffer to store payload to be sent
+	  * @param len Length of payload data
+	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
+	  * @return Returns `true` if message could be correcly sent
+	  */
 	bool sendData (const uint8_t* data, size_t len, bool controlMessage);
 
 public:

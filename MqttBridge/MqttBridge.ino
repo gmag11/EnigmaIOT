@@ -1,7 +1,7 @@
 /**
   * @file MqttBridge.ino
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief Bridge for EnigmaIoT system to forward data from serial to MQTT broker
   *
@@ -278,12 +278,6 @@ void setup ()
 		}
 	}
 	
-	//WiFi.mode (WIFI_STA);
-	//WiFi.begin (SSID, PASSWD);
-	//while (WiFi.status () != WL_CONNECTED) {
-	//	delay (500);
-	//	Serial.print (".");
-	//}
 #ifdef SECURE_MQTT
 	randomSeed (micros ());
 	espClient.setTrustAnchors (&cert);

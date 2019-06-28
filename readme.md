@@ -243,6 +243,7 @@ This is the list of currently implemented control commands
 | ------- | -------- |
 | `<configurable prefix>/<node address>/get/version` | `<configurable prefix>/<node address>/version <version>` |
 
+For instance, publishing `enigmaiot/12:34:56:78:90:12/get/version` will produce `enigmaiot/12:34:56:78:90:12/version 0.2.0`.
 
 ## External libraries
 
@@ -250,8 +251,8 @@ This is the list of currently implemented control commands
 - ESPAsyncWebServer -- https://github.com/me-no-dev/ESPAsyncWebServer
 - ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager
 - Arduino Crypto Library -- https://github.com/rweather/arduinolibs
-  - This one needs a modification in order to run successfuly on ESP8266 Arduino core > 2.5.x. You have to change line 30 on `libraries/Crypto/BigNumberUtil.h` from `#if defined (__AVR__) || defined(ESP8266)` to `#if defined (__AVR__)`. Without this code will crash.
-  - There are some objects that cause conflicts if you are using windows due to capitalisation. Files `SHA1.cpp` and `SHA1.h` have to be deleted from `libraries/CryptoLegacy/src`
+  - This one needs a modification in order to run successfuly on ESP8266 Arduino core > 2.5.x. **You have to change line 30** on `Crypto/BigNumberUtil.h` from `#if defined (__AVR__) || defined(ESP8266)` to `#if defined (__AVR__)`. **Without this, code will crash**.
+  - There are some objects that cause conflicts if you are using windows due to capitalisation. Files `SHA1.cpp` and `SHA1.h` **have to be deleted** from `CryptoLegacy/src`
 - PubSubClient -- https://github.com/knolleary/pubsubclient
 - CayenneLPP -- https://github.com/sabas1080/CayenneLPP
 - CayenneLPPDec -- https://github.com/gmag11/CayenneLPPdec

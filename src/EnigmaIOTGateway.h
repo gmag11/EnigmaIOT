@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGateway.h
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief Library to build a gateway for EnigmaIoT system
   */
@@ -63,8 +63,8 @@ typedef void (*onNodeDisconnected_t)(const uint8_t*, gwInvalidateReason_t);
 #endif
 
 typedef struct {
-	uint8_t channel = DEFAULT_CHANNEL; ///< @brief Channel used for communications
-	uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
+	uint8_t channel = DEFAULT_CHANNEL; /**< Channel used for communications*/
+	uint8_t networkKey[KEY_LENGTH];   /**< Network key to protect key agreement*/
 } gateway_config_t;
 
 /**
@@ -80,7 +80,6 @@ class EnigmaIOTGatewayClass
      node_t node; ///< @brief temporary store to keep node data while processing a message
      NodeList nodelist; ///< @brief Node database that keeps status and shared keys
      Comms_halClass *comm; ///< @brief Instance of physical communication layer
-	 //uint8_t channel = DEFAULT_CHANNEL; ///< @brief Channel used for communications
      int8_t txled = -1; ///< @brief I/O pin to connect a led that flashes when gateway transmits data
      int8_t rxled = -1; ///< @brief I/O pin to connect a led that flashes when gateway receives data
      unsigned long txLedOnTime; ///< @brief Flash duration for Tx LED
@@ -89,7 +88,6 @@ class EnigmaIOTGatewayClass
      onNewNode_t notifyNewNode; ///< @brief Callback function that will be invoked when a new node is connected
      onNodeDisconnected_t notifyNodeDisconnection; ///< @brief Callback function that will be invoked when a node gets disconnected
      bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
-     //uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
 	 gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
      
      /**
@@ -211,10 +209,22 @@ class EnigmaIOTGatewayClass
       */
      void getStatus (u8 *mac_addr, u8 status);
 
+	 /**
+	 * @brief Starts configuration AP and web server and gets settings from it
+	 * @return Returns `true` if data was been correctly configured. `false` otherwise
+	 */
 	 bool configWiFiManager ();
 
+	 /**
+	 * @brief Loads configuration from flash memory
+	 * @return Returns `true` if data was read successfuly. `false` otherwise
+	 */
 	 bool loadFlashData ();
 
+	 /**
+	 * @brief Saves configuration to flash memory
+	 * @return Returns `true` if data could be written successfuly. `false` otherwise
+	 */
 	 bool saveFlashData ();
 
  public:

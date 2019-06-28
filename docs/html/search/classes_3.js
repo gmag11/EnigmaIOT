@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rtcmem_5fdata_5ft',['rtcmem_data_t',['../structrtcmem__data__t.html',1,'']]]
+  ['gateway_5fconfig_5ft',['gateway_config_t',['../structgateway__config__t.html',1,'']]]
 ];

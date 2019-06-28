@@ -1,7 +1,7 @@
 /**
-  * @file config.h
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @file EnigmaIoTconfig.h
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief Parameter configuration
   */
@@ -11,7 +11,7 @@
 
 // Global configuration
 #define MAX_MESSAGE_LENGTH 250
-static const char ENIGMAIOT_PROT_VERS[] = "0.0.1";
+static const char ENIGMAIOT_PROT_VERS[] = "0.2.0";
 static const uint8_t DEFAULT_CHANNEL = 3;
 
 // Gateway configuration
