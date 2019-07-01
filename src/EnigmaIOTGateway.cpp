@@ -8,6 +8,7 @@
 
 #include "EnigmaIOTGateway.h"
 #include <FS.h>
+#include "libb64/cdecode.h"
 
 const char CONFIG_FILE[] = "/config.txt";
 
@@ -25,8 +26,56 @@ void EnigmaIOTGatewayClass::setRxLed (uint8_t led, time_t onTime) {
 	digitalWrite (rxled, HIGH);
 }
 
+const void* memstr (const void* str, size_t str_size,
+	const char* target, size_t target_size) {
+
+	for (size_t i = 0; i != str_size - target_size; ++i) {
+		if (!memcmp (str + i, target, target_size)) {
+			return str + i;
+		}
+	}
+
+	return NULL;
+}
+
+bool EnigmaIOTGatewayClass::processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t *output) {
+	char* otaNumber = (char*)msg + 4;
+	uint8_t* otaData = (uint8_t*)memchr (msg, ',', msgLen) + 1;
+	size_t otaLen = msgLen - (otaData - msg);
+	size_t otaNumberLen = (uint8_t*)otaData - (uint8_t*)otaNumber - 1;
+	DEBUG_VERBOSE ("otaMsg = %p, otaNumber = %p, otaData = %p", msg, otaNumber, otaData);
+
+	char* number[6];
+	memset (number, 0, 6);
+	memcpy (number, otaNumber, otaNumberLen);
+
+	size_t decodedLen = base64_decode_chars ((char*)otaData, otaLen, (char*)output);
+
+	DEBUG_INFO ("OTA: %s otaLen %d, decodedLen %d", number, otaLen, decodedLen);
+
+	DEBUG_VERBOSE ("Decoded data: Len - %d -- %s", decodedLen, printHexBuffer(output, decodedLen));
+
+	return false;
+}
+
+
 bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len) {
 	Node* node = nodelist.getNodeFromMAC (mac);
+	uint8_t otaData[MAX_MESSAGE_LENGTH];
+
+	if (len < 0)
+		return false;
+
+	DEBUG_VERBOSE ("Downstream: %s", printHexBuffer (data, len));
+
+	uint8_t* otaMsg = (uint8_t *)memstr ((const void*)data, len, "ota;", 4);
+
+	if (otaMsg) {
+		if (!processOTAMessage (otaMsg, len, otaData))
+			return false;
+	}
+
+	DEBUG_INFO ("Send downstream");
 
 	if (node) {
 		return downstreamDataMessage (node, data, len);

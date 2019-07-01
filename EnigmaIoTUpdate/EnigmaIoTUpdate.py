@@ -9,11 +9,15 @@ import optparse
 
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
+    if rc == 0:
+        print("Connected with result code "+str(rc))
+        mqtt.Client.connected_flag = True
+    else:
+        print("Error connecting. Code ="+str(rc))
 
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    client.subscribe("ordenador/#")
+    #client.subscribe("")
 
 
 def on_message(client, userdata, msg):
@@ -69,7 +73,6 @@ def main():
     (options, args) = opt.parse_args()
 
     print(options)
-    print(args)
 
     topic = options.baseTopic+"/"+options.address+"/ota"
     topicmd5 = options.baseTopic+"/"+options.address+"/ota/md5"
@@ -93,14 +96,19 @@ def main():
         print(hash_md5.hexdigest())
         binary_file.close()
 
+    mqtt.Client.connected_flag = False
     client = mqtt.Client(mqttclientname, True)
-    client.username_pw_set(options.mqttUser, options.mqttPass)
+    client.username_pw_set(username=options.mqttUser, password=options.mqttPass)
     if options.mqttSecure:
         client.tls_set()
     client.on_connect = on_connect
     client.on_message = on_message
+    client.loop_start()
 
-    client.connect(options.mqttServer, options.mqttPort, 30)
+    client.connect(host=options.mqttServer, port=options.mqttPort)
+    while not client.connected_flag:  # wait in loop
+        print("In wait loop")
+        time.sleep(1)
 
     # Blocking call that processes network traffic, dispatches callbacks and
     # handles reconnecting.
@@ -112,8 +120,8 @@ def main():
     i = 0
     # for i in range(0, len(chunked_string), 1):
     for chunk in encoded_string:
-        client.loop()
-        time.sleep(0.025)
+        # client.loop()
+        time.sleep(0.03)
         # time.sleep(0.003125)
         client.publish(topic, str(i)+","+chunk)
         i = i + 1

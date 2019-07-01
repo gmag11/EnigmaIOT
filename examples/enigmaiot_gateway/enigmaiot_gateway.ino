@@ -48,9 +48,9 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, u
 void onSerial (String message) {
 	uint8_t addr[6];
 
-	DEBUG_INFO ("Downlink message: %s", message.c_str ());
+	DEBUG_VERBOSE ("Downlink message: %s", message.c_str ());
 	String addressStr = message.substring (message.indexOf ('/') + 1, message.indexOf ('/', 2));
-	DEBUG_INFO ("Address: %s", addressStr.c_str ());
+	DEBUG_INFO ("Downlink message from: %s", addressStr.c_str ());
 	if (!str2mac (addressStr.c_str (), addr)) {
 		DEBUG_ERROR ("Not a mac address");
 		return;
