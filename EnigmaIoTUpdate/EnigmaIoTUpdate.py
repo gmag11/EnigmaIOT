@@ -7,23 +7,37 @@ import optparse
 # EnigmaIoTUpdate -f <file.bin> -d <address> -t <basetopic> -u <mqttuser> -P <mqttpass> -s <mqttserver>
 #                       -p <mqttport> <-s>
 
+options = None
+sleepyNode = True
 
 def on_connect(client, userdata, flags, rc):
+    global options
+
     if rc == 0:
         print("Connected with result code "+str(rc))
         mqtt.Client.connected_flag = True
     else:
         print("Error connecting. Code ="+str(rc))
+        return
 
-    # Subscribing in on_connect() means that if we lose the connection and
-    # reconnect then subscriptions will be renewed.
-    #client.subscribe("")
+    sleepTopic = options.baseTopic+"/"+options.address+"/sleep/result"
+    client.subscribe(sleepTopic)
+    print("Subscribed")
 
 
 def on_message(client, userdata, msg):
+    global sleepyNode
+
     print(msg.topic+" "+str(msg.payload))
 
+    if msg.topic.find("/sleep/result") and msg.payload == b'0':
+        sleepyNode = False
+
+
 def main():
+    global options
+    global sleepyNode
+
     opt = optparse.OptionParser()
     opt.add_option("-f", "--file",
                    type="string",
@@ -93,7 +107,7 @@ def main():
         for chunk in iter(lambda: binary_file.read(4096), b""):
             hash_md5.update(chunk)
 
-        print(hash_md5.hexdigest())
+        # print(hash_md5.hexdigest())
         binary_file.close()
 
     mqtt.Client.connected_flag = False
@@ -103,28 +117,40 @@ def main():
         client.tls_set()
     client.on_connect = on_connect
     client.on_message = on_message
-    client.loop_start()
 
     client.connect(host=options.mqttServer, port=options.mqttPort)
     while not client.connected_flag:  # wait in loop
-        print("In wait loop")
+        print("Connecting to MQTT server")
+        client.loop()
         time.sleep(1)
 
-    # Blocking call that processes network traffic, dispatches callbacks and
-    # handles reconnecting.
-    # Other loop*() functions are available that give a threaded interface and a
-    # manual interface.
+    # client.loop_start()
+    sleeptopic = options.baseTopic+"/"+options.address+"/set/sleep"
+    client.publish(sleeptopic, "0")
 
+    while sleepyNode:
+        print("Waiting for non sleepy confirmation")
+        client.loop()
+        time.sleep(1)
+
+    print("Sending hash: "+hash_md5.hexdigest())
     client.publish(topicmd5, hash_md5.hexdigest())
 
     i = 0
     # for i in range(0, len(chunked_string), 1):
+    print("Sending file: "+options.filename)
     for chunk in encoded_string:
         # client.loop()
         time.sleep(0.03)
         # time.sleep(0.003125)
         client.publish(topic, str(i)+","+chunk)
         i = i + 1
+        if i % 2 == 0:
+            print(".", end='')
+        if i % 160 == 0:
+            print(" %.f%%" % (i/len(encoded_string)*100))
+
+    print ("100%")
 
 
 if __name__ == '__main__':
