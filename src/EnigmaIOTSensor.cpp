@@ -678,8 +678,8 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool co
     return (comm->send (rtcmem_data.gateway, buffer, packet_length + CRC_LENGTH) == 0);
 }
 
-bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len) {
-	DEBUG_DBG ("Version command received");
+bool EnigmaIOTSensorClass::processSleepCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len) {
+	DEBUG_DBG ("Sleep command received");
 	if (sendData ((uint8_t*)ENIGMAIOT_PROT_VERS, strlen (ENIGMAIOT_PROT_VERS), true)) {
 		DEBUG_DBG ("Version is %s", ENIGMAIOT_PROT_VERS);
 	}
@@ -689,16 +689,35 @@ bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint
 	return true;
 }
 
-bool EnigmaIOTSensorClass::checkControlCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len) {
-	if (strstr ((char*)buf, "get/version")) {
-		return processVersionCommand (mac, buf, len);
-	}  else if (strstr ((char*)buf, "set/sleeptime")) {
+bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	uint8_t buffer[MAX_MESSAGE_LENGTH];
+	uint8_t bufLength;
 
+	buffer[0] = control_message_type::VERSION_ANS;
+	memcpy (buffer + 1, (uint8_t*)ENIGMAIOT_PROT_VERS, strlen (ENIGMAIOT_PROT_VERS));
+	bufLength = strlen (ENIGMAIOT_PROT_VERS) + 1;
+	DEBUG_DBG ("Version command received");
+	if (sendData (buffer, bufLength, true)) {
+		DEBUG_DBG ("Version is %s", ENIGMAIOT_PROT_VERS);
+		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+		return true;
 	}
-	return false;
+	else {
+		DEBUG_WARN ("Error sending version response");
+		return false;
+	}
 }
 
-bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len) {
+	//memset (buffer, 0, MAX_MESSAGE_LENGTH);
+	DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
+	switch (data[0]){
+		case control_message_type::VERSION:
+			return processVersionCommand (mac, data, len);
+	}
+}
+
+bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count, bool control) {
     /*
     * -------------------------------------------------------------------------
     *| msgType (1) | IV (16) | length (2) | NodeId (2) | Data (....) | CRC (4) |
@@ -745,8 +764,12 @@ bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const ui
         return false;
     }
 
-	if (checkControlCommand (mac, &buf[data_idx], crc_idx - data_idx)) {
-		return true;
+	if (control) {
+		DEBUG_INFO ("Control command");
+		DEBUG_VERBOSE ("Data: %s", printHexBuffer (&buf[data_idx], crc_idx - data_idx));
+		return processControlCommand (mac, &buf[data_idx], crc_idx - data_idx);
+		//return true;
+		// TODO: process message
 	}
 
 	DEBUG_VERBOSE ("Sending data notification. Payload length: %d", crc_idx - data_idx);
@@ -858,8 +881,14 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
         if (processDownstreamData (mac, buf, count)) {
             DEBUG_INFO ("Downstream Data OK");
         }
-        break;
-    }
+		break;
+	case DOWNSTREAM_CTRL_DATA:
+		DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
+		if (processDownstreamData (mac, buf, count, true)) {
+			DEBUG_INFO ("Downstream Data OK");
+		}
+		break;
+	}
 }
 
 void EnigmaIOTSensorClass::getStatus (uint8_t *mac_addr, uint8_t status) {

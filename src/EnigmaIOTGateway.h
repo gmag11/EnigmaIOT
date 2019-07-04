@@ -54,11 +54,11 @@ enum gwInvalidateReason_t {
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, uint16_t lostMessages)> onGwDataRx_t;
+typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, uint16_t lostMessages, bool control)> onGwDataRx_t;
 typedef std::function<void (uint8_t* mac)> onNewNode_t;
 typedef std::function<void (uint8_t* mac, gwInvalidateReason_t reason)> onNodeDisconnected_t;
 #else
-typedef void (*onGwDataRx_t)(const uint8_t*, const uint8_t*, uint8_t, size_t);
+typedef void (*onGwDataRx_t)(const uint8_t* mac, const uint8_t* data, uint8_t len, uint16_t lostMessages, bool control);
 typedef void (*onNewNode_t)(const uint8_t*);
 typedef void (*onNodeDisconnected_t)(const uint8_t*, gwInvalidateReason_t);
 #endif

@@ -25,13 +25,27 @@
 #define SET_OTA "set/ota"
 #define OTA_ANS "result/ota"
 
+void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
+	switch (data[0]) {
+		case control_message_type::VERSION_ANS:
+			Serial.printf ("~/%s/%s;", macStr, GET_VERSION_ANS);
+			Serial.write (data + 1, length - 1);
+			Serial.println ();
+	}
+}
 
-void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, uint16_t lostMessages) {
+void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control) {
 	StaticJsonDocument<256> jsonBuffer;
 	JsonArray root = jsonBuffer.createNestedArray ();
 
 	char macstr[18];
 	mac2str (mac, macstr);
+
+	if (control) {
+		processRxControlData (macstr, buffer, length);
+		return;
+	}
+
 	//Serial.printf ("Data from %s --> %s\n", macstr, printHexBuffer (buffer, length));
 
 	CayenneLPPDec::ParseLPP (buffer, length, root);

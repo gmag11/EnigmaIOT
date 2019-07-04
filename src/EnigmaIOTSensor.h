@@ -32,7 +32,8 @@
 enum sensorMessageType {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
     DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
-	CONTROL_DATA = 0x03, /**< Internal ontrol message like OTA, settings configuration, etc */
+	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway. Used for OTA, settings configuration, etc */
+	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to sensor. Used for OTA, settings configuration, etc */
 	CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
@@ -188,14 +189,17 @@ protected:
       */
     bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false);
 
+	bool processControlCommand (const uint8_t mac[6], const uint8_t* data, size_t len);
+
     /**
       * @brief Processes downstream data from gateway
       * @param mac Gateway address
       * @param buf Buffer to store received payload
       * @param count Length of payload data
+	  * @param control Idicates if downstream message is user or control data. If true it is a control message
       * @return Returns `true` if message could be correcly decoded
       */
-    bool processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    bool processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count, bool control = false);
 
     /**
       * @brief Process every received message.
@@ -230,16 +234,9 @@ protected:
       */
     static void tx_cb (uint8_t *mac_addr, uint8_t status);
 
-	bool processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+	bool processSleepCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
-	/**
-	  * @brief Processes internal sensor commands like
-	  * version information, OTA, settings tuning, etc
-	  * @param mac Address of message sender
-	  * @param buf Message payload
-	  * @param len Payload length
-	  */
-	bool checkControlCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+	bool processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
 	/**
 	  * @brief Initiades data transmission distinguissing if it is payload or control data.

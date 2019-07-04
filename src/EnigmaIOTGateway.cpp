@@ -88,14 +88,17 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 			DEBUG_ERROR ("Error building get Version message");
 			return false;
 		}
-		DEBUG_VERBOSE ("Get Version: %s", printHexBuffer (downstreamData, dataLen));
+		DEBUG_VERBOSE ("Get Version. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
 	}
 
 	DEBUG_INFO ("Send downstream");
 
 	if (node) {
-		return downstreamDataMessage (node, data, len, controlData);
+		if (controlData)
+			return downstreamDataMessage (node, downstreamData, dataLen, controlData);
+		else
+			return downstreamDataMessage (node, data, len, controlData);
 	}
 	else {
 		char addr[18];
@@ -415,14 +418,20 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 		return false;
 	}
 
+	DEBUG_DBG ("Payload length: %d bytes\n", crc_idx - data_idx);
+	
+	if (notifyData) {
+		notifyData (mac, buf+data_idx, crc_idx - data_idx, 0, true);
+	}
+
+
 	// TODO: Process output according message type
 	// This is only a test
-	DEBUG_DBG ("Payload length: %d bytes\n", crc_idx - data_idx);
-	char macstr[18];
-	mac2str (mac, macstr);
-	Serial.printf ("~/%s/control/version;", macstr);
-	Serial.write ((uint8_t*) & (buf[data_idx]), crc_idx - data_idx);
-	Serial.println ();
+	//char macstr[18];
+	//mac2str (mac, macstr);
+	//Serial.printf ("~/%s/control/version;", macstr);
+	//Serial.write ((uint8_t*) & (buf[data_idx]), crc_idx - data_idx);
+	//Serial.println ();
 
 	return true;
 }
@@ -481,7 +490,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
 	}
 
 	if (notifyData) {
-		notifyData (mac, &buf[data_idx], crc_idx - data_idx, lostMessages);
+		notifyData (mac, &buf[data_idx], crc_idx - data_idx, lostMessages, false);
 	}
 
 	if (node->getSleepy ()) {
@@ -582,6 +591,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	//memcpy (counter_p, &counter, sizeof (uint16_t));
 
 	memcpy (data_p, data, len);
+	DEBUG_VERBOSE ("Data: %s", printHexBuffer(data_p,len));
 
 	uint16_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + len;
 
