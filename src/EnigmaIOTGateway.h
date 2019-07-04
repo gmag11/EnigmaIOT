@@ -30,8 +30,9 @@
   */
 enum gatewayMessageType_t {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
-    DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
-	CONTROL_DATA = 0x03, /**< Internal ontrol message like OTA, settings configuration, etc */
+    DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for user commands */
+	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway, settings configuration, etc */
+	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to sensor. Used for OTA, settings configuration, etc */
     CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */

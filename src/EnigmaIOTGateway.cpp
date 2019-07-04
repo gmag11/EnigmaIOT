@@ -95,7 +95,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 	DEBUG_INFO ("Send downstream");
 
 	if (node) {
-		return downstreamDataMessage (node, data, len);
+		return downstreamDataMessage (node, data, len, controlData);
 	}
 	else {
 		char addr[18];
@@ -558,7 +558,11 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 		return false;
 	}
 
-	*msgType_p = (uint8_t)DOWNSTREAM_DATA;
+	if (controlData == control_message_type::USERDATA) {
+		*msgType_p = (uint8_t)DOWNSTREAM_DATA;
+	} else {
+		*msgType_p = (uint8_t)DOWNSTREAM_CTRL_DATA;
+	}
 
 	CryptModule::random (iv_p, IV_LENGTH);
 
@@ -602,12 +606,18 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	DEBUG_VERBOSE ("Encrypted downlink message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
 
 	if (node->getSleepy ()) { // Queue message if node may be sleeping
-		DEBUG_VERBOSE ("Node is sleepy. Queing message");
-		memcpy (node->queuedMessage, buffer, packet_length + CRC_LENGTH);
-		//node->queuedMessage = buffer;
-		node->qMessageLength = packet_length + CRC_LENGTH;
-		node->qMessagePending = true;
-		return true;
+		if (controlData != control_message_type::OTA) {
+			DEBUG_VERBOSE ("Node is sleepy. Queing message");
+			memcpy (node->queuedMessage, buffer, packet_length + CRC_LENGTH);
+			//node->queuedMessage = buffer;
+			node->qMessageLength = packet_length + CRC_LENGTH;
+			node->qMessagePending = true;
+			return true;
+		}
+		else {
+			DEBUG_ERROR ("OTA is only possible with non sleepy nodes. Configure it accordingly first");
+			return false;
+		}
 	}
 	else {
 		DEBUG_INFO (" -------> DOWNLINK DATA");
