@@ -16,6 +16,16 @@
 #define BLUE_LED 2
 #define RED_LED 16
 
+// DOWNLINK MESSAGES
+#define GET_VERSION "get/version"
+#define GET_VERSION_ANS "result/version"
+#define GET_SLEEP "get/sleeptime"
+#define GET_SLEEP_ANS "result/sleeptime"
+#define SET_SLEEP "set/sleeptime"
+#define SET_OTA "set/ota"
+#define OTA_ANS "result/ota"
+
+
 void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, uint16_t lostMessages) {
 	StaticJsonDocument<256> jsonBuffer;
 	JsonArray root = jsonBuffer.createNestedArray ();
@@ -45,6 +55,22 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, u
 	//Serial.println ();
 }
 
+control_message_type_t checkMsgType (String data) {
+	if (data.indexOf (GET_VERSION) != -1) {
+		return control_message_type::VERSION;
+	}
+	if (data.indexOf (GET_SLEEP) != -1) {
+		return control_message_type::SLEEP_GET;
+	}
+	if (data.indexOf (SET_SLEEP) != -1) {
+		return control_message_type::SLEEP_SET;
+	}
+	if (data.indexOf (SET_OTA) != -1) {
+		return control_message_type::OTA;
+	}
+	return control_message_type::USERDATA;
+}
+
 void onSerial (String message) {
 	uint8_t addr[6];
 
@@ -58,8 +84,9 @@ void onSerial (String message) {
 	String dataStr = message.substring (message.indexOf ('/', 2) + 1);
 	dataStr.trim ();
 
-	uint8_t* data = (uint8_t*)dataStr.c_str ();
-	if (!EnigmaIOTGateway.sendDownstream (addr, data, dataStr.length ())) {
+	control_message_type_t msgType = checkMsgType (dataStr);
+	DEBUG_INFO ("Message type %d", msgType);
+	if (!EnigmaIOTGateway.sendDownstream (addr, (uint8_t*)dataStr.c_str (), dataStr.length (), msgType)) {
 		DEBUG_ERROR ("Error sending esp_now message to %s", addressStr.c_str ());
 	}
 	else {

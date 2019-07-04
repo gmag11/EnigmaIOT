@@ -58,21 +58,38 @@ bool EnigmaIOTGatewayClass::processOTAMessage (uint8_t* msg, size_t msgLen, uint
 	return false;
 }
 
+bool buildGetVersion (uint8_t *data, size_t &dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build Version message from: %s", printHexBuffer (inputData, inputLen));
+	if (dataLen < 1) {
+		return false;
+	}
+	data[0] = (uint8_t)control_message_type::VERSION;
+	dataLen = 1;
+	return true;
+}
 
-bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len) {
+
+bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData) {
 	Node* node = nodelist.getNodeFromMAC (mac);
-	uint8_t otaData[MAX_MESSAGE_LENGTH];
+	uint8_t downstreamData[MAX_MESSAGE_LENGTH];
 
-	if (len < 0)
+	if (len < 0 && controlData == USERDATA)
 		return false;
 
-	DEBUG_VERBOSE ("Downstream: %s", printHexBuffer (data, len));
+	DEBUG_VERBOSE ("Downstream: %s MessageType: %d", printHexBuffer (data, len), controlData);
 
-	uint8_t* otaMsg = (uint8_t *)memstr ((const void*)data, len, "ota;", 4);
+	size_t dataLen = MAX_MESSAGE_LENGTH;
 
-	if (otaMsg) {
-		if (!processOTAMessage (otaMsg, len, otaData))
+	bool result;
+
+	switch (controlData) {
+	case control_message_type::VERSION:
+		if (!buildGetVersion (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building get Version message");
 			return false;
+		}
+		DEBUG_VERBOSE ("Get Version: %s", printHexBuffer (downstreamData, dataLen));
+		break;
 	}
 
 	DEBUG_INFO ("Send downstream");
@@ -398,8 +415,8 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 		return false;
 	}
 
-	//TODO Send message to Serial
-
+	// TODO: Process output according message type
+	// This is only a test
 	DEBUG_DBG ("Payload length: %d bytes\n", crc_idx - data_idx);
 	char macstr[18];
 	mac2str (mac, macstr);
@@ -509,7 +526,7 @@ double EnigmaIOTGatewayClass::getPacketsHour (uint8_t* address) {
 }
 
 
-bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* data, size_t len) {
+bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData) {
 	/*
 	* --------------------------------------------------------------------------
 	*| msgType (1) | IV (16) | length (2) | NodeId (2)  | Data (....) | CRC (4) |

@@ -164,9 +164,10 @@ class EnigmaIOTGatewayClass
       * @param node Node that downstream data message is going to
       * @param data Buffer to store payload to be sent
       * @param len Length of payload data
+	  * @param controlData Content data type if control data
       * @return Returns `true` if message could be correcly sent or scheduled
       */
-     bool downstreamDataMessage (Node *node, const uint8_t *data, size_t len);
+	 bool downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData = USERDATA);
 
 	 /**
 	 * @brief Processes control message from node
@@ -321,7 +322,7 @@ class EnigmaIOTGatewayClass
       * @param data Payload buffer
       * @param len Payload length
       */
-     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len);
+     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len, control_message_type_t controlData = USERDATA);
 
      /**
       * @brief Defines a function callback that will be called every time a node gets connected or reconnected
