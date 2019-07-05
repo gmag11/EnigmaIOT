@@ -768,8 +768,6 @@ bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const ui
 		DEBUG_INFO ("Control command");
 		DEBUG_VERBOSE ("Data: %s", printHexBuffer (&buf[data_idx], crc_idx - data_idx));
 		return processControlCommand (mac, &buf[data_idx], crc_idx - data_idx);
-		//return true;
-		// TODO: process message
 	}
 
 	DEBUG_VERBOSE ("Sending data notification. Payload length: %d", crc_idx - data_idx);

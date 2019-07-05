@@ -83,13 +83,21 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 	bool result;
 
 	switch (controlData) {
-	case control_message_type::VERSION:
-		if (!buildGetVersion (downstreamData, dataLen, data, len)) {
-			DEBUG_ERROR ("Error building get Version message");
-			return false;
-		}
-		DEBUG_VERBOSE ("Get Version. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
-		break;
+		case control_message_type::VERSION:
+			if (!buildGetVersion (downstreamData, dataLen, data, len)) {
+				DEBUG_ERROR ("Error building get Version message");
+				return false;
+			}
+			DEBUG_VERBOSE ("Get Version. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+			break;
+		case control_message_type::SLEEP_GET:
+			if (!buildGetSleep (downstreamData, dataLen, data, len)) {
+				DEBUG_ERROR ("Error building get Sleep message");
+				return false;
+			}
+			DEBUG_VERBOSE ("Get Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+			break;
+			// TODO for user data message control data field should be marked too, to avoid false positive detections
 	}
 
 	DEBUG_INFO ("Send downstream");
@@ -283,7 +291,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 
 	switch (buf[0]) {
 	case CLIENT_HELLO:
-		// TODO: Do no accept new Client Hello if registration is on process on any node??
+		// TODO: Do no accept new Client Hello if registration is on process on any node?? Possible DoS Attack??
 		// May cause undesired behaviour in case a node registration message is lost
 		DEBUG_INFO (" <------- CLIENT HELLO");
 		if (espNowError == 0) {
@@ -423,15 +431,6 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 	if (notifyData) {
 		notifyData (mac, buf+data_idx, crc_idx - data_idx, 0, true);
 	}
-
-
-	// TODO: Process output according message type
-	// This is only a test
-	//char macstr[18];
-	//mac2str (mac, macstr);
-	//Serial.printf ("~/%s/control/version;", macstr);
-	//Serial.write ((uint8_t*) & (buf[data_idx]), crc_idx - data_idx);
-	//Serial.println ();
 
 	return true;
 }
