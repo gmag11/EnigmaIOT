@@ -51,6 +51,7 @@ void setup () {
 	EnigmaIOTSensor.onDataRx (processRxData);
 
 	EnigmaIOTSensor.begin (&Espnow_hal);
+	EnigmaIOTSensor.setSleepTime (SLEEP_TIME / 1000000);
 
 	// Read sensor data
 	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
@@ -66,7 +67,7 @@ void setup () {
 		Serial.println ("---- Data sent");
 	}
 	Serial.printf ("Total time: %d ms\n", millis() - start);
-	EnigmaIOTSensor.sleep (SLEEP_TIME);
+	EnigmaIOTSensor.sleep ();
 }
 
 void loop () {

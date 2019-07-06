@@ -58,6 +58,7 @@ enum sensorInvalidateReason_t {
   */
 struct rtcmem_data_t {
     uint32_t crc32; /**< CRC to check RTC data integrity */
+	uint32_t sleepTime = 0; /**< Time to sleep between sensor data delivery */
     uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
     uint16_t lastMessageCounter; /**< Node last message counter */
 	uint16_t nodeId; /**< Node identification */
@@ -265,6 +266,24 @@ public:
 
 	void stop ();
 
+	void setSleepTime (uint32_t sleepTime) {
+		if (sleepTime == 0) {
+			rtcmem_data.sleepy = false;
+		}
+		else {
+			rtcmem_data.sleepTime = sleepTime * 1000;
+		}
+	}
+
+	uint32_t getSleepTime () {
+		if (rtcmem_data.sleepy) {
+			return 0;
+		}
+		else {
+			return rtcmem_data.sleepTime / 1000;
+		}
+	}
+
     /**
       * @brief This method should be called periodically for instance inside `loop()` function.
       * It is used for internal node maintenance tasks
@@ -376,7 +395,7 @@ public:
       * Sleep can be requested in any moment and will be triggered inmediatelly except if node is doing registration or is waiting for downlink
       * @param time Sleep mode state duration
       */
-    void sleep (uint64_t time);
+    void sleep ();
 };
 
 extern EnigmaIOTSensorClass EnigmaIOTSensor;

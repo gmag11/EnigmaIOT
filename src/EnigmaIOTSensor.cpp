@@ -75,6 +75,10 @@ bool EnigmaIOTSensorClass::loadRTCData () {
 		//memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
 		//memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
 		node.setSleepy (rtcmem_data.sleepy);
+		// set default sleep time if it was not set
+		if (rtcmem_data.sleepy && rtcmem_data.sleepTime == 0) {
+			rtcmem_data.sleepTime = DEFAULT_SLEEP_TIME;
+		}
 		node.setStatus (rtcmem_data.nodeRegisterStatus);
 		DEBUG_DBG ("Set %s mode", node.getSleepy () ? "sleepy" : "non sleepy");
 #if DEBUG_LEVEL >= VERBOSE
@@ -572,11 +576,11 @@ bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len, bool contr
     return false;
 }
 
-void EnigmaIOTSensorClass::sleep (uint64_t time)
+void EnigmaIOTSensorClass::sleep ()
 {
 	if (node.getSleepy ()) {
-		DEBUG_DBG ("Sleep programmed for %lu ms", (unsigned long)(time / 1000));
-		sleepTime = time;
+		DEBUG_DBG ("Sleep programmed for %lu ms", (unsigned long)(rtcmem_data.sleepTime * 1000));
+		sleepTime = rtcmem_data.sleepTime * 1000000;
 		sleepRequested = true;
 	} else {
 		DEBUG_VERBOSE ("Node is non sleepy. Sleep rejected");

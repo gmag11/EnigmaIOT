@@ -21,6 +21,7 @@ static const uint8_t DEFAULT_CHANNEL = 3;
 // Sensor configuration
 static const uint16_t RECONNECTION_PERIOD = 2500;
 static const uint16_t DOWNLINK_WAIT_TIME = 400;
+static const uint32_t DEFAULT_SLEEP_TIME = 10; ///< @brief Default sleep time if it was not set
 
 
 //Crypro configuration
@@ -31,6 +32,6 @@ const uint8_t IV_LENGTH = 16; ///< @brief Initalization vector length used by se
 
 //Debug
 #define DEBUG_ESP_PORT Serial
-#define DEBUG_LEVEL INFO
+#define DEBUG_LEVEL VERBOSE
 
 #endif
