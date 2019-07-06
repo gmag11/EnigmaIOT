@@ -31,6 +31,14 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 			Serial.printf ("~/%s/%s;", macStr, GET_VERSION_ANS);
 			Serial.write (data + 1, length - 1);
 			Serial.println ();
+			break;
+		case control_message_type::SLEEP_ANS:
+			uint32_t sleepTime;
+			memcpy (&sleepTime, data + 1, sizeof (sleepTime));
+			Serial.printf ("~/%s/%s;%d\n", macStr, GET_SLEEP_ANS, sleepTime);
+			//Serial.write (data + 1, length - 1);
+			//Serial.println ();
+			break;
 	}
 }
 

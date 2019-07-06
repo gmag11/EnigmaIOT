@@ -59,11 +59,21 @@ bool EnigmaIOTGatewayClass::processOTAMessage (uint8_t* msg, size_t msgLen, uint
 }
 
 bool buildGetVersion (uint8_t *data, size_t &dataLen, const uint8_t* inputData, size_t inputLen) {
-	DEBUG_VERBOSE ("Build Version message from: %s", printHexBuffer (inputData, inputLen));
+	DEBUG_VERBOSE ("Build 'Get Version' message from: %s", printHexBuffer (inputData, inputLen));
 	if (dataLen < 1) {
 		return false;
 	}
 	data[0] = (uint8_t)control_message_type::VERSION;
+	dataLen = 1;
+	return true;
+}
+
+bool buildGetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Get Sleep' message from: %s", printHexBuffer (inputData, inputLen));
+	if (dataLen < 1) {
+		return false;
+	}
+	data[0] = (uint8_t)control_message_type::SLEEP_GET;
 	dataLen = 1;
 	return true;
 }
@@ -103,7 +113,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 	DEBUG_INFO ("Send downstream");
 
 	if (node) {
-		if (controlData)
+		if (controlData != control_message_type::USERDATA)
 			return downstreamDataMessage (node, downstreamData, dataLen, controlData);
 		else
 			return downstreamDataMessage (node, data, len, controlData);

@@ -678,15 +678,28 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool co
     return (comm->send (rtcmem_data.gateway, buffer, packet_length + CRC_LENGTH) == 0);
 }
 
-bool EnigmaIOTSensorClass::processSleepCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len) {
-	DEBUG_DBG ("Sleep command received");
-	if (sendData ((uint8_t*)ENIGMAIOT_PROT_VERS, strlen (ENIGMAIOT_PROT_VERS), true)) {
-		DEBUG_DBG ("Version is %s", ENIGMAIOT_PROT_VERS);
+bool EnigmaIOTSensorClass::processGetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	uint8_t buffer[MAX_MESSAGE_LENGTH];
+	uint8_t bufLength;
+
+	DEBUG_DBG ("Get Sleep command received");
+	DEBUG_VERBOSE ("%s", printHexBuffer(data, len));
+
+	buffer[0] = control_message_type::SLEEP_ANS;
+	// TODO get real sleep time
+	uint32_t sleepTime = getSleepTime();
+	memcpy (buffer + 1, &sleepTime, sizeof (sleepTime));
+	bufLength = 5;
+
+	if (sendData (buffer, bufLength, true)) {
+		DEBUG_DBG ("Sleep time is %d seconds", sleepTime);
+		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+		return true;
 	}
 	else {
 		DEBUG_WARN ("Error sending version response");
+		return false;
 	}
-	return true;
 }
 
 bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
@@ -708,12 +721,16 @@ bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint
 	}
 }
 
+
+
 bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len) {
 	//memset (buffer, 0, MAX_MESSAGE_LENGTH);
 	DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
 	switch (data[0]){
 		case control_message_type::VERSION:
 			return processVersionCommand (mac, data, len);
+		case control_message_type::SLEEP_GET:
+			return processGetSleepTimeCommand (mac, data, len);
 	}
 }
 

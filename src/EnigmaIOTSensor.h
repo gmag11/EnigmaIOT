@@ -234,7 +234,7 @@ protected:
       */
     static void tx_cb (uint8_t *mac_addr, uint8_t status);
 
-	bool processSleepCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+	bool processGetSleepTimeCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
 	bool processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
