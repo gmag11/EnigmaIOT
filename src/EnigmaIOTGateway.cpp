@@ -179,9 +179,9 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	wifiManager.setDebugOutput (true);
 	wifiManager.setBreakAfterConfig (true);
 	boolean result = wifiManager.startConfigPortal ("EnigmaIoTGateway");
-	DEBUG_DBG ("==== Config Portal result ====");
-	DEBUG_DBG ("Network Key: %s", netKeyParam.getValue ());
-	DEBUG_DBG ("Channel: %s", channelParam.getValue ());
+	DEBUG_INFO ("==== Config Portal result ====");
+	DEBUG_INFO ("Network Key: %s", netKeyParam.getValue ());
+	DEBUG_INFO ("Channel: %s", channelParam.getValue ());
 	if (result) {
 		uint8_t keySize = netKeyParam.getValueLength ();
 		if (netKeyParam.getValueLength () > KEY_LENGTH)
@@ -263,8 +263,11 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 				ESP.restart ();
 			}
 		}
+		else {
+			DEBUG_INFO ("Configuration loaded from flash");
+		}
 
-		//initWiFi ();
+		initWiFi ();
 		comm->begin (NULL, gwConfig.channel, COMM_GATEWAY);
 		comm->onDataRcvd (rx_cb);
 		comm->onDataSent (tx_cb);
