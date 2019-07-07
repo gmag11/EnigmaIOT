@@ -107,7 +107,16 @@ void onSerial (String message) {
 	dataStr.trim ();
 
 	control_message_type_t msgType = checkMsgType (dataStr);
+
+	// Add end of string to all control messages
+	if (msgType != control_message_type::USERDATA) {
+		dataStr = dataStr.substring (dataStr.indexOf (';') + 1);
+		dataStr += '\0';
+	}
+
+	DEBUG_VERBOSE ("Message %s", dataStr.c_str ());
 	DEBUG_INFO ("Message type %d", msgType);
+	DEBUG_INFO ("Data length %d", dataStr.length ());
 	if (!EnigmaIOTGateway.sendDownstream (addr, (uint8_t*)dataStr.c_str (), dataStr.length (), msgType)) {
 		DEBUG_ERROR ("Error sending esp_now message to %s", addressStr.c_str ());
 	}

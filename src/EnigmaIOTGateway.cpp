@@ -78,12 +78,42 @@ bool buildGetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 	return true;
 }
 
+bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Set Sleep' message from: %s", printHexBuffer (inputData, inputLen));
+	if (dataLen < 5 ) { 
+		DEBUG_ERROR ("Not enough space to build message");
+		return false;
+	}
+
+	if (inputLen <= 1) {
+		DEBUG_ERROR ("Set sleep time value is empty");
+		return false;
+	}
+
+	for (int i = 0; i < (inputLen - 1); i++) { // Check if all digits are number
+		if (inputData[i] < 30 || inputData[i] > '9') {
+			DEBUG_ERROR ("Set sleep time value is not a number on position %d: %d", i, inputData[i]);
+			return false;
+		}
+	}
+	if (inputData[inputLen - 1] != 0) { // Array should end with \0
+		DEBUG_ERROR ("Set sleep time value does not end with \\0");
+		return false;
+	}
+
+	uint32_t sleepTime = atoi ((char *)inputData);
+
+	data[0] = (uint8_t)control_message_type::SLEEP_SET;
+	memcpy (data + 1, &sleepTime, sizeof (uint32_t));
+	dataLen = 5;
+	return true;
+}
 
 bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData) {
 	Node* node = nodelist.getNodeFromMAC (mac);
 	uint8_t downstreamData[MAX_MESSAGE_LENGTH];
 
-	if (len < 0 && controlData == USERDATA)
+	if (len <= 0 && controlData == USERDATA)
 		return false;
 
 	DEBUG_VERBOSE ("Downstream: %s MessageType: %d", printHexBuffer (data, len), controlData);
@@ -107,6 +137,14 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 			}
 			DEBUG_VERBOSE ("Get Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 			break;
+		case control_message_type::SLEEP_SET:
+			if (!buildSetSleep (downstreamData, dataLen, data, len)) {
+				DEBUG_ERROR ("Error building get Sleep message");
+				return false;
+			}
+			DEBUG_VERBOSE ("Get Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+			break;
+
 			// TODO for user data message control data field should be marked too, to avoid false positive detections
 	}
 
@@ -434,6 +472,22 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 		DEBUG_WARN ("Wrong CRC");
 		node->packetErrors++;
 		return false;
+	}
+
+	// Check if command informs about a sleepy mode change
+	const uint8_t *payload = buf + data_idx;
+	if (payload[0] == control_message_type::SLEEP_ANS && (crc_idx - data_idx) >= 5) {
+		uint32_t sleepTime;
+		DEBUG_DBG ("Check if sleepy mode has changed for node");
+		memcpy (&sleepTime, payload + 1, sizeof (uint32_t));
+		if (sleepTime > 0) {
+			DEBUG_DBG ("Set node to sleepy mode");
+			node->setSleepy (true);
+		}
+		else {
+			DEBUG_DBG ("Set node to non sleepy mode");
+			node->setSleepy (false);
+		}
 	}
 
 	DEBUG_DBG ("Payload length: %d bytes\n", crc_idx - data_idx);

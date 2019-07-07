@@ -106,7 +106,7 @@ bool EnigmaIOTSensorClass::loadFlashData () {
 			}
 			configFile.read ((uint8_t*)(&rtcmem_data), sizeof(rtcmem_data));
 			configFile.close ();
-			DEBUG_VERBOSE ("Configuration successfuly read: %s", printHexBuffer ((uint8_t*)&rtcmem_data, KEY_LENGTH));
+			DEBUG_VERBOSE ("Configuration successfuly read: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof(rtcmem_data_t)));
 			return true;
 		}
 	}
@@ -183,6 +183,7 @@ bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t *data) {
 		if (sleepyVal > 0) {
 			data->sleepy = true;
 		}
+		data->sleepTime = sleepyVal;
 		data->nodeKeyValid = false;
 		data->crc32 = CRC32::calculate ((uint8_t*)(data->nodeKey), sizeof (rtcmem_data_t) - sizeof (uint32_t));
 	}
@@ -706,6 +707,36 @@ bool EnigmaIOTSensorClass::processGetSleepTimeCommand (const uint8_t* mac, const
 	}
 }
 
+bool EnigmaIOTSensorClass::processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	uint8_t buffer[MAX_MESSAGE_LENGTH];
+	uint8_t bufLength;
+
+	DEBUG_DBG ("Set Sleep command received");
+	DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
+
+	buffer[0] = control_message_type::SLEEP_ANS;
+	// TODO get real sleep time
+	uint32_t sleepTime;
+	memcpy (&sleepTime, data + 1, sizeof (uint32_t));
+	DEBUG_DBG ("Sleep time requested: %d", sleepTime);
+	setSleepTime (sleepTime);
+
+	sleepTime = getSleepTime ();
+	memcpy (buffer + 1, &sleepTime, sizeof (sleepTime));
+	bufLength = 5;
+
+	if (sendData (buffer, bufLength, true)) {
+		DEBUG_DBG ("Sleep time is %d seconds", sleepTime);
+		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+		return true;
+	}
+	else {
+		DEBUG_WARN ("Error sending version response");
+		return false;
+	}
+}
+
+
 bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
 	uint8_t buffer[MAX_MESSAGE_LENGTH];
 	uint8_t bufLength;
@@ -735,7 +766,10 @@ bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint
 			return processVersionCommand (mac, data, len);
 		case control_message_type::SLEEP_GET:
 			return processGetSleepTimeCommand (mac, data, len);
+		case control_message_type::SLEEP_SET:
+			return processSetSleepTimeCommand (mac, data, len);
 	}
+	return false;
 }
 
 bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count, bool control) {

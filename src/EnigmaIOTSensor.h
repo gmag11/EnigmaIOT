@@ -58,15 +58,15 @@ enum sensorInvalidateReason_t {
   */
 struct rtcmem_data_t {
     uint32_t crc32; /**< CRC to check RTC data integrity */
-	uint32_t sleepTime = 0; /**< Time to sleep between sensor data delivery */
     uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
-    uint16_t lastMessageCounter; /**< Node last message counter */
+	uint16_t lastMessageCounter; /**< Node last message counter */
 	uint16_t nodeId; /**< Node identification */
 	uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
 	uint8_t gateway[6]; /**< Gateway address */
 	uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
 	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
 	bool sleepy; /**< Sleepy node */
+	uint32_t sleepTime = 0; /**< Time to sleep between sensor data delivery */
 	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
 };
 
@@ -236,6 +236,8 @@ protected:
     static void tx_cb (uint8_t *mac_addr, uint8_t status);
 
 	bool processGetSleepTimeCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+	
+	bool processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
 	bool processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
@@ -267,20 +269,30 @@ public:
 	void stop ();
 
 	void setSleepTime (uint32_t sleepTime) {
+		uint32_t maxSleepTime = ESP.deepSleepMax () / 1000000;
+
 		if (sleepTime == 0) {
-			rtcmem_data.sleepy = false;
+			node.setSleepy (false);
+			//rtcmem_data.sleepy = false;
+		} else if (sleepTime < maxSleepTime){
+			node.setSleepy (true);
+			rtcmem_data.sleepTime = sleepTime;
+		} else {
+			node.setSleepy (true);
+			rtcmem_data.sleepTime = maxSleepTime;
 		}
-		else {
-			rtcmem_data.sleepTime = sleepTime * 1000;
-		}
+		this->sleepTime = rtcmem_data.sleepTime * 1000000;
+		DEBUG_DBG ("Sleep time set to %d. Sleepy mode is %s",
+			rtcmem_data.sleepTime,
+			node.getSleepy()?"sleepy":"non sleepy");
 	}
 
 	uint32_t getSleepTime () {
-		if (rtcmem_data.sleepy) {
+		if (!node.getSleepy()) {
 			return 0;
 		}
 		else {
-			return rtcmem_data.sleepTime / 1000;
+			return rtcmem_data.sleepTime;
 		}
 	}
 
