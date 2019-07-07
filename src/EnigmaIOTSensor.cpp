@@ -281,6 +281,28 @@ void EnigmaIOTSensorClass::stop () {
 	DEBUG_DBG ("Communication layer uninitalized");
 }
 
+void EnigmaIOTSensorClass::setSleepTime (uint32_t sleepTime) {
+	uint64_t maxSleepTime = (ESP.deepSleepMax () / (uint64_t)1000000);
+
+	if (sleepTime == 0) {
+		node.setSleepy (false);
+		//rtcmem_data.sleepy = false;
+	}
+	else if (sleepTime < maxSleepTime) {
+		node.setSleepy (true);
+		rtcmem_data.sleepTime = sleepTime;
+	}
+	else {
+		DEBUG_DBG ("Max sleep time is %lu", (uint32_t)maxSleepTime);
+		node.setSleepy (true);
+		rtcmem_data.sleepTime = (uint32_t)maxSleepTime;
+	}
+	this->sleepTime = (uint64_t)rtcmem_data.sleepTime * (uint64_t)1000000;
+	DEBUG_DBG ("Sleep time set to %d. Sleepy mode is %s",
+		rtcmem_data.sleepTime,
+		node.getSleepy () ? "sleepy" : "non sleepy");
+}
+
 void EnigmaIOTSensorClass::handle () {
     static unsigned long blueOntime;
 
@@ -297,7 +319,8 @@ void EnigmaIOTSensorClass::handle () {
     }
 
     if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered() && node.getSleepy()) {
-        DEBUG_INFO ("Go to sleep for %lu ms", (unsigned long)(sleepTime / 1000));
+		uint64_t usSleep = sleepTime / (uint64_t)1000;
+		DEBUG_INFO ("Go to sleep for %lu ms", (uint32_t)(usSleep));
         ESP.deepSleepInstant (sleepTime, RF_NO_CAL);
     }
 
@@ -580,8 +603,8 @@ bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len, bool contr
 void EnigmaIOTSensorClass::sleep ()
 {
 	if (node.getSleepy ()) {
-		DEBUG_DBG ("Sleep programmed for %lu ms", (unsigned long)(rtcmem_data.sleepTime * 1000));
-		sleepTime = rtcmem_data.sleepTime * 1000000;
+		DEBUG_DBG ("Sleep programmed for %lu ms", rtcmem_data.sleepTime * 1000);
+		sleepTime = (uint64_t)rtcmem_data.sleepTime * (uint64_t)1000000;
 		sleepRequested = true;
 	} else {
 		DEBUG_VERBOSE ("Node is non sleepy. Sleep rejected");

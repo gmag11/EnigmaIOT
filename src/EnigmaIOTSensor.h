@@ -268,24 +268,7 @@ public:
 
 	void stop ();
 
-	void setSleepTime (uint32_t sleepTime) {
-		uint32_t maxSleepTime = ESP.deepSleepMax () / 1000000;
-
-		if (sleepTime == 0) {
-			node.setSleepy (false);
-			//rtcmem_data.sleepy = false;
-		} else if (sleepTime < maxSleepTime){
-			node.setSleepy (true);
-			rtcmem_data.sleepTime = sleepTime;
-		} else {
-			node.setSleepy (true);
-			rtcmem_data.sleepTime = maxSleepTime;
-		}
-		this->sleepTime = rtcmem_data.sleepTime * 1000000;
-		DEBUG_DBG ("Sleep time set to %d. Sleepy mode is %s",
-			rtcmem_data.sleepTime,
-			node.getSleepy()?"sleepy":"non sleepy");
-	}
+	void setSleepTime (uint32_t sleepTime);
 
 	uint32_t getSleepTime () {
 		if (!node.getSleepy()) {
