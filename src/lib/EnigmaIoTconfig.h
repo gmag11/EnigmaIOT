@@ -32,6 +32,6 @@ const uint8_t IV_LENGTH = 16; ///< @brief Initalization vector length used by se
 
 //Debug
 #define DEBUG_ESP_PORT Serial
-#define DEBUG_LEVEL VERBOSE
+#define DEBUG_LEVEL INFO
 
 #endif

@@ -20,7 +20,7 @@
 
 #define DEFAULT_BASE_TOPIC "enigmaiot"
 
-#define BRIDGE_DEBUG
+//#define BRIDGE_DEBUG
 
 typedef struct {
 	char mqtt_server[41];
