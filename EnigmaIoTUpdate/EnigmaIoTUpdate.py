@@ -9,6 +9,12 @@ import optparse
 
 options = None
 sleepyNode = True
+resultTopic = "/result/#"
+sleepSetTopic = "/set/sleeptime"
+sleepResultTopic = "/result/sleeptime"
+otaSetTopic = "/set/ota"
+otaResultTopic = "/result/ota"
+
 
 def on_connect(client, userdata, flags, rc):
     global options
@@ -20,7 +26,7 @@ def on_connect(client, userdata, flags, rc):
         print("Error connecting. Code ="+str(rc))
         return
 
-    sleepTopic = options.baseTopic+"/"+options.address+"/sleep/result"
+    sleepTopic = options.baseTopic+"/"+options.address+resultTopic
     client.subscribe(sleepTopic)
     print("Subscribed")
 
@@ -30,7 +36,7 @@ def on_message(client, userdata, msg):
 
     print(msg.topic+" "+str(msg.payload))
 
-    if msg.topic.find("/sleep/result") and msg.payload == b'0':
+    if msg.topic.find(sleepResultTopic) and msg.payload == b'0':
         sleepyNode = False
 
 
@@ -88,14 +94,13 @@ def main():
 
     print(options)
 
-    topic = options.baseTopic+"/"+options.address+"/ota"
-    topicmd5 = options.baseTopic+"/"+options.address+"/ota/md5"
+    ota_topic = options.baseTopic+"/"+options.address+otaSetTopic
     mqttclientname = "EnigmaIoTUpdate"
 
     with open(options.filename, "rb") as binary_file:
         chunked_file = []
         encoded_string = []
-        n = 200
+        n = 240
 
         for chunk in iter(lambda: binary_file.read(n), b""):
             chunked_file.append(chunk)
@@ -125,8 +130,8 @@ def main():
         time.sleep(1)
 
     # client.loop_start()
-    sleeptopic = options.baseTopic+"/"+options.address+"/set/sleep"
-    client.publish(sleeptopic, "0")
+    sleep_topic = options.baseTopic+"/"+options.address+sleepSetTopic
+    client.publish(sleep_topic, "0")
 
     while sleepyNode:
         print("Waiting for non sleepy confirmation")
@@ -134,16 +139,16 @@ def main():
         time.sleep(1)
 
     print("Sending hash: "+hash_md5.hexdigest())
-    client.publish(topicmd5, hash_md5.hexdigest())
+    client.publish(ota_topic, "0,"+hash_md5.hexdigest())
 
-    i = 0
+    i = 1
     # for i in range(0, len(chunked_string), 1):
     print("Sending file: "+options.filename)
     for chunk in encoded_string:
         # client.loop()
         time.sleep(0.03)
         # time.sleep(0.003125)
-        client.publish(topic, str(i)+","+chunk)
+        client.publish(ota_topic, str(i)+","+chunk)
         i = i + 1
         if i % 2 == 0:
             print(".", end='')
