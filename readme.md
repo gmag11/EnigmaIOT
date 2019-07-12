@@ -153,6 +153,15 @@ Gateway can send commands to an individual node in a similar way as sensor data 
 
 Only last message is queued. In case Gateway tries to send a new message, old one gets deleted and overriden by the new one.
 
+### Control Command message (downlink)
+
+![DL Control Command message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/ControlComand-Downlink.png)
+![UL Control Command message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/ControlComand-Uplink.png)
+
+Gateway  and node can exchange internal control commands. These are used to set internal protocol parameters. This type of messges are processed like normal downlink messages, but are not passed to higher level in Node.
+
+Some control messages, like OTA update messages, require that they are processed inmediatelly. Hence, it is required that node is not in deep sleep mode. This can be controlled, for instance, using another control command to set sleep time to 0.
+
 ### Invalidate Key message
 
 ![Invalidate Key message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/InvalidateKey.png)
@@ -237,13 +246,37 @@ Control messages are intended to set node specific settings, like sleep time, ch
 
 Normally control commands trigger a response as an uplink message.
 
-This is the list of currently implemented control commands
+This is the list of currently implemented control commands:
+
+- Get node protocol version
+- Get sleep duration time
+- Set sleep duration time
+- ~~OTA Update~~
 
 | Command | Response |
 | ------- | -------- |
-| `<configurable prefix>/<node address>/get/version` | `<configurable prefix>/<node address>/version <version>` |
+| `<configurable prefix>/<node address>/get/version` | `<configurable prefix>/<node address>/result/version <version>` |
+| `<configurable prefix>/<node address>/get/sleeptime` | `<configurable prefix>/<node address>/result/sleeptime <sleep_time>` |
+| `<configurable prefix>/<node address>/set/sleeptime <sleep_time>` | `<configurable prefix>/<node address>/result/sleeptime <sleep_time>` |
+| `<configurable prefix>/<node address>/get/ota` | `<configurable prefix>/<node address>/result/ota <ota_result_code>` |
 
-For instance, publishing `enigmaiot/12:34:56:78:90:12/get/version` will produce `enigmaiot/12:34:56:78:90:12/version 0.2.0`.
+For instance, publishing `enigmaiot/12:34:56:78:90:12/get/version` will produce `enigmaiot/12:34:56:78:90:12/result/version 0.2.0`.
+
+Messages are encoded to reduce the amount of bytes to be sent over internal protocol, so that the air time is as short as possible.
+
+| Command | Msg type | Encoding |
+| ------- | -------- | -------- |
+| Get version | `0x01` | |
+| Version result | `0x81` | version in ASCII |
+| Get sleep time | `0x02` | |
+| Set sleep time | `0x02` | Sleep time in seconds (Unsigned integer - 4 bytes) |
+| Sleep time result | `0x82` | Sleep time in seconds (Unsigned integer - 4 bytes) |
+| OTA Update | `0xEF` | OTA update specific format |
+| OTA Update result | `0xFF` | tbd. |
+
+## OTA Update
+
+tbd.
 
 ## External libraries
 
