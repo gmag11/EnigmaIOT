@@ -27,7 +27,7 @@ void EnigmaIOTGatewayClass::setRxLed (uint8_t led, time_t onTime) {
 }
 
 const void* memstr (const void* str, size_t str_size,
-	const char* target, size_t target_size) {
+					const char* target, size_t target_size) {
 
 	for (size_t i = 0; i != str_size - target_size; ++i) {
 		if (!memcmp (str + i, target, target_size)) {
@@ -38,7 +38,7 @@ const void* memstr (const void* str, size_t str_size,
 	return NULL;
 }
 
-bool EnigmaIOTGatewayClass::processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t *output) {
+bool EnigmaIOTGatewayClass::processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t* output) {
 	char* otaNumber = (char*)msg + 4;
 	uint8_t* otaData = (uint8_t*)memchr (msg, ',', msgLen) + 1;
 	size_t otaLen = msgLen - (otaData - msg);
@@ -53,12 +53,12 @@ bool EnigmaIOTGatewayClass::processOTAMessage (uint8_t* msg, size_t msgLen, uint
 
 	DEBUG_INFO ("OTA: %s otaLen %d, decodedLen %d", number, otaLen, decodedLen);
 
-	DEBUG_VERBOSE ("Decoded data: Len - %d -- %s", decodedLen, printHexBuffer(output, decodedLen));
+	DEBUG_VERBOSE ("Decoded data: Len - %d -- %s", decodedLen, printHexBuffer (output, decodedLen));
 
 	return false;
 }
 
-bool buildGetVersion (uint8_t *data, size_t &dataLen, const uint8_t* inputData, size_t inputLen) {
+bool buildGetVersion (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
 	DEBUG_VERBOSE ("Build 'Get Version' message from: %s", printHexBuffer (inputData, inputLen));
 	if (dataLen < 1) {
 		return false;
@@ -104,7 +104,7 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 			}
 		} else {
 			msgIdxStr[i] = '\0';
-			payload = (char *)(inputData + i + 1);
+			payload = (char*)(inputData + i + 1);
 			payloadLen = inputLen - i - 2;
 			break;
 		}
@@ -112,19 +112,18 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 	uint msgIdx = atoi (msgIdxStr);
 
 	DEBUG_DBG ("OTA message %s", msgIdxStr);
-		
+
 	//DEBUG_INFO ("OTA message number %u", msgIdx);
 	//DEBUG_INFO ("Input len = %u, Payload len = %u", inputLen, payloadLen);
 	//DEBUG_INFO ("Payload data: %s", payload);
-	
+
 	memcpy (data, &msgIdx, sizeof (uint));
 
 	size_t decodedLen;
 
 	if (msgIdx > 0) {
 		decodedLen = base64_decode_chars (payload, payloadLen, (char*)(data + sizeof (uint)));
-	}
-	else {
+	} else {
 
 		int8_t ASCIIHexToInt[] =
 		{
@@ -165,7 +164,7 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 			}
 			number <<= 4;
 			//DEBUG_VERBOSE ("Char2 %c", (char)payload[i+1]);
-			int8_t number2 = ASCIIHexToInt[payload[i+1]];
+			int8_t number2 = ASCIIHexToInt[payload[i + 1]];
 			//DEBUG_VERBOSE ("Number2 %x", number2);
 			if (number2 < 0) {
 				DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
@@ -180,7 +179,7 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 			decodedLen++;
 			//***************************
 		}
-		DEBUG_INFO ("Payload data: %s", printHexBuffer(data, (decodedLen + sizeof (uint))));
+		DEBUG_INFO ("Payload data: %s", printHexBuffer (data, (decodedLen + sizeof (uint))));
 	}
 
 	if ((decodedLen + sizeof (uint)) > MAX_MESSAGE_LENGTH) {
@@ -194,7 +193,7 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 
 bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
 	DEBUG_VERBOSE ("Build 'Set Sleep' message from: %s", printHexBuffer (inputData, inputLen));
-	if (dataLen < 5 ) { 
+	if (dataLen < 5) {
 		DEBUG_ERROR ("Not enough space to build message");
 		return false;
 	}
@@ -215,7 +214,7 @@ bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 		return false;
 	}
 
-	uint32_t sleepTime = atoi ((char *)inputData);
+	uint32_t sleepTime = atoi ((char*)inputData);
 
 	data[0] = (uint8_t)control_message_type::SLEEP_SET;
 	memcpy (data + 1, &sleepTime, sizeof (uint32_t));
@@ -237,36 +236,36 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 	bool result;
 
 	switch (controlData) {
-		case control_message_type::VERSION:
-			if (!buildGetVersion (downstreamData, dataLen, data, len)) {
-				DEBUG_ERROR ("Error building get Version message");
-				return false;
-			}
-			DEBUG_VERBOSE ("Get Version. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
-			break;
-		case control_message_type::SLEEP_GET:
-			if (!buildGetSleep (downstreamData, dataLen, data, len)) {
-				DEBUG_ERROR ("Error building get Sleep message");
-				return false;
-			}
-			DEBUG_VERBOSE ("Get Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
-			break;
-		case control_message_type::SLEEP_SET:
-			if (!buildSetSleep (downstreamData, dataLen, data, len)) {
-				DEBUG_ERROR ("Error building get Sleep message");
-				return false;
-			}
-			DEBUG_VERBOSE ("Set Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
-			break;
-		case control_message_type::OTA:
-			if (!buildOtaMsg (downstreamData, dataLen, data, len)) {
-				DEBUG_ERROR ("Error building OTA message");
-				return false;
-			}
-			DEBUG_VERBOSE ("Set Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
-			break;
+	case control_message_type::VERSION:
+		if (!buildGetVersion (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building get Version message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Get Version. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
+	case control_message_type::SLEEP_GET:
+		if (!buildGetSleep (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building get Sleep message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Get Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
+	case control_message_type::SLEEP_SET:
+		if (!buildSetSleep (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building get Sleep message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Set Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
+	case control_message_type::OTA:
+		if (!buildOtaMsg (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building OTA message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Set Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
 
-			// TODO for user data message control data field should be marked too, to avoid false positive detections
+		// TODO for user data message control data field should be marked too, to avoid false positive detections
 	}
 
 	DEBUG_INFO ("Send downstream");
@@ -282,8 +281,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 				return downstreamDataMessage (node, data, len, controlData);
 		} else
 			return downstreamDataMessage (node, data, len, controlData);
-	}
-	else {
+	} else {
 		char addr[18];
 		DEBUG_ERROR ("Downlink destionation %s not found", mac2str (mac, addr));
 		return false;
@@ -315,7 +313,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 			keySize = KEY_LENGTH;
 		memcpy (this->gwConfig.networkKey, netKeyParam.getValue (), keySize);
 		gwConfig.channel = atoi (channelParam.getValue ());
-		DEBUG_VERBOSE ("Raw network Key: %s", printHexBuffer(this->gwConfig.networkKey,KEY_LENGTH));
+		DEBUG_VERBOSE ("Raw network Key: %s", printHexBuffer (this->gwConfig.networkKey, KEY_LENGTH));
 		DEBUG_VERBOSE ("WiFi ESP-NOW channel: %d", gwConfig.networkKey);
 	}
 
@@ -341,13 +339,12 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			DEBUG_VERBOSE ("Gateway configuration successfuly read: %s", printHexBuffer ((uint8_t*)(&gwConfig), sizeof (gateway_config_t)));
 			return true;
 		}
-	}
-	else {
+	} else {
 		DEBUG_WARN ("%s do not exist", CONFIG_FILE);
 		return false;
 	}
 
-	return false; 
+	return false;
 }
 
 bool EnigmaIOTGatewayClass::saveFlashData () {
@@ -356,10 +353,10 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 		DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
 		return false;
 	}
-	configFile.write ((uint8_t*)(&gwConfig), sizeof(gateway_config_t));
+	configFile.write ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
 	configFile.close ();
 	DEBUG_VERBOSE ("Gateway configuration saved to flash: %s", printHexBuffer ((uint8_t*)(&gwConfig), sizeof (gateway_config_t)));
-	return true; 
+	return true;
 }
 
 void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bool useDataCounter) {
@@ -368,8 +365,7 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 
 	if (networkKey) {
 		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
-	}
-	else {
+	} else {
 		if (!SPIFFS.begin ()) {
 			DEBUG_ERROR ("Error mounting flash");
 			return;
@@ -379,18 +375,15 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 				DEBUG_DBG ("Got configuration. Storing");
 				if (saveFlashData ()) {
 					DEBUG_DBG ("Network Key stored on flash");
-				}
-				else {
+				} else {
 					DEBUG_ERROR ("Error saving data on flash");
 				}
 				ESP.restart ();
-			}
-			else {
+			} else {
 				DEBUG_ERROR ("Configuration error. Restarting");
 				ESP.restart ();
 			}
-		}
-		else {
+		} else {
 			DEBUG_INFO ("Configuration loaded from flash");
 		}
 
@@ -478,21 +471,18 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 				delay (1000);
 				if (serverHello (myPublicKey, node)) {
 					DEBUG_INFO ("Server Hello sent");
-				}
-				else {
+				} else {
 					node->reset ();
 					DEBUG_INFO ("Error sending Server Hello");
 				}
 
-			}
-			else {
+			} else {
 				// Ignore message in case of error
 				//invalidateKey (node, WRONG_CLIENT_HELLO);
 				node->reset ();
 				DEBUG_ERROR ("Error processing client hello");
 			}
-		}
-		else {
+		} else {
 			DEBUG_ERROR ("Error adding peer %d", espNowError);
 		}
 		break;
@@ -512,18 +502,15 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 #if DEBUG_LEVEL >= INFO
 						nodelist.printToSerial (&DEBUG_ESP_PORT);
 #endif
-					}
-					else {
+					} else {
 						node->reset ();
 					}
-				}
-				else {
+				} else {
 					invalidateKey (node, WRONG_EXCHANGE_FINISHED);
 					node->reset ();
 				}
 			}
-		}
-		else {
+		} else {
 			DEBUG_INFO (" <------- unsolicited KEY EXCHANGE FINISHED");
 		}
 		break;
@@ -532,13 +519,11 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 		if (node->getStatus () == REGISTERED) {
 			if (processControlMessage (mac, buf, count, node)) {
 				DEBUG_INFO ("Control message OK");
-			}
-			else {
+			} else {
 				invalidateKey (node, WRONG_DATA);
 				DEBUG_INFO ("Data not OK");
 			}
-		}
-		else {
+		} else {
 			invalidateKey (node, UNREGISTERED_NODE);
 		}
 		break;
@@ -553,14 +538,12 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 				if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
 					invalidateKey (node, KEY_EXPIRED);
 				}
-			}
-			else {
+			} else {
 				invalidateKey (node, WRONG_DATA);
 				DEBUG_INFO ("Data not OK");
 			}
 
-		}
-		else {
+		} else {
 			invalidateKey (node, UNREGISTERED_NODE);
 		}
 	}
@@ -605,7 +588,7 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 	}
 
 	// Check if command informs about a sleepy mode change
-	const uint8_t *payload = buf + data_idx;
+	const uint8_t* payload = buf + data_idx;
 	if (payload[0] == control_message_type::SLEEP_ANS && (crc_idx - data_idx) >= 5) {
 		uint32_t sleepTime;
 		DEBUG_DBG ("Check if sleepy mode has changed for node");
@@ -613,17 +596,16 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 		if (sleepTime > 0) {
 			DEBUG_DBG ("Set node to sleepy mode");
 			node->setSleepy (true);
-		}
-		else {
+		} else {
 			DEBUG_DBG ("Set node to non sleepy mode");
 			node->setSleepy (false);
 		}
 	}
 
 	DEBUG_DBG ("Payload length: %d bytes\n", crc_idx - data_idx);
-	
+
 	if (notifyData) {
-		notifyData (mac, buf+data_idx, crc_idx - data_idx, 0, true);
+		notifyData (mac, buf + data_idx, crc_idx - data_idx, 0, true);
 	}
 
 	return true;
@@ -668,8 +650,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
 			lostMessages = counter - node->getLastMessageCounter () - 1;
 			node->packetErrors += lostMessages;
 			node->setLastMessageCounter (counter);
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -784,7 +765,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	//memcpy (counter_p, &counter, sizeof (uint16_t));
 
 	memcpy (data_p, data, len);
-	DEBUG_VERBOSE ("Data: %s", printHexBuffer(data_p,len));
+	DEBUG_VERBOSE ("Data: %s", printHexBuffer (data_p, len));
 
 	uint16_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + len;
 
@@ -816,13 +797,11 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 			node->qMessageLength = packet_length + CRC_LENGTH;
 			node->qMessagePending = true;
 			return true;
-		}
-		else {
+		} else {
 			DEBUG_ERROR ("OTA is only possible with non sleepy nodes. Configure it accordingly first");
 			return false;
 		}
-	}
-	else {
+	} else {
 		DEBUG_INFO (" -------> DOWNLINK DATA");
 		flashTx = true;
 		return comm->send (node->getMacAddress (), buffer, packet_length + CRC_LENGTH) == 0;
@@ -1023,8 +1002,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 		node->setKeyValid (true);
 		node->setStatus (INIT);
 		DEBUG_INFO ("Node key: %s", printHexBuffer (node->getEncriptionKey (), KEY_LENGTH));
-	}
-	else {
+	} else {
 		nodelist.unregisterNode (node);
 		char macstr[18];
 		mac2str ((uint8_t*)mac, macstr);
@@ -1089,8 +1067,7 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 	if (comm->send (node->getMacAddress (), (uint8_t*)& serverHello_msg, SHMSG_LEN) == 0) {
 		DEBUG_INFO ("Server Hello message sent to %s", mac);
 		return true;
-	}
-	else {
+	} else {
 		nodelist.unregisterNode (node);
 		DEBUG_ERROR ("Error sending Server Hello message to %s", mac);
 		return false;
