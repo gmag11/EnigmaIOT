@@ -100,7 +100,7 @@ def main():
     with open(options.filename, "rb") as binary_file:
         chunked_file = []
         encoded_string = []
-        n = 240
+        n = 246
 
         for chunk in iter(lambda: binary_file.read(n), b""):
             chunked_file.append(chunk)

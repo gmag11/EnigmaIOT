@@ -78,6 +78,120 @@ bool buildGetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 	return true;
 }
 
+bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	char msgIdxStr[6];
+	char* payload;
+	size_t payloadLen;
+
+	//if (inputLen > 331) { //((MAX_MESSAGE_LENGTH - sizeof (uint)) * 4 / 3)) {
+	//	DEBUG_ERROR ("OTA message too long. %u bytes.", inputLen);
+	//	return false;
+	//}
+
+	DEBUG_VERBOSE ("Build 'OTA' message from: %s", inputData);
+
+	for (int i = 0; i < 6; i++) {
+		if (inputData[i] != ',') {
+			if (inputData[i] >= '0' && inputData[i] <= '9') {
+				msgIdxStr[i] = (char)(inputData[i]);
+			} else {
+				DEBUG_ERROR ("OTA message format error. Message number not found");
+				return false;
+			}
+			if (i == 5) {
+				DEBUG_ERROR ("OTA message format error, separator not found");
+				return false;
+			}
+		} else {
+			msgIdxStr[i] = '\0';
+			payload = (char *)(inputData + i + 1);
+			payloadLen = inputLen - i - 2;
+			break;
+		}
+	}
+	uint msgIdx = atoi (msgIdxStr);
+
+	DEBUG_DBG ("OTA message %s", msgIdxStr);
+		
+	//DEBUG_INFO ("OTA message number %u", msgIdx);
+	//DEBUG_INFO ("Input len = %u, Payload len = %u", inputLen, payloadLen);
+	//DEBUG_INFO ("Payload data: %s", payload);
+	
+	memcpy (data, &msgIdx, sizeof (uint));
+
+	size_t decodedLen;
+
+	if (msgIdx > 0) {
+		decodedLen = base64_decode_chars (payload, payloadLen, (char*)(data + sizeof (uint)));
+	}
+	else {
+
+		int8_t ASCIIHexToInt[] =
+		{
+			// ASCII
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1,
+			-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+
+			// 0x80-FF (Omit this if you don't need to check for non-ASCII)
+			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+		};
+
+		if (inputLen != 35) {
+			DEBUG_ERROR ("OTA message format error. Message #0 should be an MD5 string");
+			return false;
+		}
+		//decodedLen = 4;
+		for (size_t i = 0; i < payloadLen; i += 2) {
+			int8_t number;
+			//DEBUG_VERBOSE ("Char1 %c", (char)payload[i]);
+			number = ASCIIHexToInt[payload[i]];
+			//DEBUG_VERBOSE ("Number1 %x", number);
+			if (number < 0) {
+				DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
+				return false;
+			}
+			number <<= 4;
+			//DEBUG_VERBOSE ("Char2 %c", (char)payload[i+1]);
+			int8_t number2 = ASCIIHexToInt[payload[i+1]];
+			//DEBUG_VERBOSE ("Number2 %x", number2);
+			if (number2 < 0) {
+				DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
+				return false;
+			}
+			number = number + number2;
+			//DEBUG_VERBOSE ("Number %x", number);
+
+			uint8_t* md5hex = data + sizeof (uint);
+
+			md5hex[i / 2] = number;
+			decodedLen++;
+			//***************************
+		}
+		DEBUG_INFO ("Payload data: %s", printHexBuffer(data, (decodedLen + sizeof (uint))));
+	}
+
+	if ((decodedLen + sizeof (uint)) > MAX_MESSAGE_LENGTH) {
+		DEBUG_ERROR ("OTA message too long. %u bytes.", decodedLen + sizeof (uint));
+		return false;
+	}
+	dataLen = decodedLen + +sizeof (uint);
+	DEBUG_VERBOSE ("Payload has %u bytes of data: %s", dataLen, printHexBuffer (data, dataLen));
+	return true;
+}
+
 bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
 	DEBUG_VERBOSE ("Build 'Set Sleep' message from: %s", printHexBuffer (inputData, inputLen));
 	if (dataLen < 5 ) { 
@@ -142,7 +256,14 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 				DEBUG_ERROR ("Error building get Sleep message");
 				return false;
 			}
-			DEBUG_VERBOSE ("Get Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+			DEBUG_VERBOSE ("Set Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+			break;
+		case control_message_type::OTA:
+			if (!buildOtaMsg (downstreamData, dataLen, data, len)) {
+				DEBUG_ERROR ("Error building OTA message");
+				return false;
+			}
+			DEBUG_VERBOSE ("Set Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 			break;
 
 			// TODO for user data message control data field should be marked too, to avoid false positive detections
@@ -153,7 +274,13 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 	if (node) {
 		if (controlData != control_message_type::USERDATA)
 			return downstreamDataMessage (node, downstreamData, dataLen, controlData);
-		else
+		else if (controlData == control_message_type::OTA) {
+			if (node->getSleepy ()) {
+				DEBUG_ERROR ("Node must be in non sleepy mode to receive OTA messages");
+				return false;
+			} else
+				return downstreamDataMessage (node, data, len, controlData);
+		} else
 			return downstreamDataMessage (node, data, len, controlData);
 	}
 	else {
