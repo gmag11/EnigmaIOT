@@ -100,12 +100,12 @@ def main():
     with open(options.filename, "rb") as binary_file:
         chunked_file = []
         encoded_string = []
-        n = 250 - 4 - 25  # 250 bytes - sizeof(int) - header
+        n = 250 - 3 - 25  # 250 bytes - sizeof(int) - header
 
         for chunk in iter(lambda: binary_file.read(n), b""):
             chunked_file.append(chunk)
         for chunk in chunked_file:
-            encoded_string.append(base64.b64encode(chunk).decode("utf8"))
+            encoded_string.append(base64.b64encode(bytes(chunk)).decode('ascii'))
         # chunked_string = [encoded_string[i:i+n] for i in range(0, len(encoded_string), n)]
         binary_file.seek(0);
         hash_md5 = hashlib.md5()
@@ -139,14 +139,15 @@ def main():
         time.sleep(1)
 
     print("Sending hash: "+hash_md5.hexdigest())
-    client.publish(ota_topic, "0,"+hash_md5.hexdigest())
+    md5_str = hash_md5.hexdigest()
+    client.publish(ota_topic, "0," + str(len(encoded_string)) + "," + md5_str)
 
     i = 1
     # for i in range(0, len(chunked_string), 1):
     print("Sending file: "+options.filename)
     for chunk in encoded_string:
         # client.loop()
-        time.sleep(0.03)
+        time.sleep(0.025)
         # time.sleep(0.003125)
         client.publish(ota_topic, str(i)+","+chunk)
         i = i + 1
