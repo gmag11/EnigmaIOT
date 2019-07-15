@@ -8,6 +8,7 @@
 
 #include "EnigmaIOTSensor.h"
 #include <FS.h>
+#include <MD5Builder.h>
 
 const char CONFIG_FILE[] = "/config.txt";
 
@@ -345,6 +346,13 @@ void EnigmaIOTSensorClass::handle () {
             clientHello ();
         }
     }
+
+	if (otaRunning) {
+		if (millis () - lastOTAmsg > 10000) {
+			DEBUG_ERROR ("OTA Timeout");
+			otaRunning = false;
+		}
+	}
 
 }
 
@@ -779,6 +787,68 @@ bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint
 	}
 }
 
+bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	//DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
+	uint16_t msgIdx;
+	static uint8_t md5buffer[16];
+	uint8_t md5calc[16];
+	static uint16_t numMsgs;
+	static uint16_t oldIdx;
+	static MD5Builder _md5;
+	uint8_t* dataPtr = (uint8_t*)(data + 1);
+	uint8_t dataLen = len - 1;
+
+	memcpy (&msgIdx, dataPtr, sizeof (uint16_t));
+	dataPtr += sizeof (uint16_t);
+	dataLen -= sizeof (uint16_t);
+	DEBUG_INFO ("OTA message #%u", msgIdx);
+	if (msgIdx > 0) {
+		if (msgIdx != (oldIdx + 1)) {
+			DEBUG_ERROR ("%u OTA messages missing before %u", msgIdx - oldIdx - 1, msgIdx);
+		} else {
+			//Serial.println (msgIdx);
+		}
+	}
+	oldIdx = msgIdx;
+	lastOTAmsg = millis ();
+
+	if (msgIdx == 0) {
+		memcpy (&numMsgs, dataPtr, sizeof (uint16_t));
+		DEBUG_WARN ("Number of OTA messages: %u", numMsgs);
+		dataPtr += sizeof (uint16_t);
+		dataLen -= sizeof (uint16_t);
+		memcpy (md5buffer, dataPtr, 16);
+		DEBUG_VERBOSE ("MD5: %s", printHexBuffer (md5buffer, 16));
+		otaRunning = true;
+		otaError = false;
+		_md5.begin ();
+	} else {
+		if (otaRunning) {
+			// Process OTA Update
+			_md5.add (dataPtr, dataLen);
+		} else {
+			if (!otaError) {
+				otaError = true;
+				DEBUG_ERROR ("OTA error");
+			}
+		}
+	}
+
+	if (msgIdx == numMsgs) {
+		DEBUG_WARN ("OTA end");
+		_md5.calculate ();
+		DEBUG_WARN ("OTA MD5 %s", _md5.toString ().c_str ());
+		_md5.getBytes (md5calc);
+		if (!memcmp (md5calc, md5buffer, 16)) {
+			DEBUG_WARN ("OTA MD5 check OK");
+		} else {
+			DEBUG_ERROR ("OTA MD5 check failed");
+		}
+		otaRunning = false;
+	}
+
+	return false;
+}
 
 
 bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len) {
@@ -791,6 +861,9 @@ bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint
 			return processGetSleepTimeCommand (mac, data, len);
 		case control_message_type::SLEEP_SET:
 			return processSetSleepTimeCommand (mac, data, len);
+		case control_message_type::OTA:
+			return processOTACommand (mac, data, len);
+
 	}
 	return false;
 }

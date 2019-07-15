@@ -105,6 +105,9 @@ protected:
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed
     uint8_t dataMessageSentLength = 0; ///< @brief Message length stored for use in case of message retransmission is needed
     sensorInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
+	bool otaRunning = false;
+	bool otaError = false;
+	time_t lastOTAmsg;
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -189,6 +192,8 @@ protected:
       * @return Returns `true` if message could be correcly sent
       */
     bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false);
+
+	bool processOTACommand (const uint8_t* mac, const uint8_t* data, uint8_t len);
 
 	bool processControlCommand (const uint8_t mac[6], const uint8_t* data, size_t len);
 
