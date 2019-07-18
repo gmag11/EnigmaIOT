@@ -10,7 +10,7 @@
 #define _ENIGMAIOTSENSOR_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-#include "arduino.h"
+#include "Arduino.h"
 #else
 #include "WProgram.h"
 #endif
@@ -18,7 +18,7 @@
 #include "lib/EnigmaIoTconfig.h"
 #include "lib/cryptModule.h"
 #include "lib/helperFunctions.h"
-#include "comms_hal.h"
+#include "Comms_hal.h"
 #include <CRC32.h>
 #include "NodeList.h"
 #include <cstddef>
