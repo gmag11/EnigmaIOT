@@ -44,6 +44,14 @@ typedef enum control_message_type {
 	//USERDATA_ANS = 0x90
 } control_message_type_t;
 
+typedef enum ota_status {
+	OTA_STARTED,
+	OTA_START_ERROR,
+	OTA_CHECK_OK,
+	OTA_CHECK_FAIL,
+	OTA_OUT_OF_SEQUENCE
+} ota_status_t;
+
 /**
   * @brief Struct that define node fields. Used for long term storage needs
   */

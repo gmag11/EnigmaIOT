@@ -23,7 +23,7 @@
 #define GET_SLEEP_ANS "result/sleeptime"
 #define SET_SLEEP "set/sleeptime"
 #define SET_OTA "set/ota"
-#define OTA_ANS "result/ota"
+#define SET_OTA_ANS "result/ota"
 
 void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 	switch (data[0]) {
@@ -38,6 +38,26 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 			Serial.printf ("~/%s/%s;%d\n", macStr, GET_SLEEP_ANS, sleepTime);
 			//Serial.write (data + 1, length - 1);
 			//Serial.println ();
+			break;
+		case control_message_type::OTA_ANS:
+			Serial.printf ("~/%s/%s;", macStr, SET_OTA_ANS);
+			switch (data[1]) {
+				case ota_status::OTA_STARTED:
+					Serial.printf ("OTA Started\n");
+					break;
+				case ota_status::OTA_START_ERROR:
+					Serial.printf ("OTA Start error\n");
+					break;
+				case ota_status::OTA_OUT_OF_SEQUENCE:
+					Serial.printf ("OTA out of sequence error\n");
+					break;
+				case ota_status::OTA_CHECK_OK:
+					Serial.printf ("OTA check OK\n");
+					break;
+				case ota_status::OTA_CHECK_FAIL:
+					Serial.printf ("OTA check failed\n");
+					break;
+			}
 			break;
 	}
 }

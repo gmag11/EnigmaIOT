@@ -746,12 +746,12 @@ bool EnigmaIOTSensorClass::processSetSleepTimeCommand (const uint8_t* mac, const
 	DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
 
 	buffer[0] = control_message_type::SLEEP_ANS;
-	// TODO get real sleep time
+	
 	uint32_t sleepTime;
 	memcpy (&sleepTime, data + 1, sizeof (uint32_t));
 	DEBUG_DBG ("Sleep time requested: %d", sleepTime);
 	setSleepTime (sleepTime);
-
+	// TODO Store config on flash if sleep time > 0
 	sleepTime = getSleepTime ();
 	memcpy (buffer + 1, &sleepTime, sizeof (sleepTime));
 	bufLength = 5;
@@ -788,6 +788,8 @@ bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint
 }
 
 bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	uint8_t responseBuffer[2];
+
 	//DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
 	uint16_t msgIdx;
 	static uint8_t md5buffer[16];
@@ -802,9 +804,14 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 	dataPtr += sizeof (uint16_t);
 	dataLen -= sizeof (uint16_t);
 	DEBUG_INFO ("OTA message #%u", msgIdx);
-	if (msgIdx > 0) {
+	if (msgIdx > 0 && otaRunning) {
 		if (msgIdx != (oldIdx + 1)) {
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_OUT_OF_SEQUENCE;
+			sendData (responseBuffer, sizeof (responseBuffer), true);
 			DEBUG_ERROR ("%u OTA messages missing before %u", msgIdx - oldIdx - 1, msgIdx);
+			otaRunning = false;
+			otaError = true;
 		} else {
 			//Serial.println (msgIdx);
 		}
@@ -822,29 +829,44 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 		otaRunning = true;
 		otaError = false;
 		_md5.begin ();
+		responseBuffer[0] = control_message_type::OTA_ANS;
+		responseBuffer[1] = ota_status::OTA_STARTED;
+		if (sendData (responseBuffer, sizeof (responseBuffer), true)) {
+			DEBUG_INFO("OTA STARTED");
+		}
 	} else {
 		if (otaRunning) {
-			// Process OTA Update
 			_md5.add (dataPtr, dataLen);
+			// TODO Process OTA Update
 		} else {
 			if (!otaError) {
 				otaError = true;
-				DEBUG_ERROR ("OTA error");
+				responseBuffer[0] = control_message_type::OTA_ANS;
+				responseBuffer[1] = ota_status::OTA_START_ERROR;
+				sendData (responseBuffer, sizeof (responseBuffer), true);
+				DEBUG_ERROR ("OTA error. Message 0 not received");
 			}
 		}
 	}
 
-	if (msgIdx == numMsgs) {
+	if (msgIdx == numMsgs && otaRunning) {
 		DEBUG_WARN ("OTA end");
 		_md5.calculate ();
 		DEBUG_WARN ("OTA MD5 %s", _md5.toString ().c_str ());
 		_md5.getBytes (md5calc);
 		if (!memcmp (md5calc, md5buffer, 16)) {
 			DEBUG_WARN ("OTA MD5 check OK");
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_CHECK_OK;
+			sendData (responseBuffer, sizeof (responseBuffer), true);
 		} else {
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
+			sendData (responseBuffer, sizeof (responseBuffer), true);
 			DEBUG_ERROR ("OTA MD5 check failed");
 		}
 		otaRunning = false;
+		otaError = false;
 	}
 
 	return false;
