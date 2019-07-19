@@ -3,6 +3,7 @@ import paho.mqtt.client as mqtt
 import time
 import hashlib
 import optparse
+import os
 
 # EnigmaIoTUpdate -f <file.bin> -d <address> -t <basetopic> -u <mqttuser> -P <mqttpass> -s <mqttserver>
 #                       -p <mqttport> <-s>
@@ -14,6 +15,7 @@ sleepSetTopic = "/set/sleeptime"
 sleepResultTopic = "/result/sleeptime"
 otaSetTopic = "/set/ota"
 otaResultTopic = "/result/ota"
+otaLength = 0
 
 
 def on_connect(client, userdata, flags, rc):
@@ -97,6 +99,8 @@ def main():
     ota_topic = options.baseTopic+"/"+options.address+otaSetTopic
     mqttclientname = "EnigmaIoTUpdate"
 
+    otaLength = os.stat(options.filename).st_size
+
     with open(options.filename, "rb") as binary_file:
         chunked_file = []
         encoded_string = []
@@ -140,7 +144,9 @@ def main():
 
     print("Sending hash: "+hash_md5.hexdigest())
     md5_str = hash_md5.hexdigest()
-    client.publish(ota_topic, "0," + str(len(encoded_string)) + "," + md5_str)
+
+    # msg 0, file size, number of chunks, md5 checksum
+    client.publish(ota_topic, "0," + str(otaLength) + "," + str(len(encoded_string)) + "," + md5_str)
 
     i = 1
     # for i in range(0, len(chunked_string), 1):
@@ -148,7 +154,8 @@ def main():
     for chunk in encoded_string:
         # client.loop()
         time.sleep(0.025)
-        # time.sleep(0.003125)
+        # time.sleep(0.2)
+        # if i not in range(10,13):
         client.publish(ota_topic, str(i)+","+chunk)
         i = i + 1
         if i % 2 == 0:

@@ -9,6 +9,7 @@
 #include "EnigmaIOTGateway.h"
 #include <FS.h>
 #include "libb64/cdecode.h"
+#include <Updater.h>
 
 const char CONFIG_FILE[] = "/config.txt";
 
@@ -78,6 +79,45 @@ bool buildGetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 	return true;
 }
 
+int getNextNumber (char* &data, size_t &len/*, char* &position*/) {
+	char strNum[10];
+	int number;
+
+	for (int i = 0; i < 10; i++) {
+		if (data[i] != ',') {
+			if (data[i] >= '0' && data[i] <= '9') {
+				strNum[i] = data[i];
+			} else {
+				DEBUG_ERROR ("OTA message format error. Message number not found");
+				return -1;
+			}
+			if (i == 9) {
+				DEBUG_ERROR ("OTA message format error, separator not found");
+				return -2;
+			}
+		} else {
+			if (i == 0) {
+				DEBUG_ERROR ("OTA message format error, cannot find a number");
+				return -3;
+			}
+			strNum[i] = '\0';
+			//DEBUG_DBG ("Increment pointer by %d", i);
+			data += i;
+			len -= i; /*- 2*/
+			break;
+		}
+	}
+	if (data[0] == "," && len > 0) {
+		data += i;
+		len -= i;
+	} else {
+		DEBUG_WARN ("OTA message format warning. separator not found");
+	}
+	number = atoi (strNum);
+
+	return number;
+}
+
 bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
 	char strNum[6];
 	char* payload;
@@ -94,6 +134,7 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 	payload = (char *)inputData;
 	payloadLen = inputLen;
 
+	// Get message number
 	for (int i = 0; i < 6; i++) {
 		if (payload[i] != ',') {
 			if (payload[i] >= '0' && payload[i] <= '9') {
@@ -166,6 +207,7 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 			return false;
 		}
 
+		// Get number of chunks
 		for (int i = 0; i < 6; i++) {
 			if (payload[i] != ',') {
 				if (payload[i] >= '0' && payload[i] <= '9') {
