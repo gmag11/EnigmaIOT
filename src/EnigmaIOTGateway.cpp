@@ -82,47 +82,54 @@ bool buildGetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 int getNextNumber (char* &data, size_t &len/*, char* &position*/) {
 	char strNum[10];
 	int number;
+	char* tempData = data;
+	size_t tempLen = len;
+	//int result;
 
 	for (int i = 0; i < 10; i++) {
-		if (data[i] != ',') {
-			if (data[i] >= '0' && data[i] <= '9') {
-				strNum[i] = data[i];
+		if (tempData[i] != ',') {
+			if (tempData[i] >= '0' && tempData[i] <= '9') {
+				strNum[i] = tempData[i];
 			} else {
 				DEBUG_ERROR ("OTA message format error. Message number not found");
-				return -1;
+				number = -1;
 			}
 			if (i == 9) {
 				DEBUG_ERROR ("OTA message format error, separator not found");
-				return -2;
+				number = -2;
 			}
 		} else {
 			if (i == 0) {
 				DEBUG_ERROR ("OTA message format error, cannot find a number");
-				return -3;
+				number = -3;
 			}
 			strNum[i] = '\0';
 			//DEBUG_DBG ("Increment pointer by %d", i);
-			data += i;
-			len -= i; /*- 2*/
+			tempData += i;
+			tempLen -= i; /*- 2*/
 			break;
 		}
 	}
-	if (data[0] == "," && len > 0) {
-		data += i;
-		len -= i;
+	if (tempData[0] == ',' && tempLen > 0) {
+		tempData++;
+		tempLen--;
 	} else {
 		DEBUG_WARN ("OTA message format warning. separator not found");
 	}
-	number = atoi (strNum);
-
+	if (number >= 0) {
+		number = atoi (strNum);
+	}
+	data = tempData;
+	len = tempLen;
 	return number;
 }
 
 bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
-	char strNum[6];
+	//char strNum[6];
 	char* payload;
 	size_t payloadLen;
 	int strIndex;
+	int number;
 
 	//if (inputLen > 331) { //((MAX_MESSAGE_LENGTH - sizeof (uint)) * 4 / 3)) {
 	//	DEBUG_ERROR ("OTA message too long. %u bytes.", inputLen);
@@ -135,32 +142,38 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 	payloadLen = inputLen;
 
 	// Get message number
-	for (int i = 0; i < 6; i++) {
-		if (payload[i] != ',') {
-			if (payload[i] >= '0' && payload[i] <= '9') {
-				strNum[i] = (char)(payload[i]);
-			} else {
-				DEBUG_ERROR ("OTA message format error. Message number not found");
-				return false;
-			}
-			if (i == 5) {
-				DEBUG_ERROR ("OTA message format error, separator not found");
-				return false;
-			}
-		} else {
-			if (i == 0) {
-				DEBUG_ERROR ("OTA message format error, cannot find a number");
-				return false;
-			}
-			strNum[i] = '\0';
-			//DEBUG_DBG ("Increment pointer by %d", i);
-			payload += i;
-			payloadLen -= i; /*- 2*/
-			break;
-		}
+	number = getNextNumber (payload, payloadLen);
+	if (number < 0) {
+		return false;
 	}
+	uint16_t msgIdx = number;
 
-	uint16_t msgIdx = atoi (strNum);
+	//for (int i = 0; i < 6; i++) {
+	//	if (payload[i] != ',') {
+	//		if (payload[i] >= '0' && payload[i] <= '9') {
+	//			strNum[i] = (char)(payload[i]);
+	//		} else {
+	//			DEBUG_ERROR ("OTA message format error. Message number not found");
+	//			return false;
+	//		}
+	//		if (i == 5) {
+	//			DEBUG_ERROR ("OTA message format error, separator not found");
+	//			return false;
+	//		}
+	//	} else {
+	//		if (i == 0) {
+	//			DEBUG_ERROR ("OTA message format error, cannot find a number");
+	//			return false;
+	//		}
+	//		strNum[i] = '\0';
+	//		//DEBUG_DBG ("Increment pointer by %d", i);
+	//		payload += i;
+	//		payloadLen -= i; /*- 2*/
+	//		break;
+	//	}
+	//}
+
+	//uint16_t msgIdx = atoi (strNum);
 	data[0] = (uint8_t)control_message_type::OTA;
 	memcpy (data + 1, &msgIdx, sizeof (uint16_t));
 	size_t decodedLen = sizeof (uint8_t) + sizeof (uint16_t);
@@ -169,11 +182,11 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 	//DEBUG_INFO ("Payload len = %u", payloadLen);
 	//DEBUG_INFO ("Payload data: %s", payload);
 
-	if (payload[0] != ',') {
-		DEBUG_ERROR ("OTA message format error. separator not found");
-		return false;
-	}
-	payload++; payloadLen--;
+	//if (payload[0] != ',') {
+	//	DEBUG_ERROR ("OTA message format error. separator not found");
+	//	return false;
+	//}
+	//payload++; payloadLen--;
 
 	if (msgIdx > 0) {
 		decodedLen += base64_decode_chars (payload, payloadLen, (char*)(data + 1 + sizeof (uint16_t)));
@@ -207,40 +220,58 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 			return false;
 		}
 
-		// Get number of chunks
-		for (int i = 0; i < 6; i++) {
-			if (payload[i] != ',') {
-				if (payload[i] >= '0' && payload[i] <= '9') {
-					strNum[i] = (char)(payload[i]);
-				} else {
-					DEBUG_ERROR ("OTA message format error. Message number not found");
-					return false;
-				}
-				if (i == 5) {
-					DEBUG_ERROR ("OTA message format error, separator not found");
-					return false;
-				}
-			} else {
-				if (i == 0) {
-					DEBUG_ERROR ("OTA message format error, cannot find a number");
-					return false;
-				}
-				strNum[i] = '\0';
-				payload += i;
-				payloadLen -= i;
-				break;
-			}
-		}
-
-		uint16_t msgNum = atoi (strNum);
-		memcpy (data + 1 + sizeof (uint16_t), &msgNum, sizeof (uint16_t));
-		decodedLen += sizeof (uint16_t);
-
-		if (payload[0] != ',') {
-			DEBUG_ERROR ("OTA message format error. separator not found");
+		// Get firmware size
+		number = getNextNumber (payload, payloadLen);
+		if (number < 0) {
 			return false;
 		}
-		payload++; payloadLen--;
+		uint32_t fileSize = number;
+
+		memcpy (data + 1 + sizeof (uint16_t), &fileSize, sizeof (uint32_t));
+		decodedLen += sizeof (uint32_t);
+
+
+		// Get number of chunks
+		number = getNextNumber (payload, payloadLen);
+		if (number < 0) {
+			return false;
+		}
+		uint16_t msgNum = number;
+
+
+		//for (int i = 0; i < 6; i++) {
+		//	if (payload[i] != ',') {
+		//		if (payload[i] >= '0' && payload[i] <= '9') {
+		//			strNum[i] = (char)(payload[i]);
+		//		} else {
+		//			DEBUG_ERROR ("OTA message format error. Message number not found");
+		//			return false;
+		//		}
+		//		if (i == 5) {
+		//			DEBUG_ERROR ("OTA message format error, separator not found");
+		//			return false;
+		//		}
+		//	} else {
+		//		if (i == 0) {
+		//			DEBUG_ERROR ("OTA message format error, cannot find a number");
+		//			return false;
+		//		}
+		//		strNum[i] = '\0';
+		//		payload += i;
+		//		payloadLen -= i;
+		//		break;
+		//	}
+		//}
+
+		//uint16_t msgNum = atoi (strNum);
+		memcpy (data + 1 + sizeof (uint16_t) + sizeof (uint32_t), &msgNum, sizeof (uint16_t));
+		decodedLen += sizeof (uint16_t);
+
+		//if (payload[0] != ',') {
+		//	DEBUG_ERROR ("OTA message format error. separator not found");
+		//	return false;
+		//}
+		//payload++; payloadLen--;
 
 		DEBUG_DBG ("Number of OTA chunks %u", msgNum);
 		//DEBUG_INFO ("Payload len = %u", payloadLen);
@@ -248,6 +279,7 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 
 		uint8_t* md5hex = data + 1 + sizeof (uint16_t) + sizeof (uint16_t);
 
+		// TODO Check end of message
 		for (size_t i = 0; i < 32/*payloadLen*/; i += 2) {
 			int8_t number;
 			//DEBUG_VERBOSE ("Char1 %c", (char)payload[i]);
