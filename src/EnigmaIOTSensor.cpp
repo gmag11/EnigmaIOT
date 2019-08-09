@@ -795,6 +795,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 	static uint8_t md5buffer[16];
 	uint8_t md5calc[16];
 	static uint16_t numMsgs;
+	static uint32_t otaSize;
 	static uint16_t oldIdx;
 	static MD5Builder _md5;
 	uint8_t* dataPtr = (uint8_t*)(data + 1);
@@ -820,6 +821,10 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 	lastOTAmsg = millis ();
 
 	if (msgIdx == 0) {
+		memcpy (&otaSize, dataPtr, sizeof (uint32_t));
+		DEBUG_WARN ("OTA size: %u bytes", otaSize);
+		dataPtr += sizeof (uint32_t);
+		dataLen -= sizeof (uint32_t);
 		memcpy (&numMsgs, dataPtr, sizeof (uint16_t));
 		DEBUG_WARN ("Number of OTA messages: %u", numMsgs);
 		dataPtr += sizeof (uint16_t);

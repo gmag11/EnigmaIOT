@@ -49,7 +49,8 @@ typedef enum ota_status {
 	OTA_START_ERROR,
 	OTA_CHECK_OK,
 	OTA_CHECK_FAIL,
-	OTA_OUT_OF_SEQUENCE
+	OTA_OUT_OF_SEQUENCE,
+	OTA_TIMEOUT
 } ota_status_t;
 
 /**
