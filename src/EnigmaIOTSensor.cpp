@@ -348,9 +348,18 @@ void EnigmaIOTSensorClass::handle () {
     }
 
 	if (otaRunning) {
-		if (millis () - lastOTAmsg > 10000) {
-			DEBUG_ERROR ("OTA Timeout");
+		if (millis () - lastOTAmsg > OTA_TIMEOUT_TIME) {
+			uint8_t responseBuffer[2];
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_TIMEOUT;
+			if (sendData (responseBuffer, sizeof (responseBuffer), true)) {
+				DEBUG_INFO ("OTA TIMEOUT");
+			}
 			otaRunning = false;
+			rtcmem_data.nodeRegisterStatus = UNREGISTERED;
+			rtcmem_data.nodeKeyValid = false; // Force resync
+			ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data));
+			ESP.restart (); // Reboot to recover normal status
 		}
 	}
 
