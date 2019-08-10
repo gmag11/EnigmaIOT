@@ -163,7 +163,9 @@ def main():
         if i % 160 == 0:
             print(" %.f%%" % (i/len(encoded_string)*100))
 
-    print ("100%")
+    print("100%")
+    time.sleep(5)
+    client.disconnect()
 
 
 if __name__ == '__main__':
