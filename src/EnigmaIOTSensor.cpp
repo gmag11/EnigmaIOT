@@ -890,6 +890,11 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 		}
 		otaRunning = false;
 		otaError = false;
+		rtcmem_data.nodeRegisterStatus = UNREGISTERED;
+		rtcmem_data.nodeKeyValid = false; // Force resync
+		ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data));
+		// TODO Deploy OTA Update
+		ESP.restart (); // Reboot to recover normal status
 	}
 
 	return false;
