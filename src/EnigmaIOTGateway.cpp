@@ -128,6 +128,15 @@ int getNextNumber (char* &data, size_t &len/*, char* &position*/) {
 	return number;
 }
 
+bool isHexChar (char c) {
+	//DEBUG_DBG ("Is Hex Char %c", c);
+	return (
+		c >= '0' && c <= '9' ||
+		c >= 'a' && c <= 'f' ||
+		c >= 'A' && c <= 'F'
+		);
+}
+
 bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
 	//char strNum[6];
 	char* payload;
@@ -218,45 +227,53 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 		tempData += sizeof (uint16_t);
 		decodedLen += sizeof (uint16_t);
 
-		//if (payload[0] != ',') {
-		//	DEBUG_ERROR ("OTA message format error. separator not found");
-		//	return false;
-		//}
-		//payload++; payloadLen--;
-
 		DEBUG_DBG ("Number of OTA chunks %u", msgNum);
 		DEBUG_DBG ("OTA length = %u bytes", fileSize);
 		//DEBUG_INFO ("Payload data: %s", payload);
 
-		uint8_t* md5hex = tempData;// data + 1 + sizeof (uint16_t) + sizeof (uint16_t);
+		//uint8_t* md5hex = tempData;// data + 1 + sizeof (uint16_t) + sizeof (uint16_t);
 
-		// TODO Check end of message
-		for (size_t i = 0; i < 32/*payloadLen*/; i += 2) {
-			int8_t number;
-			//DEBUG_VERBOSE ("Char1 %c", (char)payload[i]);
-			number = ASCIIHexToInt[payload[i]];
-			//DEBUG_VERBOSE ("Number1 %x", number);
-			if (number < 0) {
-				DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
-				return false;
-			}
-			number <<= 4;
-			//DEBUG_VERBOSE ("Char2 %c", (char)payload[i+1]);
-			int8_t number2 = ASCIIHexToInt[payload[i + 1]];
-			//DEBUG_VERBOSE ("Number2 %x", number2);
-			if (number2 < 0) {
-				DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
-				return false;
-			}
-			number = number + number2;
-			//DEBUG_VERBOSE ("Number %x", number);
-
-
-			md5hex[i / 2] = number;
-			decodedLen++;
-			//***************************
+		if (payloadLen < 32) {
+			DEBUG_ERROR ("OTA message format error. MD5 is too short: %d", payloadLen);
+			return false;
 		}
-		DEBUG_VERBOSE ("Payload data: %s", printHexBuffer (data, (decodedLen)));
+
+		for (size_t i = 0; i < 32; i++) {
+			if (!isHexChar (payload[i])) {
+				DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
+				return false;
+			}
+			*tempData = (uint8_t)payload[i];
+			tempData++;
+			decodedLen++;
+		}
+
+		//for (size_t i = 0; i < 32/*payloadLen*/; i += 2) {
+		//	int8_t number;
+		//	//DEBUG_VERBOSE ("Char1 %c", (char)payload[i]);
+		//	number = ASCIIHexToInt[payload[i]];
+		//	//DEBUG_VERBOSE ("Number1 %x", number);
+		//	if (number < 0) {
+		//		DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
+		//		return false;
+		//	}
+		//	number <<= 4;
+		//	//DEBUG_VERBOSE ("Char2 %c", (char)payload[i+1]);
+		//	int8_t number2 = ASCIIHexToInt[payload[i + 1]];
+		//	//DEBUG_VERBOSE ("Number2 %x", number2);
+		//	if (number2 < 0) {
+		//		DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
+		//		return false;
+		//	}
+		//	number = number + number2;
+		//	//DEBUG_VERBOSE ("Number %x", number);
+
+
+		//	md5hex[i / 2] = number;
+		//	decodedLen++;
+		//	//***************************
+		//}
+		DEBUG_VERBOSE ("Payload data: %s", printHexBuffer (data, decodedLen));
 	}
 
 	if ((decodedLen) > MAX_MESSAGE_LENGTH) {

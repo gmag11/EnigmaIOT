@@ -801,7 +801,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 
 	//DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
 	uint16_t msgIdx;
-	static uint8_t md5buffer[16];
+	static char md5buffer[32];
 	uint8_t md5calc[16];
 	static uint16_t numMsgs;
 	static uint32_t otaSize;
@@ -810,10 +810,15 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 	uint8_t* dataPtr = (uint8_t*)(data + 1);
 	uint8_t dataLen = len - 1;
 
+	if (dataLen < 2) {
+		DEBUG_ERROR ("OTA message is too short: %u bytes", dataLen + 1);
+		return false;
+	}
+
 	memcpy (&msgIdx, dataPtr, sizeof (uint16_t));
 	dataPtr += sizeof (uint16_t);
 	dataLen -= sizeof (uint16_t);
-	DEBUG_INFO ("OTA message #%u", msgIdx);
+	DEBUG_WARN ("OTA message #%u", msgIdx);
 	if (msgIdx > 0 && otaRunning) {
 		if (msgIdx != (oldIdx + 1)) {
 			responseBuffer[0] = control_message_type::OTA_ANS;
@@ -830,6 +835,10 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 	lastOTAmsg = millis ();
 
 	if (msgIdx == 0) {
+		if (dataLen < 38) {
+			DEBUG_ERROR ("OTA message #0 is too short: %u bytes", dataLen + 3);
+			return false;
+		}
 		memcpy (&otaSize, dataPtr, sizeof (uint32_t));
 		DEBUG_WARN ("OTA size: %u bytes", otaSize);
 		dataPtr += sizeof (uint32_t);
@@ -838,8 +847,8 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 		DEBUG_WARN ("Number of OTA messages: %u", numMsgs);
 		dataPtr += sizeof (uint16_t);
 		dataLen -= sizeof (uint16_t);
-		memcpy (md5buffer, dataPtr, 16);
-		DEBUG_VERBOSE ("MD5: %s", printHexBuffer (md5buffer, 16));
+		memcpy (md5buffer, dataPtr, 32);
+		DEBUG_VERBOSE ("MD5: %s", printHexBuffer ((uint8_t *)md5buffer, 32));
 		otaRunning = true;
 		otaError = false;
 		_md5.begin ();
