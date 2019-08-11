@@ -5,3 +5,4 @@ examples/enigmaiot_sensor/enigmaiot_sensor.ino.rej
 EnigmaIoTUpdate/enigmaiot.bin
 EnigmaIoTUpdate/.idea/
 EnigmaIoTUpdate/venv/
+*.bin

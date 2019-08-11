@@ -60,6 +60,9 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 				case ota_status::OTA_TIMEOUT:
 					Serial.printf ("OTA timeout\n");
 					break;
+				case ota_status::OTA_FINISHED:
+					Serial.printf ("OTA finished OK\n");
+					break;
 				default:
 					Serial.println ();
 			}

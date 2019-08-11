@@ -142,6 +142,12 @@ protected:
 	*/
 	bool configWiFiManager (rtcmem_data_t* data);
 
+	/**
+	* @brief Restarts node after setting connection as unregistered to force a
+	* resyncrhonisation after boot
+	*/
+	void restart ();
+
     /**
       * @brief Build a **ClientHello** messange and send it to gateway
       * @return Returns `true` if ClientHello message was successfully sent. `false` otherwise

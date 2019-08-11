@@ -131,9 +131,9 @@ int getNextNumber (char* &data, size_t &len/*, char* &position*/) {
 bool isHexChar (char c) {
 	//DEBUG_DBG ("Is Hex Char %c", c);
 	return (
-		c >= '0' && c <= '9' ||
-		c >= 'a' && c <= 'f' ||
-		c >= 'A' && c <= 'F'
+		c >= '0' && c <= '9' 
+		|| c >= 'a' && c <= 'f'
+		//|| c >= 'A' && c <= 'F'
 		);
 }
 

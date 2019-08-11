@@ -9,6 +9,8 @@
 #include "EnigmaIOTSensor.h"
 #include <FS.h>
 #include <MD5Builder.h>
+#include <Updater.h>
+#include <StreamString.h>
 
 const char CONFIG_FILE[] = "/config.txt";
 
@@ -356,10 +358,7 @@ void EnigmaIOTSensorClass::handle () {
 				DEBUG_INFO ("OTA TIMEOUT");
 			}
 			otaRunning = false;
-			rtcmem_data.nodeRegisterStatus = UNREGISTERED;
-			rtcmem_data.nodeKeyValid = false; // Force resync
-			ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data));
-			ESP.restart (); // Reboot to recover normal status
+			restart ();
 		}
 	}
 
@@ -801,8 +800,8 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 
 	//DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
 	uint16_t msgIdx;
-	static char md5buffer[32];
-	uint8_t md5calc[16];
+	static char md5buffer[33];
+	char md5calc[32];
 	static uint16_t numMsgs;
 	static uint32_t otaSize;
 	static uint16_t oldIdx;
@@ -848,6 +847,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 		dataPtr += sizeof (uint16_t);
 		dataLen -= sizeof (uint16_t);
 		memcpy (md5buffer, dataPtr, 32);
+		md5buffer[32] = '\0';
 		DEBUG_VERBOSE ("MD5: %s", printHexBuffer ((uint8_t *)md5buffer, 32));
 		otaRunning = true;
 		otaError = false;
@@ -856,11 +856,25 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 		responseBuffer[1] = ota_status::OTA_STARTED;
 		if (sendData (responseBuffer, sizeof (responseBuffer), true)) {
 			DEBUG_INFO("OTA STARTED");
+			if (!Update.begin (otaSize)) {
+				DEBUG_ERROR ("Error begginning OTA. OTA size: %u", otaSize);
+				return false;
+			}
+			Update.runAsync (true);
+			if (!Update.setMD5 (md5buffer)) {
+				DEBUG_ERROR ("Error setting MD5");
+				return false;
+			}
 		}
 	} else {
 		if (otaRunning) {
+			static size_t totalBytes = 0;
+
 			_md5.add (dataPtr, dataLen);
 			// TODO Process OTA Update
+			size_t numBytes = Update.write (dataPtr, dataLen);
+			totalBytes += dataLen;
+			DEBUG_WARN ("%u bytes written. Total %u", numBytes, totalBytes);
 		} else {
 			if (!otaError) {
 				otaError = true;
@@ -873,33 +887,65 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 	}
 
 	if (msgIdx == numMsgs && otaRunning) {
+		StreamString otaError;
+
 		DEBUG_WARN ("OTA end");
 		_md5.calculate ();
 		DEBUG_WARN ("OTA MD5 %s", _md5.toString ().c_str ());
-		_md5.getBytes (md5calc);
-		if (!memcmp (md5calc, md5buffer, 16)) {
+		_md5.getChars (md5calc);
+		if (!memcmp (md5calc, md5buffer, 32)) {
 			DEBUG_WARN ("OTA MD5 check OK");
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_CHECK_OK;
 			sendData (responseBuffer, sizeof (responseBuffer), true);
+			delay (500);
 		} else {
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
 			sendData (responseBuffer, sizeof (responseBuffer), true);
 			DEBUG_ERROR ("OTA MD5 check failed");
 		}
-		otaRunning = false;
-		otaError = false;
-		rtcmem_data.nodeRegisterStatus = UNREGISTERED;
-		rtcmem_data.nodeKeyValid = false; // Force resync
-		ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data));
+		Serial.print ('.');
+		while (!Update.isFinished ()) {
+			Serial.print ('.');
+			delay (500);
+		}
+		Serial.println ();
 		// TODO Deploy OTA Update
-		ESP.restart (); // Reboot to recover normal status
+		if (Update.end (true)) {
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_FINISHED;
+			sendData (responseBuffer, sizeof (responseBuffer), true);
+			//uint8_t otaError = Update.getError ();
+			Update.printError (otaError);
+			otaError.trim (); // remove line ending
+			DEBUG_WARN ("OTA Finished");
+			DEBUG_WARN("%s", otaError.c_str ());
+			//delay (5000);
+			//ESP.restart ();
+		} else {
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
+			sendData (responseBuffer, sizeof (responseBuffer), true);
+
+			Update.printError (otaError);
+			otaError.trim (); // remove line ending
+			DEBUG_ERROR ("OTA Failed");
+			DEBUG_ERROR ("%s", otaError.c_str ());
+		}
+		delay (500);
+		//restart ();
 	}
 
-	return false;
+	return true;
 }
 
+void EnigmaIOTSensorClass::restart () {
+	rtcmem_data.nodeRegisterStatus = UNREGISTERED;
+	rtcmem_data.nodeKeyValid = false; // Force resync
+	ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data));
+	ESP.restart (); // Reboot to recover normal status
+}
 
 bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len) {
 	//memset (buffer, 0, MAX_MESSAGE_LENGTH);
@@ -912,8 +958,12 @@ bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint
 		case control_message_type::SLEEP_SET:
 			return processSetSleepTimeCommand (mac, data, len);
 		case control_message_type::OTA:
-			return processOTACommand (mac, data, len);
-
+			if (processOTACommand (mac, data, len)) {
+				return true;
+			} else {
+				DEBUG_ERROR ("Error processing OTA");
+				restart ();
+			}
 	}
 	return false;
 }
