@@ -921,8 +921,8 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 			otaError.trim (); // remove line ending
 			DEBUG_WARN ("OTA Finished");
 			DEBUG_WARN("%s", otaError.c_str ());
-			//delay (5000);
-			//ESP.restart ();
+			delay (1000);
+			ESP.reset ();
 		} else {
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
