@@ -13,7 +13,7 @@
 #include <espnow_hal.h>
 #include <CayenneLPP.h>
 
-#define BLUE_LED BUILTIN_LED
+#define BLUE_LED LED_BUILTIN
   //uint8_t gateway[6] = { 0x5E, 0xCF, 0x7F, 0x80, 0x34, 0x75 };
 uint8_t gateway[6] = { 0xBE, 0xDD, 0xC2, 0x24, 0x14, 0x97 };
 
