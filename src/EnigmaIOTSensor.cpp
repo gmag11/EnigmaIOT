@@ -887,7 +887,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 	}
 
 	if (msgIdx == numMsgs && otaRunning) {
-		StreamString otaError;
+		StreamString otaErrorStr;
 
 		DEBUG_WARN ("OTA end");
 		_md5.calculate ();
@@ -898,7 +898,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_CHECK_OK;
 			sendData (responseBuffer, sizeof (responseBuffer), true);
-			delay (500);
+			//delay (500);
 		} else {
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
@@ -908,33 +908,34 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 		Serial.print ('.');
 		while (!Update.isFinished ()) {
 			Serial.print ('.');
-			delay (500);
+			delay (100);
 		}
 		Serial.println ();
-		// TODO Deploy OTA Update
+
 		if (Update.end (true)) {
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_FINISHED;
 			sendData (responseBuffer, sizeof (responseBuffer), true);
-			//uint8_t otaError = Update.getError ();
-			Update.printError (otaError);
-			otaError.trim (); // remove line ending
-			DEBUG_WARN ("OTA Finished");
-			DEBUG_WARN("%s", otaError.c_str ());
+			uint8_t otaErrorCode = Update.getError ();
+			Update.printError (otaErrorStr);
+			otaErrorStr.trim (); // remove line ending
+			DEBUG_WARN ("OTA Finished OK");
+			DEBUG_WARN("OTA eror code [%u]: %s", otaErrorCode, otaErrorStr.c_str ());
 			delay (1000);
-			ESP.reset ();
+			restart ();
 		} else {
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
 			sendData (responseBuffer, sizeof (responseBuffer), true);
-
-			Update.printError (otaError);
-			otaError.trim (); // remove line ending
+			uint8_t otaErrorCode = Update.getError ();
+			Update.printError (otaErrorStr);
+			otaErrorStr.trim (); // remove line ending
 			DEBUG_ERROR ("OTA Failed");
-			DEBUG_ERROR ("%s", otaError.c_str ());
+			DEBUG_WARN ("OTA eror code [%u]: %s", otaErrorCode, otaErrorStr.c_str ());
+			return false;
 		}
 		delay (500);
-		//restart ();
+		restart ();
 	}
 
 	return true;
