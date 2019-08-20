@@ -2,3 +2,6 @@
 DS18B20/
 *.txt
 examples/enigmaiot_sensor/enigmaiot_sensor.ino.rej
+EnigmaIoTUpdate/venv/
+EnigmaIoTUpdate/.idea/
+*.bin
