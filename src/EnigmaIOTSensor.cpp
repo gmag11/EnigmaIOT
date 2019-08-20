@@ -251,6 +251,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 					DEBUG_DBG ("Got configuration. Storing");
 					rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 					if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+						DEBUG_DBG ("Write configuration data to RTC memory");
 #if DEBUG_LEVEL >= VERBOSE
 						DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
 						dumpRtcData (&rtcmem_data/*, this->gateway*/);
@@ -709,9 +710,10 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool co
 	DEBUG_DBG ("Destination address: %s", mac2str (rtcmem_data.gateway, macStr));
 #endif
 
-    if (useCounter) {
+    if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
         rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
         if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
+			DEBUG_DBG ("Write configuration data to RTC memory");
 #if DEBUG_LEVEL >= VERBOSE
             DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
 			dumpRtcData (&rtcmem_data);
@@ -826,6 +828,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 			DEBUG_ERROR ("%u OTA messages missing before %u", msgIdx - oldIdx - 1, msgIdx);
 			otaRunning = false;
 			otaError = true;
+			return false;
 		} else {
 			//Serial.println (msgIdx);
 		}
@@ -856,6 +859,8 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 		responseBuffer[1] = ota_status::OTA_STARTED;
 		if (sendData (responseBuffer, sizeof (responseBuffer), true)) {
 			DEBUG_INFO("OTA STARTED");
+			restart (false); // Force unregistration after boot so that sleepy status is synchronized
+			                 // on Gateway
 			if (!Update.begin (otaSize)) {
 				DEBUG_ERROR ("Error begginning OTA. OTA size: %u", otaSize);
 				return false;
@@ -916,22 +921,25 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_FINISHED;
 			sendData (responseBuffer, sizeof (responseBuffer), true);
-			uint8_t otaErrorCode = Update.getError ();
-			Update.printError (otaErrorStr);
-			otaErrorStr.trim (); // remove line ending
-			DEBUG_WARN ("OTA Finished OK");
-			DEBUG_WARN("OTA eror code [%u]: %s", otaErrorCode, otaErrorStr.c_str ());
-			delay (1000);
-			restart ();
+			//uint8_t otaErrorCode = Update.getError ();
+			//Update.printError (otaErrorStr);
+			//otaErrorStr.trim (); // remove line ending
+			//DEBUG_WARN ("OTA Finished OK");
+			//DEBUG_WARN("OTA eror code: %s", otaErrorStr.c_str ());
+			Serial.println ("OTA OK");
+			// delay (10000); // Delay does not work on lambda functions
+			ESP.restart ();
+			return true; // Restart does not happen inmediatelly, so code goes on
 		} else {
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
 			sendData (responseBuffer, sizeof (responseBuffer), true);
-			uint8_t otaErrorCode = Update.getError ();
-			Update.printError (otaErrorStr);
-			otaErrorStr.trim (); // remove line ending
-			DEBUG_ERROR ("OTA Failed");
-			DEBUG_WARN ("OTA eror code [%u]: %s", otaErrorCode, otaErrorStr.c_str ());
+			//uint8_t otaErrorCode = Update.getError ();
+			//Update.printError (otaErrorStr);
+			//otaErrorStr.trim (); // remove line ending
+			//DEBUG_ERROR ("OTA Failed");
+			//DEBUG_WARN ("OTA eror code: %s", otaErrorStr.c_str ());
+			Serial.println ("OTA failed");
 			return false;
 		}
 		delay (500);
@@ -941,11 +949,13 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 	return true;
 }
 
-void EnigmaIOTSensorClass::restart () {
+void EnigmaIOTSensorClass::restart (bool reboot) {
 	rtcmem_data.nodeRegisterStatus = UNREGISTERED;
 	rtcmem_data.nodeKeyValid = false; // Force resync
 	ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data));
-	ESP.restart (); // Reboot to recover normal status
+	DEBUG_DBG ("Reset configuration data in RTC memory");
+	if (reboot)
+		ESP.restart (); // Reboot to recover normal status
 }
 
 bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len) {
@@ -1091,6 +1101,7 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
                 rtcmem_data.nodeId = node.getNodeId ();
                 rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
                 if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
+					DEBUG_DBG ("Write configuration data to RTC memory");
                     DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
                 }
 

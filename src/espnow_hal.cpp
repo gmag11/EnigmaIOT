@@ -56,7 +56,7 @@ void Espnow_halClass::begin (uint8_t* gateway, uint8_t channel, peerType_t peerT
 }
 
 void Espnow_halClass::stop () {
-	Serial.println ("-------------> STOP");
+	Serial.println ("-------------> ESP-NOW STOP");
 	esp_now_unregister_recv_cb ();
 	esp_now_unregister_send_cb ();
 	esp_now_deinit ();

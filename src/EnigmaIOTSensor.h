@@ -146,7 +146,7 @@ protected:
 	* @brief Restarts node after setting connection as unregistered to force a
 	* resyncrhonisation after boot
 	*/
-	void restart ();
+	void restart (bool reboot = true);
 
     /**
       * @brief Build a **ClientHello** messange and send it to gateway

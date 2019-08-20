@@ -22,7 +22,7 @@ static const uint8_t DEFAULT_CHANNEL = 3;
 static const uint16_t RECONNECTION_PERIOD = 2500; ///< @brief Time to retry Gateway connection
 static const uint16_t DOWNLINK_WAIT_TIME = 400;
 static const uint32_t DEFAULT_SLEEP_TIME = 10; ///< @brief Default sleep time if it was not set
-static const uint32_t OTA_TIMEOUT_TIME = 100000; ///< @brief Timeout between OTA messages. In milliseconds
+static const uint32_t OTA_TIMEOUT_TIME = 10000; ///< @brief Timeout between OTA messages. In milliseconds
 
 //Crypro configuration
 const uint8_t KEY_LENGTH = 32; ///< @brief Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing
