@@ -8,6 +8,9 @@
 
 #include "EnigmaIOTSensor.h"
 #include <FS.h>
+#include <MD5Builder.h>
+#include <Updater.h>
+#include <StreamString.h>
 
 const char CONFIG_FILE[] = "/config.txt";
 
@@ -75,6 +78,10 @@ bool EnigmaIOTSensorClass::loadRTCData () {
 		//memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
 		//memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
 		node.setSleepy (rtcmem_data.sleepy);
+		// set default sleep time if it was not set
+		if (rtcmem_data.sleepy && rtcmem_data.sleepTime == 0) {
+			rtcmem_data.sleepTime = DEFAULT_SLEEP_TIME;
+		}
 		node.setStatus (rtcmem_data.nodeRegisterStatus);
 		DEBUG_DBG ("Set %s mode", node.getSleepy () ? "sleepy" : "non sleepy");
 #if DEBUG_LEVEL >= VERBOSE
@@ -102,7 +109,7 @@ bool EnigmaIOTSensorClass::loadFlashData () {
 			}
 			configFile.read ((uint8_t*)(&rtcmem_data), sizeof(rtcmem_data));
 			configFile.close ();
-			DEBUG_VERBOSE ("Configuration successfuly read: %s", printHexBuffer ((uint8_t*)&rtcmem_data, KEY_LENGTH));
+			DEBUG_VERBOSE ("Configuration successfuly read: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof(rtcmem_data_t)));
 			return true;
 		}
 	}
@@ -179,6 +186,7 @@ bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t *data) {
 		if (sleepyVal > 0) {
 			data->sleepy = true;
 		}
+		data->sleepTime = sleepyVal;
 		data->nodeKeyValid = false;
 		data->crc32 = CRC32::calculate ((uint8_t*)(data->nodeKey), sizeof (rtcmem_data_t) - sizeof (uint32_t));
 	}
@@ -243,6 +251,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 					DEBUG_DBG ("Got configuration. Storing");
 					rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 					if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+						DEBUG_DBG ("Write configuration data to RTC memory");
 #if DEBUG_LEVEL >= VERBOSE
 						DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
 						dumpRtcData (&rtcmem_data/*, this->gateway*/);
@@ -276,6 +285,28 @@ void EnigmaIOTSensorClass::stop () {
 	DEBUG_DBG ("Communication layer uninitalized");
 }
 
+void EnigmaIOTSensorClass::setSleepTime (uint32_t sleepTime) {
+	uint64_t maxSleepTime = (ESP.deepSleepMax () / (uint64_t)1000000);
+
+	if (sleepTime == 0) {
+		node.setSleepy (false);
+		//rtcmem_data.sleepy = false;
+	}
+	else if (sleepTime < maxSleepTime) {
+		node.setSleepy (true);
+		rtcmem_data.sleepTime = sleepTime;
+	}
+	else {
+		DEBUG_DBG ("Max sleep time is %lu", (uint32_t)maxSleepTime);
+		node.setSleepy (true);
+		rtcmem_data.sleepTime = (uint32_t)maxSleepTime;
+	}
+	this->sleepTime = (uint64_t)rtcmem_data.sleepTime * (uint64_t)1000000;
+	DEBUG_DBG ("Sleep time set to %d. Sleepy mode is %s",
+		rtcmem_data.sleepTime,
+		node.getSleepy () ? "sleepy" : "non sleepy");
+}
+
 void EnigmaIOTSensorClass::handle () {
     static unsigned long blueOntime;
 
@@ -292,8 +323,9 @@ void EnigmaIOTSensorClass::handle () {
     }
 
     if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered() && node.getSleepy()) {
-        DEBUG_INFO ("Go to sleep for %lu ms", (unsigned long)(sleepTime / 1000));
-        ESP.deepSleepInstant (sleepTime, RF_NO_CAL);
+		uint64_t usSleep = sleepTime / (uint64_t)1000;
+		DEBUG_INFO ("Go to sleep for %lu ms", (uint32_t)(usSleep));
+        ESP.deepSleep (sleepTime, RF_NO_CAL);
     }
 
 
@@ -317,6 +349,19 @@ void EnigmaIOTSensorClass::handle () {
             clientHello ();
         }
     }
+
+	if (otaRunning) {
+		if (millis () - lastOTAmsg > OTA_TIMEOUT_TIME) {
+			uint8_t responseBuffer[2];
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_TIMEOUT;
+			if (sendData (responseBuffer, sizeof (responseBuffer), true)) {
+				DEBUG_INFO ("OTA TIMEOUT");
+			}
+			otaRunning = false;
+			restart ();
+		}
+	}
 
 }
 
@@ -572,11 +617,11 @@ bool EnigmaIOTSensorClass::sendData (const uint8_t *data, size_t len, bool contr
     return false;
 }
 
-void EnigmaIOTSensorClass::sleep (uint64_t time)
+void EnigmaIOTSensorClass::sleep ()
 {
 	if (node.getSleepy ()) {
-		DEBUG_DBG ("Sleep programmed for %lu ms", (unsigned long)(time / 1000));
-		sleepTime = time;
+		DEBUG_DBG ("Sleep programmed for %lu ms", rtcmem_data.sleepTime * 1000);
+		sleepTime = (uint64_t)rtcmem_data.sleepTime * (uint64_t)1000000;
 		sleepRequested = true;
 	} else {
 		DEBUG_VERBOSE ("Node is non sleepy. Sleep rejected");
@@ -665,9 +710,10 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool co
 	DEBUG_DBG ("Destination address: %s", mac2str (rtcmem_data.gateway, macStr));
 #endif
 
-    if (useCounter) {
+    if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
         rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
         if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
+			DEBUG_DBG ("Write configuration data to RTC memory");
 #if DEBUG_LEVEL >= VERBOSE
             DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
 			dumpRtcData (&rtcmem_data);
@@ -678,27 +724,262 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t *data, size_t len, bool co
     return (comm->send (rtcmem_data.gateway, buffer, packet_length + CRC_LENGTH) == 0);
 }
 
-bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len) {
-	DEBUG_DBG ("Version command received");
-	if (sendData ((uint8_t*)ENIGMAIOT_PROT_VERS, strlen (ENIGMAIOT_PROT_VERS), true)) {
-		DEBUG_DBG ("Version is %s", ENIGMAIOT_PROT_VERS);
+bool EnigmaIOTSensorClass::processGetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	uint8_t buffer[MAX_MESSAGE_LENGTH];
+	uint8_t bufLength;
+
+	DEBUG_DBG ("Get Sleep command received");
+	DEBUG_VERBOSE ("%s", printHexBuffer(data, len));
+
+	buffer[0] = control_message_type::SLEEP_ANS;
+	// TODO get real sleep time
+	uint32_t sleepTime = getSleepTime();
+	memcpy (buffer + 1, &sleepTime, sizeof (sleepTime));
+	bufLength = 5;
+
+	if (sendData (buffer, bufLength, true)) {
+		DEBUG_DBG ("Sleep time is %d seconds", sleepTime);
+		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+		return true;
 	}
 	else {
 		DEBUG_WARN ("Error sending version response");
+		return false;
 	}
+}
+
+bool EnigmaIOTSensorClass::processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	uint8_t buffer[MAX_MESSAGE_LENGTH];
+	uint8_t bufLength;
+
+	DEBUG_DBG ("Set Sleep command received");
+	DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
+
+	buffer[0] = control_message_type::SLEEP_ANS;
+	
+	uint32_t sleepTime;
+	memcpy (&sleepTime, data + 1, sizeof (uint32_t));
+	DEBUG_DBG ("Sleep time requested: %d", sleepTime);
+	setSleepTime (sleepTime);
+	// TODO Store config on flash if sleep time > 0
+	sleepTime = getSleepTime ();
+	memcpy (buffer + 1, &sleepTime, sizeof (sleepTime));
+	bufLength = 5;
+
+	if (sendData (buffer, bufLength, true)) {
+		DEBUG_DBG ("Sleep time is %d seconds", sleepTime);
+		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+		return true;
+	}
+	else {
+		DEBUG_WARN ("Error sending version response");
+		return false;
+	}
+}
+
+
+bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	uint8_t buffer[MAX_MESSAGE_LENGTH];
+	uint8_t bufLength;
+
+	buffer[0] = control_message_type::VERSION_ANS;
+	memcpy (buffer + 1, (uint8_t*)ENIGMAIOT_PROT_VERS, strlen (ENIGMAIOT_PROT_VERS));
+	bufLength = strlen (ENIGMAIOT_PROT_VERS) + 1;
+	DEBUG_DBG ("Version command received");
+	if (sendData (buffer, bufLength, true)) {
+		DEBUG_DBG ("Version is %s", ENIGMAIOT_PROT_VERS);
+		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+		return true;
+	}
+	else {
+		DEBUG_WARN ("Error sending version response");
+		return false;
+	}
+}
+
+bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	uint8_t responseBuffer[2];
+
+	//DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
+	uint16_t msgIdx;
+	static char md5buffer[33];
+	char md5calc[32];
+	static uint16_t numMsgs;
+	static uint32_t otaSize;
+	static uint16_t oldIdx;
+	static MD5Builder _md5;
+	uint8_t* dataPtr = (uint8_t*)(data + 1);
+	uint8_t dataLen = len - 1;
+
+	if (dataLen < 2) {
+		DEBUG_ERROR ("OTA message is too short: %u bytes", dataLen + 1);
+		return false;
+	}
+
+	memcpy (&msgIdx, dataPtr, sizeof (uint16_t));
+	dataPtr += sizeof (uint16_t);
+	dataLen -= sizeof (uint16_t);
+	DEBUG_WARN ("OTA message #%u", msgIdx);
+	if (msgIdx > 0 && otaRunning) {
+		if (msgIdx != (oldIdx + 1)) {
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_OUT_OF_SEQUENCE;
+			sendData (responseBuffer, sizeof (responseBuffer), true);
+			DEBUG_ERROR ("%u OTA messages missing before %u", msgIdx - oldIdx - 1, msgIdx);
+			otaRunning = false;
+			otaError = true;
+			return false;
+		} else {
+			//Serial.println (msgIdx);
+		}
+	}
+	oldIdx = msgIdx;
+	lastOTAmsg = millis ();
+
+	if (msgIdx == 0) {
+		if (dataLen < 38) {
+			DEBUG_ERROR ("OTA message #0 is too short: %u bytes", dataLen + 3);
+			return false;
+		}
+		memcpy (&otaSize, dataPtr, sizeof (uint32_t));
+		DEBUG_WARN ("OTA size: %u bytes", otaSize);
+		dataPtr += sizeof (uint32_t);
+		dataLen -= sizeof (uint32_t);
+		memcpy (&numMsgs, dataPtr, sizeof (uint16_t));
+		DEBUG_WARN ("Number of OTA messages: %u", numMsgs);
+		dataPtr += sizeof (uint16_t);
+		dataLen -= sizeof (uint16_t);
+		memcpy (md5buffer, dataPtr, 32);
+		md5buffer[32] = '\0';
+		DEBUG_VERBOSE ("MD5: %s", printHexBuffer ((uint8_t *)md5buffer, 32));
+		otaRunning = true;
+		otaError = false;
+		_md5.begin ();
+		responseBuffer[0] = control_message_type::OTA_ANS;
+		responseBuffer[1] = ota_status::OTA_STARTED;
+		if (sendData (responseBuffer, sizeof (responseBuffer), true)) {
+			DEBUG_INFO("OTA STARTED");
+			restart (false); // Force unregistration after boot so that sleepy status is synchronized
+			                 // on Gateway
+			if (!Update.begin (otaSize)) {
+				DEBUG_ERROR ("Error begginning OTA. OTA size: %u", otaSize);
+				return false;
+			}
+			Update.runAsync (true);
+			if (!Update.setMD5 (md5buffer)) {
+				DEBUG_ERROR ("Error setting MD5");
+				return false;
+			}
+		}
+	} else {
+		if (otaRunning) {
+			static size_t totalBytes = 0;
+
+			_md5.add (dataPtr, dataLen);
+			// TODO Process OTA Update
+			size_t numBytes = Update.write (dataPtr, dataLen);
+			totalBytes += dataLen;
+			DEBUG_WARN ("%u bytes written. Total %u", numBytes, totalBytes);
+		} else {
+			if (!otaError) {
+				otaError = true;
+				responseBuffer[0] = control_message_type::OTA_ANS;
+				responseBuffer[1] = ota_status::OTA_START_ERROR;
+				sendData (responseBuffer, sizeof (responseBuffer), true);
+				DEBUG_ERROR ("OTA error. Message 0 not received");
+			}
+		}
+	}
+
+	if (msgIdx == numMsgs && otaRunning) {
+		StreamString otaErrorStr;
+
+		DEBUG_WARN ("OTA end");
+		_md5.calculate ();
+		DEBUG_WARN ("OTA MD5 %s", _md5.toString ().c_str ());
+		_md5.getChars (md5calc);
+		if (!memcmp (md5calc, md5buffer, 32)) {
+			DEBUG_WARN ("OTA MD5 check OK");
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_CHECK_OK;
+			sendData (responseBuffer, sizeof (responseBuffer), true);
+			//delay (500);
+		} else {
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
+			sendData (responseBuffer, sizeof (responseBuffer), true);
+			DEBUG_ERROR ("OTA MD5 check failed");
+		}
+		Serial.print ('.');
+		while (!Update.isFinished ()) {
+			Serial.print ('.');
+			delay (100);
+		}
+		Serial.println ();
+
+		if (Update.end (true)) {
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_FINISHED;
+			sendData (responseBuffer, sizeof (responseBuffer), true);
+			//uint8_t otaErrorCode = Update.getError ();
+			//Update.printError (otaErrorStr);
+			//otaErrorStr.trim (); // remove line ending
+			//DEBUG_WARN ("OTA Finished OK");
+			//DEBUG_WARN("OTA eror code: %s", otaErrorStr.c_str ());
+			Serial.println ("OTA OK");
+			// delay (10000); // Delay does not work on lambda functions
+			ESP.restart ();
+			return true; // Restart does not happen inmediatelly, so code goes on
+		} else {
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
+			sendData (responseBuffer, sizeof (responseBuffer), true);
+			//uint8_t otaErrorCode = Update.getError ();
+			//Update.printError (otaErrorStr);
+			//otaErrorStr.trim (); // remove line ending
+			//DEBUG_ERROR ("OTA Failed");
+			//DEBUG_WARN ("OTA eror code: %s", otaErrorStr.c_str ());
+			Serial.println ("OTA failed");
+			return false;
+		}
+		delay (500);
+		restart ();
+	}
+
 	return true;
 }
 
-bool EnigmaIOTSensorClass::checkControlCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len) {
-	if (strstr ((char*)buf, "get/version")) {
-		return processVersionCommand (mac, buf, len);
-	}  else if (strstr ((char*)buf, "set/sleeptime")) {
+void EnigmaIOTSensorClass::restart (bool reboot) {
+	rtcmem_data.nodeRegisterStatus = UNREGISTERED;
+	rtcmem_data.nodeKeyValid = false; // Force resync
+	ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data));
+	DEBUG_DBG ("Reset configuration data in RTC memory");
+	if (reboot)
+		ESP.restart (); // Reboot to recover normal status
+}
 
+bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len) {
+	//memset (buffer, 0, MAX_MESSAGE_LENGTH);
+	DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
+	switch (data[0]){
+		case control_message_type::VERSION:
+			return processVersionCommand (mac, data, len);
+		case control_message_type::SLEEP_GET:
+			return processGetSleepTimeCommand (mac, data, len);
+		case control_message_type::SLEEP_SET:
+			return processSetSleepTimeCommand (mac, data, len);
+		case control_message_type::OTA:
+			if (processOTACommand (mac, data, len)) {
+				return true;
+			} else {
+				DEBUG_ERROR ("Error processing OTA");
+				restart ();
+			}
 	}
 	return false;
 }
 
-bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count, bool control) {
     /*
     * -------------------------------------------------------------------------
     *| msgType (1) | IV (16) | length (2) | NodeId (2) | Data (....) | CRC (4) |
@@ -745,8 +1026,10 @@ bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const ui
         return false;
     }
 
-	if (checkControlCommand (mac, &buf[data_idx], crc_idx - data_idx)) {
-		return true;
+	if (control) {
+		DEBUG_INFO ("Control command");
+		DEBUG_VERBOSE ("Data: %s", printHexBuffer (&buf[data_idx], crc_idx - data_idx));
+		return processControlCommand (mac, &buf[data_idx], crc_idx - data_idx);
 	}
 
 	DEBUG_VERBOSE ("Sending data notification. Payload length: %d", crc_idx - data_idx);
@@ -818,6 +1101,7 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
                 rtcmem_data.nodeId = node.getNodeId ();
                 rtcmem_data.crc32 = CRC32::calculate ((uint8_t *)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
                 if (ESP.rtcUserMemoryWrite (0, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
+					DEBUG_DBG ("Write configuration data to RTC memory");
                     DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t *)&rtcmem_data, sizeof (rtcmem_data)));
                 }
 
@@ -858,8 +1142,14 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t *mac, const uint8_t* buf
         if (processDownstreamData (mac, buf, count)) {
             DEBUG_INFO ("Downstream Data OK");
         }
-        break;
-    }
+		break;
+	case DOWNSTREAM_CTRL_DATA:
+		DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
+		if (processDownstreamData (mac, buf, count, true)) {
+			DEBUG_INFO ("Downstream Data OK");
+		}
+		break;
+	}
 }
 
 void EnigmaIOTSensorClass::getStatus (uint8_t *mac_addr, uint8_t status) {

@@ -67,6 +67,9 @@ class Espnow_halClass : public Comms_halClass
       */
     void begin(uint8_t* gateway, uint8_t channel = 0, peerType_t peerType = COMM_SENSOR);
 
+	/**
+     * @brief Terminates communication and closes all connectrions
+     */
 	void stop ();
 
     /**

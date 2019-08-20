@@ -10,7 +10,7 @@
 #define _NODELIST_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+	#include "Arduino.h"
 #else
 	#include "WProgram.h"
 #endif
@@ -31,6 +31,28 @@ enum node_status {
 };
 
 typedef enum node_status status_t; ///< @brief Node state
+
+typedef enum control_message_type {
+	VERSION = 0x01,
+	VERSION_ANS = 0x81,
+	SLEEP_GET = 0x02,
+	SLEEP_SET = 0x03,
+	SLEEP_ANS = 0x82,
+	OTA = 0xEF,
+	OTA_ANS = 0xFF,
+	USERDATA = 0x00
+	//USERDATA_ANS = 0x90
+} control_message_type_t;
+
+typedef enum ota_status {
+	OTA_STARTED,
+	OTA_START_ERROR,
+	OTA_CHECK_OK,
+	OTA_CHECK_FAIL,
+	OTA_OUT_OF_SEQUENCE,
+	OTA_TIMEOUT,
+	OTA_FINISHED
+} ota_status_t;
 
 /**
   * @brief Struct that define node fields. Used for long term storage needs

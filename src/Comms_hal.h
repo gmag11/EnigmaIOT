@@ -52,6 +52,9 @@ class Comms_halClass
        */
      virtual void begin (uint8_t* gateway, uint8_t channel, peerType_t peerType = COMM_SENSOR) = 0;
 
+	 /**
+	   * @brief Terminates communication and closes all connectrions
+	   */
 	 virtual void stop () = 0;
 
      /**

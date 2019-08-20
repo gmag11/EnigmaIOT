@@ -12,11 +12,11 @@
 #define _CRYPTMODULE_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+	#include "Arduino.h"
 #else
 	#include "WProgram.h"
 #endif
-#include "EnigmaIOTconfig.h"
+#include "EnigmaIoTconfig.h"
 
 #define RANDOM_32 0x3FF20E44
 const uint8_t RANDOM_LENGTH = sizeof (uint32_t); ///< @brief Length of random number generator values

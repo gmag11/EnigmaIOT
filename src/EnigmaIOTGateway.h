@@ -10,14 +10,14 @@
 #define _ENIGMAIOTGATEWAY_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+	#include "Arduino.h"
 #else
 	#include "WProgram.h"
 #endif
 #include "lib/EnigmaIoTconfig.h"
 #include "lib/cryptModule.h"
 #include "lib/helperFunctions.h"
-#include "comms_hal.h"
+#include "Comms_hal.h"
 #include "NodeList.h"
 #include <CRC32.h>
 #include <cstddef>
@@ -30,8 +30,9 @@
   */
 enum gatewayMessageType_t {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
-    DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
-	CONTROL_DATA = 0x03, /**< Internal ontrol message like OTA, settings configuration, etc */
+    DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for user commands */
+	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway. Used for OTA, settings configuration, etc */
+	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to sensor. Used for OTA, settings configuration, etc */
     CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
@@ -53,11 +54,11 @@ enum gwInvalidateReason_t {
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, uint16_t lostMessages)> onGwDataRx_t;
+typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, uint16_t lostMessages, bool control)> onGwDataRx_t;
 typedef std::function<void (uint8_t* mac)> onNewNode_t;
 typedef std::function<void (uint8_t* mac, gwInvalidateReason_t reason)> onNodeDisconnected_t;
 #else
-typedef void (*onGwDataRx_t)(const uint8_t*, const uint8_t*, uint8_t, size_t);
+typedef void (*onGwDataRx_t)(const uint8_t* mac, const uint8_t* data, uint8_t len, uint16_t lostMessages, bool control);
 typedef void (*onNewNode_t)(const uint8_t*);
 typedef void (*onNodeDisconnected_t)(const uint8_t*, gwInvalidateReason_t);
 #endif
@@ -157,14 +158,17 @@ class EnigmaIOTGatewayClass
       */
      bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
 
+	 bool processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t* output);
+
      /**
       * @brief Builds, encrypts and sends a **DownstreamData** message.
       * @param node Node that downstream data message is going to
       * @param data Buffer to store payload to be sent
       * @param len Length of payload data
+	  * @param controlData Content data type if control data
       * @return Returns `true` if message could be correcly sent or scheduled
       */
-     bool downstreamDataMessage (Node *node, const uint8_t *data, size_t len);
+	 bool downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData = USERDATA);
 
 	 /**
 	 * @brief Processes control message from node
@@ -319,7 +323,7 @@ class EnigmaIOTGatewayClass
       * @param data Payload buffer
       * @param len Payload length
       */
-     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len);
+     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len, control_message_type_t controlData = USERDATA);
 
      /**
       * @brief Defines a function callback that will be called every time a node gets connected or reconnected

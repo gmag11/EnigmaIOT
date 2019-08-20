@@ -10,7 +10,7 @@
 #define _ENIGMAIOTSENSOR_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-#include "arduino.h"
+#include "Arduino.h"
 #else
 #include "WProgram.h"
 #endif
@@ -18,7 +18,7 @@
 #include "lib/EnigmaIoTconfig.h"
 #include "lib/cryptModule.h"
 #include "lib/helperFunctions.h"
-#include "comms_hal.h"
+#include "Comms_hal.h"
 #include <CRC32.h>
 #include "NodeList.h"
 #include <cstddef>
@@ -32,7 +32,8 @@
 enum sensorMessageType {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
     DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
-	CONTROL_DATA = 0x03, /**< Internal ontrol message like OTA, settings configuration, etc */
+	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway. Used for OTA, settings configuration, etc */
+	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to sensor. Used for OTA, settings configuration, etc */
 	CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
@@ -58,13 +59,14 @@ enum sensorInvalidateReason_t {
 struct rtcmem_data_t {
     uint32_t crc32; /**< CRC to check RTC data integrity */
     uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
-    uint16_t lastMessageCounter; /**< Node last message counter */
+	uint16_t lastMessageCounter; /**< Node last message counter */
 	uint16_t nodeId; /**< Node identification */
 	uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
 	uint8_t gateway[6]; /**< Gateway address */
 	uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
 	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
 	bool sleepy; /**< Sleepy node */
+	uint32_t sleepTime = 0; /**< Time to sleep between sensor data delivery */
 	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
 };
 
@@ -103,6 +105,9 @@ protected:
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed
     uint8_t dataMessageSentLength = 0; ///< @brief Message length stored for use in case of message retransmission is needed
     sensorInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
+	bool otaRunning = false; ///< @brief True if OTA update has started
+	bool otaError = false; ///< @brief True if OTA update has failed. This normally produces a restart
+	time_t lastOTAmsg; ///< @brief Time when last OTA update message has received. This is used to control timeout
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -133,9 +138,17 @@ protected:
 
 	/**
 	* @brief Starts configuration AP and web server and gets settings from it
+    * @param data Pointer to configuration data to be stored on RTC memory to keep status
+	*             along sleep cycles
 	* @return Returns `true` if data was been correctly configured. `false` otherwise
 	*/
 	bool configWiFiManager (rtcmem_data_t* data);
+
+	/**
+	* @brief Sets connection as unregistered to force a resyncrhonisation after boot
+	* @param reboot True if a reboot should be triggered after unregistration
+	*/
+	void restart (bool reboot = true);
 
     /**
       * @brief Build a **ClientHello** messange and send it to gateway
@@ -188,14 +201,33 @@ protected:
       */
     bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false);
 
+	/**
+	  * @brief Processes a single OTA update command or data
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processOTACommand (const uint8_t* mac, const uint8_t* data, uint8_t len);
+
+	/**
+	  * @brief Processes a control command. Does not propagate to user code
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processControlCommand (const uint8_t mac[6], const uint8_t* data, size_t len);
+
     /**
       * @brief Processes downstream data from gateway
       * @param mac Gateway address
       * @param buf Buffer to store received payload
       * @param count Length of payload data
+	  * @param control Idicates if downstream message is user or control data. If true it is a control message
       * @return Returns `true` if message could be correcly decoded
       */
-    bool processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    bool processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count, bool control = false);
 
     /**
       * @brief Process every received message.
@@ -229,17 +261,33 @@ protected:
       * @param status Result of sending process
       */
     static void tx_cb (uint8_t *mac_addr, uint8_t status);
-
-	bool processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+	
+	/**
+	  * @brief Processes a request of sleep time configuration
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processGetSleepTimeCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+	
+	/**
+	  * @brief Processes a request to set new sleep time configuration
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
 	/**
-	  * @brief Processes internal sensor commands like
-	  * version information, OTA, settings tuning, etc
-	  * @param mac Address of message sender
-	  * @param buf Message payload
-	  * @param len Payload length
+	  * @brief Processes a request firmware version
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
 	  */
-	bool checkControlCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+	bool processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
 	/**
 	  * @brief Initiades data transmission distinguissing if it is payload or control data.
@@ -266,7 +314,30 @@ public:
       */
     void begin (Comms_halClass *comm, uint8_t *gateway = NULL, uint8_t *networkKey = NULL, bool useCounter = true, bool sleepy = true);
 
+	/**
+	  * @brief Stops EnigmaIoT protocol
+	  */
 	void stop ();
+
+	/**
+	  * @brief Allows to configure a new sleep time period from user code
+	  * @param sleepTime Time in seconds. Final period is not espected to be exact. Its value
+	  *                  depends on communication process
+	  */
+	void setSleepTime (uint32_t sleepTime);
+
+	/**
+	  * @brief Returns sleep period in seconds
+	  * @return Sleep period in seconds
+	  */
+	uint32_t getSleepTime () {
+		if (!node.getSleepy()) {
+			return 0;
+		}
+		else {
+			return rtcmem_data.sleepTime;
+		}
+	}
 
     /**
       * @brief This method should be called periodically for instance inside `loop()` function.
@@ -379,7 +450,7 @@ public:
       * Sleep can be requested in any moment and will be triggered inmediatelly except if node is doing registration or is waiting for downlink
       * @param time Sleep mode state duration
       */
-    void sleep (uint64_t time);
+    void sleep ();
 };
 
 extern EnigmaIOTSensorClass EnigmaIOTSensor;
