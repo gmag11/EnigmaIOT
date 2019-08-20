@@ -105,9 +105,9 @@ protected:
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed
     uint8_t dataMessageSentLength = 0; ///< @brief Message length stored for use in case of message retransmission is needed
     sensorInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
-	bool otaRunning = false;
-	bool otaError = false;
-	time_t lastOTAmsg;
+	bool otaRunning = false; ///< @brief True if OTA update has started
+	bool otaError = false; ///< @brief True if OTA update has failed. This normally produces a restart
+	time_t lastOTAmsg; ///< @brief Time when last OTA update message has received. This is used to control timeout
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -138,13 +138,15 @@ protected:
 
 	/**
 	* @brief Starts configuration AP and web server and gets settings from it
+    * @param data Pointer to configuration data to be stored on RTC memory to keep status
+	*             along sleep cycles
 	* @return Returns `true` if data was been correctly configured. `false` otherwise
 	*/
 	bool configWiFiManager (rtcmem_data_t* data);
 
 	/**
-	* @brief Restarts node after setting connection as unregistered to force a
-	* resyncrhonisation after boot
+	* @brief Sets connection as unregistered to force a resyncrhonisation after boot
+	* @param reboot True if a reboot should be triggered after unregistration
 	*/
 	void restart (bool reboot = true);
 
@@ -199,8 +201,22 @@ protected:
       */
     bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false);
 
+	/**
+	  * @brief Processes a single OTA update command or data
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
 	bool processOTACommand (const uint8_t* mac, const uint8_t* data, uint8_t len);
 
+	/**
+	  * @brief Processes a control command. Does not propagate to user code
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
 	bool processControlCommand (const uint8_t mac[6], const uint8_t* data, size_t len);
 
     /**
@@ -245,11 +261,32 @@ protected:
       * @param status Result of sending process
       */
     static void tx_cb (uint8_t *mac_addr, uint8_t status);
-
+	
+	/**
+	  * @brief Processes a request of sleep time configuration
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
 	bool processGetSleepTimeCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 	
+	/**
+	  * @brief Processes a request to set new sleep time configuration
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
 	bool processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
+	/**
+	  * @brief Processes a request firmware version
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
 	bool processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
 	/**
@@ -277,10 +314,22 @@ public:
       */
     void begin (Comms_halClass *comm, uint8_t *gateway = NULL, uint8_t *networkKey = NULL, bool useCounter = true, bool sleepy = true);
 
+	/**
+	  * @brief Stops EnigmaIoT protocol
+	  */
 	void stop ();
 
+	/**
+	  * @brief Allows to configure a new sleep time period from user code
+	  * @param sleepTime Time in seconds. Final period is not espected to be exact. Its value
+	  *                  depends on communication process
+	  */
 	void setSleepTime (uint32_t sleepTime);
 
+	/**
+	  * @brief Returns sleep period in seconds
+	  * @return Sleep period in seconds
+	  */
 	uint32_t getSleepTime () {
 		if (!node.getSleepy()) {
 			return 0;
