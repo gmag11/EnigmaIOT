@@ -39,25 +39,25 @@ const void* memstr (const void* str, size_t str_size,
 	return NULL;
 }
 
-bool EnigmaIOTGatewayClass::processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t* output) {
-	char* otaNumber = (char*)msg + 4;
-	uint8_t* otaData = (uint8_t*)memchr (msg, ',', msgLen) + 1;
-	size_t otaLen = msgLen - (otaData - msg);
-	size_t otaNumberLen = (uint8_t*)otaData - (uint8_t*)otaNumber - 1;
-	DEBUG_VERBOSE ("otaMsg = %p, otaNumber = %p, otaData = %p", msg, otaNumber, otaData);
-
-	char* number[6];
-	memset (number, 0, 6);
-	memcpy (number, otaNumber, otaNumberLen);
-
-	size_t decodedLen = base64_decode_chars ((char*)otaData, otaLen, (char*)output);
-
-	DEBUG_INFO ("OTA: %s otaLen %d, decodedLen %d", number, otaLen, decodedLen);
-
-	DEBUG_VERBOSE ("Decoded data: Len - %d -- %s", decodedLen, printHexBuffer (output, decodedLen));
-
-	return false;
-}
+//bool EnigmaIOTGatewayClass::processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t* output) {
+//	char* otaNumber = (char*)msg + 4;
+//	uint8_t* otaData = (uint8_t*)memchr (msg, ',', msgLen) + 1;
+//	size_t otaLen = msgLen - (otaData - msg);
+//	size_t otaNumberLen = (uint8_t*)otaData - (uint8_t*)otaNumber - 1;
+//	DEBUG_VERBOSE ("otaMsg = %p, otaNumber = %p, otaData = %p", msg, otaNumber, otaData);
+//
+//	char* number[6];
+//	memset (number, 0, 6);
+//	memcpy (number, otaNumber, otaNumberLen);
+//
+//	size_t decodedLen = base64_decode_chars ((char*)otaData, otaLen, (char*)output);
+//
+//	DEBUG_INFO ("OTA: %s otaLen %d, decodedLen %d", number, otaLen, decodedLen);
+//
+//	DEBUG_VERBOSE ("Decoded data: Len - %d -- %s", decodedLen, printHexBuffer (output, decodedLen));
+//
+//	return false;
+//}
 
 bool buildGetVersion (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
 	DEBUG_VERBOSE ("Build 'Get Version' message from: %s", printHexBuffer (inputData, inputLen));

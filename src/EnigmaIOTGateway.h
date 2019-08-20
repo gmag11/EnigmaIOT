@@ -158,7 +158,14 @@ class EnigmaIOTGatewayClass
       */
      bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
 
-	 bool processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t* output);
+	 ///**
+	 // * @brief Processes OTA update message
+	 // * @param msg Payload, including node address
+	 // * @param msgLen Length of received data
+	 // * @param output 
+	 // * @return Returns `true` if message could be correcly decoded and processed
+	 // */
+	 //bool processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t* output);
 
      /**
       * @brief Builds, encrypts and sends a **DownstreamData** message.
