@@ -324,7 +324,7 @@ void EnigmaIOTSensorClass::handle () {
     if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered() && node.getSleepy()) {
 		uint64_t usSleep = sleepTime / (uint64_t)1000;
 		DEBUG_INFO ("Go to sleep for %lu ms", (uint32_t)(usSleep));
-        ESP.deepSleepInstant (sleepTime, RF_NO_CAL);
+        ESP.deepSleep (sleepTime, RF_NO_CAL);
     }
 
 
