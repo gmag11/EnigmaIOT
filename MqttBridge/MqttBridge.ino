@@ -163,10 +163,14 @@ bool configWiFiManager () {
 	wifiManager.addParameter (&mqttBaseTopicParam);
 
 	wifiManager.setSaveConfigCallback (saveConfigCallback);
+	wifiManager.setTryConnectDuringConfigPortal (true);
 	wifiManager.setConnectTimeout (30);
-	wifiManager.setConfigPortalTimeout (300);
+	wifiManager.setConfigPortalTimeout (60);
 #ifndef BRIDGE_DEBUG
 	wifiManager.setDebugOutput (false);
+#endif
+#ifdef BRIDGE_DEBUG
+	Serial.printf ("Connecting to WiFi: %s\n", WiFi.SSID ().c_str());
 #endif
 	String apname = "EnigmaIoTMQTTBridge" + String (ESP.getChipId (), 16);
 	boolean result = wifiManager.autoConnect (apname.c_str());
@@ -252,7 +256,7 @@ void setup ()
 #endif
 		SPIFFS.format ();
 		delay (5000);
-		ESP.reset ();
+		ESP.restart ();
 	}
 	if (!loadBridgeConfig ()) {
 #ifdef BRIDGE_DEBUG
@@ -264,7 +268,7 @@ void setup ()
 		Serial.println ("Error connecting to WiFi");
 #endif
 		delay (2000);
-		ESP.reset ();
+		ESP.restart ();
 	}
 	if (shouldSaveConfig) {
 		if (!saveBridgeConfig ()) {
@@ -274,7 +278,7 @@ void setup ()
 			SPIFFS.format ();
 			delay (5000);
 
-			ESP.reset ();
+			ESP.restart ();
 		}
 	}
 	
