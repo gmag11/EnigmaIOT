@@ -24,12 +24,12 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 	return tempStr;
 }
 
-void initWiFi () {
+void initWiFi (uint8_t channel) {
 	//WiFi.persistent (false);
 	DEBUG_DBG ("initWifi");
 	WiFi.mode (WIFI_AP);
 	DEBUG_DBG ("Mode set to AP");
-	//WiFi.softAP ("ESPNOW", nullptr, 3);
+	WiFi.softAP ("ESPNOW", nullptr, channel);
 	//DEBUG_DBG ("AP started");
 	WiFi.softAPdisconnect (false);
 	DEBUG_DBG ("AP Deactivated");

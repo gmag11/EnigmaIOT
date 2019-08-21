@@ -429,6 +429,7 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 				return false;
 			}
 			configFile.read ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
+			DEBUG_DBG ("Config file stored channel: %u", gwConfig.channel);
 			configFile.close ();
 			DEBUG_VERBOSE ("Gateway configuration successfuly read: %s", printHexBuffer ((uint8_t*)(&gwConfig), sizeof (gateway_config_t)));
 			return true;

@@ -46,8 +46,9 @@ uint8_t* str2mac (const char* mac, uint8_t* values);
 
 /**
   * @brief Initalizes WiFi interfaces on ESP8266 or ESP32
+  * @param channel WiFi channel for interface initialization
   */
-void initWiFi ();
+void initWiFi (uint8_t channel = 3);
 
 #endif
 
