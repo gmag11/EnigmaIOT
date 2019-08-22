@@ -93,9 +93,9 @@ Functions</h2></td></tr>
 <tr class="separator:a7b23b5caf042639a53c6d351ff258837"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fdf837000194d53f0d019f024e0f4a1"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8h.html#a0fdf837000194d53f0d019f024e0f4a1">str2mac</a> (const char *mac, uint8_t *values)</td></tr>
 <tr class="separator:a0fdf837000194d53f0d019f024e0f4a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf4d12a26fa69fa1dd75d6cac9c0f740"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8h.html#abf4d12a26fa69fa1dd75d6cac9c0f740">initWiFi</a> ()</td></tr>
-<tr class="memdesc:abf4d12a26fa69fa1dd75d6cac9c0f740"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initalizes WiFi interfaces on ESP8266 or ESP32.  <a href="#abf4d12a26fa69fa1dd75d6cac9c0f740">More...</a><br /></td></tr>
-<tr class="separator:abf4d12a26fa69fa1dd75d6cac9c0f740"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7201b2dcf92efc492328c2f4a0c5741"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8h.html#aa7201b2dcf92efc492328c2f4a0c5741">initWiFi</a> (uint8_t channel=3)</td></tr>
+<tr class="memdesc:aa7201b2dcf92efc492328c2f4a0c5741"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initalizes WiFi interfaces on ESP8266 or ESP32.  <a href="#aa7201b2dcf92efc492328c2f4a0c5741">More...</a><br /></td></tr>
+<tr class="separator:aa7201b2dcf92efc492328c2f4a0c5741"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Auxiliary function definition. </p>
@@ -105,8 +105,8 @@ Functions</h2></td></tr>
 
 <p class="definition">Definition in file <a class="el" href="helperFunctions_8h_source.html">helperFunctions.h</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="abf4d12a26fa69fa1dd75d6cac9c0f740"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf4d12a26fa69fa1dd75d6cac9c0f740">&#9670;&nbsp;</a></span>initWiFi()</h2>
+<a id="aa7201b2dcf92efc492328c2f4a0c5741"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7201b2dcf92efc492328c2f4a0c5741">&#9670;&nbsp;</a></span>initWiFi()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -114,13 +114,20 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void initWiFi </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>channel</em> = <code>3</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Initalizes WiFi interfaces on ESP8266 or ESP32. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>WiFi channel for interface initialization </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00027">27</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
 

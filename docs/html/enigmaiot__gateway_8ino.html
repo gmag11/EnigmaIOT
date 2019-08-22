@@ -79,7 +79,7 @@ $(function() {
 <p>Gateway based on EnigmaIoT over ESP-NOW.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
-<code>#include &lt;CayenneLPPDec.h&gt;</code><br />
+<code>#include &lt;CayenneLPP.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>&gt;</code><br />
 </div>
@@ -91,11 +91,29 @@ Macros</h2></td></tr>
 <tr class="separator:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a073dbcb7f5bc4f4b45dc048b55eaff3d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a073dbcb7f5bc4f4b45dc048b55eaff3d">RED_LED</a>&#160;&#160;&#160;16</td></tr>
 <tr class="separator:a073dbcb7f5bc4f4b45dc048b55eaff3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9ef65fac5a6e3c6594811a7c8ee2291"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#ae9ef65fac5a6e3c6594811a7c8ee2291">GET_VERSION</a>&#160;&#160;&#160;&quot;get/version&quot;</td></tr>
+<tr class="separator:ae9ef65fac5a6e3c6594811a7c8ee2291"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bbd404f93aed82bc0d713238fa2bf6b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a1bbd404f93aed82bc0d713238fa2bf6b">GET_VERSION_ANS</a>&#160;&#160;&#160;&quot;result/version&quot;</td></tr>
+<tr class="separator:a1bbd404f93aed82bc0d713238fa2bf6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fa3ce9af2986feed0592ad3f82b0e8a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a8fa3ce9af2986feed0592ad3f82b0e8a">GET_SLEEP</a>&#160;&#160;&#160;&quot;get/sleeptime&quot;</td></tr>
+<tr class="separator:a8fa3ce9af2986feed0592ad3f82b0e8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d48508893d087bd76ac4061b112cce7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a8d48508893d087bd76ac4061b112cce7">GET_SLEEP_ANS</a>&#160;&#160;&#160;&quot;result/sleeptime&quot;</td></tr>
+<tr class="separator:a8d48508893d087bd76ac4061b112cce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ffae85da5eb98e796fd818c50ac147a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a0ffae85da5eb98e796fd818c50ac147a">SET_SLEEP</a>&#160;&#160;&#160;&quot;set/sleeptime&quot;</td></tr>
+<tr class="separator:a0ffae85da5eb98e796fd818c50ac147a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03d78690a77ad7c71da69356e13f4111"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a03d78690a77ad7c71da69356e13f4111">SET_OTA</a>&#160;&#160;&#160;&quot;set/ota&quot;</td></tr>
+<tr class="separator:a03d78690a77ad7c71da69356e13f4111"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82391b9a9738bbf392fbad554f7ef527"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a82391b9a9738bbf392fbad554f7ef527">SET_OTA_ANS</a>&#160;&#160;&#160;&quot;result/ota&quot;</td></tr>
+<tr class="separator:a82391b9a9738bbf392fbad554f7ef527"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3d1862e85b946eaac15c4f8aa4ecbcd8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a3d1862e85b946eaac15c4f8aa4ecbcd8">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, uint16_t lostMessages)</td></tr>
-<tr class="separator:a3d1862e85b946eaac15c4f8aa4ecbcd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae061004c11be4b31810d82998d99a448"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#ae061004c11be4b31810d82998d99a448">processRxControlData</a> (char *macStr, const uint8_t *data, uint8_t length)</td></tr>
+<tr class="separator:ae061004c11be4b31810d82998d99a448"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ef41584e115125491e27e398576cb62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a2ef41584e115125491e27e398576cb62">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, uint16_t lostMessages, bool control)</td></tr>
+<tr class="separator:a2ef41584e115125491e27e398576cb62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57969f4236bd72eca4fa83155a025085"><td class="memItemLeft" align="right" valign="top"><a class="el" href="NodeList_8h.html#acba460d7f8050ad34fdfa8d29fc4c48a">control_message_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a57969f4236bd72eca4fa83155a025085">checkMsgType</a> (String data)</td></tr>
+<tr class="separator:a57969f4236bd72eca4fa83155a025085"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64fcdd05e254bbc38840619324f11bd2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a64fcdd05e254bbc38840619324f11bd2">onSerial</a> (String message)</td></tr>
 <tr class="separator:a64fcdd05e254bbc38840619324f11bd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58783672ef5e06fdededd53a8f397344"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__gateway_8ino.html#a58783672ef5e06fdededd53a8f397344">newNodeConnected</a> (uint8_t *mac)</td></tr>
@@ -131,6 +149,70 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a8fa3ce9af2986feed0592ad3f82b0e8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fa3ce9af2986feed0592ad3f82b0e8a">&#9670;&nbsp;</a></span>GET_SLEEP</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GET_SLEEP&#160;&#160;&#160;&quot;get/sleeptime&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00022">22</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+
+</div>
+</div>
+<a id="a8d48508893d087bd76ac4061b112cce7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d48508893d087bd76ac4061b112cce7">&#9670;&nbsp;</a></span>GET_SLEEP_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GET_SLEEP_ANS&#160;&#160;&#160;&quot;result/sleeptime&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00023">23</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+
+</div>
+</div>
+<a id="ae9ef65fac5a6e3c6594811a7c8ee2291"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9ef65fac5a6e3c6594811a7c8ee2291">&#9670;&nbsp;</a></span>GET_VERSION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GET_VERSION&#160;&#160;&#160;&quot;get/version&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00020">20</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+
+</div>
+</div>
+<a id="a1bbd404f93aed82bc0d713238fa2bf6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bbd404f93aed82bc0d713238fa2bf6b">&#9670;&nbsp;</a></span>GET_VERSION_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GET_VERSION_ANS&#160;&#160;&#160;&quot;result/version&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00021">21</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+
+</div>
+</div>
 <a id="a073dbcb7f5bc4f4b45dc048b55eaff3d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a073dbcb7f5bc4f4b45dc048b55eaff3d">&#9670;&nbsp;</a></span>RED_LED</h2>
 
@@ -147,7 +229,75 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a03d78690a77ad7c71da69356e13f4111"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03d78690a77ad7c71da69356e13f4111">&#9670;&nbsp;</a></span>SET_OTA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SET_OTA&#160;&#160;&#160;&quot;set/ota&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00025">25</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+
+</div>
+</div>
+<a id="a82391b9a9738bbf392fbad554f7ef527"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82391b9a9738bbf392fbad554f7ef527">&#9670;&nbsp;</a></span>SET_OTA_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SET_OTA_ANS&#160;&#160;&#160;&quot;result/ota&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00026">26</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+
+</div>
+</div>
+<a id="a0ffae85da5eb98e796fd818c50ac147a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ffae85da5eb98e796fd818c50ac147a">&#9670;&nbsp;</a></span>SET_SLEEP</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SET_SLEEP&#160;&#160;&#160;&quot;set/sleeptime&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00024">24</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a57969f4236bd72eca4fa83155a025085"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57969f4236bd72eca4fa83155a025085">&#9670;&nbsp;</a></span>checkMsgType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="NodeList_8h.html#acba460d7f8050ad34fdfa8d29fc4c48a">control_message_type_t</a> checkMsgType </td>
+          <td>(</td>
+          <td class="paramtype">String&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00109">109</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+
+</div>
+</div>
 <a id="afe461d27b9c48d5921c00d521181f12f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afe461d27b9c48d5921c00d521181f12f">&#9670;&nbsp;</a></span>loop()</h2>
 
@@ -163,7 +313,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00097">97</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00184">184</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
 
 </div>
 </div>
@@ -183,7 +333,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00070">70</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00157">157</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
 
 </div>
 </div>
@@ -213,7 +363,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00077">77</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00164">164</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
 
 </div>
 </div>
@@ -233,12 +383,48 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00048">48</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00125">125</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
 
 </div>
 </div>
-<a id="a3d1862e85b946eaac15c4f8aa4ecbcd8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d1862e85b946eaac15c4f8aa4ecbcd8">&#9670;&nbsp;</a></span>processRxData()</h2>
+<a id="ae061004c11be4b31810d82998d99a448"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae061004c11be4b31810d82998d99a448">&#9670;&nbsp;</a></span>processRxControlData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void processRxControlData </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>macStr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00028">28</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+
+</div>
+</div>
+<a id="a2ef41584e115125491e27e398576cb62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ef41584e115125491e27e398576cb62">&#9670;&nbsp;</a></span>processRxData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -265,7 +451,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>lostMessages</em>&#160;</td>
+          <td class="paramname"><em>lostMessages</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>control</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -275,7 +467,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00019">19</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00073">73</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
 
 </div>
 </div>
@@ -294,7 +486,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00085">85</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__gateway_8ino_source.html#l00172">172</a> of file <a class="el" href="enigmaiot__gateway_8ino_source.html">enigmaiot_gateway.ino</a>.</p>
 
 </div>
 </div>

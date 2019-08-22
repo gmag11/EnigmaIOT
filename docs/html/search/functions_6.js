@@ -12,6 +12,7 @@ var searchData=
   ['getmaxmessagelength',['getMaxMessageLength',['../classEspnow__halClass.html#a3a037c0d31f906bc24a8475b376072fd',1,'Espnow_halClass']]],
   ['getnewnode',['getNewNode',['../classNodeList.html#a04851c9373e00d3c91c11a87d052f1f2',1,'NodeList']]],
   ['getnextactivenode',['getNextActiveNode',['../classNodeList.html#a72dc59a4a4d32e2918b20038f2837ee2',1,'NodeList::getNextActiveNode(uint16_t nodeId)'],['../classNodeList.html#aa7a9a81224292702488ae98c5999bcc7',1,'NodeList::getNextActiveNode(Node node)']]],
+  ['getnextnumber',['getNextNumber',['../EnigmaIOTGateway_8cpp.html#aad57d7638e39d6c3a95654f2c1e29e7f',1,'EnigmaIOTGateway.cpp']]],
   ['getnodedata',['getNodeData',['../classNode.html#a129745eaa2b8e08ac8201809a6e2cb17',1,'Node']]],
   ['getnodefromid',['getNodeFromID',['../classNodeList.html#aab4a7f7971eeeb4c0fa3af8064006b79',1,'NodeList']]],
   ['getnodefrommac',['getNodeFromMAC',['../classNodeList.html#a08530d06e81c160b346047e37839ee7d',1,'NodeList']]],
@@ -20,6 +21,7 @@ var searchData=
   ['getper',['getPER',['../classEnigmaIOTGatewayClass.html#afb41f49d1291eebbd676d4915ee193d1',1,'EnigmaIOTGatewayClass']]],
   ['getprivdhkey',['getPrivDHKey',['../classCryptModule.html#a9d106f893f329d8648aba205b3717806',1,'CryptModule']]],
   ['getpubdhkey',['getPubDHKey',['../classCryptModule.html#aefc84d57eee3eceeadc3611866925804',1,'CryptModule']]],
+  ['getsleeptime',['getSleepTime',['../classEnigmaIOTSensorClass.html#a649a25c2949d79db05515c327c896ea0',1,'EnigmaIOTSensorClass']]],
   ['getsleepy',['getSleepy',['../classNode.html#a5bf02d202c9cb76831de89e4d1ef8893',1,'Node']]],
   ['getstatus',['getStatus',['../classEnigmaIOTGatewayClass.html#aeb03da53e404ec2befe95f66788ffcdf',1,'EnigmaIOTGatewayClass::getStatus()'],['../classEnigmaIOTSensorClass.html#a2d917e89151e018476baa0826d4a3827',1,'EnigmaIOTSensorClass::getStatus()'],['../classNode.html#a6172f9eb39a02f01b692a53b9ee09c56',1,'Node::getStatus()']]],
   ['gettotalpackets',['getTotalPackets',['../classEnigmaIOTGatewayClass.html#a8eed8023d964354b6a2533c9662037e4',1,'EnigmaIOTGatewayClass']]]

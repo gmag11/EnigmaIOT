@@ -72,8 +72,8 @@ $(function() {
 <h2>Introduction</h2>
 <p><b>EnigmaIoT</b> is an open source solution for wireless multi sensor systems. It has two main components, multiple <b>nodes</b> and one <b>gateway</b>.</p>
 <p>A number of nodes with one or more sensors each one communicate in a <b>secure</b> way to a central gateway in a star network using EnigmaIoT protocol.</p>
-<p>This protocol has been designed with security on mind. All sensor data is encrypted with a random key that changes periodically. Key is unique for each node and dinamically calculated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.</p>
-<p>I designed this because I was seaching for a way to have a relatively high number of nodes at home. I thought about using WiFi butit would overload my home router. So I looked for an alternative. I thought about LoRa or cheap 2.4GHz modules but I wanted the simplest solution in terms of hardware.</p>
+<p>This protocol has been designed with security on mind. All sensor data is encrypted with a random key that changes periodically. Key is unique for each node and dynamically calculated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.</p>
+<p>I designed this because I was searching for a way to have a relatively high number of nodes at home. I thought about using WiFi but it would overload my home router. So I looked for an alternative. I thought about LoRa or cheap 2.4GHz modules but I wanted the simplest solution in terms of hardware.</p>
 <p>ESP8266 microcontroller implements a protocol known as ESP-NOW. It is a point to point protocol, based on special WiFi frames, that works in a connectionless way and every packet is short in time. Because of this it eases to have a battery powered node so that it enables designing totally wireless sensors.</p>
 <p>But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So I thought that I could implement encryption on payload but I found many problems I should solve to grade this as "secure enough".</p>
 <p>Find library documentation on <a href="https://gmag11.github.io/EnigmaIOT">https://gmag11.github.io/EnigmaIOT</a></p>
@@ -102,18 +102,18 @@ $(function() {
 </ul>
 <p>Notice that network key used to implement this feature is stored on flash. ESP8266 do not allow flash encryption so network key may be recovered reading flash. On the other side, ESP32 is able to encrypt flash memory, but EnigmaIoT is not still tested on it.</p>
 <ul>
-<li>[x] Plugabble phisical layer communication. Right now only ESP-NOW protocol is developed but you can easily add more communication alternatives</li>
+<li>[x] Pluggable physical layer communication. Right now only ESP-NOW protocol is developed but you can easily add more communication alternatives</li>
 <li>[x] When using ESP-NOW only esp8266 is needed. No more electronics apart from sensor</li>
 <li>[x] Optional data message counter to detect lost or repeated messages</li>
 <li>[x] Designed as two libraries (one for gateway, one for node) for easier use.</li>
-<li>[x] Selectable crypto algorhithm</li>
+<li>[x] Selectable crypto algorithm</li>
 <li>[x] <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> and Gateway do store shared keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on</li>
 <li>[x] Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message</li>
-<li>[x] Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memmory is the recommended place, and it is the one currently implemented, but SPIFFS or EEPROM would be possible.</li>
+<li>[x] Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memory is the recommended place, and it is the one currently implemented, but SPIFFS or EEPROM would be possible.</li>
 <li>[x] Initial configuration over WiFi portal on each device</li>
-<li>[ ] <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> configuration on service using control downlink commands (<b>in depvelopment</b>)</li>
+<li>[x] <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> configuration on service using control downlink commands</li>
 <li>[ ] OTA over WiFi</li>
-<li>[ ] OTA over MQTT/ESP-NOW (<b>under study</b>)</li>
+<li>[x] OTA over MQTT/ESP-NOW</li>
 </ul>
 <h2>Design</h2>
 <h3>System Design</h3>
@@ -121,20 +121,20 @@ $(function() {
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/system_layers.png" alt="Software Layers" class="inline"/>
 <ul>
 <li><b>Application layer</b> is not controlled by EnigmaIoT protocol but main program. User may choose whatever data format or final destination of payload. A good option is to use CayenneLPP format but any other format or even raw data may be used. The only limit is the maximum packet length that, for ESP-NOW is around 200 bytes.</li>
-<li><b>Link layer</b> is the one that add privacy and security. It manages connection between nodes and gateway in a transparent way. It does key agreement and node registration and checks the correctness of data messages. In case of any error it automatically start a new registration process. On this layer, data packets are encrypted using calculated symetric key.</li>
-<li><b>Physical layer</b> currently uses connectionless ESP-NOW. But a hardware abstaction layer has been designed so it is possible to develop interfaces for any other layer 1 technology like LoRa or nRF24F01 radios.</li>
+<li><b>Link layer</b> is the one that add privacy and security. It manages connection between nodes and gateway in a transparent way. It does key agreement and node registration and checks the correctness of data messages. In case of any error it automatically start a new registration process. On this layer, data packets are encrypted using calculated symmetric key.</li>
+<li><b>Physical layer</b> currently uses connectionless ESP-NOW. But a hardware abstraction layer has been designed so it is possible to develop interfaces for any other layer 1 technology like LoRa or nRF24F01 radios.</li>
 </ul>
 <h3>EnigmaIoT protocol</h3>
-<p>The named <b>EnigmaIoT protocol</b> is designed to use encrypted communication without the need to hardcode the key. It uses <a href="https://security.stackexchange.com/a/196480">Diffie Hellman</a> algorythm to calculate a shared key.</p>
-<p>The process starts with node anouncing itself with a Client Hello message. It tells the gateway its intention to establish a new shared key. It sends Diffie Hellman public part to be used on gateway to calculate the key.</p>
+<p>The named <b>EnigmaIoT protocol</b> is designed to use encrypted communication without the need to hardcode the key. It uses <a href="https://security.stackexchange.com/a/196480">Diffie Hellman</a> algorithm to calculate a shared key.</p>
+<p>The process starts with node announcing itself with a Client Hello message. It tells the gateway its intention to establish a new shared key. It sends Diffie Hellman public part to be used on gateway to calculate the key.</p>
 <p>Gateway answers with Server Hello message that includes its public data for key calculation on node.</p>
 <p>Once key is calculated, node send an encrypted message as Key Exchange Finished message. A 32 bit CRC is calculated and it is used for decryption test.</p>
 <p>If gateway validates CRC correctly it answers with a Cipher Finished message. It carries a CRC too.</p>
-<p>This process is protected with a 32 byte shared <b>network key</b>, used for <b>authentication</b>. If network key is not the same on gateway and node this will lead to CRC errors.</p>
+<p>This process is protected with a 32 byte shared <b>network key</b>, used for <b>authentication</b>. Client Hello and Server Hello messages are encrypted whit this network key. If network key is not the same on gateway and node this will lead to CRC errors and messages will be ignored.</p>
 <p>In case of any error in this process gateway sends an Invalidate Key to reset to original status and forgets key.</p>
 <p>When key is marked as valid node may start sending sensor data.</p>
 <p>Optionally gateway can send data to node. As node may be sleeping between communications, downlink messages has to be sent just after uplink data. So, one downlink message is queued until node communicates. <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> waits some milliseconds before sleep for downlink data.</p>
-<p>In case of nodes that do not sleep (like actuators) gateway can send downlink data in any moment. Sleepy node is signalled during node registration on a bit on Key Exchange Finished message. It is set to 1 to signal that node will sleep just after sending data.</p>
+<p>In case of nodes that do not sleep (like actuators) gateway can send downlink data in any moment. Sleepy node is signaled during node registration on a bit on Key Exchange Finished message. It is set to 1 to signal that node will sleep just after sending data.</p>
 <p>Key is forced to change every period. Gateway decides the moment to invalidate each node key. If so, it sends an invalidate key as downlink, after next data message communication.</p>
 <p>After that node may start new key agreement sending a new Client Hello message.</p>
 <p>All nodes and gateway are identified by its MAC address. No name is assigned so no configuration is needed on node. Function assignment has to be done in a higher level.</p>
@@ -145,26 +145,31 @@ $(function() {
 <h3>Client Hello message</h3>
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/ClientHello.png" alt="Client Hello message format" class="inline"/>
 <p>Client hello is sent by node to start registration procedure. It includes the public key to be used on Diffie Hellman algorithm to calculate the key. A random filled 16 byte field is reserved for future use.</p>
-<p>This message is sent unencrypted.</p>
+<p>This message is sent encrypted with network key.</p>
 <h3>Server Hello message</h3>
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/ServerHello.png" alt="Server Hello message format" class="inline"/>
 <p>After receiving and checking Client Hello message, gateway responds with a Server Hello message. It carries gateway's public key to let node calculate key using DH. There is a random 16 byte field reserved for future use.</p>
-<p>Server Hello message is sen unencrypted.</p>
+<p>Server Hello message is sent encrypted with network key.</p>
 <h3>Key Exchange Finished message</h3>
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/KeyExchangeFinished.png" alt="Key Exchange Finished message format" class="inline"/>
 <p>After node has calculated shared key it generates a Key Exchange Finished message filled with random data and a CRC. These fields are encrypted using shared key and an initialization value (IV) that is sent unencrypted.</p>
 <p>It is used by gateway to check that calculated shared key is correct.</p>
 <h3>Cypher Finished message</h3>
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/CypherFinished.png" alt="Cypher Finished message format" class="inline"/>
-<p>After gateway has decoded correctly Key Exchange Finished message, it build a Cypher Finished message to let node check that key is correct. Gateway assings node a NodeID. It is signalled as a 2 byte field.</p>
+<p>After gateway has decoded correctly Key Exchange Finished message, it build a Cypher Finished message to let node check that key is correct. Gateway assigns node a NodeID. It is signaled as a 2 byte field.</p>
 <h3>Sensor Data message</h3>
-<img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorData.png" alt="Sensor Data message format" class="inline"/>
-<p>Sensor data is always encrypted using shaerd key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.</p>
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorData.png" alt="Node payload message format" class="inline"/>
+<p>Sensor data is always encrypted using shared key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.</p>
 <p>Total message length is included on a 2 byte field.</p>
-<h3>Sensor Command message (downlink)</h3>
-<img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorCommand-Downlink.png" alt="Sensor Command message format" class="inline"/>
+<h3><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> control message (downlink)</h3>
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorCommand-Downlink.png" alt="Node control message format" class="inline"/>
 <p>Gateway can send commands to an individual node in a similar way as sensor data is sent by nodes. For nodes that can be slept between consecutive data messages, this commands are queued and sent just after a data message is received.</p>
-<p>Only last message is queued. In case Gateway tries to send a new message, old one gets deleted and overriden by the new one.</p>
+<p>Only last message is queued. In case Gateway tries to send a new message, old one gets deleted and overridden by the new one.</p>
+<h3>Control message</h3>
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/ControlComand-Downlink.png" alt="DL Control Command message format" class="inline"/>
+ <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/ControlComand-Uplink.png" alt="UL Control Command message format" class="inline"/>
+<p>Gateway and node can exchange internal control commands. These are used to set internal protocol parameters. This type of messges are processed like normal downlink messages, but are not passed to higher level in <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a>.</p>
+<p>Some control messages, like OTA update messages, require that they are processed immediately. Hence, it is required that node is not in deep sleep mode. This can be controlled, for instance, using another control command to set sleep time to 0.</p>
 <h3>Invalidate Key message</h3>
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/InvalidateKey.png" alt="Invalidate Key message format" class="inline"/>
 <p>After every data message from nodes, gateway evaluates key integrity and validity. In case of any error decoding the packet gateways ignores data and reply with this message indicating the reason that caused error. <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> must start a new registration procedure in order to send data again. After this new registration node resends the last data message.</p>
@@ -183,6 +188,11 @@ $(function() {
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/NodeRegistrationCollision.svg?sanitize=true" alt="Node Registration Collision message sequence" width="600" class="inline"/>
 <h3>Wrong Data Counter</h3>
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/WrongCounter.svg?sanitize=true" alt="Wrong Counter message sequence" width="400" class="inline"/>
+<h2>Hardware description</h2>
+<h3><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a></h3>
+<p>tbd.</p>
+<h3>Gateway</h3>
+<p>tbd.</p>
 <h2>Data format</h2>
 <p>Although it is not mandatory at all, use of <a href="https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload">CayenneLPP format</a> is recommended for sensor data compactness.</p>
 <p>You may use <a href="https://github.com/sabas1080/CayenneLPP">CayenneLPP encoder library</a> on sensor node and <a href="https://github.com/gmag11/CayenneLPPdec">CayenneLPP decoder library</a> for decoding on Gateway.</p>
@@ -194,32 +204,75 @@ $(function() {
 <p>After every received message, gateway detects if any packet has been lost before and reports it using MQTT message using this format: </p><div class="fragment"><div class="line">&lt;configurable prefix&gt;/&lt;node address&gt;/status {&quot;per&quot;:&lt;packet error rate&gt;,&quot;lostmessages&quot;:&lt;Number of lost messages&gt;,&quot;totalmessages&quot;:&lt;Total number of messages&gt;,&quot;packetshour&quot;:&lt;Packet rate&gt;}</div></div><!-- fragment --><p> If ESP-NOW is used for node communication, ESP8266 cannot use WiFi in a reliable way. That's why in this case gateway will be formed by two ESP8266 linked by serial port. First one will output MQTT data in form of ascii strings and second one will forward them to MQTT broker.</p>
 <h3>Downlink messages</h3>
 <p>EnigmaIoT allows sending messages from gateway to nodes. In my implementation I use MQTT to trigger downlink messages too.</p>
-<p>To make it simpler, downlink messages use the same estructure than uplink. </p><div class="fragment"><div class="line">&lt;configurable prefix&gt;/&lt;node address&gt;/&lt;command&gt; &lt;data&gt;</div></div><!-- fragment --><p> <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> address means destination node address. Configurable prefix is the same used for uplink communication.</p>
+<p>To make it simpler, downlink messages use the same structure than uplink. </p><div class="fragment"><div class="line">&lt;configurable prefix&gt;/&lt;node address&gt;/&lt;command&gt; &lt;data&gt;</div></div><!-- fragment --><p> <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> address means destination node address. Configurable prefix is the same used for uplink communication.</p>
 <p>Commands are developed by user, but some are reserved for control commands. An uplink message could be like this</p>
 <div class="fragment"><div class="line">enigmaiot/12:34:56:78:90:12/light ON</div></div><!-- fragment --><h3>Control messages</h3>
 <p>Control messages are intended to set node specific settings, like sleep time, channel, trigger OTA update, etc. They are not passed to the main sketch but gateway treat them as normal downlink messages.</p>
 <p>Normally control commands trigger a response as an uplink message.</p>
-<p>This is the list of currently implemented control commands</p>
+<p>This is the list of currently implemented control commands:</p>
+<ul>
+<li>Get node protocol version</li>
+<li>Get sleep duration time</li>
+<li>Set sleep duration time</li>
+<li>OTA Update</li>
+</ul>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Command  </th><th class="markdownTableHeadNone">Response   </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/version</code>  </td><td class="markdownTableBodyNone"><code>&lt;configurable prefix&gt;/&lt;node address&gt;/version &lt;version&gt;</code>   </td></tr>
+<td class="markdownTableBodyNone"><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/version</code>  </td><td class="markdownTableBodyNone"><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/version &lt;version&gt;</code>   </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/sleeptime</code>  </td><td class="markdownTableBodyNone"><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime &lt;sleep_time&gt;</code>   </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/sleeptime &lt;sleep_time&gt;</code>  </td><td class="markdownTableBodyNone"><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime &lt;sleep_time&gt;</code>   </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/ota</code>  </td><td class="markdownTableBodyNone"><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/ota &lt;ota_result_code&gt;</code>   </td></tr>
 </table>
-<p>For instance, publishing <code>enigmaiot/12:34:56:78:90:12/get/version</code> will produce <code>enigmaiot/12:34:56:78:90:12/version 0.2.0</code>.</p>
+<p>For instance, publishing <code>enigmaiot/12:34:56:78:90:12/get/version</code> will produce <code>enigmaiot/12:34:56:78:90:12/result/version 0.2.0</code>.</p>
+<p>Messages are encoded to reduce the amount of bytes to be sent over internal protocol, so that the air time is as short as possible.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Command  </th><th class="markdownTableHeadNone">Msg type  </th><th class="markdownTableHeadNone">Encoding   </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Get version  </td><td class="markdownTableBodyNone"><code>0x01</code>  </td><td class="markdownTableBodyNone"></td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Version result  </td><td class="markdownTableBodyNone"><code>0x81</code>  </td><td class="markdownTableBodyNone">version in ASCII   </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Get sleep time  </td><td class="markdownTableBodyNone"><code>0x02</code>  </td><td class="markdownTableBodyNone"></td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Set sleep time  </td><td class="markdownTableBodyNone"><code>0x02</code>  </td><td class="markdownTableBodyNone">Sleep time in seconds (Unsigned integer - 4 bytes)   </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Sleep time result  </td><td class="markdownTableBodyNone"><code>0x82</code>  </td><td class="markdownTableBodyNone">Sleep time in seconds (Unsigned integer - 4 bytes)   </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">OTA Update  </td><td class="markdownTableBodyNone"><code>0xEF</code>  </td><td class="markdownTableBodyNone">OTA update specific format   </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">OTA Update result  </td><td class="markdownTableBodyNone"><code>0xFF</code>  </td><td class="markdownTableBodyNone">OTA result code   </td></tr>
+</table>
+<h2>OTA Update</h2>
+<p>OTA updates are transferred using the same mechanism. Firmware is sent over MQTT using a <a href="./EnigmaIoTUpdate/EnigmaIoTUpdate.py">Python script</a>. Then gateway selects the appropiate node and send this binary data over ESP-NOW.</p>
+<p>As ESP-NOW restricts <b>maximum payload to 250 bytes per message</b> firmware is splitted in chunks. Every chunk is <b>220 bytes</b> long, so that it fits toghether with message headers and is multiple of 4. This splitting work is done by <code><a class="el" href="EnigmaIoTUpdate_8py.html">EnigmaIoTUpdate.py</a></code> script.</p>
+<h3>Using <a class="el" href="EnigmaIoTUpdate_8py.html">EnigmaIoTUpdate.py</a></h3>
+<p>A requirement is to have installed <a href="https://www.python.org/download/releases/3.0/">Python3</a> in the comuter used to do the update.</p>
+<p>In order to run the update, you need to install <a href="https://pypi.org/project/paho-mqtt/"><code>paho-mqtt</code></a> library. To do that you can follow instructions <a href="https://pypi.org/project/paho-mqtt/#installation">here</a>.</p>
+<div class="fragment"><div class="line">$python3 ./EnigmaIoTUpdate.py --help</div><div class="line"></div><div class="line">Usage: EnigmaIoTUpdate.py [options]</div><div class="line"></div><div class="line">Options:</div><div class="line">  -h, --help            show this help message and exit</div><div class="line">  -f FILENAME, --file=FILENAME</div><div class="line">                        File to program into device</div><div class="line">  -d ADDRESS, --daddress=ADDRESS</div><div class="line">                        Device address</div><div class="line">  -t BASETOPIC, --topic=BASETOPIC</div><div class="line">                        Base topic for MQTT messages</div><div class="line">  -u MQTTUSER, --user=MQTTUSER</div><div class="line">                        MQTT server username</div><div class="line">  -P MQTTPASS, --password=MQTTPASS</div><div class="line">                        MQTT server user password</div><div class="line">  -S MQTTSERVER, --server=MQTTSERVER</div><div class="line">                        MQTT server address or name</div><div class="line">  -p MQTTPORT, --port=MQTTPORT</div><div class="line">                        MQTT server port</div><div class="line">  -s, --secure          Use secure TLS in MQTT connection. Normally you should</div><div class="line">                        use port 8883</div><div class="line">  --unsecure            Use secure plain TCP in MQTT connection. Normally you</div><div class="line">                        should use port 1883</div></div><!-- fragment --><p>An example of this command could be like this:</p>
+<div class="fragment"><div class="line">python3 ./EnigmaIoTUpdate.py \</div><div class="line">             -f EnigmaIOTsensor.bin \</div><div class="line">             -d 11:22:33:44:55:66 \</div><div class="line">             -t enigmaiot \</div><div class="line">             -u user \</div><div class="line">             -P pass \</div><div class="line">             -S mysecure.mqtt.server \</div><div class="line">             -p 8883 \</div><div class="line">             -s</div></div><!-- fragment --><p>Notice that using ESP-NOW device address correspond to <b>MAC address</b> of your ESP8266.</p>
 <h2>External libraries</h2>
 <ul>
 <li>CRC32 &ndash; <a href="https://github.com/bakercp/CRC32">https://github.com/bakercp/CRC32</a></li>
 <li>ESPAsyncWebServer &ndash; <a href="https://github.com/me-no-dev/ESPAsyncWebServer">https://github.com/me-no-dev/ESPAsyncWebServer</a></li>
 <li>ESPAsyncWiFiManager &ndash; <a href="https://github.com/alanswx/ESPAsyncWiFiManager">https://github.com/alanswx/ESPAsyncWiFiManager</a></li>
 <li>Arduino Crypto Library &ndash; <a href="https://github.com/rweather/arduinolibs">https://github.com/rweather/arduinolibs</a><ul>
-<li>This one needs a modification in order to run successfuly on ESP8266 Arduino core &gt; 2.5.x. <b>You have to change line 30</b> on <code>Crypto/BigNumberUtil.h</code> from <code>#if defined (__AVR__) || defined(ESP8266)</code> to <code>#if defined (__AVR__)</code>. <b>Without this, code will crash</b>.</li>
-<li>There are some objects that cause conflicts if you are using windows due to capitalisation. Files <code>SHA1.cpp</code> and <code>SHA1.h</code> <b>have to be deleted</b> from <code>CryptoLegacy/src</code></li>
+<li><p class="startli">This one needs a modification in order to run successfully on ESP8266 Arduino core &gt; 2.5.x. <b>You have to change line 30</b> on <code>Crypto/BigNumberUtil.h</code> from</p>
+<p class="startli">​ <code>#if defined (__AVR__) || defined(ESP8266)</code> to</p>
+<p class="startli">​ <code>#if defined (__AVR__)</code></p>
+<p class="startli"><b>Without this, code will crash</b>.</p>
+</li>
+<li>There are some objects that cause conflicts if you are using windows due to capitalization. Files <code>SHA1.cpp</code> and <code>SHA1.h</code> <b>have to be deleted</b> from <code>CryptoLegacy/src</code></li>
 </ul>
 </li>
+<li>ESP8266TrueRandom &ndash; <a href="https://github.com/marvinroger/ESP8266TrueRandom">https://github.com/marvinroger/ESP8266TrueRandom</a></li>
 <li>PubSubClient &ndash; <a href="https://github.com/knolleary/pubsubclient">https://github.com/knolleary/pubsubclient</a></li>
-<li>CayenneLPP &ndash; <a href="https://github.com/sabas1080/CayenneLPP">https://github.com/sabas1080/CayenneLPP</a></li>
-<li>CayenneLPPDec &ndash; <a href="https://github.com/gmag11/CayenneLPPdec">https://github.com/gmag11/CayenneLPPdec</a></li>
+<li>CayenneLPP &ndash; <a href="https://github.com/sabas1080/CayenneLPP">https://github.com/sabas1080/CayenneLPP</a> version &gt; 1.0.2</li>
 <li>ArduinoJSON 6 &ndash; <a href="https://github.com/bblanchon/ArduinoJson">https://github.com/bblanchon/ArduinoJson</a> </li>
 </ul>
 </div></div><!-- PageDoc -->

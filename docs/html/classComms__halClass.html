@@ -90,10 +90,11 @@ Inheritance diagram for Comms_halClass:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a10a4852b704badbc2902560a61dfdd78"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#a10a4852b704badbc2902560a61dfdd78">begin</a> (uint8_t *<a class="el" href="enigmaiot__sensor__ds18b20_8ino.html#ace2c0445ab33641bc6497093c8a1f5f5">gateway</a>, uint8_t channel, <a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4">peerType_t</a> peerType=<a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4ac3db8869f744d82732e37aafcd833616">COMM_SENSOR</a>)=0</td></tr>
+<tr class="memitem:a10a4852b704badbc2902560a61dfdd78"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#a10a4852b704badbc2902560a61dfdd78">begin</a> (uint8_t *<a class="el" href="enigmaiot__sensor_8ino.html#ace2c0445ab33641bc6497093c8a1f5f5">gateway</a>, uint8_t channel, <a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4">peerType_t</a> peerType=<a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4ac3db8869f744d82732e37aafcd833616">COMM_SENSOR</a>)=0</td></tr>
 <tr class="memdesc:a10a4852b704badbc2902560a61dfdd78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup communication environment and establish the connection from node to gateway.  <a href="#a10a4852b704badbc2902560a61dfdd78">More...</a><br /></td></tr>
 <tr class="separator:a10a4852b704badbc2902560a61dfdd78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa69c265e65ce31580af6d5dd9b3cd40f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#aa69c265e65ce31580af6d5dd9b3cd40f">stop</a> ()=0</td></tr>
+<tr class="memdesc:aa69c265e65ce31580af6d5dd9b3cd40f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Terminates communication and closes all connectrions.  <a href="#aa69c265e65ce31580af6d5dd9b3cd40f">More...</a><br /></td></tr>
 <tr class="separator:aa69c265e65ce31580af6d5dd9b3cd40f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35ad31b72c7d9e1d72aca131235aa111"><td class="memItemLeft" align="right" valign="top">virtual uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#a35ad31b72c7d9e1d72aca131235aa111">send</a> (uint8_t *da, uint8_t *data, int len)=0</td></tr>
 <tr class="memdesc:a35ad31b72c7d9e1d72aca131235aa111"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends data to the other peer.  <a href="#a35ad31b72c7d9e1d72aca131235aa111">More...</a><br /></td></tr>
@@ -395,6 +396,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Terminates communication and closes all connectrions. </p>
 
 <p>Implemented in <a class="el" href="classEspnow__halClass.html#add2ac8b2494fa1b5f09d32e17118ecda">Espnow_halClass</a>.</p>
 
