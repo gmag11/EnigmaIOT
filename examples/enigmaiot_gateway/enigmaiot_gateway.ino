@@ -9,7 +9,7 @@
   */
 
 #include <Arduino.h>
-#include <CayenneLPPDec.h>
+#include <CayenneLPP.h>
 #include <EnigmaIOTGateway.h>
 #include <espnow_hal.h>
 
@@ -73,6 +73,7 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control) {
 	StaticJsonDocument<256> jsonBuffer;
 	JsonArray root = jsonBuffer.createNestedArray ();
+	CayenneLPP cayennelpp (250);
 
 	char macstr[18];
 	mac2str (mac, macstr);
@@ -84,7 +85,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, u
 
 	//Serial.printf ("Data from %s --> %s\n", macstr, printHexBuffer (buffer, length));
 
-	CayenneLPPDec::ParseLPP (buffer, length, root);
+	cayennelpp.decode ((uint8_t *)buffer, length, root);
 	//root.prettyPrintTo (Serial);
 	//Serial.println ();
 	Serial.printf ("~/%s/data;", macstr);
