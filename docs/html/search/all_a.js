@@ -2,6 +2,7 @@ var searchData=
 [
   ['lastmessagecounter',['lastMessageCounter',['../structrtcmem__data__t.html#ae441a9d80bb39bdc39aee158a5d9f114',1,'rtcmem_data_t::lastMessageCounter()'],['../structnode__instance.html#a6988622d76bd1d76a0d040d97b8d2c91',1,'node_instance::lastMessageCounter()'],['../classNode.html#af2378f7b085ccdc06314b12263fd2d34',1,'Node::lastMessageCounter()']]],
   ['lastmessagetime',['lastMessageTime',['../structnode__instance.html#a7eadabd847f82e2383dd440fd3cddc37',1,'node_instance::lastMessageTime()'],['../classNode.html#a2d56bbba3211927eff545e385ef5d162',1,'Node::lastMessageTime()']]],
+  ['lastotamsg',['lastOTAmsg',['../classEnigmaIOTSensorClass.html#abe0efb6410dff1b8f78466773030ecee',1,'EnigmaIOTSensorClass']]],
   ['led',['led',['../classEnigmaIOTSensorClass.html#a4feaa9f155e6ba6bc3a285af6c7cbfaf',1,'EnigmaIOTSensorClass']]],
   ['ledflashing',['ledFlashing',['../MqttBridge_8ino.html#a9d49fc49f7d17af876a0629e9e0a22e6',1,'MqttBridge.ino']]],
   ['ledontime',['ledOnTime',['../classEnigmaIOTSensorClass.html#add7a90136eb634cd046ad8ba23921935',1,'EnigmaIOTSensorClass']]],
@@ -9,5 +10,5 @@ var searchData=
   ['loadbridgeconfig',['loadBridgeConfig',['../MqttBridge_8ino.html#aac35436ae06d3c2d50fc7cfa77e140e1',1,'MqttBridge.ino']]],
   ['loadflashdata',['loadFlashData',['../classEnigmaIOTGatewayClass.html#aaa13dfa56be2d1ad062cc69f6deef331',1,'EnigmaIOTGatewayClass::loadFlashData()'],['../classEnigmaIOTSensorClass.html#a4055223c59e48d3281b0dbb07db625c8',1,'EnigmaIOTSensorClass::loadFlashData()']]],
   ['loadrtcdata',['loadRTCData',['../classEnigmaIOTSensorClass.html#a50d2f1b9ac6a47d5b1992278bd299941',1,'EnigmaIOTSensorClass']]],
-  ['loop',['loop',['../enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;enigmaiot_gateway.ino'],['../enigmaiot__sensor_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;enigmaiot_sensor.ino'],['../enigmaiot__sensor__ds18b20_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;enigmaiot_sensor_ds18b20.ino'],['../MqttBridge_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;MqttBridge.ino']]]
+  ['loop',['loop',['../enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;enigmaiot_gateway.ino'],['../enigmaiot__sensor_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;enigmaiot_sensor.ino'],['../MqttBridge_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;MqttBridge.ino']]]
 ];

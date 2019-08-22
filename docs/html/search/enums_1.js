@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['node_5fstatus',['node_status',['../NodeList_8h.html#a8dd9280b6a6e53e65414115f47b0df6a',1,'NodeList.h']]]
+  ['gatewaymessagetype_5ft',['gatewayMessageType_t',['../EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613',1,'EnigmaIOTGateway.h']]],
+  ['gwinvalidatereason_5ft',['gwInvalidateReason_t',['../EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977',1,'EnigmaIOTGateway.h']]]
 ];

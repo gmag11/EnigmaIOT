@@ -84,9 +84,10 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ab234d1358562b66925fb7223c087556b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#ab234d1358562b66925fb7223c087556b">MAX_MESSAGE_LENGTH</a>&#160;&#160;&#160;250</td></tr>
+<tr class="memdesc:ab234d1358562b66925fb7223c087556b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum payload size on ESP-NOW.  <a href="#ab234d1358562b66925fb7223c087556b">More...</a><br /></td></tr>
 <tr class="separator:ab234d1358562b66925fb7223c087556b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74168aceb3fa9ec24d6fed419b7e8332"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a74168aceb3fa9ec24d6fed419b7e8332">MAX_KEY_VALIDITY</a>&#160;&#160;&#160;86400000</td></tr>
-<tr class="memdesc:a74168aceb3fa9ec24d6fed419b7e8332"><td class="mdescLeft">&#160;</td><td class="mdescRight">1 day  <a href="#a74168aceb3fa9ec24d6fed419b7e8332">More...</a><br /></td></tr>
+<tr class="memdesc:a74168aceb3fa9ec24d6fed419b7e8332"><td class="mdescLeft">&#160;</td><td class="mdescRight">After this time (in ms) a nude is unregistered.  <a href="#a74168aceb3fa9ec24d6fed419b7e8332">More...</a><br /></td></tr>
 <tr class="separator:a74168aceb3fa9ec24d6fed419b7e8332"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46020af35c6aa3e34e0d9611c64f3469"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a46020af35c6aa3e34e0d9611c64f3469">MAX_NODE_INACTIVITY</a>&#160;&#160;&#160;86400000U</td></tr>
 <tr class="memdesc:a46020af35c6aa3e34e0d9611c64f3469"><td class="mdescLeft">&#160;</td><td class="mdescRight">After this time (in ms) a node is marked as gone.  <a href="#a46020af35c6aa3e34e0d9611c64f3469">More...</a><br /></td></tr>
@@ -96,20 +97,32 @@ Macros</h2></td></tr>
 <tr class="memitem:a60424869b9d0955e8745158aadcd95b0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a60424869b9d0955e8745158aadcd95b0">CYPHER_TYPE</a>&#160;&#160;&#160;CFB&lt;<a class="el" href="EnigmaIoTconfig_8h.html#a6d50557f65f1b19ea6b3f43abe4f0a73">BLOCK_CYPHER</a>&gt;</td></tr>
 <tr class="separator:a60424869b9d0955e8745158aadcd95b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59484fb7e3490df6600b5add60badbb7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a59484fb7e3490df6600b5add60badbb7">DEBUG_ESP_PORT</a>&#160;&#160;&#160;Serial</td></tr>
+<tr class="memdesc:a59484fb7e3490df6600b5add60badbb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stream to output debug info. It will normally be <code>Serial</code>  <a href="#a59484fb7e3490df6600b5add60badbb7">More...</a><br /></td></tr>
 <tr class="separator:a59484fb7e3490df6600b5add60badbb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2d33ccaf63f5d5b66552b95426c0137"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#ac2d33ccaf63f5d5b66552b95426c0137">DEBUG_LEVEL</a>&#160;&#160;&#160;<a class="el" href="debug_8h.html#a42f8c497a1968074f38bf5055c650dca">VERBOSE</a></td></tr>
+<tr class="memitem:ac2d33ccaf63f5d5b66552b95426c0137"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#ac2d33ccaf63f5d5b66552b95426c0137">DEBUG_LEVEL</a>&#160;&#160;&#160;<a class="el" href="debug_8h.html#a271d8f7f52be750e5c744a394ec71344">WARN</a></td></tr>
+<tr class="memdesc:ac2d33ccaf63f5d5b66552b95426c0137"><td class="mdescLeft">&#160;</td><td class="mdescRight">Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE.  <a href="#ac2d33ccaf63f5d5b66552b95426c0137">More...</a><br /></td></tr>
 <tr class="separator:ac2d33ccaf63f5d5b66552b95426c0137"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:ac00fc04374b3c61f75a7f0f2f4eb60f9"><td class="memItemLeft" align="right" valign="top">static const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#ac00fc04374b3c61f75a7f0f2f4eb60f9">ENIGMAIOT_PROT_VERS</a> [] = &quot;0.2.0&quot;</td></tr>
+<tr class="memdesc:ac00fc04374b3c61f75a7f0f2f4eb60f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">EnitmaIoT Version.  <a href="#ac00fc04374b3c61f75a7f0f2f4eb60f9">More...</a><br /></td></tr>
 <tr class="separator:ac00fc04374b3c61f75a7f0f2f4eb60f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af561a36a9d4be8596b2187252342ffdf"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#af561a36a9d4be8596b2187252342ffdf">DEFAULT_CHANNEL</a> = 3</td></tr>
+<tr class="memdesc:af561a36a9d4be8596b2187252342ffdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">WiFi channel to be used on ESP-NOW.  <a href="#af561a36a9d4be8596b2187252342ffdf">More...</a><br /></td></tr>
 <tr class="separator:af561a36a9d4be8596b2187252342ffdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51608ff9a5042e649b061ea81b8c151b"><td class="memItemLeft" align="right" valign="top">static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a51608ff9a5042e649b061ea81b8c151b">RECONNECTION_PERIOD</a> = 2500</td></tr>
+<tr class="memdesc:a51608ff9a5042e649b061ea81b8c151b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time to retry Gateway connection.  <a href="#a51608ff9a5042e649b061ea81b8c151b">More...</a><br /></td></tr>
 <tr class="separator:a51608ff9a5042e649b061ea81b8c151b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52ec03c6ad068419f98e52f60718626e"><td class="memItemLeft" align="right" valign="top">static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a52ec03c6ad068419f98e52f60718626e">DOWNLINK_WAIT_TIME</a> = 400</td></tr>
+<tr class="memdesc:a52ec03c6ad068419f98e52f60718626e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time to wait for downlink message before sleep.  <a href="#a52ec03c6ad068419f98e52f60718626e">More...</a><br /></td></tr>
 <tr class="separator:a52ec03c6ad068419f98e52f60718626e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4400d84e20bfd15aed72aa991dd87d4f"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a4400d84e20bfd15aed72aa991dd87d4f">DEFAULT_SLEEP_TIME</a> = 10</td></tr>
+<tr class="memdesc:a4400d84e20bfd15aed72aa991dd87d4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default sleep time if it was not set.  <a href="#a4400d84e20bfd15aed72aa991dd87d4f">More...</a><br /></td></tr>
+<tr class="separator:a4400d84e20bfd15aed72aa991dd87d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb4681294ade5149d1db83df99744f6e"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#aeb4681294ade5149d1db83df99744f6e">OTA_TIMEOUT_TIME</a> = 10000</td></tr>
+<tr class="memdesc:aeb4681294ade5149d1db83df99744f6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timeout between OTA messages. In milliseconds.  <a href="#aeb4681294ade5149d1db83df99744f6e">More...</a><br /></td></tr>
+<tr class="separator:aeb4681294ade5149d1db83df99744f6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a863ca9be67da8cdc5fb9447378021e07"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a863ca9be67da8cdc5fb9447378021e07">KEY_LENGTH</a> = 32</td></tr>
 <tr class="memdesc:a863ca9be67da8cdc5fb9447378021e07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing.  <a href="#a863ca9be67da8cdc5fb9447378021e07">More...</a><br /></td></tr>
 <tr class="separator:a863ca9be67da8cdc5fb9447378021e07"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,7 +150,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00029">29</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00030">30</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -153,7 +166,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00030">30</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00031">31</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -169,7 +182,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00033">33</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p>Stream to output debug info. It will normally be <code>Serial</code> </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00034">34</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -180,12 +195,14 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define DEBUG_LEVEL&#160;&#160;&#160;<a class="el" href="debug_8h.html#a42f8c497a1968074f38bf5055c650dca">VERBOSE</a></td>
+          <td class="memname">#define DEBUG_LEVEL&#160;&#160;&#160;<a class="el" href="debug_8h.html#a271d8f7f52be750e5c744a394ec71344">WARN</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00034">34</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p>Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00035">35</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -201,7 +218,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>1 day </p>
+<p>After this time (in ms) a nude is unregistered. </p>
 
 <p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00018">18</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
@@ -218,6 +235,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Maximum payload size on ESP-NOW. </p>
 
 <p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00013">13</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
@@ -262,7 +281,35 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>WiFi channel to be used on ESP-NOW. </p>
+
 <p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00015">15</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+
+</div>
+</div>
+<a id="a4400d84e20bfd15aed72aa991dd87d4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4400d84e20bfd15aed72aa991dd87d4f">&#9670;&nbsp;</a></span>DEFAULT_SLEEP_TIME</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint32_t DEFAULT_SLEEP_TIME = 10</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default sleep time if it was not set. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00024">24</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -285,6 +332,8 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Time to wait for downlink message before sleep. </p>
 
 <p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00023">23</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
@@ -310,6 +359,8 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>EnitmaIoT Version. </p>
+
 <p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00014">14</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
@@ -328,7 +379,7 @@ Variables</h2></td></tr>
 
 <p>Initalization vector length used by selected crypto algorythm. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00028">28</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00029">29</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -346,7 +397,33 @@ Variables</h2></td></tr>
 
 <p>Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00027">27</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00028">28</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+
+</div>
+</div>
+<a id="aeb4681294ade5149d1db83df99744f6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb4681294ade5149d1db83df99744f6e">&#9670;&nbsp;</a></span>OTA_TIMEOUT_TIME</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint32_t OTA_TIMEOUT_TIME = 10000</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Timeout between OTA messages. In milliseconds. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00025">25</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -369,6 +446,8 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Time to retry Gateway connection. </p>
 
 <p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00022">22</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 

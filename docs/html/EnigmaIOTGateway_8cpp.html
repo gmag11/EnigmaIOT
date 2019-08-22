@@ -70,6 +70,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">EnigmaIOTGateway.cpp File Reference</div>  </div>
@@ -80,6 +81,8 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>&quot;</code><br />
 <code>#include &lt;FS.h&gt;</code><br />
+<code>#include &quot;libb64/cdecode.h&quot;</code><br />
+<code>#include &lt;Updater.h&gt;</code><br />
 </div>
 <p><a href="EnigmaIOTGateway_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -95,6 +98,23 @@ Macros</h2></td></tr>
 <tr class="separator:a2bd3dd6873079bda9c22994760e817dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9b144ebcf09f24dd9b85f95e6d118d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8cpp.html#ab9b144ebcf09f24dd9b85f95e6d118d0">SHMSG_LEN</a>&#160;&#160;&#160;sizeof(serverHello_msg)</td></tr>
 <tr class="separator:ab9b144ebcf09f24dd9b85f95e6d118d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aab651c53aaa5c935e3cc662399d0f091"><td class="memItemLeft" align="right" valign="top">const void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8cpp.html#aab651c53aaa5c935e3cc662399d0f091">memstr</a> (const void *str, size_t str_size, const char *target, size_t target_size)</td></tr>
+<tr class="separator:aab651c53aaa5c935e3cc662399d0f091"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bb1ee00fcd42cf937a7f6173e2a8647"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8cpp.html#a7bb1ee00fcd42cf937a7f6173e2a8647">buildGetVersion</a> (uint8_t *data, size_t &amp;dataLen, const uint8_t *inputData, size_t inputLen)</td></tr>
+<tr class="separator:a7bb1ee00fcd42cf937a7f6173e2a8647"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90e4277194db83896803d38387ec0369"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8cpp.html#a90e4277194db83896803d38387ec0369">buildGetSleep</a> (uint8_t *data, size_t &amp;dataLen, const uint8_t *inputData, size_t inputLen)</td></tr>
+<tr class="separator:a90e4277194db83896803d38387ec0369"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad57d7638e39d6c3a95654f2c1e29e7f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8cpp.html#aad57d7638e39d6c3a95654f2c1e29e7f">getNextNumber</a> (char *&amp;data, size_t &amp;len)</td></tr>
+<tr class="separator:aad57d7638e39d6c3a95654f2c1e29e7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad08e6ed992bb54d4ab67627295e7fcf0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8cpp.html#ad08e6ed992bb54d4ab67627295e7fcf0">isHexChar</a> (char c)</td></tr>
+<tr class="separator:ad08e6ed992bb54d4ab67627295e7fcf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc743eebc6ec1a9480db25fa0f59332a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8cpp.html#acc743eebc6ec1a9480db25fa0f59332a">buildOtaMsg</a> (uint8_t *data, size_t &amp;dataLen, const uint8_t *inputData, size_t inputLen)</td></tr>
+<tr class="separator:acc743eebc6ec1a9480db25fa0f59332a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab70cbb2f23008e90d70b1d744d3e71c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8cpp.html#aab70cbb2f23008e90d70b1d744d3e71c">buildSetSleep</a> (uint8_t *data, size_t &amp;dataLen, const uint8_t *inputData, size_t inputLen)</td></tr>
+<tr class="separator:aab70cbb2f23008e90d70b1d744d3e71c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -181,6 +201,267 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a90e4277194db83896803d38387ec0369"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90e4277194db83896803d38387ec0369">&#9670;&nbsp;</a></span>buildGetSleep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool buildGetSleep </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>dataLen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>inputData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>inputLen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00072">72</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a7bb1ee00fcd42cf937a7f6173e2a8647"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bb1ee00fcd42cf937a7f6173e2a8647">&#9670;&nbsp;</a></span>buildGetVersion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool buildGetVersion </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>dataLen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>inputData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>inputLen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00062">62</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+
+</div>
+</div>
+<a id="acc743eebc6ec1a9480db25fa0f59332a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc743eebc6ec1a9480db25fa0f59332a">&#9670;&nbsp;</a></span>buildOtaMsg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool buildOtaMsg </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>dataLen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>inputData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>inputLen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00140">140</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aab70cbb2f23008e90d70b1d744d3e71c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab70cbb2f23008e90d70b1d744d3e71c">&#9670;&nbsp;</a></span>buildSetSleep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool buildSetSleep </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>dataLen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>inputData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>inputLen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00288">288</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aad57d7638e39d6c3a95654f2c1e29e7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad57d7638e39d6c3a95654f2c1e29e7f">&#9670;&nbsp;</a></span>getNextNumber()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int getNextNumber </td>
+          <td>(</td>
+          <td class="paramtype">char *&amp;&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t &amp;&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00082">82</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ad08e6ed992bb54d4ab67627295e7fcf0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad08e6ed992bb54d4ab67627295e7fcf0">&#9670;&nbsp;</a></span>isHexChar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isHexChar </td>
+          <td>(</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00131">131</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aab651c53aaa5c935e3cc662399d0f091"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab651c53aaa5c935e3cc662399d0f091">&#9670;&nbsp;</a></span>memstr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const void* memstr </td>
+          <td>(</td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>str</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>str_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>target_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00030">30</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Variable Documentation</h2>
 <a id="a47616803c1ff494134cb784756035a08"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a47616803c1ff494134cb784756035a08">&#9670;&nbsp;</a></span>CONFIG_FILE</h2>
@@ -194,7 +475,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00012">12</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00014">14</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -210,7 +491,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00831">831</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01182">1182</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
