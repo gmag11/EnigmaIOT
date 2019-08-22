@@ -1,7 +1,7 @@
 /**
   * @file cryptModule.h
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief Crypto library that implements EnigmaIoT encryption, decryption and key agreement fuctions
   *
@@ -12,11 +12,11 @@
 #define _CRYPTMODULE_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+	#include "Arduino.h"
 #else
 	#include "WProgram.h"
 #endif
-#include "EnigmaIOTconfig.h"
+#include "EnigmaIoTconfig.h"
 
 #define RANDOM_32 0x3FF20E44
 const uint8_t RANDOM_LENGTH = sizeof (uint32_t); ///< @brief Length of random number generator values

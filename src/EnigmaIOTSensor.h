@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTSensor.h
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
@@ -10,7 +10,7 @@
 #define _ENIGMAIOTSENSOR_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-#include "arduino.h"
+#include "Arduino.h"
 #else
 #include "WProgram.h"
 #endif
@@ -18,11 +18,14 @@
 #include "lib/EnigmaIoTconfig.h"
 #include "lib/cryptModule.h"
 #include "lib/helperFunctions.h"
-#include "comms_hal.h"
+#include "Comms_hal.h"
 #include <CRC32.h>
 #include "NodeList.h"
 #include <cstddef>
 #include <cstdint>
+#include <ESPAsyncWebServer.h>
+#include <ESPAsyncWiFiManager.h>
+#include <ESP8266TrueRandom.h>
 
 /**
   * @brief Message code definition
@@ -30,7 +33,9 @@
 enum sensorMessageType {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
     DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
-    CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
+	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway. Used for OTA, settings configuration, etc */
+	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to sensor. Used for OTA, settings configuration, etc */
+	CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
     CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
@@ -55,8 +60,15 @@ enum sensorInvalidateReason_t {
 struct rtcmem_data_t {
     uint32_t crc32; /**< CRC to check RTC data integrity */
     uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
-    uint16_t lastMessageCounter; /**< Node last message counter */
-    uint8_t nodeId; /**< Node identification */
+	uint16_t lastMessageCounter; /**< Node last message counter */
+	uint16_t nodeId; /**< Node identification */
+	uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
+	uint8_t gateway[6]; /**< Gateway address */
+	uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
+	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
+	bool sleepy; /**< Sleepy node */
+	uint32_t sleepTime = 0; /**< Time to sleep between sensor data delivery */
+	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
 };
 
 typedef sensorMessageType sensorMessageType_t;
@@ -79,12 +91,10 @@ typedef void (*onDisconnected_t)();
 class EnigmaIOTSensorClass
 {
 protected:
-    uint8_t gateway[6]; ///< @brief Gateway address to sent messages to
     Node node; ///< @brief Sensor node abstraction to store context
     bool flashBlue = false; ///< @brief If true Tx LED will be flashed
     int8_t led = -1; ///< @brief IO Pin that corresponds to Tx LED. Default value disables LED. It is initialized with `setLed` method
     unsigned int ledOnTime; ///< @brief Time that LED is On during flash. Initalized on `setLed`
-    uint8_t channel = 3; ///< @brief Comms channel to transmit on
     Comms_halClass *comm; ///< @brief Comms abstraction layer
     onSensorDataRx_t notifyData; ///< @brief Callback that will be called on every message reception
     onConnected_t notifyConnection; ///< @brief Callback that will be called anytime a new node is registered
@@ -96,7 +106,9 @@ protected:
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed
     uint8_t dataMessageSentLength = 0; ///< @brief Message length stored for use in case of message retransmission is needed
     sensorInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
-    uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
+	bool otaRunning = false; ///< @brief True if OTA update has started
+	bool otaError = false; ///< @brief True if OTA update has failed. This normally produces a restart
+	time_t lastOTAmsg; ///< @brief Time when last OTA update message has received. This is used to control timeout
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -106,6 +118,38 @@ protected:
       * @return Returns `true` if CRC check was successful. `false` otherwise  
       */
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
+	
+	/**
+   * @brief Loads configuration from RTC data. Uses a CRC to check data integrity
+   * @return Returns `true` if data is valid. `false` otherwise
+   */
+	bool loadRTCData ();
+
+	/**
+    * @brief Loads configuration from flash memory
+    * @return Returns `true` if data was read successfuly. `false` otherwise
+    */
+	bool loadFlashData ();
+
+	/**
+	* @brief Saves configuration to flash memory
+	* @return Returns `true` if data could be written successfuly. `false` otherwise
+	*/
+	bool saveFlashData ();
+
+	/**
+	* @brief Starts configuration AP and web server and gets settings from it
+    * @param data Pointer to configuration data to be stored on RTC memory to keep status
+	*             along sleep cycles
+	* @return Returns `true` if data was been correctly configured. `false` otherwise
+	*/
+	bool configWiFiManager (rtcmem_data_t* data);
+
+	/**
+	* @brief Sets connection as unregistered to force a resyncrhonisation after boot
+	* @param reboot True if a reboot should be triggered after unregistration
+	*/
+	void restart (bool reboot = true);
 
     /**
       * @brief Build a **ClientHello** messange and send it to gateway
@@ -153,18 +197,38 @@ protected:
       * @brief Builds, encrypts and sends a **Data** message.
       * @param data Buffer to store payload to be sent
       * @param len Length of payload data
+	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
       * @return Returns `true` if message could be correcly sent
       */
-    bool dataMessage (const uint8_t *data, size_t len);
+    bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false);
+
+	/**
+	  * @brief Processes a single OTA update command or data
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processOTACommand (const uint8_t* mac, const uint8_t* data, uint8_t len);
+
+	/**
+	  * @brief Processes a control command. Does not propagate to user code
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processControlCommand (const uint8_t mac[6], const uint8_t* data, size_t len);
 
     /**
       * @brief Processes downstream data from gateway
       * @param mac Gateway address
       * @param buf Buffer to store received payload
       * @param count Length of payload data
+	  * @param control Idicates if downstream message is user or control data. If true it is a control message
       * @return Returns `true` if message could be correcly decoded
       */
-    bool processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    bool processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count, bool control = false);
 
     /**
       * @brief Process every received message.
@@ -181,7 +245,7 @@ protected:
       * @param mac_addr Address of message sender
       * @param status Result status code
       */
-    void getStatus (u8 *mac_addr, u8 status);
+    void getStatus (uint8_t *mac_addr, uint8_t status);
 
     /**
       * @brief Function that will be called anytime this node receives a message
@@ -189,7 +253,7 @@ protected:
       * @param data Buffer that stores message bytes
       * @param len Length of message in number of bytes
       */
-    static void rx_cb (u8 *mac_addr, u8 *data, u8 len);
+    static void rx_cb (uint8_t *mac_addr, uint8_t *data, uint8_t len);
 
     /**
       * @brief Function that will be called anytime this node sends a message
@@ -197,8 +261,43 @@ protected:
       * @param mac_addr Address of message destination
       * @param status Result of sending process
       */
-    static void tx_cb (u8 *mac_addr, u8 status);
+    static void tx_cb (uint8_t *mac_addr, uint8_t status);
+	
+	/**
+	  * @brief Processes a request of sleep time configuration
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processGetSleepTimeCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+	
+	/**
+	  * @brief Processes a request to set new sleep time configuration
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
+	/**
+	  * @brief Processes a request firmware version
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processVersionCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+
+	/**
+	  * @brief Initiades data transmission distinguissing if it is payload or control data.
+	  * @param data Buffer to store payload to be sent
+	  * @param len Length of payload data
+	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
+	  * @return Returns `true` if message could be correcly sent
+	  */
+	bool sendData (const uint8_t* data, size_t len, bool controlMessage);
 
 public:
     /**
@@ -214,7 +313,32 @@ public:
       * normally those that are powered with batteries, downlink message will be queued on gateway and sent just after an uplink data
       * message from node has been sent
       */
-    void begin (Comms_halClass *comm, uint8_t *gateway, uint8_t *networkKey, bool useCounter = true, bool sleepy = true);
+    void begin (Comms_halClass *comm, uint8_t *gateway = NULL, uint8_t *networkKey = NULL, bool useCounter = true, bool sleepy = true);
+
+	/**
+	  * @brief Stops EnigmaIoT protocol
+	  */
+	void stop ();
+
+	/**
+	  * @brief Allows to configure a new sleep time period from user code
+	  * @param sleepTime Time in seconds. Final period is not espected to be exact. Its value
+	  *                  depends on communication process
+	  */
+	void setSleepTime (uint32_t sleepTime);
+
+	/**
+	  * @brief Returns sleep period in seconds
+	  * @return Sleep period in seconds
+	  */
+	uint32_t getSleepTime () {
+		if (!node.getSleepy()) {
+			return 0;
+		}
+		else {
+			return rtcmem_data.sleepTime;
+		}
+	}
 
     /**
       * @brief This method should be called periodically for instance inside `loop()` function.
@@ -234,7 +358,9 @@ public:
       * @param data Payload buffer
       * @param len Payload length
       */
-    bool sendData (const uint8_t *data, size_t len);
+	bool sendData (const uint8_t* data, size_t len) {
+		return sendData (data, len, false);
+	}
 
     /**
       * @brief Defines a function callback that will be called on every downlink data message that is received from gateway
@@ -325,7 +451,7 @@ public:
       * Sleep can be requested in any moment and will be triggered inmediatelly except if node is doing registration or is waiting for downlink
       * @param time Sleep mode state duration
       */
-    void sleep (uint64_t time);
+    void sleep ();
 };
 
 extern EnigmaIOTSensorClass EnigmaIOTSensor;

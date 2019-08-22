@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['gateway',['gateway',['../classEnigmaIOTSensorClass.html#aa23a4d05eee44beb862682e3ea9ab1ac',1,'EnigmaIOTSensorClass::gateway()'],['../classEspnow__halClass.html#a28c8605361e53a0bdaa0addb85b7bd1a',1,'Espnow_halClass::gateway()'],['../enigmaiot__sensor_8ino.html#ace2c0445ab33641bc6497093c8a1f5f5',1,'gateway():&#160;enigmaiot_sensor.ino']]],
+  ['gateway',['gateway',['../structrtcmem__data__t.html#a0a7fef60533b1d915c8fa089e1d6b48b',1,'rtcmem_data_t::gateway()'],['../classEspnow__halClass.html#a28c8605361e53a0bdaa0addb85b7bd1a',1,'Espnow_halClass::gateway()'],['../enigmaiot__sensor_8ino.html#ace2c0445ab33641bc6497093c8a1f5f5',1,'gateway():&#160;enigmaiot_sensor.ino'],['../enigmaiot__sensor__ds18b20_8ino.html#ace2c0445ab33641bc6497093c8a1f5f5',1,'gateway():&#160;enigmaiot_sensor_ds18b20.ino']]],
+  ['gateway_5fconfig_5ft',['gateway_config_t',['../structgateway__config__t.html',1,'']]],
   ['gatewaymessagetype_5ft',['gatewayMessageType_t',['../EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613',1,'EnigmaIOTGateway.h']]],
   ['getaddresslength',['getAddressLength',['../classComms__halClass.html#a6093fd7b0a9eedba72c3622977639d92',1,'Comms_halClass::getAddressLength()'],['../classEspnow__halClass.html#a8d93298e01e70e39330ca7c67c7f1a87',1,'Espnow_halClass::getAddressLength()']]],
   ['getdh1',['getDH1',['../classCryptModule.html#ab043ae3361d34921f36d7d0189c058d1',1,'CryptModule']]],
@@ -23,7 +24,8 @@ var searchData=
   ['getprivdhkey',['getPrivDHKey',['../classCryptModule.html#a9d106f893f329d8648aba205b3717806',1,'CryptModule']]],
   ['getpubdhkey',['getPubDHKey',['../classCryptModule.html#aefc84d57eee3eceeadc3611866925804',1,'CryptModule']]],
   ['getsleepy',['getSleepy',['../classNode.html#a5bf02d202c9cb76831de89e4d1ef8893',1,'Node']]],
-  ['getstatus',['getStatus',['../classEnigmaIOTGatewayClass.html#aeb03da53e404ec2befe95f66788ffcdf',1,'EnigmaIOTGatewayClass::getStatus()'],['../classEnigmaIOTSensorClass.html#a4f4bc30f25632542530257a19664b8f7',1,'EnigmaIOTSensorClass::getStatus()'],['../classNode.html#a6172f9eb39a02f01b692a53b9ee09c56',1,'Node::getStatus()']]],
+  ['getstatus',['getStatus',['../classEnigmaIOTGatewayClass.html#aeb03da53e404ec2befe95f66788ffcdf',1,'EnigmaIOTGatewayClass::getStatus()'],['../classEnigmaIOTSensorClass.html#a2d917e89151e018476baa0826d4a3827',1,'EnigmaIOTSensorClass::getStatus()'],['../classNode.html#a6172f9eb39a02f01b692a53b9ee09c56',1,'Node::getStatus()']]],
   ['gettotalpackets',['getTotalPackets',['../classEnigmaIOTGatewayClass.html#a8eed8023d964354b6a2533c9662037e4',1,'EnigmaIOTGatewayClass']]],
+  ['gwconfig',['gwConfig',['../classEnigmaIOTGatewayClass.html#a77802389a0b41546f60ce114097bcadc',1,'EnigmaIOTGatewayClass']]],
   ['gwinvalidatereason_5ft',['gwInvalidateReason_t',['../EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977',1,'EnigmaIOTGateway.h']]]
 ];

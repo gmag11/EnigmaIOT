@@ -1,7 +1,7 @@
 /**
   * @file NodeList.h
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief EnigmaIoT sensor node management structures
   */
@@ -10,7 +10,7 @@
 #define _NODELIST_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+	#include "Arduino.h"
 #else
 	#include "WProgram.h"
 #endif
@@ -31,6 +31,28 @@ enum node_status {
 };
 
 typedef enum node_status status_t; ///< @brief Node state
+
+typedef enum control_message_type {
+	VERSION = 0x01,
+	VERSION_ANS = 0x81,
+	SLEEP_GET = 0x02,
+	SLEEP_SET = 0x03,
+	SLEEP_ANS = 0x82,
+	OTA = 0xEF,
+	OTA_ANS = 0xFF,
+	USERDATA = 0x00
+	//USERDATA_ANS = 0x90
+} control_message_type_t;
+
+typedef enum ota_status {
+	OTA_STARTED,
+	OTA_START_ERROR,
+	OTA_CHECK_OK,
+	OTA_CHECK_FAIL,
+	OTA_OUT_OF_SEQUENCE,
+	OTA_TIMEOUT,
+	OTA_FINISHED
+} ota_status_t;
 
 /**
   * @brief Struct that define node fields. Used for long term storage needs
@@ -247,7 +269,7 @@ public:
     double packetsHour = 0;
 
 protected:
-#define KEYLENGTH 32
+//#define KEYLENGTH 32
     bool keyValid; ///< @brief Node shared key valid
     status_t status;
     uint16_t lastMessageCounter; ///< @brief Last message counter state for specific Node
@@ -255,7 +277,7 @@ protected:
     timer_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
     bool sleepyNode = true; ///< @brief Node sleepy definition
     uint8_t mac[6]; ///< @brief Node address
-    uint8_t key[KEYLENGTH]; ///< @brief Shared key
+    uint8_t key[KEY_LENGTH]; ///< @brief Shared key
     timer_t lastMessageTime; ///< @brief Node state
 
     friend class NodeList;

@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_gateway.ino
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief Gateway based on EnigmaIoT over ESP-NOW
   *
@@ -9,22 +9,83 @@
   */
 
 #include <Arduino.h>
-#include <CayenneLPPDec.h>
+#include <CayenneLPP.h>
 #include <EnigmaIOTGateway.h>
 #include <espnow_hal.h>
 
 #define BLUE_LED 2
 #define RED_LED 16
 
-void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, uint16_t lostMessages) {
+// DOWNLINK MESSAGES
+#define GET_VERSION "get/version"
+#define GET_VERSION_ANS "result/version"
+#define GET_SLEEP "get/sleeptime"
+#define GET_SLEEP_ANS "result/sleeptime"
+#define SET_SLEEP "set/sleeptime"
+#define SET_OTA "set/ota"
+#define SET_OTA_ANS "result/ota"
+
+void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
+	switch (data[0]) {
+		case control_message_type::VERSION_ANS:
+			Serial.printf ("~/%s/%s;", macStr, GET_VERSION_ANS);
+			Serial.write (data + 1, length - 1);
+			Serial.println ();
+			break;
+		case control_message_type::SLEEP_ANS:
+			uint32_t sleepTime;
+			memcpy (&sleepTime, data + 1, sizeof (sleepTime));
+			Serial.printf ("~/%s/%s;%d\n", macStr, GET_SLEEP_ANS, sleepTime);
+			//Serial.write (data + 1, length - 1);
+			//Serial.println ();
+			break;
+		case control_message_type::OTA_ANS:
+			Serial.printf ("~/%s/%s;", macStr, SET_OTA_ANS);
+			switch (data[1]) {
+				case ota_status::OTA_STARTED:
+					Serial.printf ("OTA Started\n");
+					break;
+				case ota_status::OTA_START_ERROR:
+					Serial.printf ("OTA Start error\n");
+					break;
+				case ota_status::OTA_OUT_OF_SEQUENCE:
+					Serial.printf ("OTA out of sequence error\n");
+					break;
+				case ota_status::OTA_CHECK_OK:
+					Serial.printf ("OTA check OK\n");
+					break;
+				case ota_status::OTA_CHECK_FAIL:
+					Serial.printf ("OTA check failed\n");
+					break;
+				case ota_status::OTA_TIMEOUT:
+					Serial.printf ("OTA timeout\n");
+					break;
+				case ota_status::OTA_FINISHED:
+					Serial.printf ("OTA finished OK\n");
+					break;
+				default:
+					Serial.println ();
+			}
+			break;
+	}
+}
+
+void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control) {
 	StaticJsonDocument<256> jsonBuffer;
 	JsonArray root = jsonBuffer.createNestedArray ();
+	CayenneLPP cayennelpp (250);
 
 	char macstr[18];
 	mac2str (mac, macstr);
+
+	if (control) {
+		processRxControlData (macstr, buffer, length);
+		return;
+	}
+
 	//Serial.printf ("Data from %s --> %s\n", macstr, printHexBuffer (buffer, length));
 
-	CayenneLPPDec::ParseLPP (buffer, length, root);
+	cayennelpp.decode ((uint8_t *)buffer, length, root);
 	//root.prettyPrintTo (Serial);
 	//Serial.println ();
 	Serial.printf ("~/%s/data;", macstr);
@@ -45,12 +106,28 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, u
 	//Serial.println ();
 }
 
+control_message_type_t checkMsgType (String data) {
+	if (data.indexOf (GET_VERSION) != -1) {
+		return control_message_type::VERSION;
+	}
+	if (data.indexOf (GET_SLEEP) != -1) {
+		return control_message_type::SLEEP_GET;
+	}
+	if (data.indexOf (SET_SLEEP) != -1) {
+		return control_message_type::SLEEP_SET;
+	}
+	if (data.indexOf (SET_OTA) != -1) {
+		return control_message_type::OTA;
+	}
+	return control_message_type::USERDATA;
+}
+
 void onSerial (String message) {
 	uint8_t addr[6];
 
-	DEBUG_INFO ("Downlink message: %s", message.c_str ());
+	DEBUG_VERBOSE ("Downlink message: %s", message.c_str ());
 	String addressStr = message.substring (message.indexOf ('/') + 1, message.indexOf ('/', 2));
-	DEBUG_INFO ("Address: %s", addressStr.c_str ());
+	DEBUG_INFO ("Downlink message from: %s", addressStr.c_str ());
 	if (!str2mac (addressStr.c_str (), addr)) {
 		DEBUG_ERROR ("Not a mac address");
 		return;
@@ -58,8 +135,18 @@ void onSerial (String message) {
 	String dataStr = message.substring (message.indexOf ('/', 2) + 1);
 	dataStr.trim ();
 
-	uint8_t* data = (uint8_t*)dataStr.c_str ();
-	if (!EnigmaIOTGateway.sendDownstream (addr, data, dataStr.length ())) {
+	control_message_type_t msgType = checkMsgType (dataStr);
+
+	// Add end of string to all control messages
+	if (msgType != control_message_type::USERDATA) {
+		dataStr = dataStr.substring (dataStr.indexOf (';') + 1);
+		dataStr += '\0';
+	}
+
+	DEBUG_VERBOSE ("Message %s", dataStr.c_str ());
+	DEBUG_INFO ("Message type %d", msgType);
+	DEBUG_INFO ("Data length %d", dataStr.length ());
+	if (!EnigmaIOTGateway.sendDownstream (addr, (uint8_t*)dataStr.c_str (), dataStr.length (), msgType)) {
 		DEBUG_ERROR ("Error sending esp_now message to %s", addressStr.c_str ());
 	}
 	else {
@@ -85,12 +172,12 @@ void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
 void setup () {
 	Serial.begin (115200); Serial.println (); Serial.println ();
 
-	initWiFi ();
+	//initWiFi ();
 	EnigmaIOTGateway.setRxLed (BLUE_LED);
 	EnigmaIOTGateway.setTxLed (RED_LED);
 	EnigmaIOTGateway.onNewNode (newNodeConnected);
 	EnigmaIOTGateway.onNodeDisconnected (nodeDisconnected);
-	EnigmaIOTGateway.begin (&Espnow_hal, (uint8_t*)NETWORK_KEY);
+	EnigmaIOTGateway.begin (&Espnow_hal);
 	EnigmaIOTGateway.onDataRx (processRxData);
 }
 
@@ -102,7 +189,7 @@ void loop () {
 	while (Serial.available () != 0) {
 		message = Serial.readStringUntil ('\n');
 		message.trim ();
-		if (message[0] == '*') {
+		if (message[0] == '%') {
 			onSerial (message);
 		}
 	}

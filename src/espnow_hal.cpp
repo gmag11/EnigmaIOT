@@ -1,7 +1,7 @@
 /**
   * @file espnow_hal.cpp
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief ESP-NOW communication system abstraction layer. To be used on ESP8266 or ESP32 platforms
   */
@@ -32,14 +32,14 @@ void Espnow_halClass::initComms (peerType_t peerType)
 
 }
 
-void Espnow_halClass::rx_cb (u8 * mac_addr, u8 * data, u8 len)
+void Espnow_halClass::rx_cb (uint8_t * mac_addr, uint8_t * data, uint8_t len)
 {
     if (Espnow_hal.dataRcvd) {
-        Espnow_hal.dataRcvd (mac_addr, data, len);
+		Espnow_hal.dataRcvd (mac_addr, data, len);
     }
 }
 
-void Espnow_halClass::tx_cb (u8 * mac_addr, u8 status)
+void Espnow_halClass::tx_cb (uint8_t * mac_addr, uint8_t status)
 {
     if (Espnow_hal.sentResult) {
         Espnow_hal.sentResult (mac_addr, status);
@@ -55,7 +55,14 @@ void Espnow_halClass::begin (uint8_t* gateway, uint8_t channel, peerType_t peerT
     initComms (peerType);
 }
 
-uint8_t Espnow_halClass::send (u8 * da, u8 * data, int len)
+void Espnow_halClass::stop () {
+	Serial.println ("-------------> ESP-NOW STOP");
+	esp_now_unregister_recv_cb ();
+	esp_now_unregister_send_cb ();
+	esp_now_deinit ();
+}
+
+uint8_t Espnow_halClass::send (uint8_t * da, uint8_t * data, int len)
 {
     return esp_now_send (da, data, len);
 }

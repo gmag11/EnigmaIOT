@@ -1,9 +1,13 @@
 var searchData=
 [
-  ['send',['send',['../classComms__halClass.html#aed3ab92c7b30c82dfed79678389ec8f5',1,'Comms_halClass::send()'],['../classEspnow__halClass.html#a6f999980dc49223a524e7b8da0bd4cdc',1,'Espnow_halClass::send()']]],
-  ['senddata',['sendData',['../classEnigmaIOTSensorClass.html#a66162b98fc51e16f36c53c4eddd83f04',1,'EnigmaIOTSensorClass']]],
+  ['savebridgeconfig',['saveBridgeConfig',['../MqttBridge_8ino.html#a27c46d2342a793295890965fdf0a848e',1,'MqttBridge.ino']]],
+  ['saveconfigcallback',['saveConfigCallback',['../MqttBridge_8ino.html#a3a93d19401009ce28e89880837e3ec79',1,'MqttBridge.ino']]],
+  ['saveflashdata',['saveFlashData',['../classEnigmaIOTGatewayClass.html#a179ab2224b2cb38ea355e8d770dc0d9a',1,'EnigmaIOTGatewayClass::saveFlashData()'],['../classEnigmaIOTSensorClass.html#ae970156b6e062816ddaed43274dfbb0b',1,'EnigmaIOTSensorClass::saveFlashData()']]],
+  ['send',['send',['../classComms__halClass.html#a35ad31b72c7d9e1d72aca131235aa111',1,'Comms_halClass::send()'],['../classEspnow__halClass.html#a6f999980dc49223a524e7b8da0bd4cdc',1,'Espnow_halClass::send()']]],
+  ['senddata',['sendData',['../classEnigmaIOTSensorClass.html#aceaf2416b6f182fdc2352e1c4abb6f8f',1,'EnigmaIOTSensorClass::sendData(const uint8_t *data, size_t len, bool controlMessage)'],['../classEnigmaIOTSensorClass.html#a66162b98fc51e16f36c53c4eddd83f04',1,'EnigmaIOTSensorClass::sendData(const uint8_t *data, size_t len)']]],
   ['senddownstream',['sendDownstream',['../classEnigmaIOTGatewayClass.html#aea5bb47064d6c942ef58714b4bac1976',1,'EnigmaIOTGatewayClass']]],
   ['serverhello',['serverHello',['../classEnigmaIOTGatewayClass.html#aec8a0e96ff309d34ef19a5eaa66c40e0',1,'EnigmaIOTGatewayClass']]],
+  ['setclock',['setClock',['../MqttBridge_8ino.html#acdf16bd2889d55d8f923cd78be164fb3',1,'MqttBridge.ino']]],
   ['setencryptionkey',['setEncryptionKey',['../classNode.html#ae7b7337fdc178fe350ac4ce2f4675040',1,'Node']]],
   ['setkeyvalid',['setKeyValid',['../classNode.html#a81ded601038e157ecb03daa7fb85242d',1,'Node']]],
   ['setkeyvalidfrom',['setKeyValidFrom',['../classNode.html#a65284f939ba9d70cff90e7e508ac1a13',1,'Node']]],
@@ -16,6 +20,10 @@ var searchData=
   ['setsleepy',['setSleepy',['../classNode.html#ae1a2a8c747a1af2e7d9467ae9199edd7',1,'Node']]],
   ['setstatus',['setStatus',['../classNode.html#a7590c6b11a260ca766a2ad46f2b0cf27',1,'Node']]],
   ['settxled',['setTxLed',['../classEnigmaIOTGatewayClass.html#a829f622aa3e12b02d8318b5d1f6162aa',1,'EnigmaIOTGatewayClass']]],
-  ['setup',['setup',['../enigmaiot__gateway_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;enigmaiot_gateway.ino'],['../enigmaiot__sensor_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;enigmaiot_sensor.ino'],['../MqttBridge_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;MqttBridge.ino']]],
-  ['sleep',['sleep',['../classEnigmaIOTSensorClass.html#ae1d728febf16f6dfd479c36947a789b1',1,'EnigmaIOTSensorClass']]]
+  ['setup',['setup',['../enigmaiot__gateway_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;enigmaiot_gateway.ino'],['../enigmaiot__sensor_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;enigmaiot_sensor.ino'],['../enigmaiot__sensor__ds18b20_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;enigmaiot_sensor_ds18b20.ino'],['../MqttBridge_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;MqttBridge.ino']]],
+  ['sleep',['sleep',['../classEnigmaIOTSensorClass.html#ae1d728febf16f6dfd479c36947a789b1',1,'EnigmaIOTSensorClass']]],
+  ['startflash',['startFlash',['../MqttBridge_8ino.html#a2c078b8bfa2e57a7f39eb083be793ee8',1,'MqttBridge.ino']]],
+  ['stop',['stop',['../classComms__halClass.html#aa69c265e65ce31580af6d5dd9b3cd40f',1,'Comms_halClass::stop()'],['../classEnigmaIOTSensorClass.html#adad3f6751975d27385b6d0b944357a75',1,'EnigmaIOTSensorClass::stop()'],['../classEspnow__halClass.html#add2ac8b2494fa1b5f09d32e17118ecda',1,'Espnow_halClass::stop()']]],
+  ['stopflash',['stopFlash',['../MqttBridge_8ino.html#ad072ccb795ca00a2cc374f3ce7bd5d55',1,'MqttBridge.ino']]],
+  ['str2mac',['str2mac',['../helperFunctions_8cpp.html#a02961b325403161b54533152d242696a',1,'str2mac(const char *macAddrString, uint8_t *macBytes):&#160;helperFunctions.cpp'],['../helperFunctions_8h.html#a0fdf837000194d53f0d019f024e0f4a1',1,'str2mac(const char *mac, uint8_t *values):&#160;helperFunctions.cpp']]]
 ];

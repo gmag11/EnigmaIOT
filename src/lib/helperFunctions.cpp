@@ -1,7 +1,7 @@
 /**
   * @file helperFunctions.cpp
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief Auxiliary function definition
   */
@@ -24,11 +24,15 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 	return tempStr;
 }
 
-void initWiFi () {
+void initWiFi (uint8_t channel) {
 	//WiFi.persistent (false);
+	DEBUG_DBG ("initWifi");
 	WiFi.mode (WIFI_AP);
-	WiFi.softAP ("ESPNOW", nullptr, 3);
+	DEBUG_DBG ("Mode set to AP");
+	WiFi.softAP ("ESPNOW", nullptr, channel);
+	//DEBUG_DBG ("AP started");
 	WiFi.softAPdisconnect (false);
+	DEBUG_DBG ("AP Deactivated");
 
 	DEBUG_INFO ("AP MAC address of this device is %s", WiFi.softAPmacAddress ().c_str ());
 	DEBUG_INFO ("STA MAC address of this device is %s", WiFi.macAddress ().c_str ());

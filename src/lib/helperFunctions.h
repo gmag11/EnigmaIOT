@@ -1,7 +1,7 @@
 /**
   * @file helperFunctions.h
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief Auxiliary function definition
   */
@@ -46,8 +46,9 @@ uint8_t* str2mac (const char* mac, uint8_t* values);
 
 /**
   * @brief Initalizes WiFi interfaces on ESP8266 or ESP32
+  * @param channel WiFi channel for interface initialization
   */
-void initWiFi ();
+void initWiFi (uint8_t channel = 3);
 
 #endif
 

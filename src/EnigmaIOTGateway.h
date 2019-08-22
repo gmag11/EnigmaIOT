@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGateway.h
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief Library to build a gateway for EnigmaIoT system
   */
@@ -10,25 +10,29 @@
 #define _ENIGMAIOTGATEWAY_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+	#include "Arduino.h"
 #else
 	#include "WProgram.h"
 #endif
 #include "lib/EnigmaIoTconfig.h"
 #include "lib/cryptModule.h"
 #include "lib/helperFunctions.h"
-#include "comms_hal.h"
+#include "Comms_hal.h"
 #include "NodeList.h"
 #include <CRC32.h>
 #include <cstddef>
 #include <cstdint>
+#include <ESPAsyncWebServer.h>
+#include <ESPAsyncWiFiManager.h>
 
 /**
   * @brief Message code definition
   */
 enum gatewayMessageType_t {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
-    DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
+    DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for user commands */
+	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway. Used for OTA, settings configuration, etc */
+	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to sensor. Used for OTA, settings configuration, etc */
     CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
@@ -50,14 +54,19 @@ enum gwInvalidateReason_t {
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, uint16_t lostMessages)> onGwDataRx_t;
+typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, uint16_t lostMessages, bool control)> onGwDataRx_t;
 typedef std::function<void (uint8_t* mac)> onNewNode_t;
 typedef std::function<void (uint8_t* mac, gwInvalidateReason_t reason)> onNodeDisconnected_t;
 #else
-typedef void (*onGwDataRx_t)(const uint8_t*, const uint8_t*, uint8_t, size_t);
+typedef void (*onGwDataRx_t)(const uint8_t* mac, const uint8_t* data, uint8_t len, uint16_t lostMessages, bool control);
 typedef void (*onNewNode_t)(const uint8_t*);
 typedef void (*onNodeDisconnected_t)(const uint8_t*, gwInvalidateReason_t);
 #endif
+
+typedef struct {
+	uint8_t channel = DEFAULT_CHANNEL; /**< Channel used for communications*/
+	uint8_t networkKey[KEY_LENGTH];   /**< Network key to protect key agreement*/
+} gateway_config_t;
 
 /**
   * @brief Main gateway class. Manages communication with nodes and sends data to upper layer
@@ -71,7 +80,7 @@ class EnigmaIOTGatewayClass
      bool flashRx = false; ///< @brief `true` if Rx LED should flash
      node_t node; ///< @brief temporary store to keep node data while processing a message
      NodeList nodelist; ///< @brief Node database that keeps status and shared keys
-     Comms_halClass *comm; ///< @brief Instance of physical communication layer.
+     Comms_halClass *comm; ///< @brief Instance of physical communication layer
      int8_t txled = -1; ///< @brief I/O pin to connect a led that flashes when gateway transmits data
      int8_t rxled = -1; ///< @brief I/O pin to connect a led that flashes when gateway receives data
      unsigned long txLedOnTime; ///< @brief Flash duration for Tx LED
@@ -80,7 +89,7 @@ class EnigmaIOTGatewayClass
      onNewNode_t notifyNewNode; ///< @brief Callback function that will be invoked when a new node is connected
      onNodeDisconnected_t notifyNodeDisconnection; ///< @brief Callback function that will be invoked when a node gets disconnected
      bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
-     uint8_t networkKey[KEY_LENGTH];   ///< @brief Network key to protect key agreement
+	 gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
      
      /**
       * @brief Build a **ServerHello** messange and send it to node
@@ -142,21 +151,41 @@ class EnigmaIOTGatewayClass
      /**
       * @brief Processes data message from node
       * @param mac Node address
-      * @param buf Buffer to store received message
+      * @param buf Buffer that stores received message
       * @param count Length of received data
-      * @param node Node that data message comes from
+      * @param node Node where data message comes from
       * @return Returns `true` if message could be correcly decoded
       */
      bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
+
+	 ///**
+	 // * @brief Processes OTA update message
+	 // * @param msg Payload, including node address
+	 // * @param msgLen Length of received data
+	 // * @param output 
+	 // * @return Returns `true` if message could be correcly decoded and processed
+	 // */
+	 //bool processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t* output);
 
      /**
       * @brief Builds, encrypts and sends a **DownstreamData** message.
       * @param node Node that downstream data message is going to
       * @param data Buffer to store payload to be sent
       * @param len Length of payload data
+	  * @param controlData Content data type if control data
       * @return Returns `true` if message could be correcly sent or scheduled
       */
-     bool downstreamDataMessage (Node *node, const uint8_t *data, size_t len);
+	 bool downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData = USERDATA);
+
+	 /**
+	 * @brief Processes control message from node
+	 * @param mac Node address
+	 * @param buf Buffer that stores received message
+	 * @param count Length of received data
+	 * @param node Node where data message comes from
+	 * @return Returns `true` if message could be correcly decoded
+	 */
+	 bool processControlMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node);
 
      /**
       * @brief Process every received message.
@@ -191,6 +220,24 @@ class EnigmaIOTGatewayClass
       */
      void getStatus (u8 *mac_addr, u8 status);
 
+	 /**
+	 * @brief Starts configuration AP and web server and gets settings from it
+	 * @return Returns `true` if data was been correctly configured. `false` otherwise
+	 */
+	 bool configWiFiManager ();
+
+	 /**
+	 * @brief Loads configuration from flash memory
+	 * @return Returns `true` if data was read successfuly. `false` otherwise
+	 */
+	 bool loadFlashData ();
+
+	 /**
+	 * @brief Saves configuration to flash memory
+	 * @return Returns `true` if data could be written successfuly. `false` otherwise
+	 */
+	 bool saveFlashData ();
+
  public:
      /**
       * @brief Initalizes communication basic data and starts accepting node registration
@@ -198,7 +245,7 @@ class EnigmaIOTGatewayClass
       * @param networkKey Network key to protect shared key agreement
       * @param useDataCounter Indicates if a counter is going to be added to every message data to check message sequence. `true` by default
       */
-     void begin (Comms_halClass *comm, uint8_t *networkKey, bool useDataCounter = true);
+     void begin (Comms_halClass *comm, uint8_t *networkKey = NULL, bool useDataCounter = true);
 
      /**
       * @brief This method should be called periodically for instance inside `loop()` function.
@@ -283,7 +330,7 @@ class EnigmaIOTGatewayClass
       * @param data Payload buffer
       * @param len Payload length
       */
-     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len);
+     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len, control_message_type_t controlData = USERDATA);
 
      /**
       * @brief Defines a function callback that will be called every time a node gets connected or reconnected

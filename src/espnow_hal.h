@@ -1,7 +1,7 @@
 /**
   * @file espnow_hal.h
-  * @version 0.1.0
-  * @date 09/03/2019
+  * @version 0.2.0
+  * @date 28/06/2019
   * @author German Martin
   * @brief ESP-NOW communication system abstraction layer. To be used on ESP8266 or ESP32 platforms
   */
@@ -66,6 +66,11 @@ class Espnow_halClass : public Comms_halClass
       * @param peerType Role that peer plays into the system, sensor node or gateway.
       */
     void begin(uint8_t* gateway, uint8_t channel = 0, peerType_t peerType = COMM_SENSOR);
+
+	/**
+     * @brief Terminates communication and closes all connectrions
+     */
+	void stop ();
 
     /**
       * @brief Sends data to the other peer
