@@ -1,2 +1,4 @@
 **~
-DS18B20/
+*.bin
+EnigmaIoTUpdate/.idea/
+EnigmaIoTUpdate/venv/
