@@ -749,6 +749,16 @@ bool EnigmaIOTSensorClass::processGetSleepTimeCommand (const uint8_t* mac, const
 	}
 }
 
+bool EnigmaIOTSensorClass::processSetIndicateCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	uint8_t buffer[MAX_MESSAGE_LENGTH];
+	uint8_t bufLength;
+
+	DEBUG_DBG ("Set Indicate command received");
+	DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
+
+	Serial.println ("INDICATE");
+}
+
 bool EnigmaIOTSensorClass::processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
 	uint8_t buffer[MAX_MESSAGE_LENGTH];
 	uint8_t bufLength;

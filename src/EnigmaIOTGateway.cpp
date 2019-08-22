@@ -79,6 +79,16 @@ bool buildGetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 	return true;
 }
 
+bool buildSetIndicate (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Set Indicate' message from: %s", printHexBuffer (inputData, inputLen));
+	if (dataLen < 1) {
+		return false;
+	}
+	data[0] = (uint8_t)control_message_type::INDICATE;
+	dataLen = 1;
+	return true;
+}
+
 int getNextNumber (char* &data, size_t &len/*, char* &position*/) {
 	char strNum[10];
 	int number;
@@ -358,8 +368,16 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 		}
 		DEBUG_VERBOSE ("OTA message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
+	case control_message_type::INDICATE:
+		if (!buildSetIndicate (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building OTA message");
+			return false;
+		}
+		DEBUG_VERBOSE ("OTA message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
 
 		// TODO for user data message control data field should be marked too, to avoid false positive detections
+		// Not really as massage ID is different
 	}
 
 	DEBUG_INFO ("Send downstream");

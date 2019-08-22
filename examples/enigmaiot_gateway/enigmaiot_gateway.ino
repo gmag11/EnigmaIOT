@@ -24,6 +24,7 @@
 #define SET_SLEEP "set/sleeptime"
 #define SET_OTA "set/ota"
 #define SET_OTA_ANS "result/ota"
+#define SET_INDICATE "set/indicate"
 
 void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 	switch (data[0]) {
@@ -118,6 +119,9 @@ control_message_type_t checkMsgType (String data) {
 	}
 	if (data.indexOf (SET_OTA) != -1) {
 		return control_message_type::OTA;
+	}
+	if (data.indexOf (SET_INDICATE) != -1) {
+		return control_message_type::INDICATE;
 	}
 	return control_message_type::USERDATA;
 }

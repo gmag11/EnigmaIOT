@@ -282,6 +282,15 @@ protected:
 	bool processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
 	/**
+	  * @brief Processes a request to start indicate to identify a node visually
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processSetIndicateCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+
+	/**
 	  * @brief Processes a request firmware version
 	  * @param mac Gateway address
 	  * @param data Buffer to store received message
