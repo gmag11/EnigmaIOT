@@ -261,7 +261,7 @@ This is the list of currently implemented control commands:
 - Get node protocol version
 - Get sleep duration time
 - Set sleep duration time
-- ~~OTA Update~~
+- OTA Update
 
 | Command | Response |
 | ------- | -------- |
