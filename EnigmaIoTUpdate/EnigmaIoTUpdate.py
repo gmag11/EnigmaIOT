@@ -94,7 +94,7 @@ def main():
 
     (options, args) = opt.parse_args()
 
-    print(options)
+    # print(options)
 
     ota_topic = options.baseTopic+"/"+options.address+otaSetTopic
     mqttclientname = "EnigmaIoTUpdate"
@@ -153,7 +153,7 @@ def main():
     print("Sending file: "+options.filename)
     for chunk in encoded_string:
         # client.loop()
-        time.sleep(0.03)
+        time.sleep(0.1)
         # time.sleep(0.2)
         # if i not in range(10,13):
         client.publish(ota_topic, str(i)+","+chunk)

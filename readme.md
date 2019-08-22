@@ -198,6 +198,16 @@ Invalidate Key message is always sent unencrypted.
 
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/WrongCounter.svg?sanitize=true" alt="Wrong Counter message sequence" width="400"/>
 
+## Hardware description
+
+### Node
+
+tbd.
+
+### Gateway
+
+tbd.
+
 ## Data format
 
 Although it is not mandatory at all, use of [CayenneLPP format](https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload) is recommended for sensor data compactness.
@@ -335,10 +345,17 @@ Notice that using ESP-NOW device address correspond to **MAC address** of your E
 - ESPAsyncWebServer -- https://github.com/me-no-dev/ESPAsyncWebServer
 - ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager
 - Arduino Crypto Library -- https://github.com/rweather/arduinolibs
-  - This one needs a modification in order to run successfully on ESP8266 Arduino core > 2.5.x. **You have to change line 30** on `Crypto/BigNumberUtil.h` from `#if defined (__AVR__) || defined(ESP8266)` to `#if defined (__AVR__)`. **Without this, code will crash**.
+  - This one needs a modification in order to run successfully on ESP8266 Arduino core > 2.5.x. **You have to change line 30** on `Crypto/BigNumberUtil.h` from 
+  
+    ​       `#if defined (__AVR__) || defined(ESP8266)` to 
+  
+    ​      `#if defined (__AVR__)`
+  
+    **Without this, code will crash**.
+  
   - There are some objects that cause conflicts if you are using windows due to capitalization. Files `SHA1.cpp` and `SHA1.h` **have to be deleted** from `CryptoLegacy/src`
+- ESP8266TrueRandom -- https://github.com/marvinroger/ESP8266TrueRandom
 - PubSubClient -- https://github.com/knolleary/pubsubclient
-- CayenneLPP -- https://github.com/sabas1080/CayenneLPP
-- CayenneLPPDec -- https://github.com/gmag11/CayenneLPPdec
+- CayenneLPP -- https://github.com/sabas1080/CayenneLPP version > 1.0.2
 - ArduinoJSON 6 -- https://github.com/bblanchon/ArduinoJson
 

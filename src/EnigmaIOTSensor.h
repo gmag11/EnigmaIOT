@@ -25,6 +25,7 @@
 #include <cstdint>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
+#include <ESP8266TrueRandom.h>
 
 /**
   * @brief Message code definition

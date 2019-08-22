@@ -260,6 +260,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_
 					if (!saveFlashData ()) {
 						DEBUG_ERROR ("Error saving data on flash. Restarting");
 					}
+					SPIFFS.end ();
 					ESP.restart ();
 				} else { // Configuration error
 					DEBUG_ERROR ("Configuration error. Restarting");
@@ -332,7 +333,7 @@ void EnigmaIOTSensorClass::handle () {
     static time_t lastRegistration;
     status_t status = node.getStatus ();
     if (status == WAIT_FOR_SERVER_HELLO || status == WAIT_FOR_CIPHER_FINISHED) {
-        if (millis () - lastRegistration > (RECONNECTION_PERIOD*10)) {
+        if (millis () - lastRegistration > RECONNECTION_PERIOD * 5) {
             DEBUG_DBG ("Current node status: %d", node.getStatus ());
             lastRegistration = millis ();
             node.reset ();
@@ -342,7 +343,7 @@ void EnigmaIOTSensorClass::handle () {
 
 
     if (node.getStatus()== UNREGISTERED) {
-        if (millis () - lastRegistration > (RECONNECTION_PERIOD)) {
+        if (millis () - lastRegistration > RECONNECTION_PERIOD) {
             DEBUG_DBG ("Current node status: %d", node.getStatus ());
             lastRegistration = millis ();
             node.reset ();
@@ -763,6 +764,18 @@ bool EnigmaIOTSensorClass::processSetSleepTimeCommand (const uint8_t* mac, const
 	setSleepTime (sleepTime);
 	// TODO Store config on flash if sleep time > 0
 	sleepTime = getSleepTime ();
+	if (sleepTime > 0) {
+		if (!SPIFFS.begin ()) {
+			DEBUG_ERROR ("Error mounting flash");
+		} else 
+			if (!saveFlashData ()) {
+				DEBUG_WARN ("Error saving data after set sleep time command");
+			} else {
+				DEBUG_DBG ("Saved config data after set sleep time command");
+		}
+
+		SPIFFS.end ();
+	}
 	memcpy (buffer + 1, &sleepTime, sizeof (sleepTime));
 	bufLength = 5;
 
@@ -819,7 +832,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 	memcpy (&msgIdx, dataPtr, sizeof (uint16_t));
 	dataPtr += sizeof (uint16_t);
 	dataLen -= sizeof (uint16_t);
-	DEBUG_WARN ("OTA message #%u", msgIdx);
+	DEBUG_DBG ("OTA message #%u", msgIdx);
 	if (msgIdx > 0 && otaRunning) {
 		if (msgIdx != (oldIdx + 1)) {
 			responseBuffer[0] = control_message_type::OTA_ANS;
@@ -842,11 +855,11 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 			return false;
 		}
 		memcpy (&otaSize, dataPtr, sizeof (uint32_t));
-		DEBUG_WARN ("OTA size: %u bytes", otaSize);
+		DEBUG_INFO ("OTA size: %u bytes", otaSize);
 		dataPtr += sizeof (uint32_t);
 		dataLen -= sizeof (uint32_t);
 		memcpy (&numMsgs, dataPtr, sizeof (uint16_t));
-		DEBUG_WARN ("Number of OTA messages: %u", numMsgs);
+		DEBUG_INFO ("Number of OTA messages: %u", numMsgs);
 		dataPtr += sizeof (uint16_t);
 		dataLen -= sizeof (uint16_t);
 		memcpy (md5buffer, dataPtr, 32);
@@ -879,7 +892,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 			// TODO Process OTA Update
 			size_t numBytes = Update.write (dataPtr, dataLen);
 			totalBytes += dataLen;
-			DEBUG_WARN ("%u bytes written. Total %u", numBytes, totalBytes);
+			DEBUG_DBG ("%u bytes written. Total %u", numBytes, totalBytes);
 		} else {
 			if (!otaError) {
 				otaError = true;
@@ -894,12 +907,12 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 	if (msgIdx == numMsgs && otaRunning) {
 		StreamString otaErrorStr;
 
-		DEBUG_WARN ("OTA end");
+		DEBUG_INFO ("OTA end");
 		_md5.calculate ();
-		DEBUG_WARN ("OTA MD5 %s", _md5.toString ().c_str ());
+		DEBUG_DBG ("OTA MD5 %s", _md5.toString ().c_str ());
 		_md5.getChars (md5calc);
 		if (!memcmp (md5calc, md5buffer, 32)) {
-			DEBUG_WARN ("OTA MD5 check OK");
+			DEBUG_INFO ("OTA MD5 check OK");
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_CHECK_OK;
 			sendData (responseBuffer, sizeof (responseBuffer), true);
@@ -921,11 +934,11 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_FINISHED;
 			sendData (responseBuffer, sizeof (responseBuffer), true);
-			//uint8_t otaErrorCode = Update.getError ();
-			//Update.printError (otaErrorStr);
-			//otaErrorStr.trim (); // remove line ending
-			//DEBUG_WARN ("OTA Finished OK");
-			//DEBUG_WARN("OTA eror code: %s", otaErrorStr.c_str ());
+			uint8_t otaErrorCode = Update.getError ();
+			Update.printError (otaErrorStr);
+			otaErrorStr.trim (); // remove line ending
+			DEBUG_WARN ("OTA Finished OK");
+			DEBUG_WARN("OTA eror code: %s", otaErrorStr.c_str ());
 			Serial.println ("OTA OK");
 			// delay (10000); // Delay does not work on lambda functions
 			ESP.restart ();
@@ -934,11 +947,11 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
 			sendData (responseBuffer, sizeof (responseBuffer), true);
-			//uint8_t otaErrorCode = Update.getError ();
-			//Update.printError (otaErrorStr);
-			//otaErrorStr.trim (); // remove line ending
-			//DEBUG_ERROR ("OTA Failed");
-			//DEBUG_WARN ("OTA eror code: %s", otaErrorStr.c_str ());
+			uint8_t otaErrorCode = Update.getError ();
+			Update.printError (otaErrorStr);
+			otaErrorStr.trim (); // remove line ending
+			DEBUG_ERROR ("OTA Failed");
+			DEBUG_WARN ("OTA eror code: %s", otaErrorStr.c_str ());
 			Serial.println ("OTA failed");
 			return false;
 		}
