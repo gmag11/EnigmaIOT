@@ -262,6 +262,7 @@ This is the list of currently implemented control commands:
 - Get sleep duration time
 - Set sleep duration time
 - OTA Update
+- Indicate
 
 | Command | Response |
 | ------- | -------- |
@@ -283,17 +284,17 @@ Messages are encoded to reduce the amount of bytes to be sent over internal prot
 | Sleep time result | `0x82` | Sleep time in seconds (Unsigned integer - 4 bytes) |
 | OTA Update | `0xEF` | OTA update specific format |
 | OTA Update result | `0xFF` | OTA result code |
-| Indicate | 0x04 | Function to identify a physical node by flashing its LED |
+| Indicate | `0x04` | Function to identify a physical node by flashing its LED |
 
 ## OTA Update
 
-OTA updates are transferred using the same mechanism. Firmware is sent over MQTT using a [Python script](./EnigmaIoTUpdate/EnigmaIoTUpdate.py). Then gateway selects the appropiate node and send this binary data over ESP-NOW.
+OTA updates are transferred using the same mechanism. Firmware is sent over MQTT using a [Python script](./EnigmaIoTUpdate/EnigmaIoTUpdate.py). Then gateway selects the appropriate node and send this binary data over ESP-NOW.
 
-As ESP-NOW restricts **maximum payload to 250 bytes per message** firmware is splitted in chunks. Every chunk is **220 bytes** long, so that it fits toghether with message headers and is multiple of 4. This splitting work is done by `EnigmaIoTUpdate.py` script.
+As ESP-NOW restricts **maximum payload to 250 bytes per message** firmware is splitted in chunks. Every chunk is **220 bytes** long, so that it fits together with message headers and is multiple of 4. This splitting work is done by `EnigmaIoTUpdate.py` script.
 
 ### Using EnigmaIoTUpdate.py
 
-A requirement is to have installed [Python3](https://www.python.org/download/releases/3.0/) in the comuter used to do the update.
+A requirement is to have installed [Python3](https://www.python.org/download/releases/3.0/) in the computer used to do the update.
 
 In order to run the update, you need to install [`paho-mqtt`](https://pypi.org/project/paho-mqtt/) library. To do that you can follow instructions [here](https://pypi.org/project/paho-mqtt/#installation).
 
