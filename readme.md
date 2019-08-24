@@ -265,7 +265,7 @@ This is the list of currently implemented control commands:
 - Get sleep duration time
 - Set sleep duration time
 - OTA Update
-- Indicate
+- Identify
 
 <table>
 <thead>
