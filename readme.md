@@ -292,7 +292,7 @@ This is the list of currently implemented control commands:
   </tr>
   <tr>
     <td>OTA message</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/ota</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/ota &lt;ota message&gt;</code></td>
     <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/ota &lt;ota_result_code&gt;</code></td>
   </tr>
   <tr>
