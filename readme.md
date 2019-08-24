@@ -56,6 +56,9 @@ Notice that network key used to implement this feature is stored on flash. ESP82
 - [x] Node configuration on service using control downlink commands
 - [ ] OTA over WiFi
 - [x] OTA over MQTT/ESP-NOW
+- [x] Sensor identification by using a flashing LED. This is useful when you have a bunch of nodes together :D
+- [ ] Broadcast messages that go to all nodes
+- [ ] Node grouping to send messages to several nodes at once
 
 ## Design
 
@@ -264,12 +267,41 @@ This is the list of currently implemented control commands:
 - OTA Update
 - Indicate
 
-| Command | Response |
-| ------- | -------- |
-| `<configurable prefix>/<node address>/get/version` | `<configurable prefix>/<node address>/result/version <version>` |
-| `<configurable prefix>/<node address>/get/sleeptime` | `<configurable prefix>/<node address>/result/sleeptime <sleep_time>` |
-| `<configurable prefix>/<node address>/set/sleeptime <sleep_time>` | `<configurable prefix>/<node address>/result/sleeptime <sleep_time>` |
-| `<configurable prefix>/<node address>/get/ota` | `<configurable prefix>/<node address>/result/ota <ota_result_code>` |
+<table>
+<thead>
+  <tr>
+    <th colspan="2">Command</th>
+    <th>Response</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>Get version</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/version</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/version &lt;version&gt;</code></td>
+  </tr>
+  <tr>
+    <td>Get sleep duration</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/sleeptime</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime &lt;sleep_time&gt;</code></td>
+  </tr>
+  <tr>
+    <td>Set sleep duration</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/sleeptime &lt;sleep_time&gt;</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime &lt;sleep_time&gt;</code></td>
+  </tr>
+  <tr>
+    <td>OTA message</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/ota</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/ota &lt;ota_result_code&gt;</code></td>
+  </tr>
+  <tr>
+    <td>Identify sensor</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/identify</code></td>
+    <td>None</td>
+  </tr>
+  </tbody>
+</table>
 
 For instance, publishing `enigmaiot/12:34:56:78:90:12/get/version` will produce `enigmaiot/12:34:56:78:90:12/result/version 0.2.0`.
 
