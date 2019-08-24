@@ -15,7 +15,6 @@
 const char CONFIG_FILE[] = "/config.txt";
 
 ETSTimer ledTimer;
-bool ledFlashing = false;
 
 void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
     this->led = led;
@@ -198,17 +197,11 @@ bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t *data) {
 
 void startFlash (time_t period) {
 	ets_timer_disarm (&ledTimer);
-	//if (!ledFlashing) {
-		ledFlashing = true;
-		ets_timer_arm_new (&ledTimer, period, true, true);
-	//}
+	ets_timer_arm_new (&ledTimer, period, true, true);
 }
 
 void stopFlash () {
-	//if (ledFlashing) {
-		ledFlashing = false;
-		ets_timer_disarm (&ledTimer);
-	//}
+	ets_timer_disarm (&ledTimer);
 }
 
 void flashLed (void* led) {
@@ -805,7 +798,7 @@ bool EnigmaIOTSensorClass::processSetIdentifyCommand (const uint8_t* mac, const 
 	DEBUG_DBG ("Set Identify command received");
 	DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
 
-	Serial.println ("IDENTIFY");
+	DEBUG_ERROR ("IDENTIFY");
 	startIdentifying (1000);
 }
 

@@ -284,7 +284,7 @@ Messages are encoded to reduce the amount of bytes to be sent over internal prot
 | Sleep time result | `0x82` | Sleep time in seconds (Unsigned integer - 4 bytes) |
 | OTA Update | `0xEF` | OTA update specific format |
 | OTA Update result | `0xFF` | OTA result code |
-| Indicate | `0x04` | Function to identify a physical node by flashing its LED |
+| Identify | `0x04` | Function to identify a physical node by flashing its LED |
 
 ## OTA Update
 

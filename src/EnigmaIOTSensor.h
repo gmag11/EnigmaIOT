@@ -109,8 +109,8 @@ protected:
 	bool otaRunning = false; ///< @brief True if OTA update has started
 	bool otaError = false; ///< @brief True if OTA update has failed. This normally produces a restart
 	time_t lastOTAmsg; ///< @brief Time when last OTA update message has received. This is used to control timeout
-	boolean indentifying = false;
-	time_t identifyStart;
+	boolean indentifying = false; ///< @brief True if node has its led flashing to be identified
+	time_t identifyStart; ///< @brief Time when identification started flashing. Used to control identification timeout
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -121,8 +121,15 @@ protected:
       */
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
 	
+	/**
+	  * @brief Starts node identification by flashing led
+	  * @param period Flash led period in ms
+	  */
 	void startIdentifying (time_t period);
 
+	/**
+	  * @brief Stops node identification
+	  */
 	void stopIdentifying ();
 
 	/**
