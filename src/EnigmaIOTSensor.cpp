@@ -14,6 +14,9 @@
 
 const char CONFIG_FILE[] = "/config.txt";
 
+ETSTimer ledTimer;
+bool ledFlashing = false;
+
 void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
     this->led = led;
     ledOnTime = onTime;
@@ -193,9 +196,40 @@ bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t *data) {
 	return result;
 }
 
+void startFlash (time_t period) {
+	ets_timer_disarm (&ledTimer);
+	//if (!ledFlashing) {
+		ledFlashing = true;
+		ets_timer_arm_new (&ledTimer, period, true, true);
+	//}
+}
+
+void stopFlash () {
+	//if (ledFlashing) {
+		ledFlashing = false;
+		ets_timer_disarm (&ledTimer);
+	//}
+}
+
+void flashLed (void* led) {
+	digitalWrite (*(int*)led, !digitalRead (*(int*)led));
+}
+
+void EnigmaIOTSensorClass::startIdentifying (time_t period) {
+	identifyStart = millis ();
+	indentifying = true;
+	startFlash (period);
+}
+
+void EnigmaIOTSensorClass::stopIdentifying () {
+	indentifying = false;
+	stopFlash ();
+}
+
 void EnigmaIOTSensorClass::begin (Comms_halClass *comm, uint8_t *gateway, uint8_t *networkKey, bool useCounter, bool sleepy) {
     pinMode (led, OUTPUT);
     digitalWrite (led, HIGH);
+	ets_timer_setfn (&ledTimer, flashLed, (void*)& led);
 
 	initWiFi ();
 	this->comm = comm;
@@ -311,6 +345,7 @@ void EnigmaIOTSensorClass::setSleepTime (uint32_t sleepTime) {
 void EnigmaIOTSensorClass::handle () {
     static unsigned long blueOntime;
 
+	// Flash led if programmed (when data is transferred)
     if (led >= 0) {
         if (flashBlue) {
             blueOntime = millis ();
@@ -318,18 +353,23 @@ void EnigmaIOTSensorClass::handle () {
             flashBlue = false;
         }
 
-        if (!digitalRead (led) && millis () - blueOntime > ledOnTime) {
-            digitalWrite (led, HIGH);
-        }
+		if (!indentifying) {
+			if (!digitalRead (led) && millis () - blueOntime > ledOnTime) {
+				digitalWrite (led, HIGH);
+			}
+		}
     }
 
-    if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered() && node.getSleepy()) {
-		uint64_t usSleep = sleepTime / (uint64_t)1000;
-		DEBUG_INFO ("Go to sleep for %lu ms", (uint32_t)(usSleep));
-        ESP.deepSleep (sleepTime, RF_NO_CAL);
-    }
+	// Check if this should go to sleep
+	if (node.getSleepy ()) {
+		if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered () && !indentifying) {
+			uint64_t usSleep = sleepTime / (uint64_t)1000;
+			DEBUG_INFO ("Go to sleep for %lu ms", (uint32_t)(usSleep));
+			ESP.deepSleep (sleepTime, RF_NO_CAL);
+		}
+	}
 
-
+	// Check registration timeout
     static time_t lastRegistration;
     status_t status = node.getStatus ();
     if (status == WAIT_FOR_SERVER_HELLO || status == WAIT_FOR_CIPHER_FINISHED) {
@@ -341,7 +381,7 @@ void EnigmaIOTSensorClass::handle () {
         }
     }
 
-
+	// Retry registration
     if (node.getStatus()== UNREGISTERED) {
         if (millis () - lastRegistration > RECONNECTION_PERIOD) {
             DEBUG_DBG ("Current node status: %d", node.getStatus ());
@@ -351,6 +391,7 @@ void EnigmaIOTSensorClass::handle () {
         }
     }
 
+	// Check OTA update timeout
 	if (otaRunning) {
 		if (millis () - lastOTAmsg > OTA_TIMEOUT_TIME) {
 			uint8_t responseBuffer[2];
@@ -361,6 +402,14 @@ void EnigmaIOTSensorClass::handle () {
 			}
 			otaRunning = false;
 			restart ();
+		}
+	}
+
+	// Check identifying LED timeout
+	if (indentifying) {
+		if (millis () - identifyStart > IDENTIFY_TIMEOUT) {
+			stopIdentifying ();
+			digitalWrite (led, HIGH);
 		}
 	}
 
@@ -749,14 +798,15 @@ bool EnigmaIOTSensorClass::processGetSleepTimeCommand (const uint8_t* mac, const
 	}
 }
 
-bool EnigmaIOTSensorClass::processSetIndicateCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+bool EnigmaIOTSensorClass::processSetIdentifyCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
 	uint8_t buffer[MAX_MESSAGE_LENGTH];
 	uint8_t bufLength;
 
-	DEBUG_DBG ("Set Indicate command received");
+	DEBUG_DBG ("Set Identify command received");
 	DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
 
-	Serial.println ("INDICATE");
+	Serial.println ("IDENTIFY");
+	startIdentifying (1000);
 }
 
 bool EnigmaIOTSensorClass::processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
@@ -991,6 +1041,8 @@ bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint
 			return processGetSleepTimeCommand (mac, data, len);
 		case control_message_type::SLEEP_SET:
 			return processSetSleepTimeCommand (mac, data, len);
+		case control_message_type::IDENTIFY:
+			return processSetIdentifyCommand (mac, data, len);
 		case control_message_type::OTA:
 			if (processOTACommand (mac, data, len)) {
 				return true;

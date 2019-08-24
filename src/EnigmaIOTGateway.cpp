@@ -79,12 +79,12 @@ bool buildGetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 	return true;
 }
 
-bool buildSetIndicate (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
-	DEBUG_VERBOSE ("Build 'Set Indicate' message from: %s", printHexBuffer (inputData, inputLen));
+bool buildSetIdentify (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Set Identify' message from: %s", printHexBuffer (inputData, inputLen));
 	if (dataLen < 1) {
 		return false;
 	}
-	data[0] = (uint8_t)control_message_type::INDICATE;
+	data[0] = (uint8_t)control_message_type::IDENTIFY;
 	dataLen = 1;
 	return true;
 }
@@ -368,8 +368,8 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 		}
 		DEBUG_VERBOSE ("OTA message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
-	case control_message_type::INDICATE:
-		if (!buildSetIndicate (downstreamData, dataLen, data, len)) {
+	case control_message_type::IDENTIFY:
+		if (!buildSetIdentify (downstreamData, dataLen, data, len)) {
 			DEBUG_ERROR ("Error building OTA message");
 			return false;
 		}

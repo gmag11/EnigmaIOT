@@ -109,6 +109,8 @@ protected:
 	bool otaRunning = false; ///< @brief True if OTA update has started
 	bool otaError = false; ///< @brief True if OTA update has failed. This normally produces a restart
 	time_t lastOTAmsg; ///< @brief Time when last OTA update message has received. This is used to control timeout
+	boolean indentifying = false;
+	time_t identifyStart;
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -119,6 +121,10 @@ protected:
       */
     bool checkCRC (const uint8_t *buf, size_t count, uint32_t *crc);
 	
+	void startIdentifying (time_t period);
+
+	void stopIdentifying ();
+
 	/**
    * @brief Loads configuration from RTC data. Uses a CRC to check data integrity
    * @return Returns `true` if data is valid. `false` otherwise
@@ -288,7 +294,7 @@ protected:
 	  * @param len Length of payload data
 	  * @return Returns `true` if message could be correcly decoded and processed
 	  */
-	bool processSetIndicateCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+	bool processSetIdentifyCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
 	/**
 	  * @brief Processes a request firmware version

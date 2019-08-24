@@ -24,7 +24,7 @@
 #define SET_SLEEP "set/sleeptime"
 #define SET_OTA "set/ota"
 #define SET_OTA_ANS "result/ota"
-#define SET_INDICATE "set/indicate"
+#define SET_IDENTIFY "set/identify"
 
 void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 	switch (data[0]) {
@@ -120,8 +120,9 @@ control_message_type_t checkMsgType (String data) {
 	if (data.indexOf (SET_OTA) != -1) {
 		return control_message_type::OTA;
 	}
-	if (data.indexOf (SET_INDICATE) != -1) {
-		return control_message_type::INDICATE;
+	if (data.indexOf (SET_IDENTIFY) != -1) {
+		DEBUG_WARN ("IDENTIFY MESSAGE %s", data.c_str ());
+		return control_message_type::IDENTIFY;
 	}
 	return control_message_type::USERDATA;
 }
@@ -131,7 +132,7 @@ void onSerial (String message) {
 
 	DEBUG_VERBOSE ("Downlink message: %s", message.c_str ());
 	String addressStr = message.substring (message.indexOf ('/') + 1, message.indexOf ('/', 2));
-	DEBUG_INFO ("Downlink message from: %s", addressStr.c_str ());
+	DEBUG_INFO ("Downlink message to: %s", addressStr.c_str ());
 	if (!str2mac (addressStr.c_str (), addr)) {
 		DEBUG_ERROR ("Not a mac address");
 		return;
