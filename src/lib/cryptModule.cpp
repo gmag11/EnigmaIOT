@@ -21,6 +21,20 @@
 CYPHER_TYPE cipher;
 BLOCK_CYPHER netCipher;
 
+uint8_t *CryptModule::getSHA256FromKey (uint8_t* inputKey, uint8_t keyLength) {
+	uint8_t key[32];
+	
+	br_sha256_context* shaContext = new br_sha256_context ();
+	br_sha256_init (shaContext);
+	br_sha224_update (shaContext, (void*)inputKey, keyLength);
+	br_sha256_out (shaContext, key);
+	delete shaContext;
+
+	memcpy (inputKey, key, keyLength);
+
+	return inputKey;
+}
+
 void CryptModule::decryptBuffer (uint8_t *output, const uint8_t *input, size_t length,
     const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen) {
     if (key && iv) {

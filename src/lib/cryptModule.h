@@ -56,6 +56,8 @@ public:
     static void decryptBuffer (uint8_t *output, const uint8_t *input, size_t length,
         const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen);
 
+	static uint8_t *getSHA256FromKey (uint8_t* inputKey, uint8_t keyLength);
+
     /**
       * @brief Encrypts a buffer using a shared key
       * @param output Output buffer to get encrypted data. It may be the same as input buffer
