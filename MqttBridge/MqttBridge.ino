@@ -22,6 +22,15 @@
 
 //#define BRIDGE_DEBUG
 
+#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%lu] %lu free (%s:%d) ",millis(),(unsigned long)ESP.getFreeHeap(),__FUNCTION__,__LINE__);
+
+#ifdef BRIDGE_DEBUG
+#define DEBUG_ESP_PORT Serial
+#define _DEBUG_(...) DEBUG_LINE_PREFIX(); DEBUG_ESP_PORT.printf( __VA_ARGS__ ); DEBUG_ESP_PORT.println()
+#else
+#define _DEBUG_(...)
+#endif
+
 typedef struct {
 	char mqtt_server[41];
 	int mqtt_port = 8883;
@@ -135,9 +144,7 @@ void stopFlash () {
 
 void saveConfigCallback () {
 	shouldSaveConfig = true;
-#ifdef BRIDGE_DEBUG
-	Serial.println ("Should save configuration");
-#endif
+    _DEBUG_ ("Should save configuration");
 
 }
 
@@ -169,17 +176,13 @@ bool configWiFiManager () {
 #ifndef BRIDGE_DEBUG
 	wifiManager.setDebugOutput (false);
 #endif
-#ifdef BRIDGE_DEBUG
-	Serial.printf ("Connecting to WiFi: %s\n", WiFi.SSID ().c_str());
-#endif
+    _DEBUG_ ("Connecting to WiFi: %s", WiFi.SSID ().c_str());
 	String apname = "EnigmaIoTMQTTBridge" + String (ESP.getChipId (), 16);
 	boolean result = wifiManager.autoConnect (apname.c_str());
 
 	if (shouldSaveConfig) {
-#ifdef BRIDGE_DEBUG
-		Serial.println ("==== Config Portal result ====");
-		Serial.printf ("SSID: %s\n", WiFi.SSID().c_str());
-#endif
+        _DEBUG_ ("==== Config Portal result ====");
+        _DEBUG_ ("SSID: %s", WiFi.SSID().c_str());
 		memcpy (bridgeConfig.mqtt_server, mqttServerParam.getValue (), mqttServerParam.getValueLength ());
 		bridgeConfig.mqtt_port = atoi (mqttPortParam.getValue ());
 		memcpy (bridgeConfig.mqtt_user, mqttUserParam.getValue (), mqttUserParam.getValueLength ());
@@ -193,34 +196,24 @@ bool loadBridgeConfig () {
 	//SPIFFS.remove (CONFIG_FILE); // Only for testing
 
 	if (SPIFFS.exists (CONFIG_FILE)) {
-#ifdef BRIDGE_DEBUG
-		Serial.printf ("Opening %s file\n", CONFIG_FILE);
-#endif
+        _DEBUG_ ("Opening %s file", CONFIG_FILE);
 		File configFile = SPIFFS.open (CONFIG_FILE, "r");
 		if (configFile) {
-#ifdef BRIDGE_DEBUG
-			Serial.printf ("%s opened\n", CONFIG_FILE);
-#endif
+            _DEBUG_ ("%s opened", CONFIG_FILE);
 			size_t size = configFile.size ();
 			if (size < sizeof (bridge_config_t)) {
-#ifdef BRIDGE_DEBUG
-				Serial.println ("Config file is corrupted. Deleting");
-#endif
+                _DEBUG_ ("Config file is corrupted. Deleting");
 				SPIFFS.remove (CONFIG_FILE);
 				return false;
 			}
 			configFile.read ((uint8_t*)(&bridgeConfig), sizeof (bridge_config_t));
 			configFile.close ();
-#ifdef BRIDGE_DEBUG
-			Serial.println ("Gateway configuration successfuly read");
-#endif
+            _DEBUG_ ("Gateway configuration successfuly read");
 			return true;
 		}
 	}
 	else {
-#ifdef BRIDGE_DEBUG
-		Serial.printf ("%s do not exist\n", CONFIG_FILE);
-#endif
+        _DEBUG_ ("%s do not exist", CONFIG_FILE);
 		return false;
 	}
 
@@ -230,16 +223,12 @@ bool loadBridgeConfig () {
 bool saveBridgeConfig () {
 	File configFile = SPIFFS.open (CONFIG_FILE, "w");
 	if (!configFile) {
-#ifdef BRIDGE_DEBUG
-		Serial.printf ("Failed to open config file %s for writing\n", CONFIG_FILE);
-#endif
+        _DEBUG_ ("Failed to open config file %s for writing", CONFIG_FILE);
 		return false;
 	}
 	configFile.write ((uint8_t*)(&bridgeConfig), sizeof (bridge_config_t));
 	configFile.close ();
-#ifdef BRIDGE_DEBUG
-	Serial.println ("Gateway configuration saved to flash");
-#endif 
+    _DEBUG_ ("Gateway configuration saved to flash");
 	return true;
 }
 
@@ -251,30 +240,22 @@ void setup ()
 	digitalWrite (BUILTIN_LED, HIGH);
 	startFlash (500);
 	if (!SPIFFS.begin ()) {
-#ifdef BRIDGE_DEBUG
-		Serial.println ("Error starting filesystem. Formatting.");
-#endif
+        _DEBUG_ ("Error starting filesystem. Formatting.");
 		SPIFFS.format ();
 		delay (5000);
 		ESP.restart ();
 	}
 	if (!loadBridgeConfig ()) {
-#ifdef BRIDGE_DEBUG
-		Serial.println ("Cannot load configuration");
-#endif
+        _DEBUG_ ("Cannot load configuration");
 	}
 	if (!configWiFiManager ()) {
-#ifdef BRIDGE_DEBUG
-		Serial.println ("Error connecting to WiFi");
-#endif
+        _DEBUG_ ("Error connecting to WiFi");
 		delay (2000);
 		ESP.restart ();
 	}
 	if (shouldSaveConfig) {
 		if (!saveBridgeConfig ()) {
-#ifdef BRIDGE_DEBUG
-			Serial.println ("Error writting filesystem. Formatting.");
-#endif
+            _DEBUG_ ("Error writting filesystem. Formatting.");
 			SPIFFS.format ();
 			delay (5000);
 
@@ -306,9 +287,7 @@ void loop ()
 
 	while (Serial.available () != 0) {
 		message = Serial.readStringUntil ('\n');
-#ifdef BRIDGE_DEBUG
-		Serial.printf ("Message: %s\n", message.c_str ());
-#endif
+        _DEBUG_ ("Message: %s", message.c_str ());
 		dataPresent = true;
 		if (message.length () > 0) {
 			break;
@@ -318,46 +297,31 @@ void loop ()
 	if (dataPresent) {
 		dataPresent = false;
 		if (message[0] == '~') {
-#ifdef BRIDGE_DEBUG
-			Serial.println ("New message");
-#endif
+            _DEBUG_ ("New message");
 			int end = message.indexOf (';');
 			topic = bridgeConfig.base_topic + message.substring (1, end);
-#ifdef BRIDGE_DEBUG
-			Serial.printf ("Topic: %s", topic.c_str ());
-#endif
+            _DEBUG_ ("Topic: %s", topic.c_str ());
 			if (end < ((int)(message.length ()) - 1) && end > 0) {
 				data = message.substring (end + 1);
-#ifdef BRIDGE_DEBUG
-				Serial.println (" With data");
-				Serial.printf (" -- Data: %s\n", data.c_str ());
-#endif
+                _DEBUG_ (" With data");
+                _DEBUG_ (" -- Data: %s", data.c_str ());
 			}
 			else {
 				data = "";
-#ifdef BRIDGE_DEBUG
-				Serial.println (" Without data");
-				Serial.println ();
-#endif
+                _DEBUG_ (" Without data\n");
 			}
-#ifdef BRIDGE_DEBUG
-			Serial.printf ("Publish %s : %s\n", topic.c_str (), data.c_str ());
-#endif
+            _DEBUG_ ("Publish %s : %s", topic.c_str (), data.c_str ());
 			if (client.beginPublish (topic.c_str (), data.length (), false)) {
 				client.write ((const uint8_t*)data.c_str (), data.length ());
 				if (client.endPublish () == 1) {
-#ifdef BRIDGE_DEBUG
-					Serial.println ("Publish OK");
+                    _DEBUG_ ("Publish OK");
 				}
 				else {
-					Serial.println ("Publish error");
-#endif
+                    _DEBUG_ ("Publish error");
 				}
-#ifdef BRIDGE_DEBUG
 			}
 			else {
-				Serial.println ("Publish error");
-#endif
+                _DEBUG_ ("Publish error");
 			}
 		}
 	}
