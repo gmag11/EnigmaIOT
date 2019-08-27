@@ -17,11 +17,8 @@
 #include <Poly1305.h>
 #include "helperFunctions.h"
 
-//#define BLOCK_CYPHER Speck
-//#define CYPHER_TYPE CFB<BLOCK_CYPHER>
 
 CYPHER_TYPE cipher;
-//BLOCK_CYPHER netCipher;
 
 uint8_t *CryptModule::getSHA256FromKey (uint8_t* inputKey, uint8_t keyLength) {
 	uint8_t key[32];
@@ -102,36 +99,6 @@ bool CryptModule::encryptBuffer (const uint8_t *data, size_t length,
     return false;
 
 }
-
-//uint8_t* CryptModule::networkEncrypt (uint8_t* input, size_t inputLen, uint8_t* key, size_t keyLen, uint8_t* tag) {
-//
-//    
-//    uint8_t *tempBuffer = input;
-//
-//    netCipher.setKey (key, keyLength);
-//    size_t blockSize = netCipher.blockSize ();
-//
-//    for (int i = 0; i < numBlocks; i++) {
-//        netCipher.encryptBlock (tempBuffer, tempBuffer);
-//        tempBuffer += blockSize;
-//    }
-//    return input;
-//}
-//
-//uint8_t* CryptModule::networkDecrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength, uint8_t *tag) {
-//
-//    uint8_t *tempBuffer = input;
-//
-//    netCipher.setKey (key, keyLength);
-//    size_t blockSize = netCipher.blockSize ();
-//
-//    for (int i = 0; i < numBlocks; i++) {
-//        netCipher.decryptBlock (tempBuffer, tempBuffer);
-//        tempBuffer += blockSize;
-//    }
-//    return input;
-//}
-
 
 uint32_t CryptModule::random () {
     return *(volatile uint32_t *)RANDOM_32;

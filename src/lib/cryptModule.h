@@ -43,16 +43,16 @@ public:
       */
     static uint8_t *random (const uint8_t *buf, size_t len);
 
-    /**
-      * @brief Decrypts a buffer using a shared key
-      * @param output Output buffer to get decrypted data. It may be the same as input buffer
-      * @param input Input encrypted data buffer
-      * @param length Buffer length in number of bytes
-      * @param iv Initialization Vector used to encrypt this data
-      * @param ivlen IV length
-      * @param key Shared key used to encrypt data
-      * @param keylen Key length
-      */
+    ///**
+    //  * @brief Decrypts a buffer using a shared key
+    //  * @param output Output buffer to get decrypted data. It may be the same as input buffer
+    //  * @param input Input encrypted data buffer
+    //  * @param length Buffer length in number of bytes
+    //  * @param iv Initialization Vector used to encrypt this data
+    //  * @param ivlen IV length
+    //  * @param key Shared key used to encrypt data
+    //  * @param keylen Key length
+    //  */
     static bool decryptBuffer (const uint8_t* data, size_t length,
                                const uint8_t* iv, uint8_t ivlen, const uint8_t* key, uint8_t keylen,
                                const uint8_t* aad, uint8_t aadLen, const uint8_t* tag, uint8_t tagLen)
@@ -100,29 +100,6 @@ public:
     uint8_t* getPubDHKey () {
         return publicDHKey;
     }
-
-    /**
-      * @brief Encripts one or more blocks of memory using network key
-      * @param input Input buffer
-      * @param numBlocks Number of blocks to encrypt
-      * @param key Network key. This has to be shared among every node and gateway on the network
-      * @param keyLength Length of network key in number of bytes.
-      * @return Input buffer
-      */
-    //static uint8_t *networkEncrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength);
-
-    /**
-      * @brief Decripts one or more blocks of memory using network key
-      * @param input Input buffer
-      * @param numBlocks Number of blocks to decrypt
-      * @param key Network key. This has to be shared among every node and gateway on the network
-      * @param keyLength Length of network key in number of bytes.
-      * @return Input buffer
-      */
-    //static uint8_t *networkDecrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength);
-
-    //static size_t getBlockSize ();
-
 
 protected:
     uint8_t privateDHKey[KEY_LENGTH]; ///< @brief Temporary private key store used during key agreement

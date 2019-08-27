@@ -470,12 +470,12 @@ bool EnigmaIOTSensorClass::clientHello () {
 
     DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN));
 
-    uint8_t aad[AAD_LENGTH + CHMSG_LEN - TAG_LENGTH];
+    uint8_t aad[AAD_LENGTH + CHMSG_LEN - TAG_LENGTH - KEY_LENGTH];
 
-    memcpy (aad, clientHello_msg, CHMSG_LEN - TAG_LENGTH); // Copy message upto publicKey
+    memcpy (aad, clientHello_msg, CHMSG_LEN - TAG_LENGTH - KEY_LENGTH); // Copy message upto iv
 
     // Copy 8 last bytes from NetworkKey
-    memcpy (aad + CHMSG_LEN - TAG_LENGTH, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+    memcpy (aad + CHMSG_LEN - TAG_LENGTH - KEY_LENGTH, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
     if (!CryptModule::encryptBuffer (clientHello_msg.publicKey, KEY_LENGTH, // Encrypt only public key
                                      rtcmem_data.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key

@@ -1075,7 +1075,7 @@ bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t rea
 bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
 	/*
 	* -------------------------------------------------------
-	*| msgType (1) | random (16) | DH Kmaster (32) | CRC (4) |
+	*| msgType (1) | random (12) | DH Kmaster (32) | Tag (16) |
 	* -------------------------------------------------------
 	*/
 
@@ -1083,7 +1083,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
 		uint8_t publicKey[KEY_LENGTH];
-		uint32_t crc;
+		uint8_t crc[TAG_LENGTH];
 	} clientHello_msg;
 
 #define CHMSG_LEN sizeof(clientHello_msg)
@@ -1097,16 +1097,22 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 
 	memcpy (&clientHello_msg, buf, count);
 
-	CryptModule::networkDecrypt (clientHello_msg.iv, 3, gwConfig.networkKey, KEY_LENGTH);
+    uint8_t aad[AAD_LENGTH + CHMSG_LEN - TAG_LENGTH - KEY_LENGTH];
+
+    memcpy (aad, clientHello_msg, CHMSG_LEN - TAG_LENGTH - KEY_LENGTH); // Copy message upto iv
+
+    // Copy 8 last bytes from NetworkKey
+    memcpy (aad + CHMSG_LEN - TAG_LENGTH - KEY_LENGTH, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+    if (!CryptModule::decryptBuffer (clientHello_msg.publicKey, KEY_LENGTH,
+                                    clientHello_msg.iv, IV_LENGTH,
+                                    rtcmem_data.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+                                    aad, sizeof (aad), clientHello_msg.tag, TAG_LENGTH)) {
+        DEBUG_ERROR ("Error during decryption");
+        return false;
+    }
 
 	DEBUG_VERBOSE ("Netowrk decrypted Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN));
-
-	memcpy (&crc32, &(clientHello_msg.crc), sizeof (uint32_t));
-
-	if (!checkCRC ((uint8_t*)& clientHello_msg, CHMSG_LEN - CRC_LENGTH, &crc32)) {
-		DEBUG_WARN ("Wrong CRC");
-		return false;
-	}
 
 	node->setEncryptionKey (clientHello_msg.publicKey);
 
