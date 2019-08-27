@@ -27,9 +27,11 @@ static const time_t IDENTIFY_TIMEOUT = 10000;
 
 //Crypro configuration
 const uint8_t KEY_LENGTH = 32; ///< @brief Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing
-const uint8_t IV_LENGTH = 16; ///< @brief Initalization vector length used by selected crypto algorythm
-#define BLOCK_CYPHER Speck
-#define CYPHER_TYPE CFB<BLOCK_CYPHER>
+const uint8_t IV_LENGTH = 12; ///< @brief Initalization vector length used by selected crypto algorythm
+const uint8_t TAG_LENGTH = 16;
+const uint8_t AAD_LENGTH = 8;
+//#define BLOCK_CYPHER Speck
+#define CYPHER_TYPE ChaChaPoly
 
 //Debug
 #define DEBUG_ESP_PORT Serial ///< @brief Stream to output debug info. It will normally be `Serial`

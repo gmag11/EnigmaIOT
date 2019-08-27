@@ -8,18 +8,20 @@
   * Uses [Arduino CryptoLib](https://rweather.github.io/arduinolibs/crypto.html) library
   */
 
-#include <CFB.h>
-#include <CryptoLW.h>
+//#include <CFB.h>
+//#include <CryptoLW.h>
 #include "cryptModule.h"
-#include <Speck.h>
+//#include <Speck.h>
 #include <Curve25519.h>
+#include <ChaChaPoly.h>
+#include <Poly1305.h>
 #include "helperFunctions.h"
 
 //#define BLOCK_CYPHER Speck
 //#define CYPHER_TYPE CFB<BLOCK_CYPHER>
 
 CYPHER_TYPE cipher;
-BLOCK_CYPHER netCipher;
+//BLOCK_CYPHER netCipher;
 
 uint8_t *CryptModule::getSHA256FromKey (uint8_t* inputKey, uint8_t keyLength) {
 	uint8_t key[32];
@@ -35,12 +37,26 @@ uint8_t *CryptModule::getSHA256FromKey (uint8_t* inputKey, uint8_t keyLength) {
 	return inputKey;
 }
 
-void CryptModule::decryptBuffer (uint8_t *output, const uint8_t *input, size_t length,
-    const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen) {
-    if (key && iv) {
+bool CryptModule::decryptBuffer (const uint8_t* data, size_t length,
+                                 const uint8_t* iv, uint8_t ivlen, const uint8_t* key, uint8_t keylen,
+                                 const uint8_t* aad, uint8_t aadLen, const uint8_t* tag, uint8_t tagLen) {
+    if (key && iv && data) {
+        
+        DEBUG_VERBOSE ("IV: %s", printHexBuffer (iv, ivlen));
+        DEBUG_VERBOSE ("Key: %s", printHexBuffer (key, keylen));
+        DEBUG_VERBOSE ("AAD: %s", printHexBuffer (aad, aadLen));
+        cipher.clear ();
+        
         if (cipher.setKey (key, keylen)) {
             if (cipher.setIV (iv, ivlen)) {
+                cipher.addAuthData (aad, aadLen);
                 cipher.decrypt (output, input, length);
+                bool ok = cipher.checkTag (tag, tagLen);
+                DEBUG_VERBOSE ("Tag: %s", printHexBuffer (tag, tagLen));
+                if (!ok) {
+                    DEBUG_ERROR ("Data authentication error");
+                }
+                return ok;
             } else {
                 DEBUG_ERROR ("Error setting IV");
             }
@@ -50,14 +66,29 @@ void CryptModule::decryptBuffer (uint8_t *output, const uint8_t *input, size_t l
     } else {
         DEBUG_ERROR ("Error in key or IV");
     }
+
+    return false;
 }
 
-void CryptModule::encryptBuffer (uint8_t *output, const uint8_t *input, size_t length,
-    const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen) {
-    if (key && iv) {
+bool CryptModule::encryptBuffer (const uint8_t *data, size_t length,
+                                 const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen, 
+                                 const uint8_t *aad, uint8_t aadLen, const uint8_t* tag, uint8_t tagLen) {
+    
+    if ( key && iv && data ) {
+
+        DEBUG_VERBOSE ("IV: %s", printHexBuffer (iv, ivlen));
+        DEBUG_VERBOSE ("Key: %s", printHexBuffer (key, keylen));
+        DEBUG_VERBOSE ("AAD: %s", printHexBuffer (aad, aadLen));
+        cipher.clear ();
+        
         if (cipher.setKey (key, keylen)) {
             if (cipher.setIV (iv, ivlen)) {
-                cipher.encrypt (output, input, length);
+                cipher.addAuthData(aad,aadLen);
+                cipher.encrypt (output, data, length);
+                cipher.computeTag(tag, tagLen);
+                cipher.clear();
+                DEBUG_VERBOSE ("Tag: %s", printHexBuffer (tag, tagLen));
+                return true;
             } else {
                 DEBUG_ERROR ("Error setting IV");
             }
@@ -65,37 +96,41 @@ void CryptModule::encryptBuffer (uint8_t *output, const uint8_t *input, size_t l
             DEBUG_ERROR ("Error setting key");
         }
     } else {
-        DEBUG_ERROR ("Error in key or IV");
+        DEBUG_ERROR ("Error on input data for encryption");
     }
+
+    return false;
+
 }
 
-uint8_t* CryptModule::networkEncrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength) {
-
-    uint8_t *tempBuffer = input;
-
-    netCipher.setKey (key, keyLength);
-    size_t blockSize = netCipher.blockSize ();
-
-    for (int i = 0; i < numBlocks; i++) {
-        netCipher.encryptBlock (tempBuffer, tempBuffer);
-        tempBuffer += blockSize;
-    }
-    return input;
-}
-
-uint8_t* CryptModule::networkDecrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength) {
-
-    uint8_t *tempBuffer = input;
-
-    netCipher.setKey (key, keyLength);
-    size_t blockSize = netCipher.blockSize ();
-
-    for (int i = 0; i < numBlocks; i++) {
-        netCipher.decryptBlock (tempBuffer, tempBuffer);
-        tempBuffer += blockSize;
-    }
-    return input;
-}
+//uint8_t* CryptModule::networkEncrypt (uint8_t* input, size_t inputLen, uint8_t* key, size_t keyLen, uint8_t* tag) {
+//
+//    
+//    uint8_t *tempBuffer = input;
+//
+//    netCipher.setKey (key, keyLength);
+//    size_t blockSize = netCipher.blockSize ();
+//
+//    for (int i = 0; i < numBlocks; i++) {
+//        netCipher.encryptBlock (tempBuffer, tempBuffer);
+//        tempBuffer += blockSize;
+//    }
+//    return input;
+//}
+//
+//uint8_t* CryptModule::networkDecrypt (uint8_t* input, uint8_t numBlocks, uint8_t* key, uint8_t keyLength, uint8_t *tag) {
+//
+//    uint8_t *tempBuffer = input;
+//
+//    netCipher.setKey (key, keyLength);
+//    size_t blockSize = netCipher.blockSize ();
+//
+//    for (int i = 0; i < numBlocks; i++) {
+//        netCipher.decryptBlock (tempBuffer, tempBuffer);
+//        tempBuffer += blockSize;
+//    }
+//    return input;
+//}
 
 
 uint32_t CryptModule::random () {
