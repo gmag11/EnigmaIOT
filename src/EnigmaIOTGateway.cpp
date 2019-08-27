@@ -1088,8 +1088,6 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 
 #define CHMSG_LEN sizeof(clientHello_msg)
 
-	uint32_t crc32;
-
 	if (count < CHMSG_LEN) {
 		DEBUG_WARN ("Message too short");
 		return false;
@@ -1139,7 +1137,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 	/*
 	* ------------------------------------------------------
-	*| msgType (1) | random (16) | DH Kslave (32) | CRC (4) |
+	*| msgType (1) | random (12) | DH Kslave (32) | Tag (16) |
 	* ------------------------------------------------------
 	*/
 
@@ -1147,7 +1145,7 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
 		uint8_t publicKey[KEY_LENGTH];
-		uint32_t crc;
+		uint8_t tag[TAG_LENGTH];
 	} serverHello_msg;
 
 #define SHMSG_LEN sizeof(serverHello_msg)
@@ -1169,14 +1167,26 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 		serverHello_msg.publicKey[i] = key[i];
 	}
 
-	crc32 = CRC32::calculate ((uint8_t*)& serverHello_msg, SHMSG_LEN - CRC_LENGTH);
-	DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
+	//crc32 = CRC32::calculate ((uint8_t*)& serverHello_msg, SHMSG_LEN - CRC_LENGTH);
+	//DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
 
-	memcpy (&(serverHello_msg.crc), &crc32, CRC_LENGTH);
+	//memcpy (&(serverHello_msg.crc), &crc32, CRC_LENGTH);
 
 	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
 
-	CryptModule::networkEncrypt (serverHello_msg.iv, 3, gwConfig.networkKey, KEY_LENGTH);
+    uint8_t aad[AAD_LENGTH + SHMSG_LEN - TAG_LENGTH - KEY_LENGTH];
+
+    memcpy (aad, serverHello_msg, SHMSG_LEN - TAG_LENGTH - KEY_LENGTH); // Copy message upto iv
+
+    // Copy 8 last bytes from NetworkKey
+    memcpy (aad + SHMSG_LEN - TAG_LENGTH - KEY_LENGTH, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+    if (!CryptModule::encryptBuffer (serverHello_msg.publicKey, KEY_LENGTH, // Encrypt only public key
+                                     rtcmem_data.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+                                     aad, sizeof (aad), serverHello_msg.tag, TAG_LENGTH)) {
+        DEBUG_ERROR ("Error during encryption");
+        return false;
+    }
 
 	DEBUG_VERBOSE ("Network encrypted Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
 

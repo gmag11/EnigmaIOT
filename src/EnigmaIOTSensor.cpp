@@ -498,7 +498,7 @@ bool EnigmaIOTSensorClass::clientHello () {
 bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count) {
     /*
     * ------------------------------------------------------
-    *| msgType (1) | random (16) | DH Kslave (32) | CRC (4) |
+    *| msgType (1) | random (12) | DH Kslave (32) | Tag (16) |
     * ------------------------------------------------------
     */
 
@@ -506,13 +506,10 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
         uint8_t msgType;
         uint8_t iv[IV_LENGTH];
         uint8_t publicKey[KEY_LENGTH];
-        uint32_t crc;
+        uint8_t tag[TAG_LENGTH];
     } serverHello_msg;
 
 #define SHMSG_LEN sizeof(serverHello_msg)
-
-    //uint8_t myPublicKey[KEY_LENGTH];
-    uint32_t crc32;
 
     if (count < SHMSG_LEN) {
         DEBUG_WARN ("Message too short");
@@ -521,16 +518,22 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
 
     memcpy (&serverHello_msg, buf, count);
 
-    CryptModule::networkDecrypt (serverHello_msg.iv, 3, rtcmem_data.networkKey, KEY_LENGTH);
+    uint8_t aad[AAD_LENGTH + SHMSG_LEN - TAG_LENGTH - KEY_LENGTH];
 
-    DEBUG_VERBOSE ("Network decrypted Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
+    memcpy (aad, serverHello_msg, SHMSG_LEN - TAG_LENGTH - KEY_LENGTH); // Copy message upto iv
 
-    memcpy (&crc32, &(serverHello_msg.crc), CRC_LENGTH);
+    // Copy 8 last bytes from NetworkKey
+    memcpy (aad + SHMSG_LEN - TAG_LENGTH - KEY_LENGTH, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    if (!checkCRC ((uint8_t*)& serverHello_msg, SHMSG_LEN - CRC_LENGTH, &crc32)) {
-        DEBUG_WARN ("Wrong CRC");
+    if (!CryptModule::decryptBuffer (serverHello_msg.publicKey, KEY_LENGTH,
+                                     serverHello_msg.iv, IV_LENGTH,
+                                     rtcmem_data.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+                                     aad, sizeof (aad), serverHello_msg.tag, TAG_LENGTH)) {
+        DEBUG_ERROR ("Error during decryption");
         return false;
     }
+
+    DEBUG_VERBOSE ("Network decrypted Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
 
     bool cError = Crypto.getDH2 (serverHello_msg.publicKey);
 
