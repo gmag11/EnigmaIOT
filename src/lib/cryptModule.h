@@ -55,7 +55,7 @@ public:
     //  */
     static bool decryptBuffer (const uint8_t* data, size_t length,
                                const uint8_t* iv, uint8_t ivlen, const uint8_t* key, uint8_t keylen,
-                               const uint8_t* aad, uint8_t aadLen, const uint8_t* tag, uint8_t tagLen)
+                               const uint8_t* aad, uint8_t aadLen, const uint8_t* tag, uint8_t tagLen);
 
 	static uint8_t *getSHA256FromKey (uint8_t* inputKey, uint8_t keyLength);
 
@@ -71,7 +71,7 @@ public:
     //  */
     static bool encryptBuffer (const uint8_t* data, size_t length,
                                const uint8_t* iv, uint8_t ivlen, const uint8_t* key, uint8_t keylen,
-                               const uint8_t* aad, uint8_t aadLen, const uint8_t* tag, uint8_t tagLen)
+                               const uint8_t* aad, uint8_t aadLen, const uint8_t* tag, uint8_t tagLen);
 
     /**
       * @brief Starts first stage of Diffie Hellman key agreement algorithm

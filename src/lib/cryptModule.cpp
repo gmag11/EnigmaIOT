@@ -45,10 +45,11 @@ bool CryptModule::decryptBuffer (const uint8_t* data, size_t length,
         cipher.clear ();
         
         if (cipher.setKey (key, keylen)) {
-            if (cipher.setIV (iv, ivlen)) {
-                cipher.addAuthData (aad, aadLen);
-                cipher.decrypt (output, input, length);
-                bool ok = cipher.checkTag (tag, tagLen);
+            if (cipher.setIV ((uint8_t*)iv, ivlen)) {
+                cipher.addAuthData ((uint8_t*)aad, aadLen);
+                cipher.decrypt ((uint8_t*)data, (uint8_t*)data, length);
+                bool ok = cipher.checkTag ((uint8_t*)tag, tagLen);
+                cipher.clear ();
                 DEBUG_VERBOSE ("Tag: %s", printHexBuffer (tag, tagLen));
                 if (!ok) {
                     DEBUG_ERROR ("Data authentication error");
@@ -78,11 +79,11 @@ bool CryptModule::encryptBuffer (const uint8_t *data, size_t length,
         DEBUG_VERBOSE ("AAD: %s", printHexBuffer (aad, aadLen));
         cipher.clear ();
         
-        if (cipher.setKey (key, keylen)) {
-            if (cipher.setIV (iv, ivlen)) {
-                cipher.addAuthData(aad,aadLen);
-                cipher.encrypt (output, data, length);
-                cipher.computeTag(tag, tagLen);
+        if (cipher.setKey ((uint8_t*)key, keylen)) {
+            if (cipher.setIV ((uint8_t*)iv, ivlen)) {
+                cipher.addAuthData((uint8_t*)aad,aadLen);
+                cipher.encrypt ((uint8_t*)data, (uint8_t*)data, length);
+                cipher.computeTag((uint8_t*)tag, tagLen);
                 cipher.clear();
                 DEBUG_VERBOSE ("Tag: %s", printHexBuffer (tag, tagLen));
                 return true;

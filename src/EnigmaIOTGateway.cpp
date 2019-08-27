@@ -666,45 +666,46 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 
 bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
 	/*
-	* ---------------------------------------------------------------------------------------
-	*| msgType (1) | IV (16) | length (2) | NodeId (2) | Counter (2) | Data (....) | CRC (4) |
-	* ---------------------------------------------------------------------------------------
-	*/
+    * ----------------------------------------------------------------------------------------
+    *| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | Tag (16) |
+    * ----------------------------------------------------------------------------------------
+    */
 
 	//uint8_t msgType_idx = 0;
 	uint8_t iv_idx = 1;
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
-	uint8_t counter_idx = nodeId_idx + sizeof (int16_t); // Counter is always 0
+    uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
 	uint8_t data_idx = counter_idx + sizeof (int16_t);
-	uint8_t crc_idx = count - CRC_LENGTH;
+	uint8_t tag_idx = count - TAG_LENGTH;
 
 	//uint8_t *iv;
-	uint32_t crc32;
 	//uint16_t counter;
 	//size_t lostMessages = 0;
 
-	Crypto.decryptBuffer (
-		const_cast<uint8_t*>(&buf[length_idx]),
-		const_cast<uint8_t*>(&buf[length_idx]),
-		count - length_idx,
-		const_cast<uint8_t*>(&buf[iv_idx]),
-		IV_LENGTH,
-		node->getEncriptionKey (),
-		KEY_LENGTH
-	);
-	DEBUG_VERBOSE ("Decripted control message: %s", printHexBuffer (buf, count));
+    uint8_t addDataLen = 1 + IV_LENGTH;
+    uint8_t aad[AAD_LENGTH + addDataLen];
 
-	memcpy (&crc32, &buf[crc_idx], CRC_LENGTH);
-	if (!checkCRC (buf, count - 4, &crc32)) {
-		DEBUG_WARN ("Wrong CRC");
-		node->packetErrors++;
-		return false;
-	}
+    memcpy (aad, buf, addDataLen); // Copy message upto iv
+
+    // Copy 8 last bytes from NetworkKey
+    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+    uint8_t packetLen = count - TAG_LENGTH;
+
+    if (!CryptModule::decryptBuffer (buf + length_idx, packetLen - 1 - IV_LENGTH, // Decrypt from nodeId
+                                     buf + iv_idx, IV_LENGTH,
+                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+                                     aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
+        DEBUG_ERROR ("Error during decryption");
+        return false;
+    }
+
+	DEBUG_VERBOSE ("Decripted control message: %s", printHexBuffer (buf, count));
 
 	// Check if command informs about a sleepy mode change
 	const uint8_t* payload = buf + data_idx;
-	if (payload[0] == control_message_type::SLEEP_ANS && (crc_idx - data_idx) >= 5) {
+	if (payload[0] == control_message_type::SLEEP_ANS && (tag_idx - data_idx) >= 5) {
 		uint32_t sleepTime;
 		DEBUG_DBG ("Check if sleepy mode has changed for node");
 		memcpy (&sleepTime, payload + 1, sizeof (uint32_t));
@@ -717,10 +718,10 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 		}
 	}
 
-	DEBUG_DBG ("Payload length: %d bytes\n", crc_idx - data_idx);
+	DEBUG_DBG ("Payload length: %d bytes\n", tag_idx - data_idx);
 
 	if (notifyData) {
-		notifyData (mac, buf + data_idx, crc_idx - data_idx, 0, true);
+		notifyData (mac, buf + data_idx, tag_idx - data_idx, 0, true);
 	}
 
 	return true;
@@ -728,9 +729,9 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 
 bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
 	/*
-	* ---------------------------------------------------------------------------------------
-	*| msgType (1) | IV (16) | length (2) | NodeId (2) | Counter (2) | Data (....) | CRC (4) |
-	* ---------------------------------------------------------------------------------------
+	* ----------------------------------------------------------------------------------------
+	*| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | Tag (16) |
+	* ----------------------------------------------------------------------------------------
 	*/
 
 	//uint8_t msgType_idx = 0;
@@ -739,22 +740,30 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
 	uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
 	uint8_t data_idx = counter_idx + sizeof (int16_t);
-	uint8_t crc_idx = count - CRC_LENGTH;
+	uint8_t tag_idx = count - TAG_LENGTH;
 
 	//uint8_t *iv;
-	uint32_t crc32;
 	uint16_t counter;
 	size_t lostMessages = 0;
 
-	Crypto.decryptBuffer (
-		const_cast<uint8_t*>(&buf[length_idx]),
-		const_cast<uint8_t*>(&buf[length_idx]),
-		count - length_idx,
-		const_cast<uint8_t*>(&buf[iv_idx]),
-		IV_LENGTH,
-		node->getEncriptionKey (),
-		KEY_LENGTH
-	);
+    uint8_t addDataLen = 1 + IV_LENGTH;
+    uint8_t aad[AAD_LENGTH + addDataLen];
+
+    memcpy (aad, buf, addDataLen); // Copy message upto iv
+
+    // Copy 8 last bytes from NetworkKey
+    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+    uint8_t packetLen = count - TAG_LENGTH;
+
+    if (!CryptModule::decryptBuffer (buf + length_idx, packetLen - 1 - IV_LENGTH, // Decrypt from nodeId
+                                     buf + iv_idx, IV_LENGTH,
+                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+                                     aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
+        DEBUG_ERROR ("Error during decryption");
+        return false;
+    }
+
 	DEBUG_VERBOSE ("Decripted data message: %s", printHexBuffer (buf, count));
 
 	node->packetNumber++;
@@ -770,16 +779,8 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
 		}
 	}
 
-	memcpy (&crc32, &buf[crc_idx], CRC_LENGTH);
-
-	if (!checkCRC (buf, count - 4, &crc32)) {
-		DEBUG_WARN ("Wrong CRC");
-		node->packetErrors++;
-		return false;
-	}
-
 	if (notifyData) {
-		notifyData (mac, &buf[data_idx], crc_idx - data_idx, lostMessages, false);
+		notifyData (mac, &buf[data_idx], tag_idx - data_idx, lostMessages, false);
 	}
 
 	if (node->getSleepy ()) {
@@ -826,13 +827,12 @@ double EnigmaIOTGatewayClass::getPacketsHour (uint8_t* address) {
 
 bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData) {
 	/*
-	* --------------------------------------------------------------------------
-	*| msgType (1) | IV (16) | length (2) | NodeId (2)  | Data (....) | CRC (4) |
-	* --------------------------------------------------------------------------
+	* ---------------------------------------------------------------------------
+	*| msgType (1) | IV (12) | length (2) | NodeId (2)  | Data (....) | Tag (16) |
+	* ---------------------------------------------------------------------------
 	*/
 
 	uint8_t buffer[MAX_MESSAGE_LENGTH];
-	uint32_t crc32;
 
 	if (!node->isRegistered ()) {
 		DEBUG_VERBOSE ("Error sending downstream. Node is not registered");
@@ -841,11 +841,12 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 	uint16_t nodeId = node->getNodeId ();
 
-	uint8_t* msgType_p = buffer;
-	uint8_t* iv_p = buffer + 1;
-	uint8_t* length_p = buffer + 1 + IV_LENGTH;
-	uint8_t* nodeId_p = buffer + 1 + IV_LENGTH + sizeof (int16_t);
-	uint8_t* data_p = buffer + 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t);
+	//uint8_t msgType_p = buffer;
+	uint8_t iv_idx = 1;
+	uint8_t length_idx = iv_idx + IV_LENGTH;
+	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
+	uint8_t data_idx = nodeId_idx + sizeof (int16_t);
+    uint8_t tag_idx = len - TAG_LENGTH;
 
 	if (!data) {
 		DEBUG_ERROR ("Downlink message buffer empty");
@@ -857,16 +858,16 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	}
 
 	if (controlData == control_message_type::USERDATA) {
-		*msgType_p = (uint8_t)DOWNSTREAM_DATA;
+        buffer[0] = (uint8_t)DOWNSTREAM_DATA;
 	} else {
-		*msgType_p = (uint8_t)DOWNSTREAM_CTRL_DATA;
+        buffer[0] = (uint8_t)DOWNSTREAM_CTRL_DATA;
 	}
 
-	CryptModule::random (iv_p, IV_LENGTH);
+	CryptModule::random (buffer + iv_idx, IV_LENGTH);
 
-	DEBUG_VERBOSE ("IV: %s", printHexBuffer (iv_p, IV_LENGTH));
+	DEBUG_VERBOSE ("IV: %s", printHexBuffer (buffer + iv_idx, IV_LENGTH));
 
-	memcpy (nodeId_p, &nodeId, sizeof (uint16_t));
+	memcpy (buffer + nodeId_idx, &nodeId, sizeof (uint16_t));
 
 	//if (useCounter) {
 	//    counter = node.getLastMessageCounter () + 1;
@@ -879,37 +880,44 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 	//memcpy (counter_p, &counter, sizeof (uint16_t));
 
-	memcpy (data_p, data, len);
-	DEBUG_VERBOSE ("Data: %s", printHexBuffer (data_p, len));
+	memcpy (buffer + data_idx, data, len);
+	DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer + data_idx, len));
 
 	uint16_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + len;
 
-	memcpy (length_p, &packet_length, sizeof (uint16_t));
+	memcpy (buffer + length_idx, &packet_length, sizeof (uint16_t));
 
-	crc32 = CRC32::calculate (buffer, packet_length);
-	DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
+	DEBUG_VERBOSE ("Downlink message: %s", printHexBuffer (buffer, packet_length));
+	DEBUG_VERBOSE ("Message length: %d bytes", packet_length);
 
-	uint8_t* crc_p = (uint8_t*)(buffer + packet_length);
+	uint8_t* crypt_buf = buffer + length_idx; // buffer + 1 + IV_LENGTH;
 
-	memcpy (crc_p, &crc32, CRC_LENGTH);
+	size_t cryptLen = packet_length - length_idx;
 
-	DEBUG_VERBOSE ("Downlink message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
-	DEBUG_VERBOSE ("Message length: %d bytes", packet_length + CRC_LENGTH);
+    uint8_t addDataLen = 1 + IV_LENGTH;
+    uint8_t aad[AAD_LENGTH + addDataLen];
 
-	uint8_t* crypt_buf = length_p; // buffer + 1 + IV_LENGTH;
+    memcpy (aad, buffer, addDataLen); // Copy message upto iv
 
-	size_t cryptLen = packet_length + CRC_LENGTH - 1 - IV_LENGTH;
+    // Copy 8 last bytes from Node Key
+    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-	Crypto.encryptBuffer (crypt_buf, crypt_buf, cryptLen, iv_p, IV_LENGTH, node->getEncriptionKey (), KEY_LENGTH);
+    if (!CryptModule::encryptBuffer (buffer + length_idx, packet_length - addDataLen, // Encrypt from length
+                                     buffer + iv_idx, IV_LENGTH,
+                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of node key
+                                     aad, sizeof (aad), buffer + tag_idx, TAG_LENGTH)) {
+        DEBUG_ERROR ("Error during encryption");
+        return false;
+    }
 
-	DEBUG_VERBOSE ("Encrypted downlink message: %s", printHexBuffer (buffer, packet_length + CRC_LENGTH));
+	DEBUG_VERBOSE ("Encrypted downlink message: %s", printHexBuffer (buffer, packet_length + TAG_LENGTH));
 
 	if (node->getSleepy ()) { // Queue message if node may be sleeping
 		if (controlData != control_message_type::OTA) {
 			DEBUG_VERBOSE ("Node is sleepy. Queing message");
-			memcpy (node->queuedMessage, buffer, packet_length + CRC_LENGTH);
+			memcpy (node->queuedMessage, buffer, packet_length + TAG_LENGTH);
 			//node->queuedMessage = buffer;
-			node->qMessageLength = packet_length + CRC_LENGTH;
+			node->qMessageLength = packet_length + TAG_LENGTH;
 			node->qMessagePending = true;
 			return true;
 		} else {
@@ -919,7 +927,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	} else {
 		DEBUG_INFO (" -------> DOWNLINK DATA");
 		flashTx = true;
-		return comm->send (node->getMacAddress (), buffer, packet_length + CRC_LENGTH) == 0;
+		return comm->send (node->getMacAddress (), buffer, packet_length + TAG_LENGTH) == 0;
 	}
 }
 
@@ -954,12 +962,12 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
     uint8_t addDataLen = KEFMSG_LEN - TAG_LENGTH - sizeof(uint32_t);
     uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, keyExchangeFinished_msg, addDataLen); // Copy message upto iv
+    memcpy (aad, (uint8_t*)&keyExchangeFinished_msg, addDataLen); // Copy message upto iv
 
     // Copy 8 last bytes from NetworkKey
     memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    if (!CryptModule::decryptBuffer (keyExchangeFinished_msg.random, sizeof(uint32_t),
+    if (!CryptModule::decryptBuffer ((uint8_t*)&(keyExchangeFinished_msg.random), sizeof(uint32_t),
                                      keyExchangeFinished_msg.iv, IV_LENGTH,
                                      node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
                                      aad, sizeof (aad), keyExchangeFinished_msg.tag, TAG_LENGTH)) {
@@ -980,9 +988,9 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
 
 bool EnigmaIOTGatewayClass::cipherFinished (Node* node) {
 	/*
-	* -----------------------------------------------------------
-	*| msgType (1) | IV (16) | nodeId (2) | random (4) | CRC (4) |
-	* -----------------------------------------------------------
+	* ------------------------------------------------------------
+	*| msgType (1) | IV (12) | nodeId (2) | random (4) | Tag (16) |
+	* ------------------------------------------------------------
 	*/
 
 	struct __attribute__ ((packed, aligned (1))) {
@@ -990,12 +998,11 @@ bool EnigmaIOTGatewayClass::cipherFinished (Node* node) {
 		uint8_t iv[IV_LENGTH];
 		uint16_t nodeId;
 		uint32_t random;
-		uint32_t crc;
+		uint8_t tag[TAG_LENGTH];
 	} cipherFinished_msg;
 
 #define CFMSG_LEN sizeof(cipherFinished_msg)
 
-	uint32_t crc32;
 	uint32_t random;
 
 	cipherFinished_msg.msgType = CYPHER_FINISHED; // Server hello message
@@ -1010,28 +1017,26 @@ bool EnigmaIOTGatewayClass::cipherFinished (Node* node) {
 
 	memcpy (&(cipherFinished_msg.random), &random, RANDOM_LENGTH);
 
-	crc32 = CRC32::calculate ((uint8_t*)& cipherFinished_msg, CFMSG_LEN - CRC_LENGTH);
-	DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
-
-	memcpy (&(cipherFinished_msg.crc), (uint8_t*)& crc32, CRC_LENGTH);
-
 	DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN));
 
-	Crypto.encryptBuffer (
-		(uint8_t*) & (cipherFinished_msg.nodeId),
-		(uint8_t*) & (cipherFinished_msg.nodeId),
-		2 + RANDOM_LENGTH + CRC_LENGTH,
-		cipherFinished_msg.iv,
-		IV_LENGTH,
-		node->getEncriptionKey (),
-		KEY_LENGTH
-	);
+    uint8_t addDataLen = CFMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t);
+    uint8_t aad[AAD_LENGTH + addDataLen];
+
+    memcpy (aad, (uint8_t*)&cipherFinished_msg, addDataLen); // Copy message upto iv
+
+    // Copy 8 last bytes from Node Key
+    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+    if (!CryptModule::encryptBuffer ((uint8_t*)&(cipherFinished_msg.nodeId), sizeof (uint16_t) + sizeof (uint32_t), // Encrypt from nodeId
+                                     cipherFinished_msg.iv, IV_LENGTH,
+                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of node key
+                                     aad, sizeof (aad), cipherFinished_msg.tag, TAG_LENGTH)) {
+        DEBUG_ERROR ("Error during encryption");
+        return false;
+    }
+
 
 	DEBUG_VERBOSE ("Encripted Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN));
-
-	CryptModule::networkEncrypt (cipherFinished_msg.iv, 1, gwConfig.networkKey, KEY_LENGTH);
-
-	DEBUG_VERBOSE ("Network encrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN));
 
 	flashTx = true;
 	DEBUG_INFO (" -------> CYPHER_FINISHED");
@@ -1080,7 +1085,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
 		uint8_t publicKey[KEY_LENGTH];
-		uint8_t crc[TAG_LENGTH];
+		uint8_t tag[TAG_LENGTH];
 	} clientHello_msg;
 
 #define CHMSG_LEN sizeof(clientHello_msg)
@@ -1095,14 +1100,14 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
     uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, clientHello_msg, addDataLen); // Copy message upto iv
+    memcpy (aad, (uint8_t*)&clientHello_msg, addDataLen); // Copy message upto iv
 
     // Copy 8 last bytes from NetworkKey
-    memcpy (aad + addDataLen, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+    memcpy (aad + addDataLen, gwConfig.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
     if (!CryptModule::decryptBuffer (clientHello_msg.publicKey, KEY_LENGTH,
                                     clientHello_msg.iv, IV_LENGTH,
-                                    rtcmem_data.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+                                     gwConfig.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
                                     aad, sizeof (aad), clientHello_msg.tag, TAG_LENGTH)) {
         DEBUG_ERROR ("Error during decryption");
         return false;
@@ -1175,13 +1180,14 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
     uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, serverHello_msg, addDataLen); // Copy message upto iv
+    memcpy (aad, (uint8_t*)&serverHello_msg, addDataLen); // Copy message upto iv
 
     // Copy 8 last bytes from NetworkKey
-    memcpy (aad + addDataLen, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+    memcpy (aad + addDataLen, gwConfig.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
     if (!CryptModule::encryptBuffer (serverHello_msg.publicKey, KEY_LENGTH, // Encrypt only public key
-                                     rtcmem_data.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+                                     serverHello_msg.iv, IV_LENGTH,
+                                     gwConfig.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
                                      aad, sizeof (aad), serverHello_msg.tag, TAG_LENGTH)) {
         DEBUG_ERROR ("Error during encryption");
         return false;
