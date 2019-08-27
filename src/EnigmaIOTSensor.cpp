@@ -470,12 +470,13 @@ bool EnigmaIOTSensorClass::clientHello () {
 
     DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN));
 
-    uint8_t aad[AAD_LENGTH + CHMSG_LEN - TAG_LENGTH - KEY_LENGTH];
+    uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
+    uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, clientHello_msg, CHMSG_LEN - TAG_LENGTH - KEY_LENGTH); // Copy message upto iv
+    memcpy (aad, clientHello_msg, addDataLen); // Copy message upto iv
 
     // Copy 8 last bytes from NetworkKey
-    memcpy (aad + CHMSG_LEN - TAG_LENGTH - KEY_LENGTH, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+    memcpy (aad + addDataLen, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
     if (!CryptModule::encryptBuffer (clientHello_msg.publicKey, KEY_LENGTH, // Encrypt only public key
                                      rtcmem_data.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
@@ -518,12 +519,13 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
 
     memcpy (&serverHello_msg, buf, count);
 
-    uint8_t aad[AAD_LENGTH + SHMSG_LEN - TAG_LENGTH - KEY_LENGTH];
+    uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
+    uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, serverHello_msg, SHMSG_LEN - TAG_LENGTH - KEY_LENGTH); // Copy message upto iv
+    memcpy (aad, serverHello_msg, addDataLen); // Copy message upto iv
 
     // Copy 8 last bytes from NetworkKey
-    memcpy (aad + SHMSG_LEN - TAG_LENGTH - KEY_LENGTH, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+    memcpy (aad + addDataLen, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
     if (!CryptModule::decryptBuffer (serverHello_msg.publicKey, KEY_LENGTH,
                                      serverHello_msg.iv, IV_LENGTH,
@@ -606,21 +608,20 @@ bool EnigmaIOTSensorClass::processCipherFinished (const uint8_t mac[6], const ui
 
 bool EnigmaIOTSensorClass::keyExchangeFinished () {
     /*
-    * -------------------------------------------------------------------------
-    *| msgType (1) | IV (16) | random (31 bits) | SleepyNode (1 bit) | CRC (4) |
-    * -------------------------------------------------------------------------
+    * -------------------------------------------------------------------
+    *| msgType (1) | IV (12) | random + SleepyNode(1 bit) (4) | Tag (16) |
+    * -------------------------------------------------------------------
     */
 
     struct __attribute__ ((packed, aligned (1))) {
         uint8_t msgType;
         uint8_t iv[IV_LENGTH];
         uint32_t random;
-        uint32_t crc;
+        uint8_t tag[TAG_LENGTH];
     } keyExchangeFinished_msg;
 
 #define KEFMSG_LEN sizeof(keyExchangeFinished_msg) 
 
-    uint32_t crc32;
     uint32_t random;
 
     keyExchangeFinished_msg.msgType = KEY_EXCHANGE_FINISHED;
@@ -640,22 +641,29 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
 
     memcpy (&(keyExchangeFinished_msg.random), &random, RANDOM_LENGTH);
 
-    crc32 = CRC32::calculate ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN - CRC_LENGTH);
-    DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
-
-    memcpy (&(keyExchangeFinished_msg.crc), &crc32, CRC_LENGTH);
-
     DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN));
 
-    Crypto.encryptBuffer ((uint8_t*) & (keyExchangeFinished_msg.random), (uint8_t*) & (keyExchangeFinished_msg.random), KEFMSG_LEN - IV_LENGTH - 1, keyExchangeFinished_msg.iv, IV_LENGTH, node.getEncriptionKey (), KEY_LENGTH);
+    uint8_t addDataLen = KEFMSG_LEN - TAG_LENGTH - sizeof (uint32_t);
+    uint8_t aad[AAD_LENGTH + addDataLen];
+
+    memcpy (aad, keyExchangeFinished_msg, addDataLen); // Copy message upto iv
+
+    // Copy 8 last bytes from Node Key
+    memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+    if (!CryptModule::encryptBuffer (keyExchangeFinished_msg.random, sizeof (uint32_t), // Encrypt only public key
+                                     node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of node key
+                                     aad, sizeof (aad), keyExchangeFinished_msg.tag, TAG_LENGTH)) {
+        DEBUG_ERROR ("Error during encryption");
+        return false;
+    }
+
+   // Crypto.encryptBuffer ((uint8_t*) & (keyExchangeFinished_msg.random), (uint8_t*) & (keyExchangeFinished_msg.random), KEFMSG_LEN - IV_LENGTH - 1, keyExchangeFinished_msg.iv, IV_LENGTH, node.getEncriptionKey (), KEY_LENGTH);
 
     DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*) & (keyExchangeFinished_msg), KEFMSG_LEN));
 
-    CryptModule::networkEncrypt (keyExchangeFinished_msg.iv, 1, rtcmem_data.networkKey, KEY_LENGTH);
-
-    DEBUG_VERBOSE ("Network encrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN));
-
     DEBUG_INFO (" -------> KEY_EXCHANGE_FINISHED");
+
     return comm->send (rtcmem_data.gateway, (uint8_t*) & (keyExchangeFinished_msg), KEFMSG_LEN) == 0;
 }
 

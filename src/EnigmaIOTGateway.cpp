@@ -926,16 +926,16 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
 	/*
-	* -------------------------------------------------------------------------
-	*| msgType (1) | IV (16) | random (31 bits) | SleepyNode (1 bit) | CRC (4) |
-	* -------------------------------------------------------------------------
+	* ------------------------------------------------------------------
+	*| msgType (1) | IV (12) | random + SleepyNode(1bit) (4) | Tag (16) |
+	* ------------------------------------------------------------------
 	*/
 
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
 		uint32_t random;
-		uint32_t crc;
+		uint8_t tag[TAG_LENGTH];
 	} keyExchangeFinished_msg;
 
 #define KEFMSG_LEN sizeof(keyExchangeFinished_msg)
@@ -950,28 +950,25 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
 
 	memcpy (&keyExchangeFinished_msg, buf, KEFMSG_LEN);
 
-	CryptModule::networkDecrypt (keyExchangeFinished_msg.iv, 1, gwConfig.networkKey, KEY_LENGTH);
 
-	DEBUG_VERBOSE ("Netowrk decrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN));
+    uint8_t addDataLen = KEFMSG_LEN - TAG_LENGTH - sizeof(uint32_t);
+    uint8_t aad[AAD_LENGTH + addDataLen];
 
-	Crypto.decryptBuffer (
-		(uint8_t*) & (keyExchangeFinished_msg.random),
-		(uint8_t*) & (keyExchangeFinished_msg.random),
-		RANDOM_LENGTH + CRC_LENGTH,
-		keyExchangeFinished_msg.iv,
-		IV_LENGTH,
-		node->getEncriptionKey (),
-		KEY_LENGTH
-	);
+    memcpy (aad, keyExchangeFinished_msg, addDataLen); // Copy message upto iv
+
+    // Copy 8 last bytes from NetworkKey
+    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+    if (!CryptModule::decryptBuffer (keyExchangeFinished_msg.random, sizeof(uint32_t),
+                                     keyExchangeFinished_msg.iv, IV_LENGTH,
+                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+                                     aad, sizeof (aad), keyExchangeFinished_msg.tag, TAG_LENGTH)) {
+        DEBUG_ERROR ("Error during decryption");
+        return false;
+    }
 
 	DEBUG_VERBOSE ("Decripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN));
 
-	memcpy (&crc32, &(keyExchangeFinished_msg.crc), CRC_LENGTH);
-
-	if (!checkCRC ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN - CRC_LENGTH, &crc32)) {
-		DEBUG_WARN ("Wrong CRC");
-		return false;
-	}
 
 	sleepyNode = (keyExchangeFinished_msg.random & 0x00000001U) == 1;
 	node->setSleepy (sleepyNode);
@@ -1095,12 +1092,13 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 
 	memcpy (&clientHello_msg, buf, count);
 
-    uint8_t aad[AAD_LENGTH + CHMSG_LEN - TAG_LENGTH - KEY_LENGTH];
+    uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
+    uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, clientHello_msg, CHMSG_LEN - TAG_LENGTH - KEY_LENGTH); // Copy message upto iv
+    memcpy (aad, clientHello_msg, addDataLen); // Copy message upto iv
 
     // Copy 8 last bytes from NetworkKey
-    memcpy (aad + CHMSG_LEN - TAG_LENGTH - KEY_LENGTH, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+    memcpy (aad + addDataLen, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
     if (!CryptModule::decryptBuffer (clientHello_msg.publicKey, KEY_LENGTH,
                                     clientHello_msg.iv, IV_LENGTH,
@@ -1174,12 +1172,13 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 
 	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
 
-    uint8_t aad[AAD_LENGTH + SHMSG_LEN - TAG_LENGTH - KEY_LENGTH];
+    uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
+    uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, serverHello_msg, SHMSG_LEN - TAG_LENGTH - KEY_LENGTH); // Copy message upto iv
+    memcpy (aad, serverHello_msg, addDataLen); // Copy message upto iv
 
     // Copy 8 last bytes from NetworkKey
-    memcpy (aad + SHMSG_LEN - TAG_LENGTH - KEY_LENGTH, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+    memcpy (aad + addDataLen, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
     if (!CryptModule::encryptBuffer (serverHello_msg.publicKey, KEY_LENGTH, // Encrypt only public key
                                      rtcmem_data.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
