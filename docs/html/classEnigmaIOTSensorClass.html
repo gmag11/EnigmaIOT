@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
   </td>
@@ -121,6 +121,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a2169866121e8aded5e7970717acdaed8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#a2169866121e8aded5e7970717acdaed8">checkCRC</a> (const uint8_t *buf, size_t count, uint32_t *crc)</td></tr>
 <tr class="memdesc:a2169866121e8aded5e7970717acdaed8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check that a given CRC matches to calulated value from a buffer.  <a href="#a2169866121e8aded5e7970717acdaed8">More...</a><br /></td></tr>
 <tr class="separator:a2169866121e8aded5e7970717acdaed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03de4018faf0064ac98427bf0fdd2295"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#a03de4018faf0064ac98427bf0fdd2295">startIdentifying</a> (time_t period)</td></tr>
+<tr class="memdesc:a03de4018faf0064ac98427bf0fdd2295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts node identification by flashing led.  <a href="#a03de4018faf0064ac98427bf0fdd2295">More...</a><br /></td></tr>
+<tr class="separator:a03de4018faf0064ac98427bf0fdd2295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab38bb0e8f5fd28bd13275cebd212913"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#aab38bb0e8f5fd28bd13275cebd212913">stopIdentifying</a> ()</td></tr>
+<tr class="memdesc:aab38bb0e8f5fd28bd13275cebd212913"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops node identification.  <a href="#aab38bb0e8f5fd28bd13275cebd212913">More...</a><br /></td></tr>
+<tr class="separator:aab38bb0e8f5fd28bd13275cebd212913"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50d2f1b9ac6a47d5b1992278bd299941"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#a50d2f1b9ac6a47d5b1992278bd299941">loadRTCData</a> ()</td></tr>
 <tr class="memdesc:a50d2f1b9ac6a47d5b1992278bd299941"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads configuration from RTC data. Uses a CRC to check data integrity.  <a href="#a50d2f1b9ac6a47d5b1992278bd299941">More...</a><br /></td></tr>
 <tr class="separator:a50d2f1b9ac6a47d5b1992278bd299941"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,6 +181,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a401093c09a9a13e3e0a8a5c282af0dbe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#a401093c09a9a13e3e0a8a5c282af0dbe">processSetSleepTimeCommand</a> (const uint8_t *mac, const uint8_t *buf, uint8_t len)</td></tr>
 <tr class="memdesc:a401093c09a9a13e3e0a8a5c282af0dbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a request to set new sleep time configuration.  <a href="#a401093c09a9a13e3e0a8a5c282af0dbe">More...</a><br /></td></tr>
 <tr class="separator:a401093c09a9a13e3e0a8a5c282af0dbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e1f937e0795bb6a7248c3cfcd1f5a6b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#a5e1f937e0795bb6a7248c3cfcd1f5a6b">processSetIdentifyCommand</a> (const uint8_t *mac, const uint8_t *buf, uint8_t len)</td></tr>
+<tr class="memdesc:a5e1f937e0795bb6a7248c3cfcd1f5a6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a request to start indicate to identify a node visually.  <a href="#a5e1f937e0795bb6a7248c3cfcd1f5a6b">More...</a><br /></td></tr>
+<tr class="separator:a5e1f937e0795bb6a7248c3cfcd1f5a6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5f23da0a5943980407d51439d33275f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#ac5f23da0a5943980407d51439d33275f">processVersionCommand</a> (const uint8_t *mac, const uint8_t *buf, uint8_t len)</td></tr>
 <tr class="memdesc:ac5f23da0a5943980407d51439d33275f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a request firmware version.  <a href="#ac5f23da0a5943980407d51439d33275f">More...</a><br /></td></tr>
 <tr class="separator:ac5f23da0a5943980407d51439d33275f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,7 +238,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ab569bb4f40633f1d60481e4817cf7c1d"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#ab569bb4f40633f1d60481e4817cf7c1d">sleepTime</a></td></tr>
 <tr class="memdesc:ab569bb4f40633f1d60481e4817cf7c1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time in microseconds that this node will be slept between measurements.  <a href="#ab569bb4f40633f1d60481e4817cf7c1d">More...</a><br /></td></tr>
 <tr class="separator:ab569bb4f40633f1d60481e4817cf7c1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad01231eb904434f10ab7d293d8a73a5a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#ad01231eb904434f10ab7d293d8a73a5a">dataMessageSent</a> [<a class="el" href="EnigmaIoTconfig_8h.html#ab234d1358562b66925fb7223c087556b">MAX_MESSAGE_LENGTH</a>]</td></tr>
+<tr class="memitem:ad01231eb904434f10ab7d293d8a73a5a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#ad01231eb904434f10ab7d293d8a73a5a">dataMessageSent</a> [<a class="el" href="EnigmaIoTconfig_8h.html#a9dbccd523bb0ed9a3266bc8c448f4432">MAX_MESSAGE_LENGTH</a>]</td></tr>
 <tr class="memdesc:ad01231eb904434f10ab7d293d8a73a5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buffer where sent message is stored in case of retransmission is needed.  <a href="#ad01231eb904434f10ab7d293d8a73a5a">More...</a><br /></td></tr>
 <tr class="separator:ad01231eb904434f10ab7d293d8a73a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ba9301800610ee971f9aa76655b8511"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#a8ba9301800610ee971f9aa76655b8511">dataMessageSentLength</a> = 0</td></tr>
@@ -247,6 +256,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:abe0efb6410dff1b8f78466773030ecee"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#abe0efb6410dff1b8f78466773030ecee">lastOTAmsg</a></td></tr>
 <tr class="memdesc:abe0efb6410dff1b8f78466773030ecee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time when last OTA update message has received. This is used to control timeout.  <a href="#abe0efb6410dff1b8f78466773030ecee">More...</a><br /></td></tr>
 <tr class="separator:abe0efb6410dff1b8f78466773030ecee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69bead21e18683cf68c4a033fa10a8a4"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#a69bead21e18683cf68c4a033fa10a8a4">indentifying</a> = false</td></tr>
+<tr class="memdesc:a69bead21e18683cf68c4a033fa10a8a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if node has its led flashing to be identified.  <a href="#a69bead21e18683cf68c4a033fa10a8a4">More...</a><br /></td></tr>
+<tr class="separator:a69bead21e18683cf68c4a033fa10a8a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe5c2b8690a1e15c7867bc729c8d2437"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTSensorClass.html#abe5c2b8690a1e15c7867bc729c8d2437">identifyStart</a></td></tr>
+<tr class="memdesc:abe5c2b8690a1e15c7867bc729c8d2437"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time when identification started flashing. Used to control identification timeout.  <a href="#abe5c2b8690a1e15c7867bc729c8d2437">More...</a><br /></td></tr>
+<tr class="separator:abe5c2b8690a1e15c7867bc729c8d2437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main sensor node class. Manages communication with gateway and allows sending and receiving user data. </p>
@@ -310,7 +325,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <p>This condition is signalled to Gateway during registration so that downlink messages are managed diferently. On non sleepy nodes a downlink data message can be sent on any moment as node will be always awake. But for nodes that sleep, normally those that are powered with batteries, downlink message will be queued on gateway and sent just after an uplink data message from node has been sent </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00196">196</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00227">227</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -365,7 +380,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if CRC check was successful. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00377">377</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00423">423</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -395,7 +410,7 @@ Protected Attributes</h2></td></tr>
 <p>Build a <b>ClientHello</b> messange and send it to gateway. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if ClientHello message was successfully sent. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00387">387</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00433">433</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -432,7 +447,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if data was been correctly configured. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00141">141</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00146">146</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -487,7 +502,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly sent </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00632">632</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00697">697</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -517,7 +532,7 @@ Protected Attributes</h2></td></tr>
 <p>Returns sleep period in seconds. </p>
 <dl class="section return"><dt>Returns</dt><dd>Sleep period in seconds </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00334">334</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00356">356</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
 
 </div>
 </div>
@@ -564,7 +579,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l01168">1168</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l01239">1239</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -585,7 +600,7 @@ Protected Attributes</h2></td></tr>
 
 <p>This method should be called periodically for instance inside <code><a class="el" href="enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop()</a></code> function. It is used for internal node maintenance tasks. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00311">311</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00342">342</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -615,7 +630,7 @@ Protected Attributes</h2></td></tr>
 <p>Build and send a <b>keyExchangeFinished</b> message. </p>
 <p>It includes some random data that is encrypted with a CRC to check integrity. This message is used to let Gateway if this node generated the correct shared key. </p><dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly sent </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00548">548</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00610">610</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -645,7 +660,7 @@ Protected Attributes</h2></td></tr>
 <p>Loads configuration from flash memory. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if data was read successfuly. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00096">96</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00097">97</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -675,7 +690,7 @@ Protected Attributes</h2></td></tr>
 <p>Loads configuration from RTC data. Uses a CRC to check data integrity. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if data is valid. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00056">56</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00057">57</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -729,7 +744,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l01068">1068</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l01139">1139</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -765,7 +780,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00415">415</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00437">437</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
 
 </div>
 </div>
@@ -801,7 +816,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00388">388</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00410">410</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
 
 </div>
 </div>
@@ -838,7 +853,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00444">444</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00466">466</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
 
 </div>
 </div>
@@ -893,7 +908,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message syntax is correct and key was successfuly calculated <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00493">493</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00560">560</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -948,7 +963,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00974">974</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l01053">1053</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1010,7 +1025,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00995">995</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l01076">1076</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1058,14 +1073,14 @@ Protected Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mac</td><td>Gateway address </td></tr>
-    <tr><td class="paramname">data</td><td>Buffer to store received message </td></tr>
+    <tr><td class="paramname">buf</td><td>Buffer to store received message </td></tr>
     <tr><td class="paramname">len</td><td>Length of payload data </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00728">728</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00799">799</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1120,7 +1135,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns the reason because key is not valid anymore. Check possible values in sensorInvalidateReason_t </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l01058">1058</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l01129">1129</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1175,7 +1190,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00813">813</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00892">892</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1230,7 +1245,62 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00448">448</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00505">505</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a5e1f937e0795bb6a7248c3cfcd1f5a6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e1f937e0795bb6a7248c3cfcd1f5a6b">&#9670;&nbsp;</a></span>processSetIdentifyCommand()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool EnigmaIOTSensorClass::processSetIdentifyCommand </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>mac</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Processes a request to start indicate to identify a node visually. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mac</td><td>Gateway address </td></tr>
+    <tr><td class="paramname">buf</td><td>Buffer to store received message </td></tr>
+    <tr><td class="paramname">len</td><td>Length of payload data </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00822">822</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1278,14 +1348,14 @@ Protected Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mac</td><td>Gateway address </td></tr>
-    <tr><td class="paramname">data</td><td>Buffer to store received message </td></tr>
+    <tr><td class="paramname">buf</td><td>Buffer to store received message </td></tr>
     <tr><td class="paramname">len</td><td>Length of payload data </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00752">752</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00833">833</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1333,14 +1403,14 @@ Protected Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mac</td><td>Gateway address </td></tr>
-    <tr><td class="paramname">data</td><td>Buffer to store received message </td></tr>
+    <tr><td class="paramname">buf</td><td>Buffer to store received message </td></tr>
     <tr><td class="paramname">len</td><td>Length of payload data </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00794">794</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00874">874</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1376,7 +1446,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00965">965</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l01044">1044</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1430,7 +1500,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00369">369</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00415">415</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1460,7 +1530,7 @@ Protected Attributes</h2></td></tr>
 <p>Saves configuration to flash memory. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if data could be written successfuly. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00124">124</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00128">128</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1515,7 +1585,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly sent </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00604">604</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00670">670</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1562,7 +1632,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00361">361</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00383">383</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
 
 </div>
 </div>
@@ -1601,7 +1671,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00017">17</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00019">19</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1629,7 +1699,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00289">289</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00322">322</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1649,14 +1719,45 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Requests transition to sleep mode (low energy state) </p>
-<p>Sleep can be requested in any moment and will be triggered inmediatelly except if node is doing registration or is waiting for downlink </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Sleep can be requested in any moment and will be triggered inmediatelly except if node is doing registration or is waiting for downlink </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00687">687</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a03de4018faf0064ac98427bf0fdd2295"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03de4018faf0064ac98427bf0fdd2295">&#9670;&nbsp;</a></span>startIdentifying()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EnigmaIOTSensorClass::startIdentifying </td>
+          <td>(</td>
+          <td class="paramtype">time_t&#160;</td>
+          <td class="paramname"><em>period</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Starts node identification by flashing led. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">time</td><td>Sleep mode state duration </td></tr>
+    <tr><td class="paramname">period</td><td>Flash led period in ms </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00621">621</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00216">216</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1677,7 +1778,36 @@ Protected Attributes</h2></td></tr>
 
 <p>Stops EnigmaIoT protocol. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00284">284</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00317">317</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aab38bb0e8f5fd28bd13275cebd212913"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab38bb0e8f5fd28bd13275cebd212913">&#9670;&nbsp;</a></span>stopIdentifying()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EnigmaIOTSensorClass::stopIdentifying </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Stops node identification. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00222">222</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1724,7 +1854,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00373">373</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00419">419</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1765,7 +1895,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t EnigmaIOTSensorClass::dataMessageSent[<a class="el" href="EnigmaIoTconfig_8h.html#ab234d1358562b66925fb7223c087556b">MAX_MESSAGE_LENGTH</a>]</td>
+          <td class="memname">uint8_t EnigmaIOTSensorClass::dataMessageSent[<a class="el" href="EnigmaIoTconfig_8h.html#a9dbccd523bb0ed9a3266bc8c448f4432">MAX_MESSAGE_LENGTH</a>]</td>
         </tr>
       </table>
   </td>
@@ -1830,6 +1960,58 @@ Protected Attributes</h2></td></tr>
 <p>If true Tx LED will be flashed. </p>
 
 <p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00095">95</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
+
+</div>
+</div>
+<a id="abe5c2b8690a1e15c7867bc729c8d2437"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe5c2b8690a1e15c7867bc729c8d2437">&#9670;&nbsp;</a></span>identifyStart</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">time_t EnigmaIOTSensorClass::identifyStart</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Time when identification started flashing. Used to control identification timeout. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00113">113</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
+
+</div>
+</div>
+<a id="a69bead21e18683cf68c4a033fa10a8a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69bead21e18683cf68c4a033fa10a8a4">&#9670;&nbsp;</a></span>indentifying</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean EnigmaIOTSensorClass::indentifying = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True if node has its led flashing to be identified. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8h_source.html#l00112">112</a> of file <a class="el" href="EnigmaIOTSensor_8h_source.html">EnigmaIOTSensor.h</a>.</p>
 
 </div>
 </div>

@@ -279,7 +279,7 @@ protected:
 	/**
 	  * @brief Processes a request of sleep time configuration
 	  * @param mac Gateway address
-	  * @param data Buffer to store received message
+	  * @param buf Buffer to store received message
 	  * @param len Length of payload data
 	  * @return Returns `true` if message could be correcly decoded and processed
 	  */
@@ -288,7 +288,7 @@ protected:
 	/**
 	  * @brief Processes a request to set new sleep time configuration
 	  * @param mac Gateway address
-	  * @param data Buffer to store received message
+	  * @param buf Buffer to store received message
 	  * @param len Length of payload data
 	  * @return Returns `true` if message could be correcly decoded and processed
 	  */
@@ -297,7 +297,7 @@ protected:
 	/**
 	  * @brief Processes a request to start indicate to identify a node visually
 	  * @param mac Gateway address
-	  * @param data Buffer to store received message
+	  * @param buf Buffer to store received message
 	  * @param len Length of payload data
 	  * @return Returns `true` if message could be correcly decoded and processed
 	  */
@@ -306,7 +306,7 @@ protected:
 	/**
 	  * @brief Processes a request firmware version
 	  * @param mac Gateway address
-	  * @param data Buffer to store received message
+	  * @param buf Buffer to store received message
 	  * @param len Length of payload data
 	  * @return Returns `true` if message could be correcly decoded and processed
 	  */
@@ -471,7 +471,6 @@ public:
       * @brief Requests transition to sleep mode (low energy state)
       *
       * Sleep can be requested in any moment and will be triggered inmediatelly except if node is doing registration or is waiting for downlink
-      * @param time Sleep mode state duration
       */
     void sleep ();
 };

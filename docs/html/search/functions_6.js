@@ -21,6 +21,7 @@ var searchData=
   ['getper',['getPER',['../classEnigmaIOTGatewayClass.html#afb41f49d1291eebbd676d4915ee193d1',1,'EnigmaIOTGatewayClass']]],
   ['getprivdhkey',['getPrivDHKey',['../classCryptModule.html#a9d106f893f329d8648aba205b3717806',1,'CryptModule']]],
   ['getpubdhkey',['getPubDHKey',['../classCryptModule.html#aefc84d57eee3eceeadc3611866925804',1,'CryptModule']]],
+  ['getsha256',['getSHA256',['../classCryptModule.html#a0bc27edb1340a28f92b43dd4f91e9a16',1,'CryptModule']]],
   ['getsleeptime',['getSleepTime',['../classEnigmaIOTSensorClass.html#a649a25c2949d79db05515c327c896ea0',1,'EnigmaIOTSensorClass']]],
   ['getsleepy',['getSleepy',['../classNode.html#a5bf02d202c9cb76831de89e4d1ef8893',1,'Node']]],
   ['getstatus',['getStatus',['../classEnigmaIOTGatewayClass.html#aeb03da53e404ec2befe95f66788ffcdf',1,'EnigmaIOTGatewayClass::getStatus()'],['../classEnigmaIOTSensorClass.html#a2d917e89151e018476baa0826d4a3827',1,'EnigmaIOTSensorClass::getStatus()'],['../classNode.html#a6172f9eb39a02f01b692a53b9ee09c56',1,'Node::getStatus()']]],

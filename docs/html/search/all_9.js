@@ -1,11 +1,19 @@
 var searchData=
 [
-  ['kefmsg_5flen',['KEFMSG_LEN',['../EnigmaIOTGateway_8cpp.html#ae144e80be33739d3533beb48c5a65b26',1,'KEFMSG_LEN():&#160;EnigmaIOTGateway.cpp'],['../EnigmaIOTSensor_8cpp.html#ae144e80be33739d3533beb48c5a65b26',1,'KEFMSG_LEN():&#160;EnigmaIOTSensor.cpp']]],
-  ['key',['key',['../structnode__instance.html#a6591d96da1e646fcbd846e61af3e5ef2',1,'node_instance::key()'],['../classNode.html#aad088b52de3eb46a8c89e6cb87bdf887',1,'Node::key()']]],
-  ['key_5fexchange_5ffinished',['KEY_EXCHANGE_FINISHED',['../EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a8dbf4276d433913adaf146198f7cc7b0',1,'KEY_EXCHANGE_FINISHED():&#160;EnigmaIOTGateway.h'],['../EnigmaIOTSensor_8h.html#a1574d1ea842b8efa5966b430ee334a81a8dbf4276d433913adaf146198f7cc7b0',1,'KEY_EXCHANGE_FINISHED():&#160;EnigmaIOTSensor.h']]],
-  ['key_5fexpired',['KEY_EXPIRED',['../EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977a09a1d3d5daa36af5469fa79c12a027fe',1,'KEY_EXPIRED():&#160;EnigmaIOTGateway.h'],['../EnigmaIOTSensor_8h.html#aec9e5a1bf0ed7f6cb25f7b940fa8d939a09a1d3d5daa36af5469fa79c12a027fe',1,'KEY_EXPIRED():&#160;EnigmaIOTSensor.h']]],
-  ['key_5flength',['KEY_LENGTH',['../EnigmaIoTconfig_8h.html#a863ca9be67da8cdc5fb9447378021e07',1,'EnigmaIoTconfig.h']]],
-  ['keyexchangefinished',['keyExchangeFinished',['../classEnigmaIOTSensorClass.html#aea17db18cc3ce992be92e228d7ca4acc',1,'EnigmaIOTSensorClass']]],
-  ['keyvalid',['keyValid',['../structnode__instance.html#adf84aafdceb7da9d9e2d9d379e2dba8f',1,'node_instance::keyValid()'],['../classNode.html#a03e424c2251b5b96fb68444f008f6f17',1,'Node::keyValid()']]],
-  ['keyvalidfrom',['keyValidFrom',['../structnode__instance.html#a0ae08b109bf88f4c3481509a99001f96',1,'node_instance::keyValidFrom()'],['../classNode.html#afad1c640f8fc2623996d3d2a174ad763',1,'Node::keyValidFrom()']]]
+  ['identify',['IDENTIFY',['../NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a3b53675250beaefa566e7ff804d9f5d6',1,'NodeList.h']]],
+  ['identify_5ftimeout',['IDENTIFY_TIMEOUT',['../EnigmaIoTconfig_8h.html#a27132ec0215933e4201ee048b43916a5',1,'EnigmaIoTconfig.h']]],
+  ['identifystart',['identifyStart',['../classEnigmaIOTSensorClass.html#abe5c2b8690a1e15c7867bc729c8d2437',1,'EnigmaIOTSensorClass']]],
+  ['ikmsg_5flen',['IKMSG_LEN',['../EnigmaIOTGateway_8cpp.html#a568f6925a7027004598c4ad288dd11f0',1,'IKMSG_LEN():&#160;EnigmaIOTGateway.cpp'],['../EnigmaIOTSensor_8cpp.html#a568f6925a7027004598c4ad288dd11f0',1,'IKMSG_LEN():&#160;EnigmaIOTSensor.cpp']]],
+  ['indentifying',['indentifying',['../classEnigmaIOTSensorClass.html#a69bead21e18683cf68c4a033fa10a8a4',1,'EnigmaIOTSensorClass']]],
+  ['info',['INFO',['../debug_8h.html#ae1103fea1e1b3c41ca3322d5389f7162',1,'debug.h']]],
+  ['init',['INIT',['../NodeList_8h.html#a8dd9280b6a6e53e65414115f47b0df6aa0cb1b2c6a7db1f1084886c98909a3f36',1,'NodeList.h']]],
+  ['initcomms',['initComms',['../classComms__halClass.html#a67d74c717b8f3919307738be9d963312',1,'Comms_halClass::initComms()'],['../classEspnow__halClass.html#a084026117f83985b7f7751aa9e9726a0',1,'Espnow_halClass::initComms()']]],
+  ['initwifi',['initWiFi',['../helperFunctions_8cpp.html#a35e6494e836366dd9f73e76118d50d46',1,'initWiFi(uint8_t channel):&#160;helperFunctions.cpp'],['../helperFunctions_8h.html#aa7201b2dcf92efc492328c2f4a0c5741',1,'initWiFi(uint8_t channel=3):&#160;helperFunctions.cpp']]],
+  ['invalidate_5fkey',['INVALIDATE_KEY',['../EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a32637f9c9b67f884990ed21097ebc543',1,'INVALIDATE_KEY():&#160;EnigmaIOTGateway.h'],['../EnigmaIOTSensor_8h.html#a1574d1ea842b8efa5966b430ee334a81a32637f9c9b67f884990ed21097ebc543',1,'INVALIDATE_KEY():&#160;EnigmaIOTSensor.h']]],
+  ['invalidatekey',['invalidateKey',['../classEnigmaIOTGatewayClass.html#ac241f6c48c82d297389d78ec338ddb33',1,'EnigmaIOTGatewayClass']]],
+  ['invalidatereason',['invalidateReason',['../classEnigmaIOTSensorClass.html#a3efd703a4066b5e4c0cb6099eed4e079',1,'EnigmaIOTSensorClass']]],
+  ['ishexchar',['isHexChar',['../EnigmaIOTGateway_8cpp.html#ad08e6ed992bb54d4ab67627295e7fcf0',1,'EnigmaIOTGateway.cpp']]],
+  ['iskeyvalid',['isKeyValid',['../classNode.html#aa382c421546fc99b22b4698acb36c3d8',1,'Node']]],
+  ['isregistered',['isRegistered',['../classNode.html#a0b809fd0304e6e55173ac1e6fa8d3dc8',1,'Node']]],
+  ['iv_5flength',['IV_LENGTH',['../EnigmaIoTconfig_8h.html#a0ae6c4c749724e380b6e717a6535bed6',1,'EnigmaIoTconfig.h']]]
 ];

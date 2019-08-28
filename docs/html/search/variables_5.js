@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['gateway',['gateway',['../structrtcmem__data__t.html#a0a7fef60533b1d915c8fa089e1d6b48b',1,'rtcmem_data_t::gateway()'],['../classEspnow__halClass.html#a28c8605361e53a0bdaa0addb85b7bd1a',1,'Espnow_halClass::gateway()'],['../enigmaiot__sensor_8ino.html#ace2c0445ab33641bc6497093c8a1f5f5',1,'gateway():&#160;enigmaiot_sensor.ino']]],
-  ['gwconfig',['gwConfig',['../classEnigmaIOTGatewayClass.html#a77802389a0b41546f60ce114097bcadc',1,'EnigmaIOTGatewayClass']]]
+  ['flashblue',['flashBlue',['../classEnigmaIOTSensorClass.html#a5d89fb89da2e474c816c74d5da38e9fa',1,'EnigmaIOTSensorClass']]],
+  ['flashrx',['flashRx',['../classEnigmaIOTGatewayClass.html#a928fbc392740245076c590c1ab962ccf',1,'EnigmaIOTGatewayClass']]],
+  ['flashtx',['flashTx',['../classEnigmaIOTGatewayClass.html#a5eb353d426ea01a2aa183ae90855a3ae',1,'EnigmaIOTGatewayClass']]]
 ];

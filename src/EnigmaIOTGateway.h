@@ -158,13 +158,6 @@ class EnigmaIOTGatewayClass
       */
      bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
 
-	 ///**
-	 // * @brief Processes OTA update message
-	 // * @param msg Payload, including node address
-	 // * @param msgLen Length of received data
-	 // * @param output 
-	 // * @return Returns `true` if message could be correcly decoded and processed
-	 // */
 	 //bool processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t* output);
 
      /**
@@ -329,6 +322,8 @@ class EnigmaIOTGatewayClass
       * @param mac Node address
       * @param data Payload buffer
       * @param len Payload length
+      * @param controlData Indicates if data is control data and its class
+      * @return Returns true if everything went ok
       */
      bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len, control_message_type_t controlData = USERDATA);
 

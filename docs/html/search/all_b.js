@@ -1,19 +1,14 @@
 var searchData=
 [
-  ['mac',['mac',['../structnode__instance.html#a5ef197acf3ea44c1ae2b5e7f7fe04959',1,'node_instance::mac()'],['../classNode.html#a03db56f17c4186a74d4afdb44597475f',1,'Node::mac()']]],
-  ['mac2str',['mac2str',['../helperFunctions_8cpp.html#a7b23b5caf042639a53c6d351ff258837',1,'mac2str(const uint8_t *mac, const char *buffer):&#160;helperFunctions.cpp'],['../helperFunctions_8h.html#a7b23b5caf042639a53c6d351ff258837',1,'mac2str(const uint8_t *mac, const char *buffer):&#160;helperFunctions.cpp']]],
-  ['macstr',['MACSTR',['../helperFunctions_8cpp.html#ad6e69a2870c8f219cc679677af110849',1,'helperFunctions.cpp']]],
-  ['main',['main',['../namespaceEnigmaIoTUpdate.html#a0625a265d8105bb0e6aa1503f88e21cd',1,'EnigmaIoTUpdate']]],
-  ['managemessage',['manageMessage',['../classEnigmaIOTGatewayClass.html#a1e00c3627e28da3de191bb018f808527',1,'EnigmaIOTGatewayClass::manageMessage()'],['../classEnigmaIOTSensorClass.html#af8f6bce09744fbf0781b2381d209b447',1,'EnigmaIOTSensorClass::manageMessage()']]],
-  ['max_5fkey_5fvalidity',['MAX_KEY_VALIDITY',['../EnigmaIoTconfig_8h.html#a74168aceb3fa9ec24d6fed419b7e8332',1,'EnigmaIoTconfig.h']]],
-  ['max_5fmessage_5flength',['MAX_MESSAGE_LENGTH',['../espnow__hal_8h.html#ab234d1358562b66925fb7223c087556b',1,'MAX_MESSAGE_LENGTH():&#160;espnow_hal.h'],['../EnigmaIoTconfig_8h.html#ab234d1358562b66925fb7223c087556b',1,'MAX_MESSAGE_LENGTH():&#160;EnigmaIoTconfig.h']]],
-  ['max_5fnode_5finactivity',['MAX_NODE_INACTIVITY',['../EnigmaIoTconfig_8h.html#a46020af35c6aa3e34e0d9611c64f3469',1,'EnigmaIoTconfig.h']]],
-  ['max_5fstr_5flen',['MAX_STR_LEN',['../helperFunctions_8cpp.html#a58ce36916c399104e18d32ff090f21c6',1,'helperFunctions.cpp']]],
-  ['memstr',['memstr',['../EnigmaIOTGateway_8cpp.html#aab651c53aaa5c935e3cc662399d0f091',1,'EnigmaIOTGateway.cpp']]],
-  ['mqtt_5fpass',['mqtt_pass',['../structbridge__config__t.html#a988bc4f6dd69c3a94e7bde130ee7a2c4',1,'bridge_config_t']]],
-  ['mqtt_5fport',['mqtt_port',['../structbridge__config__t.html#aa0fa8130ca2b003a027b1afb47b083b0',1,'bridge_config_t']]],
-  ['mqtt_5fserver',['mqtt_server',['../structbridge__config__t.html#a5dad9b7bbd9b0bcda179ce438d3aab6c',1,'bridge_config_t']]],
-  ['mqtt_5fuser',['mqtt_user',['../structbridge__config__t.html#a18fac216c36cb2ce9da39542380be362',1,'bridge_config_t']]],
-  ['mqttbridge_2eino',['MqttBridge.ino',['../MqttBridge_8ino.html',1,'']]],
-  ['mypublickey',['myPublicKey',['../classEnigmaIOTGatewayClass.html#adefe71141a5aa6f9c46712487b6feb31',1,'EnigmaIOTGatewayClass']]]
+  ['lastmessagecounter',['lastMessageCounter',['../structrtcmem__data__t.html#ae441a9d80bb39bdc39aee158a5d9f114',1,'rtcmem_data_t::lastMessageCounter()'],['../structnode__instance.html#a6988622d76bd1d76a0d040d97b8d2c91',1,'node_instance::lastMessageCounter()'],['../classNode.html#af2378f7b085ccdc06314b12263fd2d34',1,'Node::lastMessageCounter()']]],
+  ['lastmessagetime',['lastMessageTime',['../structnode__instance.html#a7eadabd847f82e2383dd440fd3cddc37',1,'node_instance::lastMessageTime()'],['../classNode.html#a2d56bbba3211927eff545e385ef5d162',1,'Node::lastMessageTime()']]],
+  ['lastotamsg',['lastOTAmsg',['../classEnigmaIOTSensorClass.html#abe0efb6410dff1b8f78466773030ecee',1,'EnigmaIOTSensorClass']]],
+  ['led',['led',['../classEnigmaIOTSensorClass.html#a4feaa9f155e6ba6bc3a285af6c7cbfaf',1,'EnigmaIOTSensorClass']]],
+  ['ledflashing',['ledFlashing',['../MqttBridge_8ino.html#a9d49fc49f7d17af876a0629e9e0a22e6',1,'MqttBridge.ino']]],
+  ['ledontime',['ledOnTime',['../classEnigmaIOTSensorClass.html#add7a90136eb634cd046ad8ba23921935',1,'EnigmaIOTSensorClass']]],
+  ['ledtimer',['ledTimer',['../MqttBridge_8ino.html#a5b89ced1c808445ade24e7b818d7b88a',1,'ledTimer():&#160;MqttBridge.ino'],['../EnigmaIOTSensor_8cpp.html#a5b89ced1c808445ade24e7b818d7b88a',1,'ledTimer():&#160;EnigmaIOTSensor.cpp']]],
+  ['loadbridgeconfig',['loadBridgeConfig',['../MqttBridge_8ino.html#aac35436ae06d3c2d50fc7cfa77e140e1',1,'MqttBridge.ino']]],
+  ['loadflashdata',['loadFlashData',['../classEnigmaIOTGatewayClass.html#aaa13dfa56be2d1ad062cc69f6deef331',1,'EnigmaIOTGatewayClass::loadFlashData()'],['../classEnigmaIOTSensorClass.html#a4055223c59e48d3281b0dbb07db625c8',1,'EnigmaIOTSensorClass::loadFlashData()']]],
+  ['loadrtcdata',['loadRTCData',['../classEnigmaIOTSensorClass.html#a50d2f1b9ac6a47d5b1992278bd299941',1,'EnigmaIOTSensorClass']]],
+  ['loop',['loop',['../enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;enigmaiot_gateway.ino'],['../enigmaiot__sensor_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;enigmaiot_sensor.ino'],['../MqttBridge_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'loop():&#160;MqttBridge.ino']]]
 ];

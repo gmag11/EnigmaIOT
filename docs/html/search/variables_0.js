@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['base_5ftopic',['base_topic',['../structbridge__config__t.html#a78ff8e327e700ac6f5fbe71c06aa629a',1,'bridge_config_t']]],
-  ['bridgeconfig',['bridgeConfig',['../MqttBridge_8ino.html#a10c0dbd98e826b23414103f79c2c3ca3',1,'MqttBridge.ino']]]
+  ['aad_5flength',['AAD_LENGTH',['../EnigmaIoTconfig_8h.html#a3a00052a511fa3b63de7e280320b1ef9',1,'EnigmaIoTconfig.h']]]
 ];

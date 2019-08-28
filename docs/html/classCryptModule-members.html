@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
   </td>
@@ -71,18 +71,17 @@ $(function() {
 
 <p>This is the complete list of members for <a class="el" href="classCryptModule.html">CryptModule</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classCryptModule.html#a29cd448f3ece32bad959fd661290c21b">decryptBuffer</a>(uint8_t *output, const uint8_t *input, size_t length, const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen)</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classCryptModule.html#aff6d04cdf3ba58da4c234108724f3672">encryptBuffer</a>(uint8_t *output, const uint8_t *input, size_t length, const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen)</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classCryptModule.html#a55883c161c22f5182fc40f97a84a5da6">decryptBuffer</a>(const uint8_t *data, size_t length, const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen, const uint8_t *aad, uint8_t aadLen, const uint8_t *tag, uint8_t tagLen)</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classCryptModule.html#ae90dfe037c5e9b1a6804f0292c28bddc">encryptBuffer</a>(const uint8_t *data, size_t length, const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen, const uint8_t *aad, uint8_t aadLen, const uint8_t *tag, uint8_t tagLen)</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classCryptModule.html#ab043ae3361d34921f36d7d0189c058d1">getDH1</a>()</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classCryptModule.html#a1cd41eabb8dc153f74d42f263d168fee">getDH2</a>(const uint8_t *remotePubKey)</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classCryptModule.html#a9d106f893f329d8648aba205b3717806">getPrivDHKey</a>()</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classCryptModule.html#aefc84d57eee3eceeadc3611866925804">getPubDHKey</a>()</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classCryptModule.html#a310142081f536b0aae5d8f8544ab831b">networkDecrypt</a>(uint8_t *input, uint8_t numBlocks, uint8_t *key, uint8_t keyLength)</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classCryptModule.html#a9439e0f00c0fc43cde0195e731b59f73">networkEncrypt</a>(uint8_t *input, uint8_t numBlocks, uint8_t *key, uint8_t keyLength)</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classCryptModule.html#a34795afc7eeb1110a1672d496b3d55a3">privateDHKey</a></td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classCryptModule.html#ae55611b17617615a79de5325d2c3c02d">publicDHKey</a></td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classCryptModule.html#a96b21ebe23b1914e09408bd3e41b34b0">random</a>()</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classCryptModule.html#a81975699307738712329b4ef8cb47675">random</a>(const uint8_t *buf, size_t len)</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classCryptModule.html#a0bc27edb1340a28f92b43dd4f91e9a16">getSHA256</a>(uint8_t *buffer, uint8_t length)</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classCryptModule.html#a34795afc7eeb1110a1672d496b3d55a3">privateDHKey</a></td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classCryptModule.html#ae55611b17617615a79de5325d2c3c02d">publicDHKey</a></td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classCryptModule.html#a96b21ebe23b1914e09408bd3e41b34b0">random</a>()</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classCryptModule.html#a81975699307738712329b4ef8cb47675">random</a>(const uint8_t *buf, size_t len)</td><td class="entry"><a class="el" href="classCryptModule.html">CryptModule</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -23,8 +23,10 @@ var searchData=
   ['settxled',['setTxLed',['../classEnigmaIOTGatewayClass.html#a829f622aa3e12b02d8318b5d1f6162aa',1,'EnigmaIOTGatewayClass']]],
   ['setup',['setup',['../enigmaiot__gateway_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;enigmaiot_gateway.ino'],['../enigmaiot__sensor_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;enigmaiot_sensor.ino'],['../MqttBridge_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;MqttBridge.ino']]],
   ['sleep',['sleep',['../classEnigmaIOTSensorClass.html#aa02c33f76ec5000b97a75eedc0363cb1',1,'EnigmaIOTSensorClass']]],
-  ['startflash',['startFlash',['../MqttBridge_8ino.html#a2c078b8bfa2e57a7f39eb083be793ee8',1,'MqttBridge.ino']]],
+  ['startflash',['startFlash',['../MqttBridge_8ino.html#a2c078b8bfa2e57a7f39eb083be793ee8',1,'startFlash(int period):&#160;MqttBridge.ino'],['../EnigmaIOTSensor_8cpp.html#ae79c9303923c11f39edb388b32d4646b',1,'startFlash(time_t period):&#160;EnigmaIOTSensor.cpp']]],
+  ['startidentifying',['startIdentifying',['../classEnigmaIOTSensorClass.html#a03de4018faf0064ac98427bf0fdd2295',1,'EnigmaIOTSensorClass']]],
   ['stop',['stop',['../classComms__halClass.html#aa69c265e65ce31580af6d5dd9b3cd40f',1,'Comms_halClass::stop()'],['../classEnigmaIOTSensorClass.html#adad3f6751975d27385b6d0b944357a75',1,'EnigmaIOTSensorClass::stop()'],['../classEspnow__halClass.html#add2ac8b2494fa1b5f09d32e17118ecda',1,'Espnow_halClass::stop()']]],
-  ['stopflash',['stopFlash',['../MqttBridge_8ino.html#ad072ccb795ca00a2cc374f3ce7bd5d55',1,'MqttBridge.ino']]],
+  ['stopflash',['stopFlash',['../MqttBridge_8ino.html#ad072ccb795ca00a2cc374f3ce7bd5d55',1,'stopFlash():&#160;MqttBridge.ino'],['../EnigmaIOTSensor_8cpp.html#ad072ccb795ca00a2cc374f3ce7bd5d55',1,'stopFlash():&#160;EnigmaIOTSensor.cpp']]],
+  ['stopidentifying',['stopIdentifying',['../classEnigmaIOTSensorClass.html#aab38bb0e8f5fd28bd13275cebd212913',1,'EnigmaIOTSensorClass']]],
   ['str2mac',['str2mac',['../helperFunctions_8cpp.html#a02961b325403161b54533152d242696a',1,'str2mac(const char *macAddrString, uint8_t *macBytes):&#160;helperFunctions.cpp'],['../helperFunctions_8h.html#a0fdf837000194d53f0d019f024e0f4a1',1,'str2mac(const char *mac, uint8_t *values):&#160;helperFunctions.cpp']]]
 ];

@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
   </td>
@@ -102,18 +102,15 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a81975699307738712329b4ef8cb47675"><td class="memItemLeft" align="right" valign="top">static uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCryptModule.html#a81975699307738712329b4ef8cb47675">random</a> (const uint8_t *buf, size_t len)</td></tr>
 <tr class="memdesc:a81975699307738712329b4ef8cb47675"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills a buffer with random values.  <a href="#a81975699307738712329b4ef8cb47675">More...</a><br /></td></tr>
 <tr class="separator:a81975699307738712329b4ef8cb47675"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29cd448f3ece32bad959fd661290c21b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCryptModule.html#a29cd448f3ece32bad959fd661290c21b">decryptBuffer</a> (uint8_t *output, const uint8_t *input, size_t length, const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen)</td></tr>
-<tr class="memdesc:a29cd448f3ece32bad959fd661290c21b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decrypts a buffer using a shared key.  <a href="#a29cd448f3ece32bad959fd661290c21b">More...</a><br /></td></tr>
-<tr class="separator:a29cd448f3ece32bad959fd661290c21b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff6d04cdf3ba58da4c234108724f3672"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCryptModule.html#aff6d04cdf3ba58da4c234108724f3672">encryptBuffer</a> (uint8_t *output, const uint8_t *input, size_t length, const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen)</td></tr>
-<tr class="memdesc:aff6d04cdf3ba58da4c234108724f3672"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encrypts a buffer using a shared key.  <a href="#aff6d04cdf3ba58da4c234108724f3672">More...</a><br /></td></tr>
-<tr class="separator:aff6d04cdf3ba58da4c234108724f3672"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9439e0f00c0fc43cde0195e731b59f73"><td class="memItemLeft" align="right" valign="top">static uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCryptModule.html#a9439e0f00c0fc43cde0195e731b59f73">networkEncrypt</a> (uint8_t *input, uint8_t numBlocks, uint8_t *key, uint8_t keyLength)</td></tr>
-<tr class="memdesc:a9439e0f00c0fc43cde0195e731b59f73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encripts one or more blocks of memory using network key.  <a href="#a9439e0f00c0fc43cde0195e731b59f73">More...</a><br /></td></tr>
-<tr class="separator:a9439e0f00c0fc43cde0195e731b59f73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a310142081f536b0aae5d8f8544ab831b"><td class="memItemLeft" align="right" valign="top">static uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCryptModule.html#a310142081f536b0aae5d8f8544ab831b">networkDecrypt</a> (uint8_t *input, uint8_t numBlocks, uint8_t *key, uint8_t keyLength)</td></tr>
-<tr class="memdesc:a310142081f536b0aae5d8f8544ab831b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decripts one or more blocks of memory using network key.  <a href="#a310142081f536b0aae5d8f8544ab831b">More...</a><br /></td></tr>
-<tr class="separator:a310142081f536b0aae5d8f8544ab831b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55883c161c22f5182fc40f97a84a5da6"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCryptModule.html#a55883c161c22f5182fc40f97a84a5da6">decryptBuffer</a> (const uint8_t *data, size_t length, const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen, const uint8_t *aad, uint8_t aadLen, const uint8_t *tag, uint8_t tagLen)</td></tr>
+<tr class="memdesc:a55883c161c22f5182fc40f97a84a5da6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decrypts a buffer using a shared key.  <a href="#a55883c161c22f5182fc40f97a84a5da6">More...</a><br /></td></tr>
+<tr class="separator:a55883c161c22f5182fc40f97a84a5da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bc27edb1340a28f92b43dd4f91e9a16"><td class="memItemLeft" align="right" valign="top">static uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCryptModule.html#a0bc27edb1340a28f92b43dd4f91e9a16">getSHA256</a> (uint8_t *buffer, uint8_t length)</td></tr>
+<tr class="memdesc:a0bc27edb1340a28f92b43dd4f91e9a16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a SHA256 hash from input.  <a href="#a0bc27edb1340a28f92b43dd4f91e9a16">More...</a><br /></td></tr>
+<tr class="separator:a0bc27edb1340a28f92b43dd4f91e9a16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae90dfe037c5e9b1a6804f0292c28bddc"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCryptModule.html#ae90dfe037c5e9b1a6804f0292c28bddc">encryptBuffer</a> (const uint8_t *data, size_t length, const uint8_t *iv, uint8_t ivlen, const uint8_t *key, uint8_t keylen, const uint8_t *aad, uint8_t aadLen, const uint8_t *tag, uint8_t tagLen)</td></tr>
+<tr class="memdesc:ae90dfe037c5e9b1a6804f0292c28bddc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decrypts a buffer using a shared key.  <a href="#ae90dfe037c5e9b1a6804f0292c28bddc">More...</a><br /></td></tr>
+<tr class="separator:ae90dfe037c5e9b1a6804f0292c28bddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -130,8 +127,8 @@ Protected Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00030">30</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a29cd448f3ece32bad959fd661290c21b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29cd448f3ece32bad959fd661290c21b">&#9670;&nbsp;</a></span>decryptBuffer()</h2>
+<a id="a55883c161c22f5182fc40f97a84a5da6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55883c161c22f5182fc40f97a84a5da6">&#9670;&nbsp;</a></span>decryptBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -140,16 +137,10 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void CryptModule::decryptBuffer </td>
+          <td class="memname">bool CryptModule::decryptBuffer </td>
           <td>(</td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>output</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const uint8_t *&#160;</td>
-          <td class="paramname"><em>input</em>, </td>
+          <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -179,7 +170,31 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>keylen</em>&#160;</td>
+          <td class="paramname"><em>keylen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>aad</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aadLen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>tag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>tagLen</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -197,23 +212,27 @@ Protected Attributes</h2></td></tr>
 <p>Decrypts a buffer using a shared key. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">output</td><td>Output buffer to get decrypted data. It may be the same as input buffer </td></tr>
-    <tr><td class="paramname">input</td><td>Input encrypted data buffer </td></tr>
+    <tr><td class="paramname">data</td><td>Buffer to decrypt. It will be used as input and output </td></tr>
     <tr><td class="paramname">length</td><td>Buffer length in number of bytes </td></tr>
     <tr><td class="paramname">iv</td><td>Initialization Vector used to encrypt this data </td></tr>
     <tr><td class="paramname">ivlen</td><td>IV length </td></tr>
     <tr><td class="paramname">key</td><td>Shared key used to encrypt data </td></tr>
     <tr><td class="paramname">keylen</td><td>Key length </td></tr>
+    <tr><td class="paramname">aad</td><td>Additional Authentication Data for Poly1305 </td></tr>
+    <tr><td class="paramname">aadLen</td><td>Additional Authentication Data length </td></tr>
+    <tr><td class="paramname">tag</td><td>Buffer to store authentication tag calculated by Poly1305 </td></tr>
+    <tr><td class="paramname">tagLen</td><td>Additional Authentication Tag length </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>True if decryption and tag checking was correct </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00024">24</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00048">48</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
-<a id="aff6d04cdf3ba58da4c234108724f3672"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff6d04cdf3ba58da4c234108724f3672">&#9670;&nbsp;</a></span>encryptBuffer()</h2>
+<a id="ae90dfe037c5e9b1a6804f0292c28bddc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae90dfe037c5e9b1a6804f0292c28bddc">&#9670;&nbsp;</a></span>encryptBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -222,16 +241,10 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void CryptModule::encryptBuffer </td>
+          <td class="memname">bool CryptModule::encryptBuffer </td>
           <td>(</td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>output</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const uint8_t *&#160;</td>
-          <td class="paramname"><em>input</em>, </td>
+          <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -261,7 +274,31 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>keylen</em>&#160;</td>
+          <td class="paramname"><em>keylen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>aad</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aadLen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>tag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>tagLen</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -276,21 +313,25 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Encrypts a buffer using a shared key. </p>
+<p>Decrypts a buffer using a shared key. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">output</td><td>Output buffer to get encrypted data. It may be the same as input buffer </td></tr>
-    <tr><td class="paramname">input</td><td>Input clear data buffer </td></tr>
+    <tr><td class="paramname">data</td><td>Buffer to decrypt. It will be used as input and output </td></tr>
     <tr><td class="paramname">length</td><td>Buffer length in number of bytes </td></tr>
-    <tr><td class="paramname">iv</td><td>Initialization Vector to be used to encrypt input data </td></tr>
+    <tr><td class="paramname">iv</td><td>Initialization Vector used to encrypt this data </td></tr>
     <tr><td class="paramname">ivlen</td><td>IV length </td></tr>
-    <tr><td class="paramname">key</td><td>Shared key to be used to encrypt data </td></tr>
+    <tr><td class="paramname">key</td><td>Shared key used to encrypt data </td></tr>
     <tr><td class="paramname">keylen</td><td>Key length </td></tr>
+    <tr><td class="paramname">aad</td><td>Additional Authentication Data for Poly1305 </td></tr>
+    <tr><td class="paramname">aadLen</td><td>Additional Authentication Data length </td></tr>
+    <tr><td class="paramname">tag</td><td>Buffer to store authentication tag calculated by Poly1305 </td></tr>
+    <tr><td class="paramname">tagLen</td><td>Additional Authentication Tag length </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>True if encryption and tag generation was correct </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00041">41</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00082">82</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -311,7 +352,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Starts first stage of Diffie Hellman key agreement algorithm. </p>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00105">105</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00133">133</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -340,7 +381,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if calculation worked normally, <code>false</code> otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00112">112</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00140">140</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -370,7 +411,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets own private key used on Diffie Hellman algorithm. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to private key </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00088">88</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00106">106</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
 
 </div>
 </div>
@@ -400,12 +441,12 @@ Protected Attributes</h2></td></tr>
 <p>Gets own public key used on Diffie Hellman algorithm. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to public key </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00096">96</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00114">114</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
 
 </div>
 </div>
-<a id="a310142081f536b0aae5d8f8544ab831b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a310142081f536b0aae5d8f8544ab831b">&#9670;&nbsp;</a></span>networkDecrypt()</h2>
+<a id="a0bc27edb1340a28f92b43dd4f91e9a16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bc27edb1340a28f92b43dd4f91e9a16">&#9670;&nbsp;</a></span>getSHA256()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -414,28 +455,16 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t * CryptModule::networkDecrypt </td>
+          <td class="memname">uint8_t * CryptModule::getSHA256 </td>
           <td>(</td>
           <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>input</em>, </td>
+          <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>numBlocks</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>keyLength</em>&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -450,81 +479,17 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Decripts one or more blocks of memory using network key. </p>
+<p>Generates a SHA256 hash from input. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>Input buffer </td></tr>
-    <tr><td class="paramname">numBlocks</td><td>Number of blocks to decrypt </td></tr>
-    <tr><td class="paramname">key</td><td>Network key. This has to be shared among every node and gateway on the network </td></tr>
-    <tr><td class="paramname">keyLength</td><td>Length of network key in number of bytes. </td></tr>
+    <tr><td class="paramname">buffer</td><td>Buffer with data to hash. Hash will be stored here </td></tr>
+    <tr><td class="paramname">length</td><td>Buffer length in number of bytes. It should be 32 at least </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Input buffer </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns buffer pointer </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00072">72</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a9439e0f00c0fc43cde0195e731b59f73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9439e0f00c0fc43cde0195e731b59f73">&#9670;&nbsp;</a></span>networkEncrypt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t * CryptModule::networkEncrypt </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>input</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>numBlocks</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>keyLength</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Encripts one or more blocks of memory using network key. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">input</td><td>Input buffer </td></tr>
-    <tr><td class="paramname">numBlocks</td><td>Number of blocks to encrypt </td></tr>
-    <tr><td class="paramname">key</td><td>Network key. This has to be shared among every node and gateway on the network </td></tr>
-    <tr><td class="paramname">keyLength</td><td>Length of network key in number of bytes. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Input buffer </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00058">58</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00023">23</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -554,7 +519,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets a random number. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns a random number </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00087">87</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00115">115</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -602,7 +567,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns the same buffer used as input, filled with random data </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00091">91</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8cpp_source.html#l00119">119</a> of file <a class="el" href="cryptModule_8cpp_source.html">cryptModule.cpp</a>.</p>
 
 </div>
 </div>
@@ -629,7 +594,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Temporary private key store used during key agreement. </p>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00124">124</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00119">119</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
 
 </div>
 </div>
@@ -655,7 +620,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Temporary public key store used during key agreement. </p>
 
-<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00125">125</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cryptModule_8h_source.html#l00120">120</a> of file <a class="el" href="cryptModule_8h_source.html">cryptModule.h</a>.</p>
 
 </div>
 </div>

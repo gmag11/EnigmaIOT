@@ -4,5 +4,6 @@ var searchData=
   ['buildgetsleep',['buildGetSleep',['../EnigmaIOTGateway_8cpp.html#a90e4277194db83896803d38387ec0369',1,'EnigmaIOTGateway.cpp']]],
   ['buildgetversion',['buildGetVersion',['../EnigmaIOTGateway_8cpp.html#a7bb1ee00fcd42cf937a7f6173e2a8647',1,'EnigmaIOTGateway.cpp']]],
   ['buildotamsg',['buildOtaMsg',['../EnigmaIOTGateway_8cpp.html#acc743eebc6ec1a9480db25fa0f59332a',1,'EnigmaIOTGateway.cpp']]],
+  ['buildsetidentify',['buildSetIdentify',['../EnigmaIOTGateway_8cpp.html#ada98ad7b4543b42a5d57f458528bf2d6',1,'EnigmaIOTGateway.cpp']]],
   ['buildsetsleep',['buildSetSleep',['../EnigmaIOTGateway_8cpp.html#aab70cbb2f23008e90d70b1d744d3e71c',1,'EnigmaIOTGateway.cpp']]]
 ];

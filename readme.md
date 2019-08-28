@@ -271,13 +271,10 @@ This is the list of currently implemented control commands:
 - Identify
 
 <table>
-<thead>
   <tr>
     <th colspan="2">Command</th>
     <th>Response</th>
   </tr>
-  </thead>
-  <tbody>
   <tr>
     <td>Get version</td>
     <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/version</code></td>
@@ -303,7 +300,6 @@ This is the list of currently implemented control commands:
     <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/identify</code></td>
     <td>None</td>
   </tr>
-  </tbody>
 </table>
 
 For instance, publishing `enigmaiot/12:34:56:78:90:12/get/version` will produce `enigmaiot/12:34:56:78:90:12/result/version 0.2.0`.

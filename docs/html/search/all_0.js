@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['adc_5fmode',['ADC_MODE',['../enigmaiot__sensor_8ino.html#ad4407547625c19c85b1f3abd751f1e83',1,'enigmaiot_sensor.ino']]]
+  ['_5fdebug_5f',['_DEBUG_',['../MqttBridge_8ino.html#affeac4b5549224963efef42287bca6a4',1,'MqttBridge.ino']]]
 ];

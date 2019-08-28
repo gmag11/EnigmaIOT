@@ -15,6 +15,7 @@ var searchData=
   ['processrxcontroldata',['processRxControlData',['../enigmaiot__gateway_8ino.html#ae061004c11be4b31810d82998d99a448',1,'enigmaiot_gateway.ino']]],
   ['processrxdata',['processRxData',['../enigmaiot__gateway_8ino.html#a2ef41584e115125491e27e398576cb62',1,'processRxData(const uint8_t *mac, const uint8_t *buffer, uint8_t length, uint16_t lostMessages, bool control):&#160;enigmaiot_gateway.ino'],['../enigmaiot__sensor_8ino.html#a6ceecc17e0d09f118bac52a83a3ab81e',1,'processRxData(const uint8_t *mac, const uint8_t *buffer, uint8_t length):&#160;enigmaiot_sensor.ino']]],
   ['processserverhello',['processServerHello',['../classEnigmaIOTSensorClass.html#ad074353ba790ddfd4214b39b517861df',1,'EnigmaIOTSensorClass']]],
+  ['processsetidentifycommand',['processSetIdentifyCommand',['../classEnigmaIOTSensorClass.html#a5e1f937e0795bb6a7248c3cfcd1f5a6b',1,'EnigmaIOTSensorClass']]],
   ['processsetsleeptimecommand',['processSetSleepTimeCommand',['../classEnigmaIOTSensorClass.html#a401093c09a9a13e3e0a8a5c282af0dbe',1,'EnigmaIOTSensorClass']]],
   ['processversioncommand',['processVersionCommand',['../classEnigmaIOTSensorClass.html#ac5f23da0a5943980407d51439d33275f',1,'EnigmaIOTSensorClass']]]
 ];

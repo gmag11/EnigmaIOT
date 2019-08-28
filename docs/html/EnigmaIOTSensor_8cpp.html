@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
   </td>
@@ -106,18 +106,26 @@ Functions</h2></td></tr>
 <tr class="separator:a1b66b36dbb3d32b25e7f4b2cc4e0accb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4dcb9645090920f31f391adcd5b3850c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTSensor_8cpp.html#a4dcb9645090920f31f391adcd5b3850c">dumpRtcData</a> (<a class="el" href="structrtcmem__data__t.html">rtcmem_data_t</a> *data, uint8_t *<a class="el" href="enigmaiot__sensor_8ino.html#ace2c0445ab33641bc6497093c8a1f5f5">gateway</a>=NULL)</td></tr>
 <tr class="separator:a4dcb9645090920f31f391adcd5b3850c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae79c9303923c11f39edb388b32d4646b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTSensor_8cpp.html#ae79c9303923c11f39edb388b32d4646b">startFlash</a> (time_t period)</td></tr>
+<tr class="separator:ae79c9303923c11f39edb388b32d4646b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad072ccb795ca00a2cc374f3ce7bd5d55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTSensor_8cpp.html#ad072ccb795ca00a2cc374f3ce7bd5d55">stopFlash</a> ()</td></tr>
+<tr class="separator:ad072ccb795ca00a2cc374f3ce7bd5d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f399d10e625fb459fb5e0b8a3a79ef8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTSensor_8cpp.html#a2f399d10e625fb459fb5e0b8a3a79ef8">flashLed</a> (void *led)</td></tr>
+<tr class="separator:a2f399d10e625fb459fb5e0b8a3a79ef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a47616803c1ff494134cb784756035a08"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTSensor_8cpp.html#a47616803c1ff494134cb784756035a08">CONFIG_FILE</a> [] = &quot;/config.txt&quot;</td></tr>
 <tr class="separator:a47616803c1ff494134cb784756035a08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b89ced1c808445ade24e7b818d7b88a"><td class="memItemLeft" align="right" valign="top">ETSTimer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTSensor_8cpp.html#a5b89ced1c808445ade24e7b818d7b88a">ledTimer</a></td></tr>
+<tr class="separator:a5b89ced1c808445ade24e7b818d7b88a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88a62c62a87971903417287b1b917a20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEnigmaIOTSensorClass.html">EnigmaIOTSensorClass</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTSensor_8cpp.html#a88a62c62a87971903417287b1b917a20">EnigmaIOTSensor</a></td></tr>
 <tr class="separator:a88a62c62a87971903417287b1b917a20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Library to build a node for EnigmaIoT system. </p>
-<dl class="section version"><dt>Version</dt><dd>0.2.0 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>28/06/2019 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.3.0 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>28/08/2019 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
@@ -209,7 +217,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00022">22</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00024">24</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -239,7 +247,66 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00034">34</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00036">36</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a2f399d10e625fb459fb5e0b8a3a79ef8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f399d10e625fb459fb5e0b8a3a79ef8">&#9670;&nbsp;</a></span>flashLed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void flashLed </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>led</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00212">212</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ae79c9303923c11f39edb388b32d4646b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae79c9303923c11f39edb388b32d4646b">&#9670;&nbsp;</a></span>startFlash()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void startFlash </td>
+          <td>(</td>
+          <td class="paramtype">time_t&#160;</td>
+          <td class="paramname"><em>period</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00203">203</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ad072ccb795ca00a2cc374f3ce7bd5d55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad072ccb795ca00a2cc374f3ce7bd5d55">&#9670;&nbsp;</a></span>stopFlash()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void stopFlash </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00208">208</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
@@ -272,7 +339,23 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l01177">1177</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l01248">1248</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a5b89ced1c808445ade24e7b818d7b88a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b89ced1c808445ade24e7b818d7b88a">&#9670;&nbsp;</a></span>ledTimer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ETSTimer ledTimer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTSensor_8cpp_source.html#l00017">17</a> of file <a class="el" href="EnigmaIOTSensor_8cpp_source.html">EnigmaIOTSensor.cpp</a>.</p>
 
 </div>
 </div>
