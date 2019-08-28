@@ -809,7 +809,7 @@ double EnigmaIOTGatewayClass::getPER (uint8_t* address) {
 uint32_t EnigmaIOTGatewayClass::getTotalPackets (uint8_t* address) {
 	Node* node = nodelist.getNewNode (address);
 
-	return node->packetNumber;
+	return node->packetNumber+getErrorPackets(address);
 }
 
 uint32_t EnigmaIOTGatewayClass::getErrorPackets (uint8_t* address) {
