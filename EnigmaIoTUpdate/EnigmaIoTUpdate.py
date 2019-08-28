@@ -104,7 +104,7 @@ def main():
     with open(options.filename, "rb") as binary_file:
         chunked_file = []
         encoded_string = []
-        n = 250 - 3 - 25 - 2  # 250 bytes - sizeof(int) - header
+        n = 212  # Max 217 - 2. Divisible by 4 => 212
 
         for chunk in iter(lambda: binary_file.read(n), b""):
             chunked_file.append(chunk)
