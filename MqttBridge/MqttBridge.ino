@@ -186,7 +186,12 @@ bool configWiFiManager () {
 		memcpy (bridgeConfig.mqtt_server, mqttServerParam.getValue (), mqttServerParam.getValueLength ());
 		bridgeConfig.mqtt_port = atoi (mqttPortParam.getValue ());
 		memcpy (bridgeConfig.mqtt_user, mqttUserParam.getValue (), mqttUserParam.getValueLength ());
-		memcpy (bridgeConfig.mqtt_pass, mqttPassParam.getValue (), mqttPassParam.getValueLength ());
+        const char* mqtt_pass = mqttPassParam.getValue ();
+        if (mqtt_pass && (mqtt_pass[0] != '\0')) {// If password is empty, keep the old one
+		    memcpy (bridgeConfig.mqtt_pass, mqtt_pass, mqttPassParam.getValueLength ());
+        } else {
+            _DEBUG_ ("MQTT password field empty. Keeping the old one");
+        }
 		memcpy (bridgeConfig.base_topic, mqttBaseTopicParam.getValue (), mqttBaseTopicParam.getValueLength ());
 	}
 	return result;
