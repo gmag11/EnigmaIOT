@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGateway.h
-  * @version 0.2.0
-  * @date 28/06/2019
+  * @version 0.3.0
+  * @date 28/08/2019
   * @author German Martin
   * @brief Library to build a gateway for EnigmaIoT system
   */

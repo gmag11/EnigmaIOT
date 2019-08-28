@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIoTconfig.h
-  * @version 0.2.0
-  * @date 28/06/2019
+  * @version 0.3.0
+  * @date 28/08/2019
   * @author German Martin
   * @brief Parameter configuration
   */
@@ -11,7 +11,7 @@
 
 // Global configuration. Physical layer settings
 static const uint8_t MAX_MESSAGE_LENGTH = 250; ///< @brief Maximum payload size on ESP-NOW
-static const char ENIGMAIOT_PROT_VERS[] = "0.2.0"; ///< @brief EnitmaIoT Version
+static const char ENIGMAIOT_PROT_VERS[] = "0.3.0"; ///< @brief EnitmaIoT Version
 static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on ESP-NOW
 
 // Gateway configuration

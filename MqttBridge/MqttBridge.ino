@@ -1,7 +1,7 @@
 /**
   * @file MqttBridge.ino
-  * @version 0.2.0
-  * @date 28/06/2019
+  * @version 0.3.0
+  * @date 28/08/2019
   * @author German Martin
   * @brief Bridge for EnigmaIoT system to forward data from serial to MQTT broker
   *
