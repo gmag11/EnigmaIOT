@@ -26,34 +26,35 @@ During this project conception I decided that it should fulfil this list of requ
 - Secure by design. Make use of a secure channel for data transmission.
 - Automatic dynamic key agreement.
 - Do not require connection to the Internet.
-- Do not overload my home WiFi infrastructure.
+- Do not overload my home WiFi infrastructure. Only Gateway may be connected to LAN.
 - Able to use deep sleep to run on batteries.
 - Enough wireless range for a house.
 - Support for a high number of nodes.
 
 ## Features
 
-- [x] Encrypted communication
+- [x] Encrypted communication using [**ChaCha20/Poly1305**](https://tools.ietf.org/html/rfc7539)
 - [x] Dynamic key, shared between one node and gateway. Keys are independent for each node
-- [x] Number of nodes is only limited by memory on gateway (56 bytes per node)
+- [x] Shared keys are expired after a certain (configurable) time
+- [x] Number of nodes is only limited by memory on gateway (60 bytes per node)
 - [x] Key is never on air so it is not interceptable
 - [x] Key expiration and renewal is managed transparently
-- [x] Avoid repeatability attack having a new random initialization vector on every message
+- [x] Avoid repeatability attack having a new random initialization vector on every message. This is mandatory for ChaCha20/Poly1305 in order to keep cipher secure
 - [x] Automatic and transparent node attachment
-- [x] Avoid rogue node, rogue gateway and man-in-the-middle attack.
+- [x] Avoid rogue node, rogue gateway and man-in-the-middle attack
 
 Notice that network key used to implement this feature is stored on flash. ESP8266 do not allow flash encryption so network key may be recovered reading flash. On the other side, ESP32 is able to encrypt flash memory, but EnigmaIoT is not still tested on it.
 
 - [x] Pluggable physical layer communication. Right now only ESP-NOW protocol is developed but you can easily add more communication alternatives
 - [x] When using ESP-NOW only esp8266 is needed. No more electronics apart from sensor
-- [x] Optional data message counter to detect lost or repeated messages
-- [x] Designed as two libraries (one for gateway, one for node) for easier use.
-- [x] Selectable crypto algorithm
-- [x] Node and Gateway do store shared keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically after gateway is switched on
+- [x] Data message counter to detect lost or repeated messages
+- [x] Designed as two libraries (one for gateway, one for node) for easier use
+- [x] Crypto algorithm could be changed with low effort
+- [x] Node and Gateway do store shared keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically with a new shared key after gateway is switched on
 - [x] Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message
-- [x] Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memory is the recommended place, and it is the one currently implemented, but SPIFFS or EEPROM would be possible.
+- [x] Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memory is the recommended place, and it is the one currently implemented
 - [x] Initial configuration over WiFi portal on each device
-- [x] Node configuration on service using control downlink commands
+- [x] Node configuration while in service using control downlink commands
 - [ ] OTA over WiFi
 - [x] OTA over MQTT/ESP-NOW
 - [x] Sensor identification by using a flashing LED. This is useful when you have a bunch of nodes together :D
@@ -76,31 +77,33 @@ System functions are divided in three layers: application, link and physical lay
 
 ### EnigmaIoT protocol
 
-The named **EnigmaIoT protocol** is designed to use encrypted communication without the need to hardcode the key. It uses [Diffie Hellman](https://security.stackexchange.com/a/196480) algorithm to calculate a shared key.
+The named **EnigmaIoT protocol** is designed to use encrypted communication without the need to hardcode the key. It uses [Elliptic Curves Diffie Hellman](https://en.wikipedia.org/wiki/Elliptic-curve_Diffie–Hellman) algorithm to calculate a shared key.
 
-The process starts with node announcing itself with a Client Hello message. It tells the gateway its intention to establish a new shared key. It sends Diffie Hellman public part to be used on gateway to calculate the key.
+The process starts with node announcing itself with a Client Hello message. It tells the gateway its intention to establish a new shared key. It sends public key to be used on gateway to calculate the shared key.
 
-Gateway answers with Server Hello message that includes its public data for key calculation on node.
+Gateway answers with Server Hello message that includes its public key for shared key calculation on node.
 
-Once key is calculated, node send an encrypted message as Key Exchange Finished message. A 32 bit CRC is calculated and it is used for decryption test.
+Once shared key is calculated, node send an encrypted message as Key Exchange Finished message. Poly1305 encryption tag is used to check message integrity.
 
-If gateway validates CRC correctly it answers with a Cipher Finished message. It carries a CRC too.
+If gateway validates tag correctly it answers with a Cipher Finished message.
 
-This process is protected with a 32 byte shared **network key**, used for **authentication**. Client Hello and Server Hello messages are encrypted whit this network key. If network key is not the same on gateway and node this will lead to CRC errors and messages will be ignored.
+This process is protected with a 32 byte shared **network key**, used for **authentication**. As in the first two messages shared key is not known yet, Client Hello and Server Hello messages are encrypted whit this network key. If network key is not the same on gateway and node this will lead to decryption errors and messages will be ignored.
 
-In case of any error in this process gateway sends an Invalidate Key to reset to original status and forgets key.
+In case of any error on node key negotiation gateway sends an Invalidate Key to reset to original status and forgets any calculated shared key for this node.
 
 When key is marked as valid node may start sending sensor data.
 
-Optionally gateway can send data to node. As node may be sleeping between communications, downlink messages has to be sent just after uplink data. So, one downlink message is queued until node communicates. Node waits some milliseconds before sleep for downlink data.
+Optionally, gateway can send data to node. As node may be sleeping between communications, downlink messages has to be sent just after uplink data. So, one downlink message is queued until node communicates. Node waits some milliseconds before sleep for downlink data.
 
-In case of nodes that do not sleep (like actuators) gateway can send downlink data in any moment. Sleepy node is signaled during node registration on a bit on Key Exchange Finished message. It is set to 1 to signal that node will sleep just after sending data.
+If a new downlink message arrives, old scheduled data for that node, if any, is overwritten.
 
-Key is forced to change every period. Gateway decides the moment to invalidate each node key. If so, it sends an invalidate key as downlink, after next data message communication.
+In case of nodes that do not sleep (like a mains powered relay), gateway can send downlink data in any moment. Sleepy node is signaled during node registration on a bit in Key Exchange Finished message. It is set to 1 to signal that node will sleep just after sending data.
+
+Key is forced to change every period. Gateway decides the moment to invalidate each node key. If so, it sends an invalidate key as downlink, after next data message communication. This key validity period is configurable on [EnigmaIoTconfig.h](https://github.com/gmag11/EnigmaIOT/blob/master/src/lib/EnigmaIoTconfig.h) file.
 
 After that node may start new key agreement sending a new Client Hello message.
 
-All nodes and gateway are identified by its MAC address. No name is assigned so no configuration is needed on node. Function assignment has to be done in a  higher level.
+All nodes and gateway are identified by its MAC address. No name is assigned so no configuration is needed on node. Function assignment has to be done at a higher level.
 
 ## State diagram for nodes and Gateway
 
@@ -130,7 +133,7 @@ Server Hello message is sent encrypted with network key.
 
 ![Key Exchange Finished message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/KeyExchangeFinished.png)
 
-After node has calculated shared key it generates a Key Exchange Finished message filled with random data and a CRC. These fields are encrypted using shared key and an initialization value (IV) that is sent unencrypted.
+After node has calculated shared key it generates a Key Exchange Finished message filled with random data. These fields are encrypted using shared key and an initialization value (IV) that is sent unencrypted.
 
 It is used by gateway to check that calculated shared key is correct.
 
@@ -138,7 +141,7 @@ It is used by gateway to check that calculated shared key is correct.
 
 ![Cypher Finished message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/CypherFinished.png)
 
-After gateway has decoded correctly Key Exchange Finished message, it build a Cypher Finished message to let node check that key is correct. Gateway assigns node a NodeID. It is signaled as a 2 byte field.
+After gateway has decoded correctly Key Exchange Finished message, it builds a Cypher Finished message to let node check that key is correct. Gateway assigns node a NodeID. It is signaled as a 2 byte field.
 
 ### Sensor Data message
 
@@ -146,13 +149,13 @@ After gateway has decoded correctly Key Exchange Finished message, it build a Cy
 
 Sensor data is always encrypted using shared key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.
 
-Total message length is included on a 2 byte field.
+Total message length (without tag) is included on a 2 byte field.
 
 ### Node control message (downlink)
 
 ![Node control message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorCommand-Downlink.png)
 
-Gateway can send commands to an individual node in a similar way as sensor data is sent by nodes. For nodes that can be slept between consecutive data messages, this commands are queued and sent just after a data message is received.
+Gateway can send commands to an individual node in a similar way as sensor data is sent by nodes. For nodes that can be slept between consecutive data messages this commands are queued and sent just after a data message is received.
 
 Only last message is queued. In case Gateway tries to send a new message, old one gets deleted and overridden by the new one.
 
@@ -161,7 +164,7 @@ Only last message is queued. In case Gateway tries to send a new message, old on
 ![DL Control Command message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/ControlComand-Downlink.png)
 ![UL Control Command message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/ControlComand-Uplink.png)
 
-Gateway  and node can exchange internal control commands. These are used to set internal protocol parameters. This type of messges are processed like normal downlink messages, but are not passed to higher level in Node.
+Gateway  and node can exchange internal control commands. These are used to set internal protocol parameters like sleep time. This type of messages are processed like normal downlink messages, but are not passed to higher level (user code) in Node.
 
 Some control messages, like OTA update messages, require that they are processed immediately. Hence, it is required that node is not in deep sleep mode. This can be controlled, for instance, using another control command to set sleep time to 0.
 
@@ -309,20 +312,20 @@ Messages are encoded to reduce the amount of bytes to be sent over internal prot
 
 | Command | Msg type | Encoding |
 | ------- | -------- | -------- |
-| Get version | `0x01` | |
-| Version result | `0x81` | version in ASCII |
-| Get sleep time | `0x02` | |
-| Set sleep time | `0x02` | Sleep time in seconds (Unsigned integer - 4 bytes) |
-| Sleep time result | `0x82` | Sleep time in seconds (Unsigned integer - 4 bytes) |
+| Get version | `0x01` | None |
+| Version result | `0x81` | version as ASCII string |
+| Get sleep time | `0x02` | None |
+| Set sleep time | `0x02` | Sleep time in seconds (Unsigned integer - 32 bit) |
+| Sleep time result | `0x82` | Sleep time in seconds (Unsigned integer - 23 bit) |
 | OTA Update | `0xEF` | OTA update specific format |
 | OTA Update result | `0xFF` | OTA result code |
-| Identify | `0x04` | Function to identify a physical node by flashing its LED |
+| Identify | `0x04` | None. Function to identify a physical node by flashing its LED |
 
 ## OTA Update
 
 OTA updates are transferred using the same mechanism. Firmware is sent over MQTT using a [Python script](./EnigmaIoTUpdate/EnigmaIoTUpdate.py). Then gateway selects the appropriate node and send this binary data over ESP-NOW.
 
-As ESP-NOW restricts **maximum payload to 250 bytes per message** firmware is splitted in chunks. Every chunk is **220 bytes** long, so that it fits together with message headers and is multiple of 4. This splitting work is done by `EnigmaIoTUpdate.py` script.
+As ESP-NOW restricts **maximum payload to 250 bytes per message** firmware is splitted in chunks. Every chunk is **216 bytes** long, so that it fits together with message headers and is multiple of 4. This splitting work is done by `EnigmaIoTUpdate.py` script.
 
 ### Using EnigmaIoTUpdate.py
 
@@ -364,14 +367,16 @@ python3 ./EnigmaIoTUpdate.py \
              -f EnigmaIOTsensor.bin \
              -d 11:22:33:44:55:66 \
              -t enigmaiot \
-             -u user \
-             -P pass \
+             -u "mymqttbrokeruser" \
+             -P "mymqttbrokerpassword" \
              -S mysecure.mqtt.server \
              -p 8883 \
              -s
 ```
 
 Notice that using ESP-NOW device address correspond to **MAC address** of your ESP8266.
+
+It is very important to configure user and password on you MQTT broker. Besides, if it is going to be accessed from the Internet you should activate TLS encryption and a certificate.
 
 ## External libraries
 
@@ -388,7 +393,7 @@ Notice that using ESP-NOW device address correspond to **MAC address** of your E
     **Without this, code will crash**.
   
   - There are some objects that cause conflicts if you are using windows due to capitalization. Files `SHA1.cpp` and `SHA1.h` **have to be deleted** from `CryptoLegacy/src`
-- ESP8266TrueRandom -- https://github.com/marvinroger/ESP8266TrueRandom
+- ~~ESP8266TrueRandom -- https://github.com/marvinroger/ESP8266TrueRandom~~
 - PubSubClient -- https://github.com/knolleary/pubsubclient
 - CayenneLPP -- https://github.com/sabas1080/CayenneLPP version > 1.0.2
 - ArduinoJSON 6 -- https://github.com/bblanchon/ArduinoJson
