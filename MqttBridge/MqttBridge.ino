@@ -243,7 +243,7 @@ void setup ()
 	ets_timer_setfn (&ledTimer, flashLed, (void*)&notifLed);
 	pinMode (BUILTIN_LED, OUTPUT);
 	digitalWrite (BUILTIN_LED, HIGH);
-	startFlash (500);
+	startFlash (100);
 	if (!SPIFFS.begin ()) {
         _DEBUG_ ("Error starting filesystem. Formatting.");
 		SPIFFS.format ();
