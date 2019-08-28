@@ -1108,7 +1108,7 @@ bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const ui
         return false;
     }
 
-    DEBUG_VERBOSE ("Decripted downstream message: %s", printHexBuffer (buf, count));
+    DEBUG_VERBOSE ("Decripted downstream message: %s", printHexBuffer (buf, count - TAG_LENGTH));
 
     if (control) {
         DEBUG_INFO ("Control command");

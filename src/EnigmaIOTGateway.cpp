@@ -701,7 +701,7 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
         return false;
     }
 
-	DEBUG_VERBOSE ("Decripted control message: %s", printHexBuffer (buf, count));
+	DEBUG_VERBOSE ("Decripted control message: %s", printHexBuffer (buf, count - TAG_LENGTH));
 
 	// Check if command informs about a sleepy mode change
 	const uint8_t* payload = buf + data_idx;
@@ -846,7 +846,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
 	uint8_t data_idx = nodeId_idx + sizeof (int16_t);
-    uint8_t tag_idx = len - TAG_LENGTH;
+    uint8_t tag_idx = data_idx + len;
 
 	if (!data) {
 		DEBUG_ERROR ("Downlink message buffer empty");
