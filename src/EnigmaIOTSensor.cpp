@@ -186,7 +186,7 @@ bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t* data) {
         if (netKeyParam.getValueLength () > KEY_LENGTH)
             keySize = KEY_LENGTH;
         memcpy (data->networkKey, netKeyParam.getValue (), keySize);
-        CryptModule::getSHA256FromKey (data->networkKey, KEY_LENGTH);
+        CryptModule::getSHA256 (data->networkKey, KEY_LENGTH);
         DEBUG_DBG ("Calculated network key: %s", printHexBuffer (data->networkKey, KEY_LENGTH));
         data->nodeRegisterStatus = UNREGISTERED;
         int sleepyVal = atoi (sleepyParam.getValue ());
@@ -256,7 +256,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_
             memcpy (rtcmem_data.gateway, gateway, comm->getAddressLength ()); // setGateway
             //memcpy (this->networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
             memcpy (rtcmem_data.networkKey, networkKey, KEY_LENGTH);          // setNetworkKey
-            CryptModule::getSHA256FromKey (rtcmem_data.networkKey, KEY_LENGTH);
+            CryptModule::getSHA256 (rtcmem_data.networkKey, KEY_LENGTH);
             rtcmem_data.nodeKeyValid = false;
             //rtcmem_data.channel = channel;
             rtcmem_data.sleepy = sleepy;
@@ -550,7 +550,7 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
         return false;
     }
 
-    node.setEncryptionKey (CryptModule::getSHA256FromKey (serverHello_msg.publicKey, KEY_LENGTH));
+    node.setEncryptionKey (CryptModule::getSHA256 (serverHello_msg.publicKey, KEY_LENGTH));
     memcpy (rtcmem_data.nodeKey, node.getEncriptionKey (), KEY_LENGTH);
     DEBUG_INFO ("Node key: %s", printHexBuffer (node.getEncriptionKey (), KEY_LENGTH));
 

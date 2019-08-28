@@ -43,32 +43,46 @@ public:
       */
     static uint8_t *random (const uint8_t *buf, size_t len);
 
-    ///**
-    //  * @brief Decrypts a buffer using a shared key
-    //  * @param output Output buffer to get decrypted data. It may be the same as input buffer
-    //  * @param input Input encrypted data buffer
-    //  * @param length Buffer length in number of bytes
-    //  * @param iv Initialization Vector used to encrypt this data
-    //  * @param ivlen IV length
-    //  * @param key Shared key used to encrypt data
-    //  * @param keylen Key length
-    //  */
+    /**
+      * @brief Decrypts a buffer using a shared key
+      * @param data Buffer to decrypt. It will be used as input and output
+      * @param length Buffer length in number of bytes
+      * @param iv Initialization Vector used to encrypt this data
+      * @param ivlen IV length
+      * @param key Shared key used to encrypt data
+      * @param keylen Key length
+      * @param aad Additional Authentication Data for Poly1305
+      * @param aadLen Additional Authentication Data length
+      * @param tag Buffer to store authentication tag calculated by Poly1305
+      * @param tagLen Additional Authentication Tag length
+      * @return True if decryption and tag checking was correct
+      */
     static bool decryptBuffer (const uint8_t* data, size_t length,
                                const uint8_t* iv, uint8_t ivlen, const uint8_t* key, uint8_t keylen,
                                const uint8_t* aad, uint8_t aadLen, const uint8_t* tag, uint8_t tagLen);
 
-	static uint8_t *getSHA256FromKey (uint8_t* inputKey, uint8_t keyLength);
+    /**
+      * @brief Generates a SHA256 hash from input
+      * @param buffer Buffer with data to hash. Hash will be stored here
+      * @param length Buffer length in number of bytes. It should be 32 at least
+      * @return Returns buffer pointer
+      */
+	static uint8_t *getSHA256 (uint8_t* buffer, uint8_t length);
 
-    ///**
-    //  * @brief Encrypts a buffer using a shared key
-    //  * @param output Output buffer to get encrypted data. It may be the same as input buffer
-    //  * @param input Input clear data buffer
-    //  * @param length Buffer length in number of bytes
-    //  * @param iv Initialization Vector to be used to encrypt input data
-    //  * @param ivlen IV length
-    //  * @param key Shared key to be used to encrypt data
-    //  * @param keylen Key length
-    //  */
+    /**
+      * @brief Decrypts a buffer using a shared key
+      * @param data Buffer to decrypt. It will be used as input and output
+      * @param length Buffer length in number of bytes
+      * @param iv Initialization Vector used to encrypt this data
+      * @param ivlen IV length
+      * @param key Shared key used to encrypt data
+      * @param keylen Key length
+      * @param aad Additional Authentication Data for Poly1305
+      * @param aadLen Additional Authentication Data length
+      * @param tag Buffer to store authentication tag calculated by Poly1305
+      * @param tagLen Additional Authentication Tag length
+      * @return True if encryption and tag generation was correct
+      */
     static bool encryptBuffer (const uint8_t* data, size_t length,
                                const uint8_t* iv, uint8_t ivlen, const uint8_t* key, uint8_t keylen,
                                const uint8_t* aad, uint8_t aadLen, const uint8_t* tag, uint8_t tagLen);

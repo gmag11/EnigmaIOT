@@ -20,18 +20,29 @@
 
 CYPHER_TYPE cipher;
 
-uint8_t *CryptModule::getSHA256FromKey (uint8_t* inputKey, uint8_t keyLength) {
-	uint8_t key[32];
+uint8_t *CryptModule::getSHA256 (uint8_t* buffer, uint8_t length) {
+    const uint8_t HASH_LEN = 32;
+
+	uint8_t key[HASH_LEN];
+
+    if (length < HASH_LEN) {
+        DEBUG_ERROR("Too small buffer. Should be 32 bytes");
+        return NULL;
+    }
 	
 	br_sha256_context* shaContext = new br_sha256_context ();
 	br_sha256_init (shaContext);
-	br_sha224_update (shaContext, (void*)inputKey, keyLength);
+	br_sha224_update (shaContext, (void*)buffer, length);
 	br_sha256_out (shaContext, key);
 	delete shaContext;
 
-	memcpy (inputKey, key, keyLength);
+    if (length > HASH_LEN) {
+        length = HASH_LEN;
+    }
 
-	return inputKey;
+	memcpy (buffer, key, length);
+
+	return buffer;
 }
 
 bool CryptModule::decryptBuffer (const uint8_t* data, size_t length,

@@ -424,7 +424,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 		if (netKeyParam.getValueLength () > KEY_LENGTH)
 			keySize = KEY_LENGTH;
 		memcpy (this->gwConfig.networkKey, netKeyParam.getValue (), keySize);
-		CryptModule::getSHA256FromKey (this->gwConfig.networkKey, KEY_LENGTH);
+		CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
 		gwConfig.channel = atoi (channelParam.getValue ());
 		DEBUG_DBG ("Raw network Key: %s", printHexBuffer (this->gwConfig.networkKey, KEY_LENGTH));
 		DEBUG_VERBOSE ("WiFi ESP-NOW channel: %d", gwConfig.networkKey);
@@ -479,7 +479,7 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 
 	if (networkKey) {
 		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
-		CryptModule::getSHA256FromKey (this->gwConfig.networkKey, KEY_LENGTH);
+		CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
 	} else {
 		if (!SPIFFS.begin ()) {
 			DEBUG_ERROR ("Error mounting flash");
@@ -1121,7 +1121,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 	memcpy (myPublicKey, Crypto.getPubDHKey (), KEY_LENGTH);
 
 	if (Crypto.getDH2 (node->getEncriptionKey ())) {
-		CryptModule::getSHA256FromKey (node->getEncriptionKey (), KEY_LENGTH);
+		CryptModule::getSHA256 (node->getEncriptionKey (), KEY_LENGTH);
 
 		node->setKeyValid (true);
 		node->setStatus (INIT);
