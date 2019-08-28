@@ -161,7 +161,12 @@ Only last message is queued. In case Gateway tries to send a new message, old on
 
 ### Control message
 
+##### Downlink Control Message
+
 ![DL Control Command message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/ControlComand-Downlink.png)
+
+##### Uplink Control Message
+
 ![UL Control Command message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/ControlComand-Uplink.png)
 
 Gateway  and node can exchange internal control commands. These are used to set internal protocol parameters like sleep time. This type of messages are processed like normal downlink messages, but are not passed to higher level (user code) in Node.
@@ -379,6 +384,7 @@ It is very important to configure user and password on you MQTT broker. Besides,
 - CRC32 -- https://github.com/bakercp/CRC32
 - ESPAsyncWebServer -- https://github.com/me-no-dev/ESPAsyncWebServer
 - ESPAsyncWiFiManager -- https://github.com/gmag11/ESPAsyncWiFiManager
+  
   - Due to a bug on original library, I recommend to use my fork meanwhile my pull request is accepted and merged
 - Arduino Crypto Library -- https://github.com/rweather/arduinolibs
   - This one needs a modification in order to run successfully on ESP8266 Arduino core > 2.5.x. **You have to change line 30** on `Crypto/BigNumberUtil.h` from 
