@@ -103,14 +103,18 @@ bool EnigmaIOTSensorClass::loadFlashData () {
         if (configFile) {
             DEBUG_DBG ("%s opened", CONFIG_FILE);
             size_t size = configFile.size ();
-            if (size < sizeof (rtcmem_data)) {
+            if (size != sizeof (rtcmem_data)) {
                 DEBUG_WARN ("Config file is corrupted. Deleting");
                 SPIFFS.remove (CONFIG_FILE);
                 return false;
             }
             configFile.read ((uint8_t*)(&rtcmem_data), sizeof (rtcmem_data));
             configFile.close ();
+            // TODO: Check CRC
             DEBUG_VERBOSE ("Configuration successfuly read: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data_t)));
+#if DEBUG_LEVEL >= VERBOSE
+            dumpRtcData (&rtcmem_data);
+#endif
             return true;
         }
     } else {
@@ -127,11 +131,12 @@ bool EnigmaIOTSensorClass::saveFlashData () {
         DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
         return false;
     }
+    // TODO: Recalcule CRC ???
     configFile.write ((uint8_t*)(&rtcmem_data), sizeof (rtcmem_data));
     configFile.close ();
     DEBUG_DBG ("Configuration saved to flash");
 #if DEBUG_LEVEL >= VERBOSE
-    dumpRtcData (&rtcmem_data/*,gateway*/);
+    dumpRtcData (&rtcmem_data);
 #endif
 
     return true;
@@ -468,7 +473,7 @@ bool EnigmaIOTSensorClass::clientHello () {
         clientHello_msg.publicKey[i] = key[i];
     }
 
-    DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN));
+    DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN - TAG_LENGTH));
 
     uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
@@ -486,7 +491,7 @@ bool EnigmaIOTSensorClass::clientHello () {
         return false;
     }
 
-    DEBUG_VERBOSE ("Netowrk encrypted Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN));
+    DEBUG_VERBOSE ("Encrypted Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN));
 
     node.setStatus (WAIT_FOR_SERVER_HELLO);
     rtcmem_data.nodeRegisterStatus = WAIT_FOR_SERVER_HELLO;
@@ -536,7 +541,7 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
         return false;
     }
 
-    DEBUG_VERBOSE ("Network decrypted Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
+    DEBUG_VERBOSE ("Decrypted Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN - TAG_LENGTH));
 
     bool cError = Crypto.getDH2 (serverHello_msg.publicKey);
 
@@ -594,7 +599,7 @@ bool EnigmaIOTSensorClass::processCipherFinished (const uint8_t mac[6], const ui
         return false;
     }
 
-    DEBUG_VERBOSE ("Decripted Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN));
+    DEBUG_VERBOSE ("Decrypted Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN - TAG_LENGTH));
 
     memcpy (&nodeId, &cipherFinished_msg.nodeId, sizeof (uint16_t));
     node.setNodeId (nodeId);
@@ -637,7 +642,7 @@ bool EnigmaIOTSensorClass::keyExchangeFinished () {
 
     memcpy (&(keyExchangeFinished_msg.random), &random, RANDOM_LENGTH);
 
-    DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN));
+    DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN - TAG_LENGTH));
 
     uint8_t addDataLen = KEFMSG_LEN - TAG_LENGTH - sizeof (uint32_t);
     uint8_t aad[AAD_LENGTH + addDataLen];
@@ -696,18 +701,17 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t* data, size_t len, bool co
     * ----------------------------------------------------------------------------------------
     */
 
-    uint8_t buffer[MAX_MESSAGE_LENGTH];
+    uint8_t buf[MAX_MESSAGE_LENGTH];
     uint8_t tag[TAG_LENGTH];
-    uint32_t counter;
+    uint16_t counter;
     uint16_t nodeId = node.getNodeId ();
 
-    uint8_t* msgType_p = buffer;
-    uint8_t* iv_p = buffer + 1;
-    uint8_t* length_p = iv_p + IV_LENGTH;
-    uint8_t* nodeId_p = length_p + sizeof (int16_t);
-    uint8_t* counter_p = counter_p + sizeof (int16_t);
-    uint8_t* data_p = counter_p + sizeof (int16_t);
-    uint8_t* tag_p = buffer + len - TAG_LENGTH;
+    uint8_t iv_idx = 1;
+    uint8_t length_idx = iv_idx + IV_LENGTH;
+    uint8_t nodeId_idx = length_idx + sizeof (int16_t);
+    uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
+    uint8_t data_idx = counter_idx + sizeof (int16_t);
+    uint8_t tag_idx = data_idx + len;
 
 
     if (!data) {
@@ -715,16 +719,16 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t* data, size_t len, bool co
     }
 
     if (controlMessage) {
-        *msgType_p = (uint8_t)CONTROL_DATA;
+        buf[0] = (uint8_t)CONTROL_DATA;
     } else {
-        *msgType_p = (uint8_t)SENSOR_DATA;
+        buf[0] = (uint8_t)SENSOR_DATA;
     }
 
-    CryptModule::random (iv_p, IV_LENGTH);
+    CryptModule::random (buf + iv_idx, IV_LENGTH);
 
-    DEBUG_VERBOSE ("IV: %s", printHexBuffer (iv_p, IV_LENGTH));
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (buf + iv_idx, IV_LENGTH));
 
-    memcpy (nodeId_p, &nodeId, sizeof (uint16_t));
+    memcpy (buf + nodeId_idx, &nodeId, sizeof (uint16_t));
 
     if (!controlMessage) { // Control messages do not use counter
         if (useCounter) {
@@ -732,44 +736,41 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t* data, size_t len, bool co
             node.setLastMessageCounter (counter);
             rtcmem_data.lastMessageCounter = counter;
         } else {
-            counter = Crypto.random ();
+            counter = (uint16_t)(Crypto.random ());
         }
 
-        memcpy (counter_p, &counter, sizeof (uint16_t));
+        memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
     }
 
-    memcpy (data_p, data, len);
+    memcpy (buf + data_idx, data, len);
 
-    uint16_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + sizeof (uint16_t) + len;
+    uint16_t packet_length = tag_idx;
 
-    memcpy (length_p, &packet_length, sizeof (uint16_t));
+    memcpy (buf + length_idx, &packet_length, sizeof (uint16_t));
 
-    // int is little indian mode on ESP platform
-    //uint8_t* tag_p = (uint8_t*)(buffer + packet_length);
+    DEBUG_VERBOSE ("Data message: %s", printHexBuffer (buf, packet_length));
 
-    DEBUG_VERBOSE ("Data message: %s", printHexBuffer (buffer, packet_length + TAG_LENGTH));
-
-    uint8_t* crypt_buf = buffer + 1 + IV_LENGTH;
+    uint8_t* crypt_buf = buf + length_idx;
 
     size_t cryptLen = packet_length - 1 - IV_LENGTH;
 
     uint8_t addDataLen = 1 + IV_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, buffer, addDataLen); // Copy message upto iv
+    memcpy (aad, buf, addDataLen); // Copy message upto iv
 
     // Copy 8 last bytes from Node Key
     memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    if (!CryptModule::encryptBuffer (length_p, packet_length - addDataLen, // Encrypt from length
-                                     iv_p, IV_LENGTH,
+    if (!CryptModule::encryptBuffer (crypt_buf, cryptLen, // Encrypt from length
+                                     buf + iv_idx, IV_LENGTH,
                                      node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of node key
-                                     aad, sizeof (aad), tag_p, TAG_LENGTH)) {
+                                     aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
         DEBUG_ERROR ("Error during encryption");
         return false;
     }
 
-    DEBUG_VERBOSE ("Encrypted data message: %s", printHexBuffer (buffer, packet_length + TAG_LENGTH));
+    DEBUG_VERBOSE ("Encrypted data message: %s", printHexBuffer (buf, packet_length + TAG_LENGTH));
 
     if (controlMessage) {
         DEBUG_INFO (" -------> CONTROL MESSAGE");
@@ -792,7 +793,7 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t* data, size_t len, bool co
         }
     }
 
-    return (comm->send (rtcmem_data.gateway, buffer, packet_length + TAG_LENGTH) == 0);
+    return (comm->send (rtcmem_data.gateway, buf, packet_length + TAG_LENGTH) == 0);
 }
 
 bool EnigmaIOTSensorClass::processGetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {

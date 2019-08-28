@@ -35,6 +35,6 @@ const uint8_t AAD_LENGTH = 8;
 
 //Debug
 #define DEBUG_ESP_PORT Serial ///< @brief Stream to output debug info. It will normally be `Serial`
-#define DEBUG_LEVEL WARN ///< @brief Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE
+#define DEBUG_LEVEL VERBOSE ///< @brief Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE
 
 #endif

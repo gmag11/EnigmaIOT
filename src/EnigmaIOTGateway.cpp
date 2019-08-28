@@ -764,7 +764,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
         return false;
     }
 
-	DEBUG_VERBOSE ("Decripted data message: %s", printHexBuffer (buf, count));
+	DEBUG_VERBOSE ("Decrypted data message: %s", printHexBuffer (buf, count - TAG_LENGTH));
 
 	node->packetNumber++;
 
@@ -975,7 +975,7 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
         return false;
     }
 
-	DEBUG_VERBOSE ("Decripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN));
+	DEBUG_VERBOSE ("Decrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN- TAG_LENGTH));
 
 
 	sleepyNode = (keyExchangeFinished_msg.random & 0x00000001U) == 1;
@@ -1017,7 +1017,7 @@ bool EnigmaIOTGatewayClass::cipherFinished (Node* node) {
 
 	memcpy (&(cipherFinished_msg.random), &random, RANDOM_LENGTH);
 
-	DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN));
+	DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN -TAG_LENGTH));
 
     uint8_t addDataLen = CFMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t);
     uint8_t aad[AAD_LENGTH + addDataLen];
@@ -1036,7 +1036,7 @@ bool EnigmaIOTGatewayClass::cipherFinished (Node* node) {
     }
 
 
-	DEBUG_VERBOSE ("Encripted Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN));
+	DEBUG_VERBOSE ("Encrypted Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN));
 
 	flashTx = true;
 	DEBUG_INFO (" -------> CYPHER_FINISHED");
@@ -1113,7 +1113,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
         return false;
     }
 
-	DEBUG_VERBOSE ("Netowrk decrypted Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN));
+	DEBUG_VERBOSE ("Decrypted Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN - TAG_LENGTH));
 
 	node->setEncryptionKey (clientHello_msg.publicKey);
 
@@ -1175,7 +1175,7 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 
 	//memcpy (&(serverHello_msg.crc), &crc32, CRC_LENGTH);
 
-	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
+	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN - TAG_LENGTH));
 
     uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
@@ -1193,7 +1193,7 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
         return false;
     }
 
-	DEBUG_VERBOSE ("Network encrypted Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
+	DEBUG_VERBOSE ("Encrypted Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
 
 	flashTx = true;
 
