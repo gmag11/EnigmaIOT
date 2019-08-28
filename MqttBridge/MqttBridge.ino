@@ -160,9 +160,9 @@ bool configWiFiManager () {
 	AsyncWiFiManagerParameter mqttServerParam ("mqttserver", "MQTT Server", bridgeConfig.mqtt_server, 41, "required type=\"text\" maxlength=40");
 	AsyncWiFiManagerParameter mqttPortParam ("mqttport", "MQTT Port", port, 6, "required type=\"number\" min=\"0\" max=\"65535\" step=\"1\"");
 	AsyncWiFiManagerParameter mqttUserParam ("mqttuser", "MQTT User", bridgeConfig.mqtt_user, 21, "required type=\"text\" maxlength=20");
-	AsyncWiFiManagerParameter mqttPassParam ("mqttpass", "MQTT Password", bridgeConfig.mqtt_pass, 41, "required type=\"text\" maxlength=40");
+	AsyncWiFiManagerParameter mqttPassParam ("mqttpass", "MQTT Password", "", 41, "type=\"password\" maxlength=40");
 	AsyncWiFiManagerParameter mqttBaseTopicParam ("mqtttopic", "MQTT Base Topic", bridgeConfig.base_topic, 21, "required type=\"text\" maxlength=20");
-
+    
 	wifiManager.addParameter (&mqttServerParam);
 	wifiManager.addParameter (&mqttPortParam);
 	wifiManager.addParameter (&mqttUserParam);
