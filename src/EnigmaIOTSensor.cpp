@@ -6,7 +6,9 @@
   * @brief Library to build a node for EnigmaIoT system
   */
 
+#include <Arduino.h>
 #include "EnigmaIOTSensor.h"
+#include "lib/timeManager.h"
 #include <FS.h>
 #include <MD5Builder.h>
 #include <Updater.h>
@@ -235,6 +237,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_
     this->useCounter = useCounter;
 
     node.setSleepy (sleepy);
+    node.setInitAsSleepy (sleepy);
     DEBUG_DBG ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
 
     uint8_t macAddress[6];
@@ -320,23 +323,28 @@ void EnigmaIOTSensorClass::stop () {
 }
 
 void EnigmaIOTSensorClass::setSleepTime (uint32_t sleepTime) {
-    uint64_t maxSleepTime = (ESP.deepSleepMax () / (uint64_t)1000000);
+    if (node.getInitAsSleepy()) {
+        uint64_t maxSleepTime = (ESP.deepSleepMax () / (uint64_t)1000000);
 
-    if (sleepTime == 0) {
-        node.setSleepy (false);
-        //rtcmem_data.sleepy = false;
-    } else if (sleepTime < maxSleepTime) {
-        node.setSleepy (true);
-        rtcmem_data.sleepTime = sleepTime;
+        if (sleepTime == 0) {
+            node.setSleepy (false);
+            //rtcmem_data.sleepy = false;
+        } else if (sleepTime < maxSleepTime) {
+            node.setSleepy (true);
+            rtcmem_data.sleepTime = sleepTime;
+        } else {
+            DEBUG_DBG ("Max sleep time is %lu", (uint32_t)maxSleepTime);
+            node.setSleepy (true);
+            rtcmem_data.sleepTime = (uint32_t)maxSleepTime;
+        }
+        this->sleepTime = (uint64_t)rtcmem_data.sleepTime * (uint64_t)1000000;
+        DEBUG_DBG ("Sleep time set to %d. Sleepy mode is %s",
+                   rtcmem_data.sleepTime,
+                   node.getSleepy () ? "sleepy" : "non sleepy");
+
     } else {
-        DEBUG_DBG ("Max sleep time is %lu", (uint32_t)maxSleepTime);
-        node.setSleepy (true);
-        rtcmem_data.sleepTime = (uint32_t)maxSleepTime;
+        DEBUG_WARN ("Cannot set sleep time to %u seconds as this node started as non sleepy", sleepTime);
     }
-    this->sleepTime = (uint64_t)rtcmem_data.sleepTime * (uint64_t)1000000;
-    DEBUG_DBG ("Sleep time set to %d. Sleepy mode is %s",
-               rtcmem_data.sleepTime,
-               node.getSleepy () ? "sleepy" : "non sleepy");
 }
 
 void EnigmaIOTSensorClass::handle () {
@@ -410,6 +418,16 @@ void EnigmaIOTSensorClass::handle () {
         }
     }
 
+    // Check time sync timeout
+    static time_t lastTimeSync;
+    static const uint32_t TIME_SYNC_PERIOD = 10000;
+    if (!node.getSleepy() && node.isRegistered()) {
+        if (millis () - lastTimeSync > TIME_SYNC_PERIOD) {
+            lastTimeSync = millis ();
+            clockRequest ();
+        }
+    }
+
 }
 
 void EnigmaIOTSensorClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
@@ -445,8 +463,6 @@ bool EnigmaIOTSensorClass::clientHello () {
     } clientHello_msg;
 
 #define CHMSG_LEN sizeof(clientHello_msg)
-
-    uint32_t crc32;
 
     Crypto.getDH1 ();
     node.setStatus (INIT);
@@ -499,6 +515,53 @@ bool EnigmaIOTSensorClass::clientHello () {
     DEBUG_INFO (" -------> CLIENT HELLO");
 
     return comm->send (rtcmem_data.gateway, (uint8_t*)& clientHello_msg, CHMSG_LEN) == 0;
+}
+
+bool EnigmaIOTSensorClass::clockRequest () {
+    struct  __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        clock_t t1;
+        uint8_t tag[TAG_LENGTH];
+    } clockRequest_msg;
+
+    static const uint8_t CRMSG_LEN = sizeof(clockRequest_msg);
+
+    clockRequest_msg.msgType = CLOCK_REQUEST;
+
+    clock_t t1 = TimeManager.setOrigin();
+
+    memcpy(&(clockRequest_msg.t1),&t1,sizeof(clock_t));
+
+    DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
+
+    return comm->send (rtcmem_data.gateway, (uint8_t*)& clockRequest_msg, CRMSG_LEN) == 0;
+
+}
+
+bool EnigmaIOTSensorClass::processClockResponse (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        clock_t t2;
+        clock_t t3;
+        uint8_t tag[TAG_LENGTH];
+    } clockResponse_msg;
+
+#define CRSMSG_LEN sizeof(clockResponse_msg)
+
+    clock_t t4 = TimeManager.getClock ();
+    
+    if (count < CRSMSG_LEN) {
+        DEBUG_WARN ("Message too short");
+        return false;
+    }
+
+    memcpy (&clockResponse_msg, buf, count);
+
+    time_t offset = TimeManager.adjustTime(clockResponse_msg.t2, clockResponse_msg.t3, t4);
+
+    DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
+    DEBUG_DBG ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay());
+
 }
 
 

@@ -634,9 +634,12 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 		if (node->getStatus () == REGISTERED) {
 			if (processControlMessage (mac, buf, count, node)) {
 				DEBUG_INFO ("Control message OK");
+                if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
+                    invalidateKey (node, KEY_EXPIRED);
+                }
 			} else {
 				invalidateKey (node, WRONG_DATA);
-				DEBUG_INFO ("Data not OK");
+				DEBUG_INFO ("Control message not OK");
 			}
 		} else {
 			invalidateKey (node, UNREGISTERED_NODE);
@@ -661,6 +664,25 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 		} else {
 			invalidateKey (node, UNREGISTERED_NODE);
 		}
+        break;
+    case CLOCK_REQUEST:
+        DEBUG_INFO (" <------- CLOCK REQUEST");
+        if (node->getStatus () == REGISTERED) {
+            if (processClockRequest (mac, buf, count, node)) {
+                DEBUG_INFO ("Clock request OK");
+                if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
+                    invalidateKey (node, KEY_EXPIRED);
+                }
+            } else {
+                invalidateKey (node, WRONG_DATA);
+                DEBUG_INFO ("Clock request not OK");
+            }
+
+        } else {
+            invalidateKey (node, UNREGISTERED_NODE);
+        }
+        break;
+
 	}
 }
 
@@ -1136,6 +1158,66 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 	return true;
 }
 
+bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        clock_t t1;
+        uint8_t tag[TAG_LENGTH];
+    } clockRequest_msg;
+
+#define CRMSG_LEN sizeof(clockRequest_msg)
+
+    if (count < CRMSG_LEN) {
+        DEBUG_WARN ("Message too short");
+        return false;
+    }
+
+    //memcpy (&clockRequest_msg, buf, count); // Not needed
+
+    clock_t t2 = millis();
+
+    DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
+
+    return clockResponse (node, t2);
+}
+
+bool EnigmaIOTGatewayClass::clockResponse (Node* node, clock_t t2r) {
+
+    struct __attribute__ ((packed, aligned (1))) {
+        uint8_t msgType;
+        clock_t t2;
+        clock_t t3;
+        uint8_t tag[TAG_LENGTH];
+    } clockResponse_msg;
+
+#define CRSMSG_LEN sizeof(clockResponse_msg)
+
+    clockResponse_msg.msgType = CLOCK_RESPONSE;
+
+    clock_t t2 = t2r;
+
+    memcpy (&(clockResponse_msg.t2),&t2,sizeof(clock_t));
+
+    clock_t t3 = millis();;
+
+    memcpy (&(clockResponse_msg.t3), &t3, sizeof (clock_t));
+
+    DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
+
+#ifdef DEBUG_ESP_PORT
+    char mac[18];
+    mac2str (node->getMacAddress (), mac);
+#endif
+    DEBUG_INFO (" -------> CLOCK RESPONSE");
+    if (comm->send (node->getMacAddress (), (uint8_t*)& clockResponse_msg, CRSMSG_LEN) == 0) {
+        DEBUG_INFO ("Clock Response message sent to %s", mac);
+        return true;
+    } else {
+        nodelist.unregisterNode (node);
+        DEBUG_ERROR ("Error sending Clock Response message to %s", mac);
+        return false;
+    }
+}
 
 bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 	/*

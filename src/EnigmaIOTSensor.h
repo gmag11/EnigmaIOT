@@ -35,6 +35,8 @@ enum sensorMessageType {
     DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
 	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway. Used for OTA, settings configuration, etc */
 	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to sensor. Used for OTA, settings configuration, etc */
+    CLOCK_REQUEST = 0x05, /**< Clock request message from node */
+    CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
 	CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
@@ -169,6 +171,10 @@ protected:
       * @return Returns `true` if ClientHello message was successfully sent. `false` otherwise
       */
     bool clientHello ();
+
+    bool clockRequest ();
+
+    bool processClockResponse (const uint8_t mac[6], const uint8_t* buf, size_t count);
 
     /**
       * @brief Gets a buffer containing a **ServerHello** message and process it. It uses that message to calculate a shared key using Diffie Hellman algorithm
