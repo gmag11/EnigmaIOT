@@ -421,7 +421,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	DEBUG_INFO ("Channel: %s", channelParam.getValue ());
 	if (result) {
 		uint8_t keySize = netKeyParam.getValueLength ();
-		if (netKeyParam.getValueLength () > KEY_LENGTH)
+		if (keySize > KEY_LENGTH)
 			keySize = KEY_LENGTH;
 		memcpy (this->gwConfig.networkKey, netKeyParam.getValue (), keySize);
 		CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
@@ -1001,6 +1001,7 @@ bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], co
 
 
 	sleepyNode = (keyExchangeFinished_msg.random & 0x00000001U) == 1;
+	node->setInitAsSleepy (sleepyNode);
 	node->setSleepy (sleepyNode);
 
 	DEBUG_VERBOSE ("This is a %s node", sleepyNode ? "sleepy" : "always awaken");
@@ -1176,7 +1177,7 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[6], const uin
 
     clock_t t2 = millis();
 
-    DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
+	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
 
     return clockResponse (node, t2);
 }
@@ -1202,15 +1203,16 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node, clock_t t2r) {
 
     memcpy (&(clockResponse_msg.t3), &t3, sizeof (clock_t));
 
-    DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
+	DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
 
 #ifdef DEBUG_ESP_PORT
     char mac[18];
     mac2str (node->getMacAddress (), mac);
 #endif
-    DEBUG_INFO (" -------> CLOCK RESPONSE");
+
+	DEBUG_INFO (" -------> CLOCK RESPONSE");
     if (comm->send (node->getMacAddress (), (uint8_t*)& clockResponse_msg, CRSMSG_LEN) == 0) {
-        DEBUG_INFO ("Clock Response message sent to %s", mac);
+		DEBUG_INFO ("Clock Response message sent to %s", mac);
         return true;
     } else {
         nodelist.unregisterNode (node);

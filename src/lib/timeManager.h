@@ -15,7 +15,7 @@ protected:
 public:
     clock_t setOrigin ();
 
-    clock_t getClock ();
+    clock_t clock ();
 
     time_t adjustTime (clock_t t2r, clock_t t3r, clock_t t4r);
 

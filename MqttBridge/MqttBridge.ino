@@ -173,9 +173,9 @@ bool configWiFiManager () {
 	wifiManager.setTryConnectDuringConfigPortal (true);
 	wifiManager.setConnectTimeout (30);
 	wifiManager.setConfigPortalTimeout (60);
-#ifndef BRIDGE_DEBUG
-	wifiManager.setDebugOutput (false);
-#endif
+//#ifndef BRIDGE_DEBUG
+	//wifiManager.setDebugOutput (false);
+//#endif
     _DEBUG_ ("Connecting to WiFi: %s", WiFi.SSID ().c_str());
 	String apname = "EnigmaIoTMQTTBridge" + String (ESP.getChipId (), 16);
 	boolean result = wifiManager.autoConnect (apname.c_str());

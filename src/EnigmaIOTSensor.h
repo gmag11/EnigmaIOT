@@ -479,6 +479,15 @@ public:
       * Sleep can be requested in any moment and will be triggered inmediatelly except if node is doing registration or is waiting for downlink
       */
     void sleep ();
+
+	time_t clock ();
+
+	bool hasClockSync ();
+
+	bool isRegistered () {
+		return node.isRegistered ();
+	}
+
 };
 
 extern EnigmaIOTSensorClass EnigmaIOTSensor;

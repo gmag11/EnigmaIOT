@@ -236,8 +236,8 @@ void EnigmaIOTSensorClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_
 
     this->useCounter = useCounter;
 
-    node.setSleepy (sleepy);
-    node.setInitAsSleepy (sleepy);
+	node.setInitAsSleepy (sleepy);
+	node.setSleepy (sleepy);
     DEBUG_DBG ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
 
     uint8_t macAddress[6];
@@ -310,8 +310,10 @@ void EnigmaIOTSensorClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_
     comm->begin (rtcmem_data.gateway, rtcmem_data.channel);
     comm->onDataRcvd (rx_cb);
     comm->onDataSent (tx_cb);
-    if (!rtcmem_data.nodeKeyValid || (rtcmem_data.nodeRegisterStatus != REGISTERED))
-        clientHello ();
+	if (!rtcmem_data.nodeKeyValid || (rtcmem_data.nodeRegisterStatus != REGISTERED))
+		clientHello ();
+	else if (!node.getSleepy () && node.isRegistered ())
+		clockRequest ();
     DEBUG_DBG ("Comms started");
 
 }
@@ -420,10 +422,10 @@ void EnigmaIOTSensorClass::handle () {
 
     // Check time sync timeout
     static time_t lastTimeSync;
-    static const uint32_t TIME_SYNC_PERIOD = 10000;
     if (!node.getSleepy() && node.isRegistered()) {
         if (millis () - lastTimeSync > TIME_SYNC_PERIOD) {
             lastTimeSync = millis ();
+			DEBUG_WARN ("Clock Request");
             clockRequest ();
         }
     }
@@ -531,9 +533,9 @@ bool EnigmaIOTSensorClass::clockRequest () {
     clock_t t1 = TimeManager.setOrigin();
 
     memcpy(&(clockRequest_msg.t1),&t1,sizeof(clock_t));
-
-    DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
-
+	//DEBUG_VERBOSE
+    DEBUG_WARN ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
+	DEBUG_WARN ("T1: %u", t1);
     return comm->send (rtcmem_data.gateway, (uint8_t*)& clockRequest_msg, CRMSG_LEN) == 0;
 
 }
@@ -548,7 +550,7 @@ bool EnigmaIOTSensorClass::processClockResponse (const uint8_t mac[6], const uin
 
 #define CRSMSG_LEN sizeof(clockResponse_msg)
 
-    clock_t t4 = TimeManager.getClock ();
+    clock_t t4 = TimeManager.clock ();
     
     if (count < CRSMSG_LEN) {
         DEBUG_WARN ("Message too short");
@@ -558,10 +560,29 @@ bool EnigmaIOTSensorClass::processClockResponse (const uint8_t mac[6], const uin
     memcpy (&clockResponse_msg, buf, count);
 
     time_t offset = TimeManager.adjustTime(clockResponse_msg.t2, clockResponse_msg.t3, t4);
+	//DEBUG_VERBOSE
+    DEBUG_WARN ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
+    //DEBUG_DBG
+	DEBUG_WARN ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay());
+	DEBUG_WARN ("T2: %u", clockResponse_msg.t2);
+	DEBUG_WARN ("T3: %u", clockResponse_msg.t3);
+	DEBUG_WARN ("T4: %u", t4);
+}
 
-    DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
-    DEBUG_DBG ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay());
+time_t EnigmaIOTSensorClass::clock () {
+	if (node.getInitAsSleepy ()) {
+		return millis ();
+	} else {
+		return TimeManager.clock ();
+	}
 
+}
+
+bool EnigmaIOTSensorClass::hasClockSync () {
+	if (!node.getInitAsSleepy ())
+		return TimeManager.isTimeAdjusted ();
+	else
+		return false;
 }
 
 
@@ -974,7 +995,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
     memcpy (&msgIdx, dataPtr, sizeof (uint16_t));
     dataPtr += sizeof (uint16_t);
     dataLen -= sizeof (uint16_t);
-    DEBUG_DBG ("OTA message #%u", msgIdx);
+    DEBUG_WARN ("OTA message #%u", msgIdx);
     if (msgIdx > 0 && otaRunning) {
         if (msgIdx != (oldIdx + 1)) {
             responseBuffer[0] = control_message_type::OTA_ANS;
@@ -1034,7 +1055,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
             // TODO Process OTA Update
             size_t numBytes = Update.write (dataPtr, dataLen);
             totalBytes += dataLen;
-            DEBUG_DBG ("%u bytes written. Total %u", numBytes, totalBytes);
+            DEBUG_WARN ("%u bytes written. Total %u", numBytes, totalBytes);
         } else {
             if (!otaError) {
                 otaError = true;
@@ -1054,7 +1075,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
         DEBUG_DBG ("OTA MD5 %s", _md5.toString ().c_str ());
         _md5.getChars (md5calc);
         if (!memcmp (md5calc, md5buffer, 32)) {
-            DEBUG_INFO ("OTA MD5 check OK");
+            DEBUG_WARN ("OTA MD5 check OK");
             responseBuffer[0] = control_message_type::OTA_ANS;
             responseBuffer[1] = ota_status::OTA_CHECK_OK;
             sendData (responseBuffer, sizeof (responseBuffer), true);
@@ -1251,6 +1272,8 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t* mac, const uint8_t* buf
                     DEBUG_DBG ("Write configuration data to RTC memory");
                     DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
                 }
+				if (!node.getSleepy () && node.isRegistered ())
+					clockRequest ();
 
 #if DEBUG_LEVEL >= INFO
                 node.printToSerial (&DEBUG_ESP_PORT);
@@ -1262,9 +1285,12 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t* mac, const uint8_t* buf
                 // If key expired it was successfully sent before so retransmission is not needed 
                 if (invalidateReason < KEY_EXPIRED && dataMessageSentLength > 0) {
                     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
-                        DEBUG_VERBOSE ("Data sent: %s", printHexBuffer (dataMessageSent, dataMessageSentLength));
-                        dataMessage ((uint8_t*)dataMessageSent, dataMessageSentLength);
-                        flashBlue = true;
+						if (dataMessageSentLength > 0) {
+							DEBUG_VERBOSE ("Data sent: %s", printHexBuffer (dataMessageSent, dataMessageSentLength));
+							dataMessage ((uint8_t*)dataMessageSent, dataMessageSentLength);
+							dataMessageSentLength = 0;
+							flashBlue = true;
+						}
                     }
                 }
                 // TODO: Store node data on EEPROM, SPIFFS or RTCMEM
@@ -1296,8 +1322,15 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t* mac, const uint8_t* buf
             DEBUG_INFO ("Downstream Data OK");
         }
         break;
-    }
+	case CLOCK_RESPONSE:
+		DEBUG_INFO (" <------- CLOCK RESPONSE");
+		if (processClockResponse (mac, buf, count)) {
+			DEBUG_INFO ("Clock Response OK");
+		}
+		break;
+	}
 }
+
 
 void EnigmaIOTSensorClass::getStatus (uint8_t* mac_addr, uint8_t status) {
     if (status == 0) {
