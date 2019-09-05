@@ -380,11 +380,13 @@ void EnigmaIOTSensorClass::handle () {
     static time_t lastRegistration;
     status_t status = node.getStatus ();
     if (status == WAIT_FOR_SERVER_HELLO || status == WAIT_FOR_CIPHER_FINISHED) {
-        if (millis () - lastRegistration > RECONNECTION_PERIOD * 5) {
+        if (millis () - lastRegistration > RECONNECTION_PERIOD) {
             DEBUG_DBG ("Current node status: %d", node.getStatus ());
             lastRegistration = millis ();
             node.reset ();
-            clientHello ();
+            //clientHello ();
+			DEBUG_INFO ("Registration timepout. Go to sleep for %lu ms", (uint32_t)(RECONNECTION_PERIOD * 4));
+			ESP.deepSleep (RECONNECTION_PERIOD * 4000, RF_NO_CAL);
         }
     }
 
