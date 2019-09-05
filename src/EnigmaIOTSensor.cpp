@@ -377,17 +377,28 @@ void EnigmaIOTSensorClass::handle () {
     }
 
     // Check registration timeout
-    static time_t lastRegistration;
+    static time_t lastRegistration = millis();
     status_t status = node.getStatus ();
     if (status == WAIT_FOR_SERVER_HELLO || status == WAIT_FOR_CIPHER_FINISHED) {
-        if (millis () - lastRegistration > RECONNECTION_PERIOD) {
-            DEBUG_DBG ("Current node status: %d", node.getStatus ());
-            lastRegistration = millis ();
-            node.reset ();
-            //clientHello ();
-			DEBUG_INFO ("Registration timepout. Go to sleep for %lu ms", (uint32_t)(RECONNECTION_PERIOD * 4));
-			ESP.deepSleep (RECONNECTION_PERIOD * 4000, RF_NO_CAL);
-        }
+		if (node.getSleepy ()) { // Sleep after registration timeout
+			if (millis () - lastRegistration > RECONNECTION_PERIOD) {
+				DEBUG_DBG ("Current node status: %d", node.getStatus ());
+				lastRegistration = millis ();
+				node.reset ();
+				//clientHello ();
+				DEBUG_INFO ("Registration timeout. Go to sleep for %lu ms", (uint32_t)(RECONNECTION_PERIOD * 4));
+				ESP.deepSleep (RECONNECTION_PERIOD * 4000, RF_NO_CAL);
+
+			}
+		} else { // Retry registration
+			if (millis () - lastRegistration > RECONNECTION_PERIOD * 5) {
+				DEBUG_DBG ("Current node status: %d", node.getStatus ());
+				lastRegistration = millis ();
+				node.reset ();
+				clientHello ();
+				//ESP.restart ();
+			}
+		}
     }
 
     // Retry registration
