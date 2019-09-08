@@ -277,7 +277,14 @@ void EnigmaIOTSensorClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_
         } else { // Try read from flash
             if (!SPIFFS.begin ()) {
                 DEBUG_ERROR ("Error mounting flash");
-                return;
+				if (SPIFFS.format ()) {
+					DEBUG_INFO ("SPIFFS formatted");
+				} else {
+					DEBUG_ERROR ("Error formatting SPIFFS");
+				}
+				delay (2500);
+				ESP.restart ();
+                //return;
             }
             if (loadFlashData ()) { // If data present on flash, read and continue
                 node.setStatus (UNREGISTERED);
