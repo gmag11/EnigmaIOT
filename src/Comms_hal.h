@@ -20,8 +20,8 @@
     * @brief Peer role on communication
     */
 enum peerType_t {
-    COMM_SENSOR, /**< Peer acts as a sensor node */
-    COMM_GATEWAY /**< Peer acts as a gateway */
+    COMM_SENSOR = 0, /**< Peer acts as a sensor node */
+    COMM_GATEWAY = 1 /**< Peer acts as a gateway */
 };
 
 typedef void (*comms_hal_rcvd_data)(uint8_t *, uint8_t *, uint8_t );
