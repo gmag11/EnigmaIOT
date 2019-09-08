@@ -18,7 +18,7 @@
 uint8_t gateway[6] = { 0xBE, 0xDD, 0xC2, 0x24, 0x14, 0x97 };
 
 //#define SLEEP_TIME 20000000
-//ADC_MODE (ADC_VCC);
+ADC_MODE (ADC_VCC);
 
 void connectEventHandler () {
 	Serial.println ("Connected");
@@ -41,7 +41,6 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length) {
 }
 
 void setup () {
-	//CayenneLPP msg (20);
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
 	//time_t start = millis ();
@@ -89,5 +88,26 @@ void loop () {
 		} else {
 			digitalWrite (BLUE_LED, HIGH); // Turn on LED
 		}
+	}
+	
+	CayenneLPP msg (20);
+
+	static time_t lastSensorData;
+	static const time_t SENSOR_PERIOD = 10000;
+	if (millis () - lastSensorData > SENSOR_PERIOD) {
+		lastSensorData = millis ();
+		// Read sensor data
+		msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
+		Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
+		msg.addTemperature (1, 20.34);
+		//// Read sensor data
+		Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
+
+		if (!EnigmaIOTSensor.sendData (msg.getBuffer (), msg.getSize ())) {
+			Serial.println ("---- Error sending data");
+		} else {
+			Serial.println ("---- Data sent");
+		}
+
 	}
 }
