@@ -446,7 +446,7 @@ void EnigmaIOTSensorClass::handle () {
     if (!node.getSleepy() && node.isRegistered()) {
         if (millis () - lastTimeSync > TIME_SYNC_PERIOD) {
             lastTimeSync = millis ();
-			DEBUG_WARN ("Clock Request");
+			DEBUG_DBG ("Clock Request");
             clockRequest ();
         }
     }
@@ -555,8 +555,8 @@ bool EnigmaIOTSensorClass::clockRequest () {
 
     memcpy(&(clockRequest_msg.t1),&t1,sizeof(clock_t));
 	//DEBUG_VERBOSE
-    DEBUG_WARN ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
-	DEBUG_WARN ("T1: %u", t1);
+    DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
+	DEBUG_DBG ("T1: %u", t1);
     return comm->send (rtcmem_data.gateway, (uint8_t*)& clockRequest_msg, CRMSG_LEN) == 0;
 
 }
@@ -582,12 +582,12 @@ bool EnigmaIOTSensorClass::processClockResponse (const uint8_t mac[6], const uin
 
     time_t offset = TimeManager.adjustTime(clockResponse_msg.t2, clockResponse_msg.t3, t4);
 	//DEBUG_VERBOSE
-    DEBUG_WARN ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
+    DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
     //DEBUG_DBG
-	DEBUG_WARN ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay());
-	DEBUG_WARN ("T2: %u", clockResponse_msg.t2);
-	DEBUG_WARN ("T3: %u", clockResponse_msg.t3);
-	DEBUG_WARN ("T4: %u", t4);
+	DEBUG_DBG ("T2: %u", clockResponse_msg.t2);
+	DEBUG_DBG ("T3: %u", clockResponse_msg.t3);
+	DEBUG_DBG ("T4: %u", t4);
+	DEBUG_DBG ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay ());
 }
 
 time_t EnigmaIOTSensorClass::clock () {
