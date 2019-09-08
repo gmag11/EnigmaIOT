@@ -232,7 +232,6 @@ void EnigmaIOTSensorClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_
     digitalWrite (led, HIGH);
     ets_timer_setfn (&ledTimer, flashLed, (void*)& led);
 
-    initWiFi ();
     this->comm = comm;
 
     this->useCounter = useCounter;
@@ -315,6 +314,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_
 
     }
 
+	initWiFi (rtcmem_data.channel);
     comm->begin (rtcmem_data.gateway, rtcmem_data.channel);
     comm->onDataRcvd (rx_cb);
     comm->onDataSent (tx_cb);

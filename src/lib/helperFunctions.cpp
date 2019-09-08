@@ -24,15 +24,21 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 	return tempStr;
 }
 
-void initWiFi (uint8_t channel) {
+void initWiFi (uint8_t channel, uint8_t role) {
 	//WiFi.persistent (false);
 	DEBUG_DBG ("initWifi");
 	WiFi.mode (WIFI_AP);
-	DEBUG_DBG ("Mode set to AP");
-	WiFi.softAP ("ESPNOW", nullptr, channel);
 	//DEBUG_DBG ("AP started");
-	WiFi.softAPdisconnect (false);
-	DEBUG_DBG ("AP Deactivated");
+	if (role == 0) {
+		WiFi.softAP ("ESPNOW", "qpwoeirufjdhbfdjd", channel, true);
+		DEBUG_DBG ("Mode set to AP");
+		WiFi.mode (WIFI_STA);
+		//WiFi.softAPdisconnect (false);
+		//DEBUG_DBG ("AP Deactivated");
+	} else {
+		WiFi.softAP ("EnigmaGw", "12345678901234567890", channel);
+		DEBUG_DBG ("Mode set to AP");
+	}
 
 	DEBUG_INFO ("AP MAC address of this device is %s", WiFi.softAPmacAddress ().c_str ());
 	DEBUG_INFO ("STA MAC address of this device is %s", WiFi.macAddress ().c_str ());

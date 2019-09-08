@@ -5,9 +5,9 @@
 #include "timeManager.h"
 
 clock_t TimeManagerClass::setOrigin () {
-	Serial.printf ("millis: %u\n", millis ());
-	Serial.printf ("offset: %d\n", offset);
-	Serial.printf ("clock:  %u %u\n", millis () + offset, clock());
+	//Serial.printf ("millis: %u\n", millis ());
+	//Serial.printf ("offset: %d\n", offset);
+	//Serial.printf ("clock:  %u %u\n", millis () + offset, clock());
 
     t1 = clock ();
     return t1;

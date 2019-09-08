@@ -502,7 +502,7 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 			DEBUG_INFO ("Configuration loaded from flash");
 		}
 
-		initWiFi ();
+		initWiFi (gwConfig.channel, COMM_GATEWAY);
 		comm->begin (NULL, gwConfig.channel, COMM_GATEWAY);
 		comm->onDataRcvd (rx_cb);
 		comm->onDataSent (tx_cb);
