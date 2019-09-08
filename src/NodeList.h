@@ -248,7 +248,19 @@ public:
       * @param sleepy `true` if node sleeps after sending a message and wait for downlink. `false` if downlink may happen in any moment
       */
     void setSleepy (bool sleepy) {
-        sleepyNode = sleepy;
+        if (initAsSleepy) {
+            sleepyNode = sleepy;
+        } else {
+            sleepyNode = false;
+        }
+    }
+
+    void setInitAsSleepy (bool sleepy) {
+        initAsSleepy = sleepy;
+    }
+
+    bool getInitAsSleepy () {
+        return initAsSleepy;
     }
 
     /**
@@ -277,6 +289,7 @@ protected:
     uint16_t nodeId; ///< @brief Node identifier asigned by gateway
     timer_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
     bool sleepyNode = true; ///< @brief Node sleepy definition
+    bool initAsSleepy; ///< @brief Stores initial sleepy node. If this is false, this node does not accept sleep time changes
     uint8_t mac[6]; ///< @brief Node address
     uint8_t key[KEY_LENGTH]; ///< @brief Shared key
     timer_t lastMessageTime; ///< @brief Node state
