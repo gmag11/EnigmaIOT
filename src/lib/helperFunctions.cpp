@@ -1,7 +1,7 @@
 /**
   * @file helperFunctions.cpp
-  * @version 0.3.0
-  * @date 28/08/2019
+  * @version 0.4.0
+  * @date 10/09/2019
   * @author German Martin
   * @brief Auxiliary function definition
   */
@@ -25,19 +25,19 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 }
 
 void initWiFi (uint8_t channel, uint8_t role) {
-	//WiFi.persistent (false);
 	DEBUG_DBG ("initWifi");
 	WiFi.mode (WIFI_AP);
 	//DEBUG_DBG ("AP started");
 	if (role == 0) {
 		WiFi.softAP ("ESPNOW", "qpwoeirufjdhbfdjd", channel, true);
-		DEBUG_DBG ("Mode set to AP");
+		DEBUG_DBG ("Mode set to AP in channel %u", channel);
 		WiFi.mode (WIFI_STA);
+		DEBUG_DBG ("Mode set to STA");
 		//WiFi.softAPdisconnect (false);
 		//DEBUG_DBG ("AP Deactivated");
 	} else {
 		WiFi.softAP ("EnigmaGw", "12345678901234567890", channel);
-		DEBUG_DBG ("Mode set to AP");
+		DEBUG_DBG ("Mode set to AP in channel %u", channel);
 	}
 
 	DEBUG_INFO ("AP MAC address of this device is %s", WiFi.softAPmacAddress ().c_str ());
@@ -73,9 +73,9 @@ uint8_t* str2mac (const char* macAddrString, uint8_t* macBytes)
 		}
 
 		//Convert into number. 
-		//       a. If character is digit then ch - '0'
+		//  a. If character is digit then ch - '0'
 		//	b. else (ch - 'a' + 10) it is done 
-		//	because addition of 10 takes correct value.
+		//	      because addition of 10 takes correct value.
 		iNumber = isdigit (ch) ? (ch - '0') : (ch - 'a' + 10);
 		ch = tolower (*macAddrString);
 

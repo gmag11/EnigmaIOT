@@ -1,7 +1,7 @@
 /**
   * @file NodeList.h
-  * @version 0.3.0
-  * @date 28/08/2019
+  * @version 0.4.0
+  * @date 10/09/2019
   * @author German Martin
   * @brief EnigmaIoT sensor node management structures
   */
@@ -23,8 +23,6 @@ enum node_status {
     UNREGISTERED, /**< Node is not registered. This is te initial state of every node */
     INIT, /**< Node is starting registration by ClientHello message */
     WAIT_FOR_SERVER_HELLO, /**< Node sent ClientHello message, now it is waiting for ServerHello */
-    //WAIT_FOR_KEY_EXCH_FINISHED, /**< Gateway sent ServerHello message, now it is waiting for KeyExchangeFinished from Node*/
-    //WAIT_FOR_CIPHER_FINISHED, /**< Node sent KeyExchangeFinished message, now it is waiting for CipherFinished */
     WAIT_FOR_DOWNLINK, /**< Node sent a data message, now it is waiting for downlink data */
     REGISTERED, /**< Node is registered and its key is valid */
     SLEEP /**< Node is in sleep mode */
@@ -298,7 +296,7 @@ protected:
 };
 
 
-
+// TODO Document NodeList
 class NodeList {
 #define NUM_NODES 20
 public:

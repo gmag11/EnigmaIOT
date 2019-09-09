@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_sensor.ino
-  * @version 0.3.0
-  * @date 28/08/2019
+  * @version 0.4.0
+  * @date 10/09/2019
   * @author German Martin
   * @brief Sensor node based on EnigmaIoT over ESP-NOW
   *
@@ -9,7 +9,7 @@
   */
 
 #include <Arduino.h>
-#include <EnigmaIOTSensor.h>
+#include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
 #include <CayenneLPP.h>
 
@@ -17,7 +17,6 @@
   //uint8_t gateway[6] = { 0x5E, 0xCF, 0x7F, 0x80, 0x34, 0x75 };
 uint8_t gateway[6] = { 0xBE, 0xDD, 0xC2, 0x24, 0x14, 0x97 };
 
-//#define SLEEP_TIME 20000000
 ADC_MODE (ADC_VCC);
 
 void connectEventHandler () {
@@ -43,7 +42,6 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length) {
 void setup () {
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
-	//time_t start = millis ();
 	
 	//EnigmaIOTNode.setLed (BLUE_LED);
 	pinMode (BLUE_LED, OUTPUT);
@@ -53,23 +51,6 @@ void setup () {
 	EnigmaIOTNode.onDataRx (processRxData);
 
 	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, false);
-	//EnigmaIOTNode.setSleepTime (5/*SLEEP_TIME / 1000000*/);
-
-	// Read sensor data
-	//msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
-	//Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
-	//msg.addTemperature (1, 20.34);
-	//// Read sensor data
-
-	//Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
-
-	//if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
-	//	Serial.println ("---- Error sending data");
-	//} else {
-	//	Serial.println ("---- Data sent");
-	//}
-	//Serial.printf ("Total time: %d ms\n", millis() - start);
-	//EnigmaIOTNode.sleep ();
 }
 
 void loop () {
@@ -96,11 +77,13 @@ void loop () {
 	static const time_t SENSOR_PERIOD = 10000;
 	if (millis () - lastSensorData > SENSOR_PERIOD) {
 		lastSensorData = millis ();
+		
 		// Read sensor data
 		msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
 		Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
 		msg.addTemperature (1, 20.34);
-		//// Read sensor data
+		// Read sensor data
+		
 		Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
 		if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {

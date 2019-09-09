@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_gateway.ino
-  * @version 0.3.0
-  * @date 28/06/2019
+  * @version 0.4.0
+  * @date 10/09/2019
   * @author German Martin
   * @brief Gateway based on EnigmaIoT over ESP-NOW
   *
@@ -37,8 +37,6 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 			uint32_t sleepTime;
 			memcpy (&sleepTime, data + 1, sizeof (sleepTime));
 			Serial.printf ("~/%s/%s;%d\n", macStr, GET_SLEEP_ANS, sleepTime);
-			//Serial.write (data + 1, length - 1);
-			//Serial.println ();
 			break;
 		case control_message_type::OTA_ANS:
 			Serial.printf ("~/%s/%s;", macStr, SET_OTA_ANS);
@@ -177,7 +175,6 @@ void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
 void setup () {
 	Serial.begin (115200); Serial.println (); Serial.println ();
 
-	//initWiFi ();
 	EnigmaIOTGateway.setRxLed (BLUE_LED);
 	EnigmaIOTGateway.setTxLed (RED_LED);
 	EnigmaIOTGateway.onNewNode (newNodeConnected);

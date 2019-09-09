@@ -1,7 +1,7 @@
 /**
   * @file helperFunctions.h
-  * @version 0.3.0
-  * @date 28/08/2019
+  * @version 0.4.0
+  * @date 10/09/2019
   * @author German Martin
   * @brief Auxiliary function definition
   */
@@ -42,7 +42,7 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len);
   */
 const char* mac2str (const uint8_t* mac, const char* buffer);
 
-uint8_t* str2mac (const char* mac, uint8_t* values);
+//uint8_t* str2mac (const char* mac, uint8_t* values);
 
 /**
   * @brief Initalizes WiFi interfaces on ESP8266 or ESP32

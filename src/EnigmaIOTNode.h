@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTNode.h
-  * @version 0.2.0
-  * @date 28/06/2019
+  * @version 0.4.0
+  * @date 10/09/2019
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
@@ -25,7 +25,7 @@
 #include <cstdint>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
-#include <ESP8266TrueRandom.h>
+//#include <ESP8266TrueRandom.h>
 
 /**
   * @brief Message code definition
@@ -39,8 +39,6 @@ enum nodeMessageType {
     CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
 	CLIENT_HELLO = 0xFF, /**< ClientHello message from node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
-    //KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from node */
-    //CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
     INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
 };
 
@@ -186,15 +184,6 @@ protected:
     bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count);
 
     /**
-      * @brief Gets a buffer containing a **CipherFinished** message and process it. It checks that gateway key is correct by decrypting this message random payload
-      * @param mac Address where this message was received from
-      * @param buf Pointer to the buffer that contains the message
-      * @param count Message length in number of bytes of CipherFinished message
-      * @return Returns `true` if message syntax is correct and key was successfuly calculated `false` otherwise
-      */
-    //bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count);
-    
-    /**
       * @brief Gets a buffer containing an **InvalidateKey** message and process it. This trigger a new key agreement to start
       * @param mac Address where this message was received from
       * @param buf Pointer to the buffer that contains the message
@@ -203,15 +192,6 @@ protected:
       */
     nodeInvalidateReason_t processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count);
     
-    /**
-      * @brief Build and send a **keyExchangeFinished** message. 
-      * 
-      * It includes some random data that is encrypted with a CRC to check integrity. This message is used to let Gateway if this node
-      * generated the correct shared key.
-      * @return Returns `true` if message could be correcly sent
-      */
-    //bool keyExchangeFinished ();
-
     /**
       * @brief Builds, encrypts and sends a **Data** message.
       * @param data Buffer to store payload to be sent
@@ -480,10 +460,22 @@ public:
       */
     void sleep ();
 
+	/**
+	  * @brief Gets current clock counter. millis() + offset
+	  * @return Clock value in `time_t` format
+	  */
 	time_t clock ();
 
+	/**
+	  * @brief Checks if internal clock is synchronized to gateway
+	  * @return True if clock is synchronized
+	  */
 	bool hasClockSync ();
 
+	/**
+	  * @brief Checks if node is registered
+	  * @return True if node is registered
+	  */
 	bool isRegistered () {
 		return node.isRegistered ();
 	}

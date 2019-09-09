@@ -1,4 +1,10 @@
-// timeManager.h
+/**
+  * @file timeManager.h
+  * @version 0.4.0
+  * @date 10/09/2019
+  * @author German Martin
+  * @brief Clock synchronisation calculations
+  */
 
 #ifndef _TIMEMANAGER_h
 #define _TIMEMANAGER_h

@@ -1,7 +1,7 @@
 /**
   * @file Comms_hal.h
-  * @version 0.3.0
-  * @date 28/08/2019
+  * @version 0.4.0
+  * @date 10/09/2019
   * @author German Martin
   * @brief Generic communication system abstraction layer
   *

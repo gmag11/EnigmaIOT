@@ -1,7 +1,7 @@
 /**
   * @file NodeList.cpp
-  * @version 0.3.0
-  * @date 28/08/2019
+  * @version 0.4.0
+  * @date 10/09/2019
   * @author German Martin
   * @brief EnigmaIoT sensor node management structures
   */
@@ -52,12 +52,6 @@ void Node::printToSerial (Stream *port)
     case WAIT_FOR_SERVER_HELLO:
         port->println ("Wait for server hello");
         break;
-    //case WAIT_FOR_KEY_EXCH_FINISHED:
-    //    port->println ("Wait for Key Exchange Finished");
-    //    break;
-    //case WAIT_FOR_CIPHER_FINISHED:
-    //    port->println ("Wait for Cipher Finished");
-    //    break;
     case WAIT_FOR_DOWNLINK:
         port->println ("Wait for Downlik");
         break;
