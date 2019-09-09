@@ -37,8 +37,8 @@ enum gatewayMessageType_t {
     CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
     CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
-    KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
-    CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
+    //KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
+    //CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
     INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
 };
 
@@ -48,7 +48,7 @@ enum gatewayMessageType_t {
 enum gwInvalidateReason_t {
     UNKNOWN_ERROR = 0x00, /**< Unknown error. Not used by the moment */
     WRONG_CLIENT_HELLO = 0x01, /**< ClientHello message received was invalid */
-    WRONG_EXCHANGE_FINISHED = 0x02, /**< KeyExchangeFinished message received was invalid. Probably this means an error on shared key */
+    //WRONG_EXCHANGE_FINISHED = 0x02, /**< KeyExchangeFinished message received was invalid. Probably this means an error on shared key */
     WRONG_DATA = 0x03, /**< Data message received could not be decrypted successfuly */
     UNREGISTERED_NODE = 0x04, /**< Data received from an unregistered node*/
     KEY_EXPIRED = 0x05 /**< Node key has reached maximum validity time */
@@ -141,7 +141,7 @@ class EnigmaIOTGatewayClass
       * @param node Node which key agreement is being made with
       * @return Returns `true` if message could be correcly sent
       */
-     bool cipherFinished (Node *node);
+     //bool cipherFinished (Node *node);
 
      /**
       * @brief Gets a buffer containing a **KeyExchangeFinished** message and process it. It checks that node key is correct by
@@ -152,7 +152,7 @@ class EnigmaIOTGatewayClass
       * @param node Node entry on database
       * @return Returns `true` if message syntax is correct and key was successfuly calculated `false` otherwise
       */
-     bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
+     //bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
 
      /**
       * @brief Processes data message from node
@@ -279,13 +279,13 @@ class EnigmaIOTGatewayClass
       * void setup () {
       *   .....
       *   // Now register function as data message handler
-      *   EnigmaIOTSensor.onDataRx (processRxData);
+      *   EnigmaIOTNode.onDataRx (processRxData);
       *   .....
       * }
       *
       * void loop {
       *   .....
-      *   EnigmaIOTSensor.handle();
+      *   EnigmaIOTNode.handle();
       *   .....
       * }
       * ```
@@ -352,7 +352,7 @@ class EnigmaIOTGatewayClass
       *
       * void loop {
       *   .....
-      *   EnigmaIOTSensor.handle();
+      *   EnigmaIOTNode.handle();
       *   .....
       * }
       * ```
@@ -381,7 +381,7 @@ class EnigmaIOTGatewayClass
       *
       * void loop {
       *   .....
-      *   EnigmaIOTSensor.handle();
+      *   EnigmaIOTNode.handle();
       *   .....
       * }
       * ```

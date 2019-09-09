@@ -23,8 +23,8 @@ enum node_status {
     UNREGISTERED, /**< Node is not registered. This is te initial state of every node */
     INIT, /**< Node is starting registration by ClientHello message */
     WAIT_FOR_SERVER_HELLO, /**< Node sent ClientHello message, now it is waiting for ServerHello */
-    WAIT_FOR_KEY_EXCH_FINISHED, /**< Gateway sent ServerHello message, now it is waiting for KeyExchangeFinished from Node*/
-    WAIT_FOR_CIPHER_FINISHED, /**< Node sent KeyExchangeFinished message, now it is waiting for CipherFinished */
+    //WAIT_FOR_KEY_EXCH_FINISHED, /**< Gateway sent ServerHello message, now it is waiting for KeyExchangeFinished from Node*/
+    //WAIT_FOR_CIPHER_FINISHED, /**< Node sent KeyExchangeFinished message, now it is waiting for CipherFinished */
     WAIT_FOR_DOWNLINK, /**< Node sent a data message, now it is waiting for downlink data */
     REGISTERED, /**< Node is registered and its key is valid */
     SLEEP /**< Node is in sleep mode */

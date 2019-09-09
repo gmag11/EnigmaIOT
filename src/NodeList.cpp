@@ -52,12 +52,12 @@ void Node::printToSerial (Stream *port)
     case WAIT_FOR_SERVER_HELLO:
         port->println ("Wait for server hello");
         break;
-    case WAIT_FOR_KEY_EXCH_FINISHED:
-        port->println ("Wait for Key Exchange Finished");
-        break;
-    case WAIT_FOR_CIPHER_FINISHED:
-        port->println ("Wait for Cipher Finished");
-        break;
+    //case WAIT_FOR_KEY_EXCH_FINISHED:
+    //    port->println ("Wait for Key Exchange Finished");
+    //    break;
+    //case WAIT_FOR_CIPHER_FINISHED:
+    //    port->println ("Wait for Cipher Finished");
+    //    break;
     case WAIT_FOR_DOWNLINK:
         port->println ("Wait for Downlik");
         break;

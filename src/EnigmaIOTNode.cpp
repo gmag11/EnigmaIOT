@@ -1,5 +1,5 @@
 /**
-  * @file EnigmaIOTSensor.cpp
+  * @file EnigmaIOTNode.cpp
   * @version 0.3.0
   * @date 28/08/2019
   * @author German Martin
@@ -7,7 +7,7 @@
   */
 
 #include <Arduino.h>
-#include "EnigmaIOTSensor.h"
+#include "EnigmaIOTNode.h"
 #include "lib/timeManager.h"
 #include <FS.h>
 #include <MD5Builder.h>
@@ -18,7 +18,7 @@ const char CONFIG_FILE[] = "/config.txt";
 
 ETSTimer ledTimer;
 
-void EnigmaIOTSensorClass::setLed (uint8_t led, time_t onTime) {
+void EnigmaIOTNodeClass::setLed (uint8_t led, time_t onTime) {
     this->led = led;
     ledOnTime = onTime;
 }
@@ -56,7 +56,7 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
     }
 }
 
-bool EnigmaIOTSensorClass::loadRTCData () {
+bool EnigmaIOTNodeClass::loadRTCData () {
     if (ESP.rtcUserMemoryRead (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
         DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
     } else {
@@ -96,7 +96,7 @@ bool EnigmaIOTSensorClass::loadRTCData () {
 
 }
 
-bool EnigmaIOTSensorClass::loadFlashData () {
+bool EnigmaIOTNodeClass::loadFlashData () {
     //SPIFFS.remove (CONFIG_FILE); // Only for testing
 
     if (SPIFFS.exists (CONFIG_FILE)) {
@@ -127,7 +127,7 @@ bool EnigmaIOTSensorClass::loadFlashData () {
     return false;
 }
 
-bool EnigmaIOTSensorClass::saveFlashData () {
+bool EnigmaIOTNodeClass::saveFlashData () {
     File configFile = SPIFFS.open (CONFIG_FILE, "w");
     if (!configFile) {
         DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
@@ -145,7 +145,7 @@ bool EnigmaIOTSensorClass::saveFlashData () {
 }
 
 
-bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t* data) {
+bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
     AsyncWebServer server (80);
     DNSServer dns;
     char channel[4];
@@ -171,7 +171,7 @@ bool EnigmaIOTSensorClass::configWiFiManager (rtcmem_data_t* data) {
     wifiManager.setConnectTimeout (30);
     wifiManager.setBreakAfterConfig (true);
 	wifiManager.setTryConnectDuringConfigPortal (false);
-    String apname = "EnigmaIoTSensor" + String (ESP.getChipId (), 16);
+    String apname = "EnigmaIoTNode" + String (ESP.getChipId (), 16);
 
     boolean result = wifiManager.startConfigPortal (apname.c_str ());
     if (result) {
@@ -216,18 +216,18 @@ void flashLed (void* led) {
     digitalWrite (*(int*)led, !digitalRead (*(int*)led));
 }
 
-void EnigmaIOTSensorClass::startIdentifying (time_t period) {
+void EnigmaIOTNodeClass::startIdentifying (time_t period) {
     identifyStart = millis ();
     indentifying = true;
     startFlash (period);
 }
 
-void EnigmaIOTSensorClass::stopIdentifying () {
+void EnigmaIOTNodeClass::stopIdentifying () {
     indentifying = false;
     stopFlash ();
 }
 
-void EnigmaIOTSensorClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t* networkKey, bool useCounter, bool sleepy) {
+void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t* networkKey, bool useCounter, bool sleepy) {
     pinMode (led, OUTPUT);
     digitalWrite (led, HIGH);
     ets_timer_setfn (&ledTimer, flashLed, (void*)& led);
@@ -246,7 +246,7 @@ void EnigmaIOTSensorClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_
         node.setMacAddress (macAddress);
     }
 
-    if (loadRTCData ()) { // If data present on RTC sensor has waked up or it is just configured, continue
+    if (loadRTCData ()) { // If data present on RTC node has waked up or it is just configured, continue
 #if DEBUG_LEVEL >= DBG
         char gwAddress[18];
         DEBUG_DBG ("RTC data loaded. Gateway: %s", mac2str (rtcmem_data.gateway, gwAddress));
@@ -327,12 +327,12 @@ void EnigmaIOTSensorClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_
 }
 
 
-void EnigmaIOTSensorClass::stop () {
+void EnigmaIOTNodeClass::stop () {
     comm->stop ();
     DEBUG_DBG ("Communication layer uninitalized");
 }
 
-void EnigmaIOTSensorClass::setSleepTime (uint32_t sleepTime) {
+void EnigmaIOTNodeClass::setSleepTime (uint32_t sleepTime) {
     if (node.getInitAsSleepy()) {
         uint64_t maxSleepTime = (ESP.deepSleepMax () / (uint64_t)1000000);
 
@@ -357,7 +357,7 @@ void EnigmaIOTSensorClass::setSleepTime (uint32_t sleepTime) {
     }
 }
 
-void EnigmaIOTSensorClass::handle () {
+void EnigmaIOTNodeClass::handle () {
     static unsigned long blueOntime;
 
     // Flash led if programmed (when data is transferred)
@@ -387,7 +387,7 @@ void EnigmaIOTSensorClass::handle () {
     // Check registration timeout
     static time_t lastRegistration = millis();
     status_t status = node.getStatus ();
-    if (status == WAIT_FOR_SERVER_HELLO || status == WAIT_FOR_CIPHER_FINISHED) {
+    if (status == WAIT_FOR_SERVER_HELLO /*|| status == WAIT_FOR_CIPHER_FINISHED*/) {
 		if (node.getSleepy ()) { // Sleep after registration timeout
 			if (millis () - lastRegistration > RECONNECTION_PERIOD) {
 				DEBUG_DBG ("Current node status: %d", node.getStatus ());
@@ -453,15 +453,15 @@ void EnigmaIOTSensorClass::handle () {
 
 }
 
-void EnigmaIOTSensorClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
-    EnigmaIOTSensor.manageMessage (mac_addr, data, len);
+void EnigmaIOTNodeClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
+    EnigmaIOTNode.manageMessage (mac_addr, data, len);
 }
 
-void EnigmaIOTSensorClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
-    EnigmaIOTSensor.getStatus (mac_addr, status);
+void EnigmaIOTNodeClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
+    EnigmaIOTNode.getStatus (mac_addr, status);
 }
 
-bool EnigmaIOTSensorClass::checkCRC (const uint8_t* buf, size_t count, uint32_t* crc) {
+bool EnigmaIOTNodeClass::checkCRC (const uint8_t* buf, size_t count, uint32_t* crc) {
     uint32 recvdCRC;
 
     memcpy (&recvdCRC, crc, sizeof (uint32_t));
@@ -471,7 +471,7 @@ bool EnigmaIOTSensorClass::checkCRC (const uint8_t* buf, size_t count, uint32_t*
     return (_crc == recvdCRC);
 }
 
-bool EnigmaIOTSensorClass::clientHello () {
+bool EnigmaIOTNodeClass::clientHello () {
     /*
     * -------------------------------------------------------
     *| msgType (1) | random (12) | DH Kmaster (32) | Tag (16) |
@@ -482,6 +482,7 @@ bool EnigmaIOTSensorClass::clientHello () {
         uint8_t msgType;
         uint8_t iv[IV_LENGTH];
         uint8_t publicKey[KEY_LENGTH];
+		uint32_t random;
         uint8_t tag[TAG_LENGTH];
     } clientHello_msg;
 
@@ -512,9 +513,22 @@ bool EnigmaIOTSensorClass::clientHello () {
         clientHello_msg.publicKey[i] = key[i];
     }
 
+	uint32_t random;
+	random = Crypto.random ();
+
+	if (node.getSleepy ()) {
+		random = random | 0x00000001U; // Signal sleepy node
+		DEBUG_DBG ("Signal sleepy node");
+	} else {
+		random = random & 0xFFFFFFFEU; // Signal always awake node
+		DEBUG_DBG ("Signal non sleepy node");
+	}
+
+	memcpy (&(clientHello_msg.random), &random, RANDOM_LENGTH);
+
     DEBUG_VERBOSE ("Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN - TAG_LENGTH));
 
-    uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
+    uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - KEY_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
     memcpy (aad, (uint8_t*)&clientHello_msg, addDataLen); // Copy message upto iv
@@ -522,7 +536,7 @@ bool EnigmaIOTSensorClass::clientHello () {
     // Copy 8 last bytes from NetworkKey
     memcpy (aad + addDataLen, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    if (!CryptModule::encryptBuffer (clientHello_msg.publicKey, KEY_LENGTH, // Encrypt only public key
+    if (!CryptModule::encryptBuffer (clientHello_msg.publicKey, KEY_LENGTH + sizeof(uint32_t), // Encrypt only from public key
                                      clientHello_msg.iv, IV_LENGTH,
                                      rtcmem_data.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
                                      aad, sizeof (aad), clientHello_msg.tag, TAG_LENGTH)) {
@@ -540,7 +554,7 @@ bool EnigmaIOTSensorClass::clientHello () {
     return comm->send (rtcmem_data.gateway, (uint8_t*)& clientHello_msg, CHMSG_LEN) == 0;
 }
 
-bool EnigmaIOTSensorClass::clockRequest () {
+bool EnigmaIOTNodeClass::clockRequest () {
     struct  __attribute__ ((packed, aligned (1))) {
         uint8_t msgType;
         clock_t t1;
@@ -561,7 +575,7 @@ bool EnigmaIOTSensorClass::clockRequest () {
 
 }
 
-bool EnigmaIOTSensorClass::processClockResponse (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool EnigmaIOTNodeClass::processClockResponse (const uint8_t mac[6], const uint8_t* buf, size_t count) {
     struct __attribute__ ((packed, aligned (1))) {
         uint8_t msgType;
         clock_t t2;
@@ -590,7 +604,7 @@ bool EnigmaIOTSensorClass::processClockResponse (const uint8_t mac[6], const uin
 	DEBUG_DBG ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay ());
 }
 
-time_t EnigmaIOTSensorClass::clock () {
+time_t EnigmaIOTNodeClass::clock () {
 	if (node.getInitAsSleepy ()) {
 		return millis ();
 	} else {
@@ -599,7 +613,7 @@ time_t EnigmaIOTSensorClass::clock () {
 
 }
 
-bool EnigmaIOTSensorClass::hasClockSync () {
+bool EnigmaIOTNodeClass::hasClockSync () {
 	if (!node.getInitAsSleepy ())
 		return TimeManager.isTimeAdjusted ();
 	else
@@ -607,7 +621,7 @@ bool EnigmaIOTSensorClass::hasClockSync () {
 }
 
 
-bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool EnigmaIOTNodeClass::processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count) {
     /*
     * ------------------------------------------------------
     *| msgType (1) | random (12) | DH Kslave (32) | Tag (16) |
@@ -618,10 +632,14 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
         uint8_t msgType;
         uint8_t iv[IV_LENGTH];
         uint8_t publicKey[KEY_LENGTH];
+		uint16_t nodeId;
+		uint32_t random;
         uint8_t tag[TAG_LENGTH];
     } serverHello_msg;
 
 #define SHMSG_LEN sizeof(serverHello_msg)
+
+	uint16_t nodeId;
 
     if (count < SHMSG_LEN) {
         DEBUG_WARN ("Message too short");
@@ -630,7 +648,7 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
 
     memcpy (&serverHello_msg, buf, count);
 
-    uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
+    uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t) - KEY_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
     memcpy (aad, (uint8_t*)&serverHello_msg, addDataLen); // Copy message upto iv
@@ -638,7 +656,7 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
     // Copy 8 last bytes from NetworkKey
     memcpy (aad + addDataLen, rtcmem_data.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    if (!CryptModule::decryptBuffer (serverHello_msg.publicKey, KEY_LENGTH,
+    if (!CryptModule::decryptBuffer (serverHello_msg.publicKey, KEY_LENGTH + sizeof (uint16_t) + sizeof (uint32_t),
                                      serverHello_msg.iv, IV_LENGTH,
                                      rtcmem_data.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
                                      aad, sizeof (aad), serverHello_msg.tag, TAG_LENGTH)) {
@@ -655,6 +673,11 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
         return false;
     }
 
+	memcpy (&nodeId, &serverHello_msg.nodeId, sizeof (uint16_t));
+	node.setNodeId (nodeId);
+	rtcmem_data.nodeKeyValid = nodeId;
+	DEBUG_DBG ("Node ID: %u", node.getNodeId ());
+
     node.setEncryptionKey (CryptModule::getSHA256 (serverHello_msg.publicKey, KEY_LENGTH));
     memcpy (rtcmem_data.nodeKey, node.getEncriptionKey (), KEY_LENGTH);
     DEBUG_INFO ("Node key: %s", printHexBuffer (node.getEncriptionKey (), KEY_LENGTH));
@@ -662,117 +685,117 @@ bool EnigmaIOTSensorClass::processServerHello (const uint8_t mac[6], const uint8
     return true;
 }
 
-bool EnigmaIOTSensorClass::processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count) {
-    /*
-    * ------------------------------------------------------------
-    *| msgType (1) | IV (12) | nodeId (2) | random (4) | Tag (16) |
-    * ------------------------------------------------------------
-    */
+//bool EnigmaIOTNodeClass::processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+//    /*
+//    * ------------------------------------------------------------
+//    *| msgType (1) | IV (12) | nodeId (2) | random (4) | Tag (16) |
+//    * ------------------------------------------------------------
+//    */
+//
+//    struct __attribute__ ((packed, aligned (1))) {
+//        uint8_t msgType;
+//        uint8_t iv[IV_LENGTH];
+//        uint16_t nodeId;
+//        uint32_t random;
+//        uint8_t tag[TAG_LENGTH];
+//    } cipherFinished_msg;
+//
+//#define CFMSG_LEN sizeof(cipherFinished_msg) 
+//
+//    uint16_t nodeId;
+//
+//    if (count < CFMSG_LEN) {
+//        DEBUG_WARN ("Wrong message length --> Required: %d Received: %d", CFMSG_LEN, count);
+//        return false;
+//    }
+//
+//    memcpy (&cipherFinished_msg, buf, CFMSG_LEN);
+//
+//    uint8_t addDataLen = CFMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t);
+//    uint8_t aad[AAD_LENGTH + addDataLen];
+//
+//    memcpy (aad, (uint8_t*)&cipherFinished_msg, addDataLen); // Copy message upto iv
+//
+//    // Copy 8 last bytes from NetworkKey
+//    memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+//
+//    if (!CryptModule::decryptBuffer ((uint8_t*)&(cipherFinished_msg.nodeId), sizeof (uint16_t) + sizeof (uint32_t), // Decrypt from nodeId
+//                                     cipherFinished_msg.iv, IV_LENGTH,
+//                                     node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+//                                     aad, sizeof (aad), cipherFinished_msg.tag, TAG_LENGTH)) {
+//        DEBUG_ERROR ("Error during decryption");
+//        return false;
+//    }
+//
+//    DEBUG_VERBOSE ("Decrypted Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN - TAG_LENGTH));
+//
+//    memcpy (&nodeId, &cipherFinished_msg.nodeId, sizeof (uint16_t));
+//    node.setNodeId (nodeId);
+//    DEBUG_DBG ("Node ID: %u", node.getNodeId ());
+//    return true;
+//}
+//
+//bool EnigmaIOTNodeClass::keyExchangeFinished () {
+//    /*
+//    * -------------------------------------------------------------------
+//    *| msgType (1) | IV (12) | random + SleepyNode(1 bit) (4) | Tag (16) |
+//    * -------------------------------------------------------------------
+//    */
+//
+//    struct __attribute__ ((packed, aligned (1))) {
+//        uint8_t msgType;
+//        uint8_t iv[IV_LENGTH];
+//        uint32_t random;
+//        uint8_t tag[TAG_LENGTH];
+//    } keyExchangeFinished_msg;
+//
+//#define KEFMSG_LEN sizeof(keyExchangeFinished_msg) 
+//
+//    uint32_t random;
+//
+//    keyExchangeFinished_msg.msgType = KEY_EXCHANGE_FINISHED;
+//
+//    Crypto.random (keyExchangeFinished_msg.iv, IV_LENGTH);
+//    DEBUG_VERBOSE ("IV: %s", printHexBuffer (keyExchangeFinished_msg.iv, IV_LENGTH));
+//
+//    random = Crypto.random ();
+//
+//    if (node.getSleepy ()) {
+//        random = random | 0x00000001U; // Signal sleepy node
+//        DEBUG_DBG ("Signal sleepy node");
+//    } else {
+//        random = random & 0xFFFFFFFEU; // Signal always awake node
+//        DEBUG_DBG ("Signal non sleepy node");
+//    }
+//
+//    memcpy (&(keyExchangeFinished_msg.random), &random, RANDOM_LENGTH);
+//
+//    DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN - TAG_LENGTH));
+//
+//    uint8_t addDataLen = KEFMSG_LEN - TAG_LENGTH - sizeof (uint32_t);
+//    uint8_t aad[AAD_LENGTH + addDataLen];
+//
+//    memcpy (aad, (uint8_t*)&keyExchangeFinished_msg, addDataLen); // Copy message upto iv
+//
+//    // Copy 8 last bytes from Node Key
+//    memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+//
+//    if (!CryptModule::encryptBuffer ((uint8_t*)&(keyExchangeFinished_msg.random), sizeof (uint32_t), // Encrypt only public key
+//                                     keyExchangeFinished_msg.iv,IV_LENGTH,
+//                                     node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of node key
+//                                     aad, sizeof (aad), keyExchangeFinished_msg.tag, TAG_LENGTH)) {
+//        DEBUG_ERROR ("Error during encryption");
+//        return false;
+//    }
+//
+//    DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*) & (keyExchangeFinished_msg), KEFMSG_LEN));
+//
+//    DEBUG_INFO (" -------> KEY_EXCHANGE_FINISHED");
+//
+//    return comm->send (rtcmem_data.gateway, (uint8_t*) & (keyExchangeFinished_msg), KEFMSG_LEN) == 0;
+//}
 
-    struct __attribute__ ((packed, aligned (1))) {
-        uint8_t msgType;
-        uint8_t iv[IV_LENGTH];
-        uint16_t nodeId;
-        uint32_t random;
-        uint8_t tag[TAG_LENGTH];
-    } cipherFinished_msg;
-
-#define CFMSG_LEN sizeof(cipherFinished_msg) 
-
-    uint16_t nodeId;
-
-    if (count < CFMSG_LEN) {
-        DEBUG_WARN ("Wrong message length --> Required: %d Received: %d", CFMSG_LEN, count);
-        return false;
-    }
-
-    memcpy (&cipherFinished_msg, buf, CFMSG_LEN);
-
-    uint8_t addDataLen = CFMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t);
-    uint8_t aad[AAD_LENGTH + addDataLen];
-
-    memcpy (aad, (uint8_t*)&cipherFinished_msg, addDataLen); // Copy message upto iv
-
-    // Copy 8 last bytes from NetworkKey
-    memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
-
-    if (!CryptModule::decryptBuffer ((uint8_t*)&(cipherFinished_msg.nodeId), sizeof (uint16_t) + sizeof (uint32_t), // Decrypt from nodeId
-                                     cipherFinished_msg.iv, IV_LENGTH,
-                                     node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
-                                     aad, sizeof (aad), cipherFinished_msg.tag, TAG_LENGTH)) {
-        DEBUG_ERROR ("Error during decryption");
-        return false;
-    }
-
-    DEBUG_VERBOSE ("Decrypted Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN - TAG_LENGTH));
-
-    memcpy (&nodeId, &cipherFinished_msg.nodeId, sizeof (uint16_t));
-    node.setNodeId (nodeId);
-    DEBUG_DBG ("Node ID: %u", node.getNodeId ());
-    return true;
-}
-
-bool EnigmaIOTSensorClass::keyExchangeFinished () {
-    /*
-    * -------------------------------------------------------------------
-    *| msgType (1) | IV (12) | random + SleepyNode(1 bit) (4) | Tag (16) |
-    * -------------------------------------------------------------------
-    */
-
-    struct __attribute__ ((packed, aligned (1))) {
-        uint8_t msgType;
-        uint8_t iv[IV_LENGTH];
-        uint32_t random;
-        uint8_t tag[TAG_LENGTH];
-    } keyExchangeFinished_msg;
-
-#define KEFMSG_LEN sizeof(keyExchangeFinished_msg) 
-
-    uint32_t random;
-
-    keyExchangeFinished_msg.msgType = KEY_EXCHANGE_FINISHED;
-
-    Crypto.random (keyExchangeFinished_msg.iv, IV_LENGTH);
-    DEBUG_VERBOSE ("IV: %s", printHexBuffer (keyExchangeFinished_msg.iv, IV_LENGTH));
-
-    random = Crypto.random ();
-
-    if (node.getSleepy ()) {
-        random = random | 0x00000001U; // Signal sleepy node
-        DEBUG_DBG ("Signal sleepy node");
-    } else {
-        random = random & 0xFFFFFFFEU; // Signal always awake node
-        DEBUG_DBG ("Signal non sleepy node");
-    }
-
-    memcpy (&(keyExchangeFinished_msg.random), &random, RANDOM_LENGTH);
-
-    DEBUG_VERBOSE ("Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN - TAG_LENGTH));
-
-    uint8_t addDataLen = KEFMSG_LEN - TAG_LENGTH - sizeof (uint32_t);
-    uint8_t aad[AAD_LENGTH + addDataLen];
-
-    memcpy (aad, (uint8_t*)&keyExchangeFinished_msg, addDataLen); // Copy message upto iv
-
-    // Copy 8 last bytes from Node Key
-    memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
-
-    if (!CryptModule::encryptBuffer ((uint8_t*)&(keyExchangeFinished_msg.random), sizeof (uint32_t), // Encrypt only public key
-                                     keyExchangeFinished_msg.iv,IV_LENGTH,
-                                     node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of node key
-                                     aad, sizeof (aad), keyExchangeFinished_msg.tag, TAG_LENGTH)) {
-        DEBUG_ERROR ("Error during encryption");
-        return false;
-    }
-
-    DEBUG_VERBOSE ("Encripted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*) & (keyExchangeFinished_msg), KEFMSG_LEN));
-
-    DEBUG_INFO (" -------> KEY_EXCHANGE_FINISHED");
-
-    return comm->send (rtcmem_data.gateway, (uint8_t*) & (keyExchangeFinished_msg), KEFMSG_LEN) == 0;
-}
-
-bool EnigmaIOTSensorClass::sendData (const uint8_t* data, size_t len, bool controlMessage) {
+bool EnigmaIOTNodeClass::sendData (const uint8_t* data, size_t len, bool controlMessage) {
     memcpy (dataMessageSent, data, len);
     dataMessageSentLength = len;
     node.setLastMessageTime (); // Mark message time to start RX window start
@@ -789,7 +812,7 @@ bool EnigmaIOTSensorClass::sendData (const uint8_t* data, size_t len, bool contr
     return false;
 }
 
-void EnigmaIOTSensorClass::sleep () {
+void EnigmaIOTNodeClass::sleep () {
     if (node.getSleepy ()) {
         DEBUG_DBG ("Sleep programmed for %lu ms", rtcmem_data.sleepTime * 1000);
         sleepTime = (uint64_t)rtcmem_data.sleepTime * (uint64_t)1000000;
@@ -799,7 +822,7 @@ void EnigmaIOTSensorClass::sleep () {
     }
 }
 
-bool EnigmaIOTSensorClass::dataMessage (const uint8_t* data, size_t len, bool controlMessage) {
+bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool controlMessage) {
     /*
     * ----------------------------------------------------------------------------------------
     *| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | tag (16) |
@@ -901,7 +924,7 @@ bool EnigmaIOTSensorClass::dataMessage (const uint8_t* data, size_t len, bool co
     return (comm->send (rtcmem_data.gateway, buf, packet_length + TAG_LENGTH) == 0);
 }
 
-bool EnigmaIOTSensorClass::processGetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+bool EnigmaIOTNodeClass::processGetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
     uint8_t buffer[MAX_MESSAGE_LENGTH];
     uint8_t bufLength;
 
@@ -924,7 +947,7 @@ bool EnigmaIOTSensorClass::processGetSleepTimeCommand (const uint8_t* mac, const
     }
 }
 
-bool EnigmaIOTSensorClass::processSetIdentifyCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+bool EnigmaIOTNodeClass::processSetIdentifyCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
     uint8_t buffer[MAX_MESSAGE_LENGTH];
     uint8_t bufLength;
 
@@ -935,7 +958,7 @@ bool EnigmaIOTSensorClass::processSetIdentifyCommand (const uint8_t* mac, const 
     startIdentifying (1000);
 }
 
-bool EnigmaIOTSensorClass::processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+bool EnigmaIOTNodeClass::processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
     uint8_t buffer[MAX_MESSAGE_LENGTH];
     uint8_t bufLength;
 
@@ -976,7 +999,7 @@ bool EnigmaIOTSensorClass::processSetSleepTimeCommand (const uint8_t* mac, const
 }
 
 
-bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+bool EnigmaIOTNodeClass::processVersionCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
     uint8_t buffer[MAX_MESSAGE_LENGTH];
     uint8_t bufLength;
 
@@ -994,7 +1017,7 @@ bool EnigmaIOTSensorClass::processVersionCommand (const uint8_t* mac, const uint
     }
 }
 
-bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
     uint8_t responseBuffer[2];
 
     //DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
@@ -1146,7 +1169,7 @@ bool EnigmaIOTSensorClass::processOTACommand (const uint8_t* mac, const uint8_t*
     return true;
 }
 
-void EnigmaIOTSensorClass::restart (bool reboot) {
+void EnigmaIOTNodeClass::restart (bool reboot) {
     rtcmem_data.nodeRegisterStatus = UNREGISTERED;
     rtcmem_data.nodeKeyValid = false; // Force resync
     ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data));
@@ -1155,7 +1178,7 @@ void EnigmaIOTSensorClass::restart (bool reboot) {
         ESP.restart (); // Reboot to recover normal status
 }
 
-bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len) {
+bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len) {
     //memset (buffer, 0, MAX_MESSAGE_LENGTH);
     DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
     switch (data[0]) {
@@ -1178,7 +1201,7 @@ bool EnigmaIOTSensorClass::processControlCommand (const uint8_t* mac, const uint
     return false;
 }
 
-bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count, bool control) {
+bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count, bool control) {
     /*
     * --------------------------------------------------------------------------
     *| msgType (1) | IV (12) | length (2) | NodeId (2) | Data (....) | Tag (16) |
@@ -1231,17 +1254,17 @@ bool EnigmaIOTSensorClass::processDownstreamData (const uint8_t mac[6], const ui
 }
 
 
-sensorInvalidateReason_t EnigmaIOTSensorClass::processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+nodeInvalidateReason_t EnigmaIOTNodeClass::processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count) {
 #define IKMSG_LEN 2
     if (buf && count < IKMSG_LEN) {
         return UNKNOWN_ERROR;
     }
     DEBUG_DBG ("Invalidate key request. Reason: %u", buf[1]);
     uint8_t reason = buf[1];
-    return (sensorInvalidateReason_t)reason;
+    return (nodeInvalidateReason_t)reason;
 }
 
-void EnigmaIOTSensorClass::manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count) {
+void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count) {
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     DEBUG_VERBOSE ("Received data: %s", printHexBuffer (const_cast<uint8_t*>(buf), count));
     flashBlue = true;
@@ -1262,59 +1285,50 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t* mac, const uint8_t* buf
         DEBUG_INFO (" <------- SERVER HELLO");
         if (node.getStatus () == WAIT_FOR_SERVER_HELLO) {
             if (processServerHello (mac, buf, count)) {
-                keyExchangeFinished ();
-                node.setStatus (WAIT_FOR_CIPHER_FINISHED);
-                rtcmem_data.nodeRegisterStatus = WAIT_FOR_CIPHER_FINISHED;
-            } else {
-                node.reset ();
-            }
-        } else {
-            node.reset ();
-        }
-        break;
-    case CYPHER_FINISHED:
-        DEBUG_INFO ("Cypher Finished received");
-        if (node.getStatus () == WAIT_FOR_CIPHER_FINISHED) {
-            DEBUG_INFO (" <------- CIPHER_FINISHED");
-            if (processCipherFinished (mac, buf, count)) {
-                // mark node as registered
-                node.setKeyValid (true);
-                rtcmem_data.nodeKeyValid = true;
-                node.setKeyValidFrom (millis ());
-                node.setLastMessageCounter (0);
-                node.setStatus (REGISTERED);
-                rtcmem_data.nodeRegisterStatus = REGISTERED;
+				// mark node as registered
+				node.setKeyValid (true);
+				rtcmem_data.nodeKeyValid = true;
+				node.setKeyValidFrom (millis ());
+				node.setLastMessageCounter (0);
+				node.setStatus (REGISTERED);
+				rtcmem_data.nodeRegisterStatus = REGISTERED;
 
-                memcpy (rtcmem_data.nodeKey, node.getEncriptionKey (), KEY_LENGTH);
-                rtcmem_data.lastMessageCounter = 0;
-                rtcmem_data.nodeId = node.getNodeId ();
-                rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-                if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
-                    DEBUG_DBG ("Write configuration data to RTC memory");
-                    DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
-                }
+				// save context to RTC memory
+				memcpy (rtcmem_data.nodeKey, node.getEncriptionKey (), KEY_LENGTH);
+				rtcmem_data.lastMessageCounter = 0;
+				rtcmem_data.nodeId = node.getNodeId ();
+				rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+
+				if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+					DEBUG_DBG ("Write configuration data to RTC memory");
+					DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+				}
+
+				// request clock sync if non sleepy
 				if (!node.getSleepy () && node.isRegistered ())
 					clockRequest ();
 
 #if DEBUG_LEVEL >= INFO
-                node.printToSerial (&DEBUG_ESP_PORT);
+				node.printToSerial (&DEBUG_ESP_PORT);
 #endif
-                if (notifyConnection) {
-                    notifyConnection ();
-                }
-                // Resend last message in case of it is still pending to be sent.
-                // If key expired it was successfully sent before so retransmission is not needed 
-                if (invalidateReason < KEY_EXPIRED && dataMessageSentLength > 0) {
-                    if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
+
+				// send notification to user code
+				if (notifyConnection) {
+					notifyConnection ();
+				}
+				// Resend last message in case of it is still pending to be sent.
+				// If key expired it was successfully sent before so retransmission is not needed 
+				if (invalidateReason < KEY_EXPIRED && dataMessageSentLength > 0) {
+					if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
 						if (dataMessageSentLength > 0) {
 							DEBUG_VERBOSE ("Data sent: %s", printHexBuffer (dataMessageSent, dataMessageSentLength));
 							dataMessage ((uint8_t*)dataMessageSent, dataMessageSentLength);
 							dataMessageSentLength = 0;
 							flashBlue = true;
 						}
-                    }
-                }
-                // TODO: Store node data on EEPROM, SPIFFS or RTCMEM
+					}
+				}
+
 
             } else {
                 node.reset ();
@@ -1323,6 +1337,57 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t* mac, const uint8_t* buf
             node.reset ();
         }
         break;
+//    case CYPHER_FINISHED:
+//        DEBUG_INFO ("Cypher Finished received");
+//        if (node.getStatus () == WAIT_FOR_CIPHER_FINISHED) {
+//            DEBUG_INFO (" <------- CIPHER_FINISHED");
+//            if (processCipherFinished (mac, buf, count)) {
+//                // mark node as registered
+//                node.setKeyValid (true);
+//                rtcmem_data.nodeKeyValid = true;
+//                node.setKeyValidFrom (millis ());
+//                node.setLastMessageCounter (0);
+//                node.setStatus (REGISTERED);
+//                rtcmem_data.nodeRegisterStatus = REGISTERED;
+//
+//                memcpy (rtcmem_data.nodeKey, node.getEncriptionKey (), KEY_LENGTH);
+//                rtcmem_data.lastMessageCounter = 0;
+//                rtcmem_data.nodeId = node.getNodeId ();
+//                rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+//                if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+//                    DEBUG_DBG ("Write configuration data to RTC memory");
+//                    DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+//                }
+//				if (!node.getSleepy () && node.isRegistered ())
+//					clockRequest ();
+//
+//#if DEBUG_LEVEL >= INFO
+//                node.printToSerial (&DEBUG_ESP_PORT);
+//#endif
+//                if (notifyConnection) {
+//                    notifyConnection ();
+//                }
+//                // Resend last message in case of it is still pending to be sent.
+//                // If key expired it was successfully sent before so retransmission is not needed 
+//                if (invalidateReason < KEY_EXPIRED && dataMessageSentLength > 0) {
+//                    if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
+//						if (dataMessageSentLength > 0) {
+//							DEBUG_VERBOSE ("Data sent: %s", printHexBuffer (dataMessageSent, dataMessageSentLength));
+//							dataMessage ((uint8_t*)dataMessageSent, dataMessageSentLength);
+//							dataMessageSentLength = 0;
+//							flashBlue = true;
+//						}
+//                    }
+//                }
+//                // TODO: Store node data on EEPROM, SPIFFS or RTCMEM
+//
+//            } else {
+//                node.reset ();
+//            }
+//        } else {
+//            node.reset ();
+//        }
+//        break;
     case INVALIDATE_KEY:
         DEBUG_INFO (" <------- INVALIDATE KEY");
         invalidateReason = processInvalidateKey (mac, buf, count);
@@ -1353,7 +1418,7 @@ void EnigmaIOTSensorClass::manageMessage (const uint8_t* mac, const uint8_t* buf
 }
 
 
-void EnigmaIOTSensorClass::getStatus (uint8_t* mac_addr, uint8_t status) {
+void EnigmaIOTNodeClass::getStatus (uint8_t* mac_addr, uint8_t status) {
     if (status == 0) {
         DEBUG_DBG ("SENDStatus OK");
     } else {
@@ -1362,5 +1427,5 @@ void EnigmaIOTSensorClass::getStatus (uint8_t* mac_addr, uint8_t status) {
 }
 
 
-EnigmaIOTSensorClass EnigmaIOTSensor;
+EnigmaIOTNodeClass EnigmaIOTNode;
 

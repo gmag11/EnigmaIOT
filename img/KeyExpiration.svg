@@ -1,93 +1,385 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
-<svg width="22cm" height="22cm" viewBox="117 55 422 422" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="223.5" y1="102" x2="224.5" y2="468"/>
-  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="425.5" y1="102" x2="426.5" y2="468"/>
-  <g>
-    <g>
-      <rect style="fill: #ffffff" x="387.5" y="56.8" width="77" height="46"/>
-      <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="387.5" y="56.8" width="77" height="46"/>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="22cm"
+   height="22cm"
+   viewBox="117 55 422 422"
+   version="1.1"
+   id="svg3986"
+   sodipodi:docname="KeyExpiration.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata3992">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3990" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="715"
+     id="namedview3988"
+     showgrid="false"
+     inkscape:zoom="0.55"
+     inkscape:cx="415.74803"
+     inkscape:cy="415.74803"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3986" />
+  <line
+     style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+     x1="223.5"
+     y1="102"
+     x2="224.5"
+     y2="468"
+     id="line3856" />
+  <line
+     style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+     x1="425.5"
+     y1="102"
+     x2="426.5"
+     y2="468"
+     id="line3858" />
+  <g
+     id="g3870">
+    <g
+       id="g3864">
+      <rect
+         style="fill: #ffffff"
+         x="387.5"
+         y="56.8"
+         width="77"
+         height="46"
+         id="rect3860" />
+      <rect
+         style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+         x="387.5"
+         y="56.8"
+         width="77"
+         height="46"
+         id="rect3862" />
     </g>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="401.356" y="84.875">
-      <tspan x="401.356" y="84.875">Gateway</tspan>
+    <text
+       font-size="12.8"
+       style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal"
+       x="401.356"
+       y="84.875"
+       id="text3868">
+      <tspan
+         x="401.356"
+         y="84.875"
+         id="tspan3866">Gateway</tspan>
     </text>
   </g>
-  <g>
-    <g>
-      <rect style="fill: #ffffff" x="185.5" y="56.8" width="77" height="46"/>
-      <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="185.5" y="56.8" width="77" height="46"/>
+  <g
+     id="g3882">
+    <g
+       id="g3876">
+      <rect
+         style="fill: #ffffff"
+         x="185.5"
+         y="56.8"
+         width="77"
+         height="46"
+         id="rect3872" />
+      <rect
+         style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+         x="185.5"
+         y="56.8"
+         width="77"
+         height="46"
+         id="rect3874" />
     </g>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="209.132" y="84.875">
-      <tspan x="209.132" y="84.875">Node</tspan>
+    <text
+       font-size="12.8"
+       style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal"
+       x="209.132"
+       y="84.875"
+       id="text3880">
+      <tspan
+         x="209.132"
+         y="84.875"
+         id="tspan3878">Node</tspan>
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="225" y1="356" x2="417.264" y2="356.952"/>
-    <polygon style="fill: #000000" points="424.764,356.989 414.739,361.939 417.264,356.952 414.789,351.939 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="424.764,356.989 414.739,361.939 417.264,356.952 414.789,351.939 "/>
+  <g
+     id="g3890">
+    <line
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       x1="225"
+       y1="356"
+       x2="417.264"
+       y2="356.952"
+       id="line3884" />
+    <polygon
+       style="fill: #000000"
+       points="424.764,356.989 414.739,361.939 417.264,356.952 414.789,351.939 "
+       id="polygon3886" />
+    <polygon
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       points="424.764,356.989 414.739,361.939 417.264,356.952 414.789,351.939 "
+       id="polygon3888" />
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="257" y="349">
-    <tspan x="257" y="349">ClientHello (unencrypted)</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="285.60562"
+     y="349"
+     id="text3894">
+    <tspan
+       x="285.60562"
+       y="349"
+       id="tspan3892">ClientHello</tspan>
   </text>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="426" y1="415" x2="233.736" y2="414.048"/>
-    <polygon style="fill: #000000" points="226.236,414.011 236.261,409.061 233.736,414.048 236.211,419.061 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="226.236,414.011 236.261,409.061 233.736,414.048 236.211,419.061 "/>
+  <g
+     id="g3902">
+    <line
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       x1="426"
+       y1="415"
+       x2="233.736"
+       y2="414.048"
+       id="line3896" />
+    <polygon
+       style="fill: #000000"
+       points="226.236,414.011 236.261,409.061 233.736,414.048 236.211,419.061 "
+       id="polygon3898" />
+    <polygon
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       points="226.236,414.011 236.261,409.061 233.736,414.048 236.211,419.061 "
+       id="polygon3900" />
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="255" y="408">
-    <tspan x="255" y="408">ServerHello (unencrypted)</tspan>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="283.60562"
+     y="408"
+     id="text3906">
+    <tspan
+       x="283.60562"
+       y="408"
+       id="tspan3904">ServerHello</tspan>
   </text>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="223.504" y1="162.097" x2="415.768" y2="163.048"/>
-    <polygon style="fill: #000000" points="423.268,163.086 413.243,168.036 415.768,163.048 413.293,158.036 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="423.268,163.086 413.243,168.036 415.768,163.048 413.293,158.036 "/>
+  <g
+     id="g3914">
+    <line
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       x1="223.504"
+       y1="162.097"
+       x2="415.768"
+       y2="163.048"
+       id="line3908" />
+    <polygon
+       style="fill: #000000"
+       points="423.268,163.086 413.243,168.036 415.768,163.048 413.293,158.036 "
+       id="polygon3910" />
+    <polygon
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       points="423.268,163.086 413.243,168.036 415.768,163.048 413.293,158.036 "
+       id="polygon3912" />
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="276.5" y="154.6">
-    <tspan x="276.5" y="154.6">Data (encrypted)</tspan>
+  <text
+     font-size="12.8"
+     style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal"
+     x="276.5"
+     y="154.6"
+     id="text3918">
+    <tspan
+       x="276.5"
+       y="154.6"
+       id="tspan3916">Data (encrypted)</tspan>
   </text>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="224.504" y1="229.096" x2="416.768" y2="230.048"/>
-    <polygon style="fill: #000000" points="424.268,230.085 414.243,235.035 416.768,230.048 414.293,225.035 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="424.268,230.085 414.243,235.035 416.768,230.048 414.293,225.035 "/>
+  <g
+     id="g3926">
+    <line
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       x1="224.504"
+       y1="229.096"
+       x2="416.768"
+       y2="230.048"
+       id="line3920" />
+    <polygon
+       style="fill: #000000"
+       points="424.268,230.085 414.243,235.035 416.768,230.048 414.293,225.035 "
+       id="polygon3922" />
+    <polygon
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       points="424.268,230.085 414.243,235.035 416.768,230.048 414.293,225.035 "
+       id="polygon3924" />
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="277.5" y="221.6">
-    <tspan x="277.5" y="221.6">Data (encrypted)</tspan>
+  <text
+     font-size="12.8"
+     style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal"
+     x="277.5"
+     y="221.6"
+     id="text3930">
+    <tspan
+       x="277.5"
+       y="221.6"
+       id="tspan3928">Data (encrypted)</tspan>
   </text>
-  <text font-size="17.5994" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="315" y="474">
-    <tspan x="315" y="474">...</tspan>
+  <text
+     font-size="17.5994"
+     style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700"
+     x="315"
+     y="474"
+     id="text3934">
+    <tspan
+       x="315"
+       y="474"
+       id="tspan3932">...</tspan>
   </text>
-  <g>
-    <rect style="fill: #ffffff" x="118.025" y="115" width="96.55" height="54"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="118.025" y="115" width="96.55" height="54"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="166.3" y="138.8">
-      <tspan x="166.3" y="138.8">Node already</tspan>
-      <tspan x="166.3" y="154.8">registered</tspan>
+  <g
+     id="g3946">
+    <rect
+       style="fill: #ffffff"
+       x="118.025"
+       y="115"
+       width="96.55"
+       height="54"
+       id="rect3936" />
+    <rect
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       x="118.025"
+       y="115"
+       width="96.55"
+       height="54"
+       id="rect3938" />
+    <text
+       font-size="12.8"
+       style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal"
+       x="166.3"
+       y="138.8"
+       id="text3944">
+      <tspan
+         x="166.3"
+         y="138.8"
+         id="tspan3940">Node already</tspan>
+      <tspan
+         x="166.3"
+         y="154.8"
+         id="tspan3942">registered</tspan>
     </text>
   </g>
-  <g>
-    <rect style="fill: #ffffff" x="434.75" y="172" width="102.5" height="38"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="434.75" y="172" width="102.5" height="38"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="486" y="195.8">
-      <tspan x="486" y="195.8">Key expiration</tspan>
+  <g
+     id="g3956">
+    <rect
+       style="fill: #ffffff"
+       x="434.75"
+       y="172"
+       width="102.5"
+       height="38"
+       id="rect3948" />
+    <rect
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       x="434.75"
+       y="172"
+       width="102.5"
+       height="38"
+       id="rect3950" />
+    <text
+       font-size="12.8"
+       style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal"
+       x="486"
+       y="195.8"
+       id="text3954">
+      <tspan
+         x="486"
+         y="195.8"
+         id="tspan3952">Key expiration</tspan>
     </text>
   </g>
-  <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="425.736" y1="270.6" x2="233.472" y2="269.648"/>
-    <polygon style="fill: #000000" points="225.972,269.611 235.997,264.661 233.472,269.648 235.947,274.661 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="225.972,269.611 235.997,264.661 233.472,269.648 235.947,274.661 "/>
+  <g
+     id="g3964">
+    <line
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       x1="425.736"
+       y1="270.6"
+       x2="233.472"
+       y2="269.648"
+       id="line3958" />
+    <polygon
+       style="fill: #000000"
+       points="225.972,269.611 235.997,264.661 233.472,269.648 235.947,274.661 "
+       id="polygon3960" />
+    <polygon
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       points="225.972,269.611 235.997,264.661 233.472,269.648 235.947,274.661 "
+       id="polygon3962" />
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="254.736" y="263.6">
-    <tspan x="254.736" y="263.6">InvalidateKey (unencrypted)</tspan>
+  <text
+     font-size="12.8"
+     style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal"
+     x="254.736"
+     y="263.6"
+     id="text3968">
+    <tspan
+       x="254.736"
+       y="263.6"
+       id="tspan3966">InvalidateKey (unencrypted)</tspan>
   </text>
-  <g>
-    <rect style="fill: #ffffff" x="126.975" y="291" width="86.05" height="54"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="126.975" y="291" width="86.05" height="54"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="170" y="314.8">
-      <tspan x="170" y="314.8">Start new</tspan>
-      <tspan x="170" y="330.8">registration</tspan>
+  <g
+     id="g3980">
+    <rect
+       style="fill: #ffffff"
+       x="126.975"
+       y="291"
+       width="86.05"
+       height="54"
+       id="rect3970" />
+    <rect
+       style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000"
+       x="126.975"
+       y="291"
+       width="86.05"
+       height="54"
+       id="rect3972" />
+    <text
+       font-size="12.8"
+       style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal"
+       x="170"
+       y="314.8"
+       id="text3978">
+      <tspan
+         x="170"
+         y="314.8"
+         id="tspan3974">Start new</tspan>
+      <tspan
+         x="170"
+         y="330.8"
+         id="tspan3976">registration</tspan>
     </text>
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="265" y="285">
-    <tspan x="265" y="285">Reason: key expired</tspan>
+  <text
+     font-size="12.8"
+     style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal"
+     x="265"
+     y="285"
+     id="text3984">
+    <tspan
+       x="265"
+       y="285"
+       id="tspan3982">Reason: key expired</tspan>
   </text>
 </svg>

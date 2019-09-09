@@ -582,10 +582,20 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 		DEBUG_INFO (" <------- CLIENT HELLO");
 		if (espNowError == 0) {
 			if (processClientHello (mac, buf, count, node)) {
-				node->setStatus (WAIT_FOR_KEY_EXCH_FINISHED);
-				delay (1000);
+				//node->setStatus (WAIT_FOR_KEY_EXCH_FINISHED);
+				//delay (1000);
 				if (serverHello (myPublicKey, node)) {
 					DEBUG_INFO ("Server Hello sent");
+					node->setStatus (REGISTERED);
+					node->setKeyValidFrom (millis ());
+					node->setLastMessageCounter (0);
+					node->setLastMessageTime ();
+					if (notifyNewNode) {
+						notifyNewNode (node->getMacAddress ());
+					}
+#if DEBUG_LEVEL >= INFO
+						nodelist.printToSerial (&DEBUG_ESP_PORT);
+#endif
 				} else {
 					node->reset ();
 					DEBUG_INFO ("Error sending Server Hello");
@@ -601,34 +611,34 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 			DEBUG_ERROR ("Error adding peer %d", espNowError);
 		}
 		break;
-	case KEY_EXCHANGE_FINISHED:
-		if (node->getStatus () == WAIT_FOR_KEY_EXCH_FINISHED) {
-			DEBUG_INFO (" <------- KEY EXCHANGE FINISHED");
-			if (espNowError == 0) {
-				if (processKeyExchangeFinished (mac, buf, count, node)) {
-					if (cipherFinished (node)) {
-						node->setStatus (REGISTERED);
-						node->setKeyValidFrom (millis ());
-						node->setLastMessageCounter (0);
-						node->setLastMessageTime ();
-						if (notifyNewNode) {
-							notifyNewNode (node->getMacAddress ());
-						}
-#if DEBUG_LEVEL >= INFO
-						nodelist.printToSerial (&DEBUG_ESP_PORT);
-#endif
-					} else {
-						node->reset ();
-					}
-				} else {
-					invalidateKey (node, WRONG_EXCHANGE_FINISHED);
-					node->reset ();
-				}
-			}
-		} else {
-			DEBUG_INFO (" <------- unsolicited KEY EXCHANGE FINISHED");
-		}
-		break;
+//	case KEY_EXCHANGE_FINISHED:
+//		if (node->getStatus () == WAIT_FOR_KEY_EXCH_FINISHED) {
+//			DEBUG_INFO (" <------- KEY EXCHANGE FINISHED");
+//			if (espNowError == 0) {
+//				if (processKeyExchangeFinished (mac, buf, count, node)) {
+//					if (cipherFinished (node)) {
+//						node->setStatus (REGISTERED);
+//						node->setKeyValidFrom (millis ());
+//						node->setLastMessageCounter (0);
+//						node->setLastMessageTime ();
+//						if (notifyNewNode) {
+//							notifyNewNode (node->getMacAddress ());
+//						}
+//#if DEBUG_LEVEL >= INFO
+//						nodelist.printToSerial (&DEBUG_ESP_PORT);
+//#endif
+//					} else {
+//						node->reset ();
+//					}
+//				} else {
+//					invalidateKey (node, WRONG_EXCHANGE_FINISHED);
+//					node->reset ();
+//				}
+//			}
+//		} else {
+//			DEBUG_INFO (" <------- unsolicited KEY EXCHANGE FINISHED");
+//		}
+//		break;
 	case CONTROL_DATA:
 		DEBUG_INFO (" <------- CONTROL MESSAGE");
 		if (node->getStatus () == REGISTERED) {
@@ -954,117 +964,117 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 }
 
 
-bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
-	/*
-	* ------------------------------------------------------------------
-	*| msgType (1) | IV (12) | random + SleepyNode(1bit) (4) | Tag (16) |
-	* ------------------------------------------------------------------
-	*/
-
-	struct __attribute__ ((packed, aligned (1))) {
-		uint8_t msgType;
-		uint8_t iv[IV_LENGTH];
-		uint32_t random;
-		uint8_t tag[TAG_LENGTH];
-	} keyExchangeFinished_msg;
-
-#define KEFMSG_LEN sizeof(keyExchangeFinished_msg)
-
-	uint32_t crc32;
-	bool sleepyNode;
-
-	if (count < KEFMSG_LEN) {
-		DEBUG_WARN ("Wrong message");
-		return false;
-	}
-
-	memcpy (&keyExchangeFinished_msg, buf, KEFMSG_LEN);
-
-
-    uint8_t addDataLen = KEFMSG_LEN - TAG_LENGTH - sizeof(uint32_t);
-    uint8_t aad[AAD_LENGTH + addDataLen];
-
-    memcpy (aad, (uint8_t*)&keyExchangeFinished_msg, addDataLen); // Copy message upto iv
-
-    // Copy 8 last bytes from NetworkKey
-    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
-
-    if (!CryptModule::decryptBuffer ((uint8_t*)&(keyExchangeFinished_msg.random), sizeof(uint32_t),
-                                     keyExchangeFinished_msg.iv, IV_LENGTH,
-                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
-                                     aad, sizeof (aad), keyExchangeFinished_msg.tag, TAG_LENGTH)) {
-        DEBUG_ERROR ("Error during decryption");
-        return false;
-    }
-
-	DEBUG_VERBOSE ("Decrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN- TAG_LENGTH));
-
-
-	sleepyNode = (keyExchangeFinished_msg.random & 0x00000001U) == 1;
-	node->setInitAsSleepy (sleepyNode);
-	node->setSleepy (sleepyNode);
-
-	DEBUG_VERBOSE ("This is a %s node", sleepyNode ? "sleepy" : "always awaken");
-
-	return true;
-}
-
-bool EnigmaIOTGatewayClass::cipherFinished (Node* node) {
-	/*
-	* ------------------------------------------------------------
-	*| msgType (1) | IV (12) | nodeId (2) | random (4) | Tag (16) |
-	* ------------------------------------------------------------
-	*/
-
-	struct __attribute__ ((packed, aligned (1))) {
-		uint8_t msgType;
-		uint8_t iv[IV_LENGTH];
-		uint16_t nodeId;
-		uint32_t random;
-		uint8_t tag[TAG_LENGTH];
-	} cipherFinished_msg;
-
-#define CFMSG_LEN sizeof(cipherFinished_msg)
-
-	uint32_t random;
-
-	cipherFinished_msg.msgType = CYPHER_FINISHED; // Server hello message
-
-	CryptModule::random (cipherFinished_msg.iv, IV_LENGTH);
-	DEBUG_VERBOSE ("IV: %s", printHexBuffer (cipherFinished_msg.iv, IV_LENGTH));
-
-	uint16_t nodeId = node->getNodeId ();
-	memcpy (&(cipherFinished_msg.nodeId), &nodeId, sizeof (uint16_t));
-
-	random = Crypto.random ();
-
-	memcpy (&(cipherFinished_msg.random), &random, RANDOM_LENGTH);
-
-	DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN -TAG_LENGTH));
-
-    uint8_t addDataLen = CFMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t);
-    uint8_t aad[AAD_LENGTH + addDataLen];
-
-    memcpy (aad, (uint8_t*)&cipherFinished_msg, addDataLen); // Copy message upto iv
-
-    // Copy 8 last bytes from Node Key
-    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
-
-    if (!CryptModule::encryptBuffer ((uint8_t*)&(cipherFinished_msg.nodeId), sizeof (uint16_t) + sizeof (uint32_t), // Encrypt from nodeId
-                                     cipherFinished_msg.iv, IV_LENGTH,
-                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of node key
-                                     aad, sizeof (aad), cipherFinished_msg.tag, TAG_LENGTH)) {
-        DEBUG_ERROR ("Error during encryption");
-        return false;
-    }
-
-
-	DEBUG_VERBOSE ("Encrypted Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN));
-
-	flashTx = true;
-	DEBUG_INFO (" -------> CYPHER_FINISHED");
-	return comm->send (node->getMacAddress (), (uint8_t*)& cipherFinished_msg, CFMSG_LEN) == 0;
-}
+//bool EnigmaIOTGatewayClass::processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
+//	/*
+//	* ------------------------------------------------------------------
+//	*| msgType (1) | IV (12) | random + SleepyNode(1bit) (4) | Tag (16) |
+//	* ------------------------------------------------------------------
+//	*/
+//
+//	struct __attribute__ ((packed, aligned (1))) {
+//		uint8_t msgType;
+//		uint8_t iv[IV_LENGTH];
+//		uint32_t random;
+//		uint8_t tag[TAG_LENGTH];
+//	} keyExchangeFinished_msg;
+//
+//#define KEFMSG_LEN sizeof(keyExchangeFinished_msg)
+//
+//	uint32_t crc32;
+//	bool sleepyNode;
+//
+//	if (count < KEFMSG_LEN) {
+//		DEBUG_WARN ("Wrong message");
+//		return false;
+//	}
+//
+//	memcpy (&keyExchangeFinished_msg, buf, KEFMSG_LEN);
+//
+//
+//    uint8_t addDataLen = KEFMSG_LEN - TAG_LENGTH - sizeof(uint32_t);
+//    uint8_t aad[AAD_LENGTH + addDataLen];
+//
+//    memcpy (aad, (uint8_t*)&keyExchangeFinished_msg, addDataLen); // Copy message upto iv
+//
+//    // Copy 8 last bytes from NetworkKey
+//    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+//
+//    if (!CryptModule::decryptBuffer ((uint8_t*)&(keyExchangeFinished_msg.random), sizeof(uint32_t),
+//                                     keyExchangeFinished_msg.iv, IV_LENGTH,
+//                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+//                                     aad, sizeof (aad), keyExchangeFinished_msg.tag, TAG_LENGTH)) {
+//        DEBUG_ERROR ("Error during decryption");
+//        return false;
+//    }
+//
+//	DEBUG_VERBOSE ("Decrypted Key Exchange Finished message: %s", printHexBuffer ((uint8_t*)& keyExchangeFinished_msg, KEFMSG_LEN- TAG_LENGTH));
+//
+//
+//	sleepyNode = (keyExchangeFinished_msg.random & 0x00000001U) == 1;
+//	node->setInitAsSleepy (sleepyNode);
+//	node->setSleepy (sleepyNode);
+//
+//	DEBUG_VERBOSE ("This is a %s node", sleepyNode ? "sleepy" : "always awaken");
+//
+//	return true;
+//}
+//
+//bool EnigmaIOTGatewayClass::cipherFinished (Node* node) {
+//	/*
+//	* ------------------------------------------------------------
+//	*| msgType (1) | IV (12) | nodeId (2) | random (4) | Tag (16) |
+//	* ------------------------------------------------------------
+//	*/
+//
+//	struct __attribute__ ((packed, aligned (1))) {
+//		uint8_t msgType;
+//		uint8_t iv[IV_LENGTH];
+//		uint16_t nodeId;
+//		uint32_t random;
+//		uint8_t tag[TAG_LENGTH];
+//	} cipherFinished_msg;
+//
+//#define CFMSG_LEN sizeof(cipherFinished_msg)
+//
+//	uint32_t random;
+//
+//	cipherFinished_msg.msgType = CYPHER_FINISHED; // Server hello message
+//
+//	CryptModule::random (cipherFinished_msg.iv, IV_LENGTH);
+//	DEBUG_VERBOSE ("IV: %s", printHexBuffer (cipherFinished_msg.iv, IV_LENGTH));
+//
+//	uint16_t nodeId = node->getNodeId ();
+//	memcpy (&(cipherFinished_msg.nodeId), &nodeId, sizeof (uint16_t));
+//
+//	random = Crypto.random ();
+//
+//	memcpy (&(cipherFinished_msg.random), &random, RANDOM_LENGTH);
+//
+//	DEBUG_VERBOSE ("Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN -TAG_LENGTH));
+//
+//    uint8_t addDataLen = CFMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t);
+//    uint8_t aad[AAD_LENGTH + addDataLen];
+//
+//    memcpy (aad, (uint8_t*)&cipherFinished_msg, addDataLen); // Copy message upto iv
+//
+//    // Copy 8 last bytes from Node Key
+//    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+//
+//    if (!CryptModule::encryptBuffer ((uint8_t*)&(cipherFinished_msg.nodeId), sizeof (uint16_t) + sizeof (uint32_t), // Encrypt from nodeId
+//                                     cipherFinished_msg.iv, IV_LENGTH,
+//                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of node key
+//                                     aad, sizeof (aad), cipherFinished_msg.tag, TAG_LENGTH)) {
+//        DEBUG_ERROR ("Error during encryption");
+//        return false;
+//    }
+//
+//
+//	DEBUG_VERBOSE ("Encrypted Cipher Finished message: %s", printHexBuffer ((uint8_t*)& cipherFinished_msg, CFMSG_LEN));
+//
+//	flashTx = true;
+//	DEBUG_INFO (" -------> CYPHER_FINISHED");
+//	return comm->send (node->getMacAddress (), (uint8_t*)& cipherFinished_msg, CFMSG_LEN) == 0;
+//}
 
 bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t reason) {
 	/*
@@ -1104,10 +1114,13 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 	* -------------------------------------------------------
 	*/
 
+	bool sleepyNode;
+
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
 		uint8_t publicKey[KEY_LENGTH];
+		uint32_t random;
 		uint8_t tag[TAG_LENGTH];
 	} clientHello_msg;
 
@@ -1120,7 +1133,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 
 	memcpy (&clientHello_msg, buf, count);
 
-    uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
+    uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - KEY_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
     memcpy (aad, (uint8_t*)&clientHello_msg, addDataLen); // Copy message upto iv
@@ -1128,7 +1141,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
     // Copy 8 last bytes from NetworkKey
     memcpy (aad + addDataLen, gwConfig.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    if (!CryptModule::decryptBuffer (clientHello_msg.publicKey, KEY_LENGTH,
+    if (!CryptModule::decryptBuffer (clientHello_msg.publicKey, KEY_LENGTH + sizeof (uint32_t),
                                     clientHello_msg.iv, IV_LENGTH,
                                      gwConfig.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
                                     aad, sizeof (aad), clientHello_msg.tag, TAG_LENGTH)) {
@@ -1148,7 +1161,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 
 		node->setKeyValid (true);
 		node->setStatus (INIT);
-		DEBUG_INFO ("Node key: %s", printHexBuffer (node->getEncriptionKey (), KEY_LENGTH));
+		DEBUG_DBG ("Node key: %s", printHexBuffer (node->getEncriptionKey (), KEY_LENGTH));
 	} else {
 		nodelist.unregisterNode (node);
 		char macstr[18];
@@ -1156,6 +1169,13 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 		DEBUG_ERROR ("DH2 error with %s", macstr);
 		return false;
 	}
+
+	sleepyNode = (clientHello_msg.random & 0x00000001U) == 1;
+	node->setInitAsSleepy (sleepyNode);
+	node->setSleepy (sleepyNode);
+
+	DEBUG_VERBOSE ("This is a %s node", sleepyNode ? "sleepy" : "always awaken");
+
 	return true;
 }
 
@@ -1232,12 +1252,14 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
 		uint8_t publicKey[KEY_LENGTH];
+		uint16_t nodeId;
+		uint32_t random;
 		uint8_t tag[TAG_LENGTH];
 	} serverHello_msg;
 
 #define SHMSG_LEN sizeof(serverHello_msg)
 
-	uint32_t crc32;
+	uint32_t random;
 
 	if (!key) {
 		DEBUG_ERROR ("NULL key");
@@ -1254,14 +1276,15 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 		serverHello_msg.publicKey[i] = key[i];
 	}
 
-	//crc32 = CRC32::calculate ((uint8_t*)& serverHello_msg, SHMSG_LEN - CRC_LENGTH);
-	//DEBUG_VERBOSE ("CRC32 = 0x%08X", crc32);
+	uint16_t nodeId = node->getNodeId ();
+	memcpy (&(serverHello_msg.nodeId), &nodeId, sizeof (uint16_t));
 
-	//memcpy (&(serverHello_msg.crc), &crc32, CRC_LENGTH);
+	random = Crypto.random ();
+	memcpy (&(serverHello_msg.random), &random, RANDOM_LENGTH);
 
 	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN - TAG_LENGTH));
 
-    uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - KEY_LENGTH;
+    uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t) - KEY_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
     memcpy (aad, (uint8_t*)&serverHello_msg, addDataLen); // Copy message upto iv
@@ -1269,7 +1292,7 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
     // Copy 8 last bytes from NetworkKey
     memcpy (aad + addDataLen, gwConfig.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    if (!CryptModule::encryptBuffer (serverHello_msg.publicKey, KEY_LENGTH, // Encrypt only public key
+    if (!CryptModule::encryptBuffer (serverHello_msg.publicKey, KEY_LENGTH + sizeof (uint16_t) + sizeof (uint32_t), // Encrypt from public key
                                      serverHello_msg.iv, IV_LENGTH,
                                      gwConfig.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
                                      aad, sizeof (aad), serverHello_msg.tag, TAG_LENGTH)) {

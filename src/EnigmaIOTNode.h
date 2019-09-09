@@ -1,13 +1,13 @@
 /**
-  * @file EnigmaIOTSensor.h
+  * @file EnigmaIOTNode.h
   * @version 0.2.0
   * @date 28/06/2019
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
 
-#ifndef _ENIGMAIOTSENSOR_h
-#define _ENIGMAIOTSENSOR_h
+#ifndef _ENIGMAIOTNODE_h
+#define _ENIGMAIOTNODE_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
@@ -30,27 +30,27 @@
 /**
   * @brief Message code definition
   */
-enum sensorMessageType {
+enum nodeMessageType {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
     DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
-	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway. Used for OTA, settings configuration, etc */
-	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to sensor. Used for OTA, settings configuration, etc */
+	CONTROL_DATA = 0x03, /**< Internal control message from node to gateway. Used for OTA, settings configuration, etc */
+	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to node. Used for OTA, settings configuration, etc */
     CLOCK_REQUEST = 0x05, /**< Clock request message from node */
     CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
-	CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
+	CLIENT_HELLO = 0xFF, /**< ClientHello message from node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
-    KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
-    CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
+    //KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from node */
+    //CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
     INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
 };
 
 /**
   * @brief Key invalidation reason definition
   */
-enum sensorInvalidateReason_t {
+enum nodeInvalidateReason_t {
     UNKNOWN_ERROR = 0x00, /**< Unknown error. Not used by the moment */
     WRONG_CLIENT_HELLO = 0x01, /**< ClientHello message received was invalid */
-    WRONG_EXCHANGE_FINISHED = 0x02, /**< KeyExchangeFinished message received was invalid. Probably this means an error on shared key */
+    //WRONG_EXCHANGE_FINISHED = 0x02, /**< KeyExchangeFinished message received was invalid. Probably this means an error on shared key */
     WRONG_DATA = 0x03, /**< Data message received could not be decrypted successfuly */
     UNREGISTERED_NODE = 0x04, /**< Data received from an unregistered node*/
     KEY_EXPIRED = 0x05 /**< Node key has reached maximum validity time */
@@ -73,32 +73,32 @@ struct rtcmem_data_t {
 	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
 };
 
-typedef sensorMessageType sensorMessageType_t;
+typedef nodeMessageType nodeMessageType_t;
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len)> onSensorDataRx_t;
+typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len)> onNodeDataRx_t;
 typedef std::function<void ()> onConnected_t;
 typedef std::function<void ()> onDisconnected_t;
 #else
-typedef void (*onSensorDataRx_t)(const uint8_t*, const uint8_t*, uint8_t);
+typedef void (*onNodeDataRx_t)(const uint8_t*, const uint8_t*, uint8_t);
 typedef void (*onConnected_t)();
 typedef void (*onDisconnected_t)();
 #endif
 
 /**
-  * @brief Main sensor node class. Manages communication with gateway and allows sending and receiving user data
+  * @brief Main node class. Manages communication with gateway and allows sending and receiving user data
   *
   */
-class EnigmaIOTSensorClass
+class EnigmaIOTNodeClass
 {
 protected:
-    Node node; ///< @brief Sensor node abstraction to store context
+    Node node; ///< @brief Node abstraction to store context
     bool flashBlue = false; ///< @brief If true Tx LED will be flashed
     int8_t led = -1; ///< @brief IO Pin that corresponds to Tx LED. Default value disables LED. It is initialized with `setLed` method
     unsigned int ledOnTime; ///< @brief Time that LED is On during flash. Initalized on `setLed`
     Comms_halClass *comm; ///< @brief Comms abstraction layer
-    onSensorDataRx_t notifyData; ///< @brief Callback that will be called on every message reception
+    onNodeDataRx_t notifyData; ///< @brief Callback that will be called on every message reception
     onConnected_t notifyConnection; ///< @brief Callback that will be called anytime a new node is registered
     onDisconnected_t notifyDisconnection; ///< @brief Callback that will be called anytime a node is disconnected
     bool useCounter = true; ///< @brief `true` means that data message counter will be used to mark message order
@@ -107,7 +107,7 @@ protected:
     uint64_t sleepTime; ///< @brief Time in microseconds that this node will be slept between measurements
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed
     uint8_t dataMessageSentLength = 0; ///< @brief Message length stored for use in case of message retransmission is needed
-    sensorInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
+    nodeInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
 	bool otaRunning = false; ///< @brief True if OTA update has started
 	bool otaError = false; ///< @brief True if OTA update has failed. This normally produces a restart
 	time_t lastOTAmsg; ///< @brief Time when last OTA update message has received. This is used to control timeout
@@ -192,16 +192,16 @@ protected:
       * @param count Message length in number of bytes of CipherFinished message
       * @return Returns `true` if message syntax is correct and key was successfuly calculated `false` otherwise
       */
-    bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    //bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count);
     
     /**
       * @brief Gets a buffer containing an **InvalidateKey** message and process it. This trigger a new key agreement to start
       * @param mac Address where this message was received from
       * @param buf Pointer to the buffer that contains the message
       * @param count Message length in number of bytes of InvalidateKey message
-      * @return Returns the reason because key is not valid anymore. Check possible values in sensorInvalidateReason_t
+      * @return Returns the reason because key is not valid anymore. Check possible values in nodeInvalidateReason_t
       */
-    sensorInvalidateReason_t processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    nodeInvalidateReason_t processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count);
     
     /**
       * @brief Build and send a **keyExchangeFinished** message. 
@@ -210,7 +210,7 @@ protected:
       * generated the correct shared key.
       * @return Returns `true` if message could be correcly sent
       */
-    bool keyExchangeFinished ();
+    //bool keyExchangeFinished ();
 
     /**
       * @brief Builds, encrypts and sends a **Data** message.
@@ -403,7 +403,7 @@ public:
       * void setup () {
       *   .....
       *   // Now register function as data message handler
-      *   EnigmaIOTSensor.onDataRx (processRxData);
+      *   EnigmaIOTNode.onDataRx (processRxData);
       *   .....
       * }
       * 
@@ -413,7 +413,7 @@ public:
       * ```
       * @param handler Pointer to the function
       */
-    void onDataRx (onSensorDataRx_t handler) {
+    void onDataRx (onNodeDataRx_t handler) {
         notifyData = handler;
     }
 
@@ -430,7 +430,7 @@ public:
       * void setup () {
       *   .....
       *   // Now register function as data message handler
-      *   EnigmaIOTSensor.onConnected (connectEventHandler);
+      *   EnigmaIOTNode.onConnected (connectEventHandler);
       *   .....
       * }
       *
@@ -459,7 +459,7 @@ public:
       * void setup () {
       *   .....
       *   // Now register function as data message handler
-      *   EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
+      *   EnigmaIOTNode.onDisconnected (disconnectEventHandler);
       *   .....
       * }
       *
@@ -490,7 +490,7 @@ public:
 
 };
 
-extern EnigmaIOTSensorClass EnigmaIOTSensor;
+extern EnigmaIOTNodeClass EnigmaIOTNode;
 
 #endif
 

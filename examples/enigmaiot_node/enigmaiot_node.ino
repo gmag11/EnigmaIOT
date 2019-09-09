@@ -1,15 +1,15 @@
 /**
-  * @file enigmaiot_sensor.ino
+  * @file enigmaiot_node.ino
   * @version 0.3.0
   * @date 28/08/2019
   * @author German Martin
-  * @brief Sensor node based on EnigmaIoT over ESP-NOW
+  * @brief Node based on EnigmaIoT over ESP-NOW
   *
   * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
 
 #include <Arduino.h>
-#include <EnigmaIOTSensor.h>
+#include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
 #include <CayenneLPP.h>
 
@@ -46,13 +46,13 @@ void setup () {
 	Serial.begin (115200); Serial.println (); Serial.println ();
 	time_t start = millis ();
 	
-	EnigmaIOTSensor.setLed (BLUE_LED);
-	EnigmaIOTSensor.onConnected (connectEventHandler);
-	EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
-	EnigmaIOTSensor.onDataRx (processRxData);
+	EnigmaIOTNode.setLed (BLUE_LED);
+	EnigmaIOTNode.onConnected (connectEventHandler);
+	EnigmaIOTNode.onDisconnected (disconnectEventHandler);
+	EnigmaIOTNode.onDataRx (processRxData);
 
-	EnigmaIOTSensor.begin (&Espnow_hal);
-	//EnigmaIOTSensor.setSleepTime (5/*SLEEP_TIME / 1000000*/);
+	EnigmaIOTNode.begin (&Espnow_hal);
+	//EnigmaIOTNode.setSleepTime (5/*SLEEP_TIME / 1000000*/);
 
 	// Read sensor data
 	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
@@ -62,17 +62,17 @@ void setup () {
 
 	Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
-	if (!EnigmaIOTSensor.sendData (msg.getBuffer (), msg.getSize ())) {
+	if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
 		Serial.println ("---- Error sending data");
 	} else {
 		Serial.println ("---- Data sent");
 	}
 	Serial.printf ("Total time: %d ms\n", millis() - start);
-	EnigmaIOTSensor.sleep ();
+	EnigmaIOTNode.sleep ();
 }
 
 void loop () {
 
-	EnigmaIOTSensor.handle ();
+	EnigmaIOTNode.handle ();
 
 }
