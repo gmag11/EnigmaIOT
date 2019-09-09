@@ -8,11 +8,11 @@
 
 A number of nodes with one or more sensors each one communicate in a **secure** way to a central gateway in a star network using EnigmaIoT protocol.
 
-This protocol has been designed with security on mind. All sensor data is encrypted with a random key that changes periodically. Key is unique for each node and dynamically calculated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.
+This protocol has been designed with security on mind. All sensor data is encrypted with a random key that changes periodically. Key is unique for each node and dynamically negotiated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.
 
-I designed this because I was searching for a way to have a relatively high number of nodes at home. I thought about using WiFi but it would overload my home router. So I looked for an alternative. I thought about LoRa or cheap 2.4GHz modules but I wanted the simplest solution in terms of hardware.
+I designed this because I was searching for a way to have a relatively high number of nodes at home. I thought about using WiFi but it would overload my home router. So I looked for an alternative. I evaluated  LoRa or cheap nRF24 modules but I wanted the simplest solution in terms of hardware.
 
-ESP8266 microcontroller implements a protocol known as ESP-NOW. It is a point to point protocol, based on special WiFi frames, that works in a connectionless way and every packet is short in time. Because of this it eases to have a battery powered node so that it enables designing totally wireless sensors.
+ESP8266 microcontroller implements a protocol known as ESP-NOW. It is a point to point protocol, based on vendor specific [WiFi management action frames](https://mrncciew.com/2014/09/29/cwap-802-11-mgmt-frame-types/), that works in a connectionless way and every packet is a few milliseconds long. Because of this it eases to have a battery powered node so that it enables designing totally wireless sensors.
 
 But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So I thought that I could implement encryption on payload but I found many problems I should solve to grade this as "secure enough".
 
@@ -37,7 +37,7 @@ During this project conception I decided that it should fulfil this list of requ
 - [x] Dynamic key, shared between one node and gateway. Keys are independent for each node
 - [x] Shared keys are expired after a certain (configurable) time
 - [x] Number of nodes is only limited by memory on gateway (60 bytes per node)
-- [x] Key is never on air so it is not interceptable
+- [x] Key is never on air so it is cannot be captured
 - [x] Key expiration and renewal is managed transparently
 - [x] Avoid repeatability attack having a new random initialization vector on every message. This is mandatory for ChaCha20/Poly1305 in order to keep cipher secure
 - [x] Automatic and transparent node attachment
@@ -117,7 +117,7 @@ All nodes and gateway are identified by its MAC address. No name is assigned so 
 
 ![Client Hello message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/ClientHello.png)
 
-Client hello is sent by node to start registration procedure. It includes the public key to be used on Diffie Hellman algorithm to calculate the key. A random filled 16 byte field is reserved for future use.
+Client hello is sent by node to start registration procedure. It includes the public key to be used on Elliptic Curve Diffie Hellman (EDCH) algorithm to calculate the key. Initialization vector (IV) is used for encryption. There is a random 4 byte field reserved for future use.
 
 This message is sent encrypted with network key.
 
@@ -125,23 +125,9 @@ This message is sent encrypted with network key.
 
 ![Server Hello message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/ServerHello.png)
 
-After receiving and checking Client Hello message, gateway responds with a Server Hello message. It carries gateway's public key to let node calculate key using DH. There is a random 16 byte field reserved for future use.
+After receiving and checking Client Hello message, gateway responds with a Server Hello message. It carries gateway's public key to let node calculate key using ECDH. There is a random 4 byte field reserved for future use. Gateway assigns node a NodeID. It is signaled as a 2 byte field.
 
 Server Hello message is sent encrypted with network key.
-
-### Key Exchange Finished message
-
-![Key Exchange Finished message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/KeyExchangeFinished.png)
-
-After node has calculated shared key it generates a Key Exchange Finished message filled with random data. These fields are encrypted using shared key and an initialization value (IV) that is sent unencrypted.
-
-It is used by gateway to check that calculated shared key is correct.
-
-### Cypher Finished message
-
-![Cypher Finished message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/CypherFinished.png)
-
-After gateway has decoded correctly Key Exchange Finished message, it builds a Cypher Finished message to let node check that key is correct. Gateway assigns node a NodeID. It is signaled as a 2 byte field.
 
 ### Sensor Data message
 
@@ -223,11 +209,11 @@ tbd.
 
 Although it is not mandatory at all, use of [CayenneLPP format](https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload) is recommended for sensor data compactness.
 
-You may use [CayenneLPP encoder library](https://github.com/sabas1080/CayenneLPP) on sensor node and [CayenneLPP decoder library](https://github.com/gmag11/CayenneLPPdec) for decoding on Gateway.
+You may use [CayenneLPP library](https://github.com/ElectronicCats/CayenneLPP) for encoding on node and decoding on Gateway.
 
-Example gateway code expands data message to JSON data, to be used easily as payload on a MQTT publish message to a broker. For JSON generation ArduinoJSON library is required.
+Example gateway code expands data message to JSON data, to be used easily as payload on a MQTT publish message to a broker. For JSON generation [ArduinoJSON](https://arduinojson.org) library is required.
 
-In any case you can use your own format or even raw unencoded data. Take care of maximum message length that communications layer uses. For ESP-NOW it is about 200 bytes.
+In any case you can use your own format or even raw unencoded data. Take care of maximum message length that communications layer uses. For ESP-NOW, maximum payload length it is 217 bytes.
 
 ## Output data from gateway
 
