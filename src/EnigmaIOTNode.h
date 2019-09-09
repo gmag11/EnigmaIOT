@@ -39,8 +39,8 @@ enum nodeMessageType {
     CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
 	CLIENT_HELLO = 0xFF, /**< ClientHello message from node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
-    KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from node */
-    CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
+    //KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from node */
+    //CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
     INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
 };
 
@@ -50,7 +50,7 @@ enum nodeMessageType {
 enum nodeInvalidateReason_t {
     UNKNOWN_ERROR = 0x00, /**< Unknown error. Not used by the moment */
     WRONG_CLIENT_HELLO = 0x01, /**< ClientHello message received was invalid */
-    WRONG_EXCHANGE_FINISHED = 0x02, /**< KeyExchangeFinished message received was invalid. Probably this means an error on shared key */
+    //WRONG_EXCHANGE_FINISHED = 0x02, /**< KeyExchangeFinished message received was invalid. Probably this means an error on shared key */
     WRONG_DATA = 0x03, /**< Data message received could not be decrypted successfuly */
     UNREGISTERED_NODE = 0x04, /**< Data received from an unregistered node*/
     KEY_EXPIRED = 0x05 /**< Node key has reached maximum validity time */
@@ -192,7 +192,7 @@ protected:
       * @param count Message length in number of bytes of CipherFinished message
       * @return Returns `true` if message syntax is correct and key was successfuly calculated `false` otherwise
       */
-    bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    //bool processCipherFinished (const uint8_t mac[6], const uint8_t* buf, size_t count);
     
     /**
       * @brief Gets a buffer containing an **InvalidateKey** message and process it. This trigger a new key agreement to start
@@ -210,7 +210,7 @@ protected:
       * generated the correct shared key.
       * @return Returns `true` if message could be correcly sent
       */
-    bool keyExchangeFinished ();
+    //bool keyExchangeFinished ();
 
     /**
       * @brief Builds, encrypts and sends a **Data** message.
