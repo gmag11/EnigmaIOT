@@ -45,15 +45,15 @@ void setup () {
 	Serial.begin (115200); Serial.println (); Serial.println ();
 	//time_t start = millis ();
 	
-	//EnigmaIOTSensor.setLed (BLUE_LED);
+	//EnigmaIOTNode.setLed (BLUE_LED);
 	pinMode (BLUE_LED, OUTPUT);
 	digitalWrite (BLUE_LED, HIGH); // Turn on LED
-	EnigmaIOTSensor.onConnected (connectEventHandler);
-	EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
-	EnigmaIOTSensor.onDataRx (processRxData);
+	EnigmaIOTNode.onConnected (connectEventHandler);
+	EnigmaIOTNode.onDisconnected (disconnectEventHandler);
+	EnigmaIOTNode.onDataRx (processRxData);
 
-	EnigmaIOTSensor.begin (&Espnow_hal, NULL, NULL, true, false);
-	//EnigmaIOTSensor.setSleepTime (5/*SLEEP_TIME / 1000000*/);
+	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, false);
+	//EnigmaIOTNode.setSleepTime (5/*SLEEP_TIME / 1000000*/);
 
 	// Read sensor data
 	//msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
@@ -63,26 +63,26 @@ void setup () {
 
 	//Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
-	//if (!EnigmaIOTSensor.sendData (msg.getBuffer (), msg.getSize ())) {
+	//if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
 	//	Serial.println ("---- Error sending data");
 	//} else {
 	//	Serial.println ("---- Data sent");
 	//}
 	//Serial.printf ("Total time: %d ms\n", millis() - start);
-	//EnigmaIOTSensor.sleep ();
+	//EnigmaIOTNode.sleep ();
 }
 
 void loop () {
 
-	EnigmaIOTSensor.handle ();
+	EnigmaIOTNode.handle ();
 
 	static const time_t PERIOD = 3000;
 	static const time_t FLASH_DURATION = 100;
 	static time_t clock;
 
-	clock = EnigmaIOTSensor.clock () % PERIOD;
+	clock = EnigmaIOTNode.clock () % PERIOD;
 
-	if (EnigmaIOTSensor.hasClockSync () && EnigmaIOTSensor.isRegistered()) {
+	if (EnigmaIOTNode.hasClockSync () && EnigmaIOTNode.isRegistered()) {
 		if (clock >= 0 && clock < FLASH_DURATION) {
 			digitalWrite (BLUE_LED, LOW); // Turn on LED
 		} else {
@@ -103,7 +103,7 @@ void loop () {
 		//// Read sensor data
 		Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
-		if (!EnigmaIOTSensor.sendData (msg.getBuffer (), msg.getSize ())) {
+		if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
 			Serial.println ("---- Error sending data");
 		} else {
 			Serial.println ("---- Data sent");

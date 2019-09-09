@@ -279,13 +279,13 @@ class EnigmaIOTGatewayClass
       * void setup () {
       *   .....
       *   // Now register function as data message handler
-      *   EnigmaIOTSensor.onDataRx (processRxData);
+      *   EnigmaIOTNode.onDataRx (processRxData);
       *   .....
       * }
       *
       * void loop {
       *   .....
-      *   EnigmaIOTSensor.handle();
+      *   EnigmaIOTNode.handle();
       *   .....
       * }
       * ```
@@ -352,7 +352,7 @@ class EnigmaIOTGatewayClass
       *
       * void loop {
       *   .....
-      *   EnigmaIOTSensor.handle();
+      *   EnigmaIOTNode.handle();
       *   .....
       * }
       * ```
@@ -381,7 +381,7 @@ class EnigmaIOTGatewayClass
       *
       * void loop {
       *   .....
-      *   EnigmaIOTSensor.handle();
+      *   EnigmaIOTNode.handle();
       *   .....
       * }
       * ```
