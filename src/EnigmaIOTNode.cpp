@@ -563,12 +563,12 @@ bool EnigmaIOTNodeClass::clockRequest () {
 
     clockRequest_msg.msgType = CLOCK_REQUEST;
 
-    clock_t t1 = TimeManager.setOrigin();
+    node.t1 = TimeManager.setOrigin();
 
-    memcpy(&(clockRequest_msg.t1),&t1,sizeof(clock_t));
+    memcpy(&(clockRequest_msg.t1),&node.t1,sizeof(clock_t));
 
 	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
-	DEBUG_DBG ("T1: %u", t1);
+	DEBUG_DBG ("T1: %u", node.t1);
     return comm->send (rtcmem_data.gateway, (uint8_t*)& clockRequest_msg, CRMSG_LEN) == 0;
 
 }
@@ -583,8 +583,10 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t mac[6], const uint8
 
 #define CRSMSG_LEN sizeof(clockResponse_msg)
 
-    clock_t t4 = TimeManager.clock ();
-    
+	node.t2 = clockResponse_msg.t2;
+	node.t3 = clockResponse_msg.t3;
+	node.t4 = TimeManager.clock ();
+
     if (count < CRSMSG_LEN) {
         DEBUG_WARN ("Message too short");
         return false;
@@ -592,13 +594,14 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t mac[6], const uint8
 
     memcpy (&clockResponse_msg, buf, count);
 
-    time_t offset = TimeManager.adjustTime(clockResponse_msg.t2, clockResponse_msg.t3, t4);
+    time_t offset = TimeManager.adjustTime(node.t1, node.t2, node.t3, node.t4);
 
 	DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
 
-	DEBUG_DBG ("T2: %u", clockResponse_msg.t2);
-	DEBUG_DBG ("T3: %u", clockResponse_msg.t3);
-	DEBUG_DBG ("T4: %u", t4);
+	DEBUG_DBG ("T1: %u", node.t1);
+	DEBUG_DBG ("T2: %u", node.t2);
+	DEBUG_DBG ("T3: %u", node.t3);
+	DEBUG_DBG ("T4: %u", node.t4);
 	DEBUG_DBG ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay ());
 }
 

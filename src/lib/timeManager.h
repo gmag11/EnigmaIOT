@@ -13,7 +13,7 @@
 
 class TimeManagerClass {
 protected:
-    clock_t t1, t2, t3, t4;
+    //clock_t t1, t2, t3, t4;
     bool timeIsAdjusted = false;
     time_t offset;
     time_t roundTripDelay;
@@ -23,7 +23,7 @@ public:
 
     clock_t clock ();
 
-    time_t adjustTime (clock_t t2r, clock_t t3r, clock_t t4r);
+    time_t adjustTime (clock_t t1r, clock_t t2r, clock_t t3r, clock_t t4r);
 
     time_t getOffset () {
         return offset;

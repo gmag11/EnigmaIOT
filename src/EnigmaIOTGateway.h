@@ -122,7 +122,7 @@ class EnigmaIOTGatewayClass
 
      bool processClockRequest (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node);
 
-     bool clockResponse (Node* node, clock_t t2r);
+     bool clockResponse (Node* node);
 
      /**
       * @brief Creates an **InvalidateKey** message and sned it. This trigger a new key agreement to start on related node

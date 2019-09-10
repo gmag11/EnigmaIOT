@@ -13,8 +13,7 @@ clock_t TimeManagerClass::setOrigin () {
 	//Serial.printf ("offset: %d\n", offset);
 	//Serial.printf ("clock:  %u %u\n", millis () + offset, clock());
 
-    t1 = clock ();
-    return t1;
+    return clock ();
 }
 
 clock_t TimeManagerClass::clock () {
@@ -26,10 +25,11 @@ clock_t TimeManagerClass::clock () {
     }
 }
 
-time_t TimeManagerClass::adjustTime (clock_t t2r, clock_t t3r, clock_t t4r) {
-    t2 = t2r;
-    t3 = t3r;
-    t4 = t4r;
+time_t TimeManagerClass::adjustTime (clock_t t1r, clock_t t2r, clock_t t3r, clock_t t4r) {
+	clock_t t1 = t1r;
+	clock_t t2 = t2r;
+	clock_t t3 = t3r;
+	clock_t t4 = t4r;
 
 	time_t delay = (long)((t2 - t1) + (t3 - t4)) / 2L;
     offset += delay;

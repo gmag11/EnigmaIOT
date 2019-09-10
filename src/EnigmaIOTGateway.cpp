@@ -1031,14 +1031,14 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[6], const uin
         return false;
     }
 
-    clock_t t2 = millis();
+    node->t2 = millis();
 
 	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
 
-    return clockResponse (node, t2);
+    return clockResponse (node);
 }
 
-bool EnigmaIOTGatewayClass::clockResponse (Node* node, clock_t t2r) {
+bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 
     struct __attribute__ ((packed, aligned (1))) {
         uint8_t msgType;
@@ -1051,13 +1051,13 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node, clock_t t2r) {
 
     clockResponse_msg.msgType = CLOCK_RESPONSE;
 
-    clock_t t2 = t2r;
+    //node->t2 = t2r;
 
-    memcpy (&(clockResponse_msg.t2),&t2,sizeof(clock_t));
+    memcpy (&(clockResponse_msg.t2),&node->t2,sizeof(clock_t));
 
-    clock_t t3 = millis();;
+    node->t3 = millis();;
 
-    memcpy (&(clockResponse_msg.t3), &t3, sizeof (clock_t));
+    memcpy (&(clockResponse_msg.t3), &node->t3, sizeof (clock_t));
 
 	DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
 

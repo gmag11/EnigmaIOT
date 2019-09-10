@@ -278,6 +278,7 @@ public:
     uint32_t packetErrors = 0;
     double per = 0;
     double packetsHour = 0;
+	clock_t t1, t2, t3, t4;
 
 protected:
 //#define KEYLENGTH 32
