@@ -9,11 +9,12 @@ var searchData=
   ['red_5fled',['RED_LED',['../enigmaiot__gateway_8ino.html#a073dbcb7f5bc4f4b45dc048b55eaff3d',1,'enigmaiot_gateway.ino']]],
   ['registered',['REGISTERED',['../NodeList_8h.html#a8dd9280b6a6e53e65414115f47b0df6aa89af859e5ad61a519a9e407a67b26568',1,'NodeList.h']]],
   ['reset',['reset',['../classNode.html#a7c565caad2fea0439f28d24887ac2498',1,'Node']]],
-  ['restart',['restart',['../classEnigmaIOTSensorClass.html#ab334621b9b70886857b69cc6445cd1a9',1,'EnigmaIOTSensorClass']]],
+  ['restart',['restart',['../classEnigmaIOTNodeClass.html#a94a6a83a983c3d258f49be646f432b37',1,'EnigmaIOTNodeClass']]],
   ['resulttopic',['resultTopic',['../namespaceEnigmaIoTUpdate.html#acd57a56c8115a7f72f00b6efc95eeea5',1,'EnigmaIoTUpdate']]],
-  ['rtcmem_5fdata',['rtcmem_data',['../classEnigmaIOTSensorClass.html#aadc63a108f737693784bef26dae601fe',1,'EnigmaIOTSensorClass']]],
+  ['roundtripdelay',['roundTripDelay',['../classTimeManagerClass.html#a8fb658610a1550211c2e5d12f3c47dc0',1,'TimeManagerClass']]],
+  ['rtcmem_5fdata',['rtcmem_data',['../classEnigmaIOTNodeClass.html#ad3f6f92f204d4667e2a577cd23965f69',1,'EnigmaIOTNodeClass']]],
   ['rtcmem_5fdata_5ft',['rtcmem_data_t',['../structrtcmem__data__t.html',1,'']]],
-  ['rx_5fcb',['rx_cb',['../classEnigmaIOTGatewayClass.html#a26f1b71f8a5c17a3c8283ebfb113bdc3',1,'EnigmaIOTGatewayClass::rx_cb()'],['../classEnigmaIOTSensorClass.html#a0c8594a0c70cba868677892b5a8883ac',1,'EnigmaIOTSensorClass::rx_cb()'],['../classEspnow__halClass.html#a0f50cd83e6818030cb68cf59c4a32cf4',1,'Espnow_halClass::rx_cb()']]],
+  ['rx_5fcb',['rx_cb',['../classEnigmaIOTGatewayClass.html#a26f1b71f8a5c17a3c8283ebfb113bdc3',1,'EnigmaIOTGatewayClass::rx_cb()'],['../classEnigmaIOTNodeClass.html#a4efeeca90488a14e95283c31d70ee0e4',1,'EnigmaIOTNodeClass::rx_cb()'],['../classEspnow__halClass.html#a0f50cd83e6818030cb68cf59c4a32cf4',1,'Espnow_halClass::rx_cb()']]],
   ['rxled',['rxled',['../classEnigmaIOTGatewayClass.html#a038ecd9541cb893eb58fb6aa49994816',1,'EnigmaIOTGatewayClass']]],
   ['rxledontime',['rxLedOnTime',['../classEnigmaIOTGatewayClass.html#a5e93664145eb75e55ae4c6d3482c8a64',1,'EnigmaIOTGatewayClass']]]
 ];

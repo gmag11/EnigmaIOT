@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['mac2str',['mac2str',['../helperFunctions_8cpp.html#a7b23b5caf042639a53c6d351ff258837',1,'mac2str(const uint8_t *mac, const char *buffer):&#160;helperFunctions.cpp'],['../helperFunctions_8h.html#a7b23b5caf042639a53c6d351ff258837',1,'mac2str(const uint8_t *mac, const char *buffer):&#160;helperFunctions.cpp']]],
-  ['main',['main',['../namespaceEnigmaIoTUpdate.html#a0625a265d8105bb0e6aa1503f88e21cd',1,'EnigmaIoTUpdate']]],
-  ['managemessage',['manageMessage',['../classEnigmaIOTGatewayClass.html#a1e00c3627e28da3de191bb018f808527',1,'EnigmaIOTGatewayClass::manageMessage()'],['../classEnigmaIOTSensorClass.html#af8f6bce09744fbf0781b2381d209b447',1,'EnigmaIOTSensorClass::manageMessage()']]],
-  ['memstr',['memstr',['../EnigmaIOTGateway_8cpp.html#aab651c53aaa5c935e3cc662399d0f091',1,'EnigmaIOTGateway.cpp']]]
+  ['newnodeconnected',['newNodeConnected',['../enigmaiot__gateway_8ino.html#a58783672ef5e06fdededd53a8f397344',1,'enigmaiot_gateway.ino']]],
+  ['node',['Node',['../classNode.html#ad7a34779cad45d997bfd6d3d8043c75f',1,'Node::Node()'],['../classNode.html#a45db0ed8c3ce61c3cee9d2070e20493f',1,'Node::Node(node_t nodeData)']]],
+  ['nodedisconnected',['nodeDisconnected',['../enigmaiot__gateway_8ino.html#ade106fbc95d08320451d9b901aafd230',1,'enigmaiot_gateway.ino']]],
+  ['nodelist',['NodeList',['../classNodeList.html#a7cf92e8316f291e0a4e4ad608756887f',1,'NodeList']]]
 ];

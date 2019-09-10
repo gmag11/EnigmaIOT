@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tx_5fcb',['tx_cb',['../classEnigmaIOTGatewayClass.html#a35dd01d430ef026ff1c386d022ba7c04',1,'EnigmaIOTGatewayClass::tx_cb()'],['../classEnigmaIOTSensorClass.html#a3acb8f0906fcb92bdaaebe5818dac990',1,'EnigmaIOTSensorClass::tx_cb()'],['../classEspnow__halClass.html#aa4fe83d8c56ff311ca6dc03ef8b98338',1,'Espnow_halClass::tx_cb()']]]
+  ['unregisternode',['unregisterNode',['../classNodeList.html#a2892fb1e6830073f3419da35ddad8725',1,'NodeList::unregisterNode(uint16_t nodeId)'],['../classNodeList.html#ae5aaadb6ddbe6d4c5e1a5e7289ac3aa8',1,'NodeList::unregisterNode(const uint8_t *mac)'],['../classNodeList.html#a52e67df2a4891252279101a492453038',1,'NodeList::unregisterNode(Node *node)']]]
 ];
