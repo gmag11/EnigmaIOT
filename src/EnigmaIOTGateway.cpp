@@ -1036,11 +1036,10 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[6], const uin
 	node->t1 = clockRequest_msg.t1;
     node->t2 = millis();
 
-	DEBUG_WARN ("T1: %u", node->t1);
-	DEBUG_WARN ("T2: %u", node->t2);
-	//DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
-	DEBUG_WARN ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
-
+	DEBUG_DBG ("T1: %u", node->t1);
+	DEBUG_DBG ("T2: %u", node->t2);
+	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
+	
     return clockResponse (node);
 }
 
@@ -1065,26 +1064,20 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 
     memcpy (&(clockResponse_msg.t3), &(node->t3), sizeof (clock_t));
 
-	//DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
-	DEBUG_WARN ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
+	DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
 
 #ifdef DEBUG_ESP_PORT
     char mac[18];
     mac2str (node->getMacAddress (), mac);
 #endif
-	/*DEBUG_DBG ("T1: %u", node->t1);
+	DEBUG_DBG ("T1: %u", node->t1);
 	DEBUG_DBG ("T2: %u", node->t2);
-	DEBUG_DBG ("T3: %u", node->t3);*/
-	DEBUG_WARN ("T1: %u", node->t1);
-	DEBUG_WARN ("T2: %u", node->t2);
-	DEBUG_WARN ("T3: %u", node->t3);
+	DEBUG_DBG ("T3: %u", node->t3);
 
-	//DEBUG_INFO (" -------> CLOCK RESPONSE");
-	DEBUG_WARN (" -------> CLOCK RESPONSE");
+	DEBUG_INFO (" -------> CLOCK RESPONSE");
     if (comm->send (node->getMacAddress (), (uint8_t*)& clockResponse_msg, CRSMSG_LEN) == 0) {
-		//DEBUG_INFO ("Clock Response message sent to %s", mac);
-		DEBUG_WARN ("Clock Response message sent to %s", mac);
-        return true;
+		DEBUG_INFO ("Clock Response message sent to %s", mac);
+		return true;
     } else {
         nodelist.unregisterNode (node);
         DEBUG_ERROR ("Error sending Clock Response message to %s", mac);

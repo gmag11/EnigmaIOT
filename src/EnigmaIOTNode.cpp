@@ -571,11 +571,10 @@ bool EnigmaIOTNodeClass::clockRequest () {
 
     memcpy(&(clockRequest_msg.t1),&(node.t1),sizeof(clock_t));
 
-	//DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
-	DEBUG_WARN ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
-	//DEBUG_DBG ("T1: %u", node.t1);
-	DEBUG_WARN ("T1: %u", node.t1);
-    return comm->send (rtcmem_data.gateway, (uint8_t*)& clockRequest_msg, CRMSG_LEN) == 0;
+	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
+	DEBUG_DBG ("T1: %u", node.t1);
+	
+	return comm->send (rtcmem_data.gateway, (uint8_t*)& clockRequest_msg, CRMSG_LEN) == 0;
 
 }
 
@@ -604,24 +603,18 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t mac[6], const uint8
 
     time_t offset = TimeManager.adjustTime(node.t1, node.t2, node.t3, node.t4);
 
-	if (offset < 10 && offset > -10) {
+	if (offset < MIN_SYNC_ACCURACY && offset > (MIN_SYNC_ACCURACY * -1) ) {
 		timeSyncPeriod = TIME_SYNC_PERIOD;
 	} else {
 		timeSyncPeriod = QUICK_SYNC_TIME;
 	}
-	//DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
-	DEBUG_WARN ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
-
-	/*DEBUG_DBG ("T1: %u", node.t1);
+	DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
+	
+	DEBUG_DBG ("T1: %u", node.t1);
 	DEBUG_DBG ("T2: %u", node.t2);
 	DEBUG_DBG ("T3: %u", node.t3);
-	DEBUG_DBG ("T4: %u", node.t4);*/
-	DEBUG_WARN ("T1: %u", node.t1);
-	DEBUG_WARN ("T2: %u", node.t2);
-	DEBUG_WARN ("T3: %u", node.t3);
-	DEBUG_WARN ("T4: %u", node.t4);
-	//DEBUG_DBG ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay ());
-	DEBUG_WARN ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay ());
+	DEBUG_DBG ("T4: %u", node.t4);
+	DEBUG_DBG ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay ());
 }
 
 time_t EnigmaIOTNodeClass::clock () {

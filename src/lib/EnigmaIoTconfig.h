@@ -11,7 +11,7 @@
 
 // Global configuration. Physical layer settings
 static const uint8_t MAX_MESSAGE_LENGTH = 250; ///< @brief Maximum payload size on ESP-NOW
-static const char ENIGMAIOT_PROT_VERS[] = "0.3.0"; ///< @brief EnitmaIoT Version
+static const char ENIGMAIOT_PROT_VERS[] = "0.4.0"; ///< @brief EnitmaIoT Version
 static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on ESP-NOW
 
 // Gateway configuration
@@ -24,8 +24,9 @@ static const uint16_t DOWNLINK_WAIT_TIME = 400; ///< @brief Time to wait for dow
 static const uint32_t DEFAULT_SLEEP_TIME = 10; ///< @brief Default sleep time if it was not set
 static const uint32_t OTA_TIMEOUT_TIME = 10000; ///< @brief Timeout between OTA messages. In milliseconds
 static const time_t IDENTIFY_TIMEOUT = 10000; ///< @brief How long LED will be flashing during identification
-static const uint32_t TIME_SYNC_PERIOD = 300000;
-static const unsigned int QUICK_SYNC_TIME = 1000;
+static const uint32_t TIME_SYNC_PERIOD = 300000; ///< @brief Period of clock synchronization request
+static const unsigned int QUICK_SYNC_TIME = 1000; ///< @brief Period of clock synchronization request in case of resync is needed 
+static const int MIN_SYNC_ACCURACY = 5; ///< @brief If calculated offset absolute value is higher than this value resync is done more often
 
 //Crypro configuration
 const uint8_t KEY_LENGTH = 32; ///< @brief Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing
