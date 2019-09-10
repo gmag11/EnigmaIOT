@@ -393,7 +393,7 @@ void EnigmaIOTNodeClass::handle () {
 				node.reset ();
 				//clientHello ();
 				DEBUG_INFO ("Registration timeout. Go to sleep for %lu ms", (uint32_t)(RECONNECTION_PERIOD * 4));
-				ESP.deepSleep (RECONNECTION_PERIOD * 4000, RF_NO_CAL);
+				ESP.deepSleep (RECONNECTION_PERIOD * 1000, RF_NO_CAL);
 
 			}
 		} else { // Retry registration
