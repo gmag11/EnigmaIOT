@@ -42,7 +42,7 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len);
   */
 const char* mac2str (const uint8_t* mac, const char* buffer);
 
-//uint8_t* str2mac (const char* mac, uint8_t* values);
+uint8_t* str2mac (const char* mac, uint8_t* values);
 
 /**
   * @brief Initalizes WiFi interfaces on ESP8266 or ESP32
