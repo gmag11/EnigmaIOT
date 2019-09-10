@@ -111,6 +111,7 @@ protected:
 	time_t lastOTAmsg; ///< @brief Time when last OTA update message has received. This is used to control timeout
 	boolean indentifying = false; ///< @brief True if node has its led flashing to be identified
 	time_t identifyStart; ///< @brief Time when identification started flashing. Used to control identification timeout
+	clock_t timeSyncPeriod = QUICK_SYNC_TIME;
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer

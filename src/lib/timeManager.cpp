@@ -21,7 +21,7 @@ clock_t TimeManagerClass::clock () {
 		clock_t clk = (clock_t)(offset + (time_t)(millis ()));
 		return clk;
     } else {
-        return millis ();
+		return millis ();
     }
 }
 

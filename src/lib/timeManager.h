@@ -15,7 +15,7 @@ class TimeManagerClass {
 protected:
     //clock_t t1, t2, t3, t4;
     bool timeIsAdjusted = false;
-    time_t offset;
+    time_t offset = 0;
     time_t roundTripDelay;
 
 public:
@@ -36,6 +36,11 @@ public:
     time_t getDelay () {
         return roundTripDelay;
     }
+
+	void reset () {
+		offset = 0;
+		timeIsAdjusted = false;
+	}
 };
 
 extern TimeManagerClass TimeManager;
