@@ -369,7 +369,7 @@ It is very important to configure user and password on you MQTT broker. Besides,
 
 - CRC32 -- https://github.com/bakercp/CRC32
 - ESPAsyncWebServer -- https://github.com/me-no-dev/ESPAsyncWebServer
-- ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager
+- ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager version > 0.22
   
 - Arduino Crypto Library -- https://github.com/rweather/arduinolibs
   - This one needs a modification in order to run successfully on ESP8266 Arduino core > 2.5.x. **You have to change line 30** on `Crypto/BigNumberUtil.h` from 
