@@ -1,15 +1,15 @@
 /**
-  * @file enigmaiot_sensor.ino
-  * @version 0.3.0
-  * @date 28/08/2019
+  * @file enigmaiot_node_nonsleepy.ino
+  * @version 0.4.0
+  * @date 10/09/2019
   * @author German Martin
-  * @brief Sensor node based on EnigmaIoT over ESP-NOW
+  * @brief Node based on EnigmaIoT over ESP-NOW, in non sleeping mode
   *
   * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
 
 #include <Arduino.h>
-#include <EnigmaIOTSensor.h>
+#include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
 #include <CayenneLPP.h>
 
@@ -44,19 +44,19 @@ void setup () {
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
 	
-	EnigmaIOTSensor.setLed (BLUE_LED);
+	EnigmaIOTNode.setLed (BLUE_LED);
 	//pinMode (BLUE_LED, OUTPUT);
 	//digitalWrite (BLUE_LED, HIGH); // Turn on LED
-	EnigmaIOTSensor.onConnected (connectEventHandler);
-	EnigmaIOTSensor.onDisconnected (disconnectEventHandler);
-	EnigmaIOTSensor.onDataRx (processRxData);
+	EnigmaIOTNode.onConnected (connectEventHandler);
+	EnigmaIOTNode.onDisconnected (disconnectEventHandler);
+	EnigmaIOTNode.onDataRx (processRxData);
 
-	EnigmaIOTSensor.begin (&Espnow_hal, NULL, NULL, true, false);
+	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, false);
 }
 
 void loop () {
 
-	EnigmaIOTSensor.handle ();
+	EnigmaIOTNode.handle ();
 
 	CayenneLPP msg (20);
 
@@ -64,14 +64,16 @@ void loop () {
 	static const time_t SENSOR_PERIOD = 10000;
 	if (millis () - lastSensorData > SENSOR_PERIOD) {
 		lastSensorData = millis ();
+		
 		// Read sensor data
 		msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
 		Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
 		msg.addTemperature (1, 20.34);
-		//// Read sensor data
+		// Read sensor data
+		
 		Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
-		if (!EnigmaIOTSensor.sendData (msg.getBuffer (), msg.getSize ())) {
+		if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
 			Serial.println ("---- Error sending data");
 		} else {
 			Serial.println ("---- Data sent");

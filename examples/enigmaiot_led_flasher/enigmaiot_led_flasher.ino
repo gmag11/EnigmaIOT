@@ -1,9 +1,9 @@
 /**
-  * @file enigmaiot_sensor.ino
+  * @file enigmaiot_led_flasher.ino
   * @version 0.4.0
   * @date 10/09/2019
   * @author German Martin
-  * @brief Sensor node based on EnigmaIoT over ESP-NOW
+  * @brief Node based on EnigmaIoT over ESP-NOW. Demonstrate clock synchronisation
   *
   * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
