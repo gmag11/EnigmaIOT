@@ -447,14 +447,16 @@ void EnigmaIOTNodeClass::handle () {
 	//	clockRequest ();
 
     // Check time sync timeout
-    static time_t lastTimeSync;
-    if (!node.getSleepy() && node.isRegistered()) {
-        if ((	millis () - lastTimeSync > timeSyncPeriod)) {
-            lastTimeSync = millis ();
-			DEBUG_DBG ("Clock Request");
-            clockRequest ();
-        }
-    }
+	if (clockSyncEnabled) {
+		static time_t lastTimeSync;
+		if (!node.getSleepy () && node.isRegistered ()) {
+			if ((millis () - lastTimeSync > timeSyncPeriod)) {
+				lastTimeSync = millis ();
+				DEBUG_DBG ("Clock Request");
+				clockRequest ();
+			}
+		}
+	}
 
 }
 
@@ -1313,8 +1315,10 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
         break;
 	case CLOCK_RESPONSE:
 		DEBUG_INFO (" <------- CLOCK RESPONSE");
-		if (processClockResponse (mac, buf, count)) {
-			DEBUG_INFO ("Clock Response OK");
+		if (clockSyncEnabled) {
+			if (processClockResponse (mac, buf, count)) {
+				DEBUG_INFO ("Clock Response OK");
+			}
 		}
 		break;
 	}

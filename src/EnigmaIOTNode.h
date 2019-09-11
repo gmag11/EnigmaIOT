@@ -112,6 +112,7 @@ protected:
 	boolean indentifying = false; ///< @brief True if node has its led flashing to be identified
 	time_t identifyStart; ///< @brief Time when identification started flashing. Used to control identification timeout
 	clock_t timeSyncPeriod = QUICK_SYNC_TIME; ///< @brief Clock synchronization period
+	bool clockSyncEnabled = false; ///< @brief If true clock is synchronized with Gateway
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -354,6 +355,14 @@ public:
       * It is used for internal node maintenance tasks
       */
     void handle ();
+
+	/**
+	  * @brief Controls clock synchronization function
+	  * @param clockSync If true clock will be synchronized with gateway 
+	  */
+	void enableClockSync (bool clockSync = true) {
+		clockSyncEnabled = clockSync;
+	}
 
     /**
       * @brief Sets a LED to be flashed every time a message is transmitted
