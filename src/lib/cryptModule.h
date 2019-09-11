@@ -35,6 +35,20 @@ public:
       */
     static uint32_t random ();
 
+	static uint32_t random (uint32_t max, uint32_t min = 0) {
+		uint32_t _max, _min;
+
+		if (max > min) {
+			_max = max;
+			_min = min;
+		} else {
+			_max = min;
+			_min = max;
+		}
+
+		return _min + (random () % (_max - _min));
+	}
+
     /**
       * @brief Fills a buffer with random values
       * @param buf Pointer to the buffer to fill

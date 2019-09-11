@@ -33,8 +33,6 @@ void initWiFi (uint8_t channel, uint8_t role) {
 		DEBUG_DBG ("Mode set to AP in channel %u", channel);
 		WiFi.mode (WIFI_STA);
 		DEBUG_DBG ("Mode set to STA");
-		//WiFi.softAPdisconnect (false);
-		//DEBUG_DBG ("AP Deactivated");
 	} else { // Gateway
 		WiFi.softAP ("EnigmaGw", "12345678901234567890", channel);
 		DEBUG_DBG ("Mode set to AP in channel %u", channel);

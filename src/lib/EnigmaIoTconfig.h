@@ -18,15 +18,18 @@ static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on
 static const unsigned int MAX_KEY_VALIDITY = 86400000U; ///< @brief After this time (in ms) a nude is unregistered.
 static const unsigned int MAX_NODE_INACTIVITY = 86400000U; ///< @brief After this time (in ms) a node is marked as gone
 
-// Sensor configuration
-static const uint16_t RECONNECTION_PERIOD = 1500; ///< @brief Time to retry Gateway connection
+// Node configuration
+static const int16_t RECONNECTION_PERIOD = 1500; ///< @brief Time to retry Gateway connection
 static const uint16_t DOWNLINK_WAIT_TIME = 400; ///< @brief Time to wait for downlink message before sleep
 static const uint32_t DEFAULT_SLEEP_TIME = 10; ///< @brief Default sleep time if it was not set
 static const uint32_t OTA_TIMEOUT_TIME = 10000; ///< @brief Timeout between OTA messages. In milliseconds
 static const time_t IDENTIFY_TIMEOUT = 10000; ///< @brief How long LED will be flashing during identification
 static const uint32_t TIME_SYNC_PERIOD = 300000; ///< @brief Period of clock synchronization request
-static const unsigned int QUICK_SYNC_TIME = 1000; ///< @brief Period of clock synchronization request in case of resync is needed 
+static const unsigned int QUICK_SYNC_TIME = 5000; ///< @brief Period of clock synchronization request in case of resync is needed 
 static const int MIN_SYNC_ACCURACY = 5; ///< @brief If calculated offset absolute value is higher than this value resync is done more often
+static const int MAX_DATA_PAYLOAD_SIZE = 215; ///< @brief Maximun payload size for data packets
+static const uint32_t PRE_REG_DELAY = 5000; ///< @brief Time to wait before registration so that other nodes have time to communicate. Real delay is a random lower than this value.
+static const uint32_t POST_REG_DELAY = 1500 ///< @brief Time to waif before sending data after registration so that other nodes have time to finish their registration. Real delay is a random lower than this value.
 
 //Crypro configuration
 const uint8_t KEY_LENGTH = 32; ///< @brief Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing

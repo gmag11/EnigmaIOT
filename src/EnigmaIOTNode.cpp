@@ -319,11 +319,11 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
     comm->begin (rtcmem_data.gateway, rtcmem_data.channel);
     comm->onDataRcvd (rx_cb);
     comm->onDataSent (tx_cb);
-	if (!rtcmem_data.nodeKeyValid || (rtcmem_data.nodeRegisterStatus != REGISTERED))
-		clientHello ();
-	else if (!node.getSleepy () && node.isRegistered ()){
+	//if (!rtcmem_data.nodeKeyValid || (rtcmem_data.nodeRegisterStatus != REGISTERED))
+		//clientHello ();
+	//else if (!node.getSleepy () && node.isRegistered ()){
 		//clockRequest ();
-	}
+	//}
     DEBUG_DBG ("Comms started");
 
 }
@@ -391,22 +391,18 @@ void EnigmaIOTNodeClass::handle () {
     status_t status = node.getStatus ();
     if (status == WAIT_FOR_SERVER_HELLO /*|| status == WAIT_FOR_CIPHER_FINISHED*/) {
 		if (node.getSleepy ()) { // Sleep after registration timeout
-			if (millis () - lastRegistration > RECONNECTION_PERIOD) {
-				DEBUG_DBG ("Current node status: %d", node.getStatus ());
-				lastRegistration = millis ();
+			if (millis () - node.getLastMessageTime () > RECONNECTION_PERIOD) {
+				DEBUG_WARN ("Current node status: %d", node.getStatus ());
 				node.reset ();
-				//clientHello ();
 				DEBUG_INFO ("Registration timeout. Go to sleep for %lu ms", (uint32_t)(RECONNECTION_PERIOD * 4));
-				ESP.deepSleep (RECONNECTION_PERIOD * 1000, RF_NO_CAL);
-
+				uint32_t rnd = Crypto.random (PRE_REG_DELAY * 1000); // nanoseconds
+				ESP.deepSleep (RECONNECTION_PERIOD * 4000 + rnd, RF_NO_CAL);
 			}
 		} else { // Retry registration
-			if (millis () - lastRegistration > RECONNECTION_PERIOD * 5) {
-				DEBUG_DBG ("Current node status: %d", node.getStatus ());
-				lastRegistration = millis ();
+			if (millis () - node.getLastMessageTime () > RECONNECTION_PERIOD * 5) {
+				DEBUG_INFO ("Current node status: %d", node.getStatus ());
 				node.reset ();
-				clientHello ();
-				//ESP.restart ();
+				node.setLastMessageTime (); // Set wait time start
 			}
 		}
     }
@@ -415,9 +411,13 @@ void EnigmaIOTNodeClass::handle () {
     if (node.getStatus () == UNREGISTERED) {
         if (millis () - lastRegistration > RECONNECTION_PERIOD) {
             DEBUG_DBG ("Current node status: %d", node.getStatus ());
-            lastRegistration = millis ();
+            lastRegistration = millis (); // Set wait time start
             node.reset ();
+			uint32_t rnd = Crypto.random (PRE_REG_DELAY);
+			DEBUG_INFO ("Random delay (%u)", rnd);
+			delay (1500 + rnd);
             clientHello ();
+			delay (1500 + Crypto.random (POST_REG_DELAY)); // Wait for Server Hello
         }
     }
 
@@ -492,6 +492,8 @@ bool EnigmaIOTNodeClass::clientHello () {
     } clientHello_msg;
 
 #define CHMSG_LEN sizeof(clientHello_msg)
+
+	invalidateReason = UNKNOWN_ERROR; // reset any previous force disconnect
 
     Crypto.getDH1 ();
     node.setStatus (INIT);
