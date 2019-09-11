@@ -108,6 +108,8 @@ bool EnigmaIOTNodeClass::loadFlashData () {
             if (size != sizeof (rtcmem_data)) {
                 DEBUG_WARN ("Config file is corrupted. Deleting");
                 SPIFFS.remove (CONFIG_FILE);
+				if (SPIFFS.format ())
+					DEBUG_WARN ("File system formatted");
                 return false;
             }
             configFile.read ((uint8_t*)(&rtcmem_data), sizeof (rtcmem_data));
@@ -135,6 +137,7 @@ bool EnigmaIOTNodeClass::saveFlashData () {
     }
     // TODO: Recalcule CRC ???
     configFile.write ((uint8_t*)(&rtcmem_data), sizeof (rtcmem_data));
+	configFile.flush ();
     configFile.close ();
     DEBUG_DBG ("Configuration saved to flash");
 #if DEBUG_LEVEL >= VERBOSE
