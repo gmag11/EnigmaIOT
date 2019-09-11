@@ -369,7 +369,7 @@ public:
       * @param led LED I/O pin
       * @param onTime Flash duration. 100ms by default.
       */
-    void setLed (uint8_t led, time_t onTime = 100);
+    void setLed (uint8_t led, time_t onTime = FLASH_LED_TIME);
 
     /**
       * @brief Starts a data message transmission

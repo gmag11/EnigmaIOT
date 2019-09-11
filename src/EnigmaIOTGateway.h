@@ -257,14 +257,14 @@ class EnigmaIOTGatewayClass
       * @param led LED I/O pin
       * @param onTime Flash duration. 100ms by default.
       */
-     void setTxLed (uint8_t led, time_t onTime = 100);
+     void setTxLed (uint8_t led, time_t onTime = FLASH_LED_TIME);
 
      /**
       * @brief Sets a LED to be flashed every time a message is received
       * @param led LED I/O pin
       * @param onTime Flash duration. 100ms by default.
       */
-     void setRxLed (uint8_t led, time_t onTime = 100);
+     void setRxLed (uint8_t led, time_t onTime = FLASH_LED_TIME);
 
      /**
       * @brief Defines a function callback that will be called on every downlink data message that is received from a node
