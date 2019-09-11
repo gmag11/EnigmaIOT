@@ -41,7 +41,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length) {
 }
 
 void setup () {
-	CayenneLPP msg (20);
+	CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
 	time_t start = millis ();

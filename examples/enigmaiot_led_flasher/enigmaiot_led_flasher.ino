@@ -71,7 +71,7 @@ void loop () {
 		}
 	}
 	
-	CayenneLPP msg (20);
+	CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
 
 	static time_t lastSensorData;
 	static const time_t SENSOR_PERIOD = 10000;
