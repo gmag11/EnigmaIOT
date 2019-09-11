@@ -562,13 +562,19 @@ bool EnigmaIOTNodeClass::clientHello () {
 bool EnigmaIOTNodeClass::clockRequest () {
     struct  __attribute__ ((packed, aligned (1))) {
         uint8_t msgType;
-        clock_t t1;
+		uint8_t iv[IV_LENGTH];
+		clock_t t1;
         uint8_t tag[TAG_LENGTH];
     } clockRequest_msg;
 
     static const uint8_t CRMSG_LEN = sizeof(clockRequest_msg);
 
     clockRequest_msg.msgType = CLOCK_REQUEST;
+
+	CryptModule::random (clockRequest_msg.iv, IV_LENGTH);
+
+	DEBUG_VERBOSE ("IV: %s", printHexBuffer (clockRequest_msg.iv, IV_LENGTH));
+
 
     node.t1 = TimeManager.setOrigin();
 
@@ -577,6 +583,28 @@ bool EnigmaIOTNodeClass::clockRequest () {
 	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
 	DEBUG_DBG ("T1: %u", node.t1);
 	
+	uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
+
+	memcpy (aad, (uint8_t*)& clockRequest_msg, addDataLen); // Copy message upto iv
+
+	// Copy 8 last bytes from NetworkKey
+	memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+	if (!CryptModule::encryptBuffer ((uint8_t*)&(clockRequest_msg.t1), sizeof (clock_t), // Encrypt only from public key
+									 clockRequest_msg.iv, IV_LENGTH,
+									 node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), clockRequest_msg.tag, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during encryption");
+		return false;
+	}
+
+	DEBUG_VERBOSE ("Encrypted Clock Request message: %s", printHexBuffer ((uint8_t*)&clockRequest_msg, CRMSG_LEN));
+
+	DEBUG_INFO (" -------> CLOCK REQUEST");
+
+	node.setLastMessageTime ();
+
 	return comm->send (rtcmem_data.gateway, (uint8_t*)& clockRequest_msg, CRMSG_LEN) == 0;
 
 }
@@ -584,7 +612,8 @@ bool EnigmaIOTNodeClass::clockRequest () {
 bool EnigmaIOTNodeClass::processClockResponse (const uint8_t mac[6], const uint8_t* buf, size_t count) {
     struct __attribute__ ((packed, aligned (1))) {
         uint8_t msgType;
-        clock_t t2;
+		uint8_t iv[IV_LENGTH];
+		clock_t t2;
         clock_t t3;
         uint8_t tag[TAG_LENGTH];
     } clockResponse_msg;
@@ -592,6 +621,27 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t mac[6], const uint8
 #define CRSMSG_LEN sizeof(clockResponse_msg)
 
 	memcpy (&clockResponse_msg, buf, count);
+
+	uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
+
+	memcpy (aad, buf, addDataLen); // Copy message upto iv
+
+	// Copy 8 last bytes from NetworkKey
+	memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+	uint8_t packetLen = count - TAG_LENGTH;
+
+	if (!CryptModule::decryptBuffer ((uint8_t*)&(clockResponse_msg.t2), sizeof(clock_t) << 1, // Decrypt from t2, 8 bytes
+									 clockResponse_msg.iv, IV_LENGTH,
+									 node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), clockResponse_msg.tag, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during decryption");
+		return false;
+	}
+
+	DEBUG_VERBOSE ("Decripted Clock Response message: %s", printHexBuffer ((uint8_t*)&clockResponse_msg, packetLen));
+
 
 	node.t2 = clockResponse_msg.t2;
 	node.t3 = clockResponse_msg.t3;

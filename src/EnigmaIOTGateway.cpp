@@ -1020,7 +1020,8 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
     struct __attribute__ ((packed, aligned (1))) {
         uint8_t msgType;
-        clock_t t1;
+		uint8_t iv[IV_LENGTH];
+		clock_t t1;
         uint8_t tag[TAG_LENGTH];
     } clockRequest_msg;
 
@@ -1033,6 +1034,26 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[6], const uin
 
 	memcpy (&clockRequest_msg, buf, count);
 
+	uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
+
+	memcpy (aad, buf, addDataLen); // Copy message upto iv
+
+	// Copy 8 last bytes from NetworkKey
+	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+	uint8_t packetLen = count - TAG_LENGTH;
+
+	if (!CryptModule::decryptBuffer ((uint8_t*) & (clockRequest_msg.t1), sizeof (clock_t), // Decrypt from t2, 8 bytes
+									 clockRequest_msg.iv, IV_LENGTH,
+									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), clockRequest_msg.tag, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during decryption");
+		return false;
+	}
+
+	DEBUG_VERBOSE ("Decripted Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, packetLen));
+	
 	node->t1 = clockRequest_msg.t1;
     node->t2 = millis();
 
@@ -1047,16 +1068,15 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 
     struct __attribute__ ((packed, aligned (1))) {
         uint8_t msgType;
+		uint8_t iv[IV_LENGTH];
         clock_t t2;
         clock_t t3;
         uint8_t tag[TAG_LENGTH];
     } clockResponse_msg;
 
-#define CRSMSG_LEN sizeof(clockResponse_msg)
+	const unsigned int CRSMSG_LEN = sizeof (clockResponse_msg);
 
     clockResponse_msg.msgType = CLOCK_RESPONSE;
-
-    //node->t2 = t2r;
 
     memcpy (&(clockResponse_msg.t2),&(node->t2),sizeof(clock_t));
 
@@ -1073,6 +1093,24 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 	DEBUG_DBG ("T1: %u", node->t1);
 	DEBUG_DBG ("T2: %u", node->t2);
 	DEBUG_DBG ("T3: %u", node->t3);
+
+	uint8_t addDataLen = 1 + IV_LENGTH ;
+	uint8_t aad[AAD_LENGTH + addDataLen];
+
+	memcpy (aad, (uint8_t*)& clockResponse_msg, addDataLen); // Copy message upto iv
+
+	// Copy 8 last bytes from NetworkKey
+	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+	if (!CryptModule::encryptBuffer ((uint8_t *)&(clockResponse_msg.t2), sizeof (clock_t) << 1, // Encrypt only from t2, 8 bytes
+									 clockResponse_msg.iv, IV_LENGTH,
+									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), clockResponse_msg.tag, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during encryption");
+		return false;
+	}
+
+	DEBUG_VERBOSE ("Encrypted Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN));
 
 	DEBUG_INFO (" -------> CLOCK RESPONSE");
     if (comm->send (node->getMacAddress (), (uint8_t*)& clockResponse_msg, CRSMSG_LEN) == 0) {
