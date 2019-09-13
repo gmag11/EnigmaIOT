@@ -153,7 +153,7 @@ def main():
     print("Sending file: "+options.filename)
     for chunk in encoded_string:
         # client.loop()
-        time.sleep(0.05)
+        time.sleep(0.06)
         # time.sleep(0.2)
         # if i not in range(10,13):
         client.publish(ota_topic, str(i)+","+chunk)
