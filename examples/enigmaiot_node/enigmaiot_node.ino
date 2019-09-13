@@ -41,7 +41,6 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length) {
 }
 
 void setup () {
-	CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
 	time_t start = millis ();
@@ -52,22 +51,27 @@ void setup () {
 	EnigmaIOTNode.onDataRx (processRxData);
 
 	EnigmaIOTNode.begin (&Espnow_hal);
-	//EnigmaIOTNode.setSleepTime (5/*SLEEP_TIME / 1000000*/);
 
-	// Read sensor data
+	// Put here your code to read sensor and compose buffer
+    CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
+
 	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
+    msg.addTemperature (1, 20.34);
+
 	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
-	msg.addTemperature (1, 20.34);
-	// Read sensor data
+	// End of user code
 
 	Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
+    // Send buffer data
 	if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
 		Serial.println ("---- Error sending data");
 	} else {
 		Serial.println ("---- Data sent");
 	}
 	Serial.printf ("Total time: %d ms\n", millis() - start);
+
+    // Go to sleep
 	EnigmaIOTNode.sleep ();
 }
 
