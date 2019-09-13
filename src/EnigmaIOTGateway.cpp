@@ -517,14 +517,20 @@ void EnigmaIOTGatewayClass::handle () {
 	static unsigned long txOntime;
 
 	if (flashRx) {
-		rxOntime = millis ();
-		digitalWrite (rxled, LOW);
+        if (rxled == txled){
+            flashTx = true;
+        } else {
+		    rxOntime = millis ();
+		    digitalWrite (rxled, LOW);
+        }
 		flashRx = false;
 	}
 
-	if (!digitalRead (rxled) && millis () - rxOntime > rxLedOnTime) {
-		digitalWrite (rxled, HIGH);
-	}
+    if (rxled != txled) {
+	    if (!digitalRead (rxled) && millis () - rxOntime > rxLedOnTime) {
+		    digitalWrite (rxled, HIGH);
+	    }
+    }
 
 	if (flashTx) {
 		txOntime = millis ();

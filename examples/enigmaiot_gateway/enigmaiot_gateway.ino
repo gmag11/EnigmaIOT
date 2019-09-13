@@ -14,7 +14,7 @@
 #include <espnow_hal.h>
 
 #define BLUE_LED 2
-#define RED_LED 16
+#define RED_LED 2
 
 // DOWNLINK MESSAGES
 #define GET_VERSION "get/version"
