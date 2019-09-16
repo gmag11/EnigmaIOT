@@ -70,9 +70,10 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 }
 
 void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control) {
-	StaticJsonDocument<256> jsonBuffer;
+	const int capacity = JSON_OBJECT_SIZE(4) * 14;
+	StaticJsonDocument<capacity> jsonBuffer;
 	JsonArray root = jsonBuffer.createNestedArray ();
-	CayenneLPP cayennelpp (250);
+	CayenneLPP cayennelpp (MAX_DATA_PAYLOAD_SIZE);
 
 	char macstr[18];
 	mac2str (mac, macstr);
