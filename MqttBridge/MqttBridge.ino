@@ -172,7 +172,7 @@ bool configWiFiManager () {
 	wifiManager.setSaveConfigCallback (saveConfigCallback);
 	wifiManager.setTryConnectDuringConfigPortal (true);
 	wifiManager.setConnectTimeout (30);
-	wifiManager.setConfigPortalTimeout (60);
+	wifiManager.setConfigPortalTimeout (240);
 //#ifndef BRIDGE_DEBUG
 	//wifiManager.setDebugOutput (false);
 //#endif
