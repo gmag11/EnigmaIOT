@@ -113,6 +113,8 @@ protected:
 	time_t identifyStart; ///< @brief Time when identification started flashing. Used to control identification timeout
 	clock_t timeSyncPeriod = QUICK_SYNC_TIME; ///< @brief Clock synchronization period
 	bool clockSyncEnabled = false; ///< @brief If true clock is synchronized with Gateway
+	bool shouldRestart = false;
+
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer

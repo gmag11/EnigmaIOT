@@ -458,6 +458,14 @@ void EnigmaIOTNodeClass::handle () {
 		}
 	}
 
+	if (shouldRestart) {
+		static unsigned long retartRequest = millis();
+		if (millis () - retartRequest > 2500) {
+			DEBUG_WARN ("Restart");
+			ESP.restart ();
+		}
+	}
+
 }
 
 void EnigmaIOTNodeClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
@@ -1112,7 +1120,9 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
             DEBUG_WARN ("OTA Finished OK");
             DEBUG_WARN ("OTA eror code: %s", otaErrorStr.c_str ());
             Serial.println ("OTA OK");
-            ESP.restart ();
+            //ESP.restart ();
+			otaRunning = false;
+			shouldRestart = true;
             return true; // Restart does not happen inmediatelly, so code goes on
         } else {
             responseBuffer[0] = control_message_type::OTA_ANS;
