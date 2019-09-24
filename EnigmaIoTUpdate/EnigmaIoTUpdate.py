@@ -16,7 +16,9 @@ sleepResultTopic = "/result/sleeptime"
 otaSetTopic = "/set/ota"
 otaResultTopic = "/result/ota"
 otaOutOfSequenceError = "OTA out of sequence error"
+otaOK = "OTA finished OK"
 otaLength = 0
+otaFinished = False
 idx = 0
 
 
@@ -37,25 +39,29 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     global sleepyNode
-    global idx
-
-    print(msg.topic+" "+str(msg.payload))
+    global idx, otaFinished
 
     if msg.topic.find(sleepResultTopic) >= 0 and msg.payload == b'0':
         sleepyNode = False
-    payload = msg.payload.decode ('utf-8')
-    if msg.topic.find(otaResultTopic) >= 0 and payload.find(otaOutOfSequenceError) >= 0:
-        # and msg.payload.find(otaOutOfSequenceError):
-        print('Encontrado')
-        print(payload.split(',')[0])
-        idx = int(payload.split(',')[0])
+        print(msg.topic + " " + str(msg.payload))
 
-        # print(msg.payload.split(',')[0])
+    payload = msg.payload.decode ('utf-8')
+
+    if msg.topic.find(otaResultTopic) >= 0:
+
+        if payload.find(otaOutOfSequenceError) >= 0:
+            print(payload.split(',')[0],end='')
+            idx = int(payload.split(',')[0])
+
+        elif payload.find(otaOK) >= 0:
+            print(" OTA Finished ", end='')
+            otaFinished = True
 
 
 def main():
     global options
     global sleepyNode
+    global otaFinished
 
     opt = optparse.OptionParser()
     opt.add_option("-f", "--file",
@@ -164,7 +170,7 @@ def main():
     global idx
     while idx < len(encoded_string):
         client.loop()
-        time.sleep(0.03)
+        time.sleep(0.035)
         # time.sleep(0.2)
         # if i not in range(10,13):
         i = idx + 1
@@ -175,10 +181,15 @@ def main():
         if i % 160 == 0:
             print(" %.f%%" % (i/len(encoded_string)*100))
         if i == len(encoded_string):
-            time.sleep(2)
+            for i in range(0, 20):
+                client.loop()
+                time.sleep(1)
+                if otaFinished:
+                    print(" OTA OK ", end='')
+                    break
 
     print("100%")
-    time.sleep(5)
+    # time.sleep(5)
     client.disconnect()
 
 

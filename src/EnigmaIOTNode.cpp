@@ -1111,15 +1111,12 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
         Serial.println ();
 
         if (Update.end ()) {
-            responseBuffer[0] = control_message_type::OTA_ANS;
-            responseBuffer[1] = ota_status::OTA_FINISHED;
-            sendData (responseBuffer, 2, true);
-            uint8_t otaErrorCode = Update.getError ();
-            Update.printError (otaErrorStr);
-            //otaErrorStr.trim (); // remove line ending
+			responseBuffer[0] = control_message_type::OTA_ANS;
+			responseBuffer[1] = ota_status::OTA_FINISHED;
+			sendData (responseBuffer, 2, true);
+			uint8_t otaErrorCode = Update.getError ();
             DEBUG_WARN ("OTA Finished OK");
-            DEBUG_WARN ("OTA eror code: %s", otaErrorStr.c_str ());
-            Serial.println ("OTA OK");
+            DEBUG_WARN ("OTA eror code: %d", otaErrorCode);
             //ESP.restart ();
 			otaRunning = false;
 			shouldRestart = true;

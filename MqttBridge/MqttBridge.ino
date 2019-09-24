@@ -239,7 +239,7 @@ bool saveBridgeConfig () {
 
 void setup ()
 {
-	Serial.begin (115200);
+	Serial.begin (500000);
 	ets_timer_setfn (&ledTimer, flashLed, (void*)&notifLed);
 	pinMode (BUILTIN_LED, OUTPUT);
 	digitalWrite (BUILTIN_LED, HIGH);

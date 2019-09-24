@@ -176,7 +176,7 @@ void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
 }
 
 void setup () {
-	Serial.begin (115200); Serial.println (); Serial.println ();
+	Serial.begin (500000); Serial.println (); Serial.println ();
 
 	EnigmaIOTGateway.setRxLed (BLUE_LED);
 	EnigmaIOTGateway.setTxLed (RED_LED);
