@@ -58,8 +58,8 @@ Notice that network key used to implement this feature is stored on flash. ESP82
 - [ ] OTA over WiFi
 - [x] OTA over MQTT/ESP-NOW
 - [x] Sensor identification by using a flashing LED. This is useful when you have a bunch of nodes together :D
-- [ ] Broadcast messages that go to all nodes
-- [ ] Node grouping to send messages to several nodes at once
+- [ ] Broadcast messages that go to all nodes. Under study
+- [ ] ~~Node grouping to send messages to several nodes at once~~
 
 ## Design
 
@@ -371,16 +371,7 @@ It is very important to configure user and password on you MQTT broker. Besides,
 - ESPAsyncWebServer -- https://github.com/me-no-dev/ESPAsyncWebServer
 - ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager version > 0.22
   
-- Arduino Crypto Library -- https://github.com/rweather/arduinolibs
-  - This one needs a modification in order to run successfully on ESP8266 Arduino core > 2.5.x. **You have to change line 30** on `Crypto/BigNumberUtil.h` from 
-  
-    ​       `#if defined (__AVR__) || defined(ESP8266)` to 
-  
-    ​      `#if defined (__AVR__)`
-  
-    **Without this, code will crash**.
-  
-  - There are some objects that cause conflicts if you are using windows due to capitalization. Files `SHA1.cpp` and `SHA1.h` **have to be deleted** from `CryptoLegacy/src`
+- Arduino Crypto Library -- https://github.com/gmag11/CryptoArduino forked and formatted from https://github.com/rweather
 - ~~ESP8266TrueRandom -- https://github.com/marvinroger/ESP8266TrueRandom~~
 - PubSubClient -- https://github.com/knolleary/pubsubclient
 - CayenneLPP -- https://github.com/sabas1080/CayenneLPP version > 1.0.2
