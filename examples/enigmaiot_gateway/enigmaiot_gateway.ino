@@ -48,7 +48,9 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 					Serial.printf ("OTA Start error\n");
 					break;
 				case ota_status::OTA_OUT_OF_SEQUENCE:
-					Serial.printf ("OTA out of sequence error\n");
+					uint16_t lastGoodIdx;
+					memcpy ((uint8_t*)& lastGoodIdx, data + 2, sizeof (uint16_t));
+					Serial.printf ("%d,OTA out of sequence error\n", lastGoodIdx);
 					break;
 				case ota_status::OTA_CHECK_OK:
 					Serial.printf ("OTA check OK\n");

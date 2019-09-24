@@ -977,7 +977,9 @@ bool EnigmaIOTNodeClass::processVersionCommand (const uint8_t* mac, const uint8_
 }
 
 bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
-    uint8_t responseBuffer[2];
+	const uint8_t MAX_OTA_RESPONSE_LENGTH = 4;
+	
+	uint8_t responseBuffer[MAX_OTA_RESPONSE_LENGTH];
 
     //DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
     uint16_t msgIdx;
@@ -986,6 +988,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
     static uint16_t numMsgs;
     static uint32_t otaSize;
     static uint16_t oldIdx;
+	static bool otaRecoverRequested = false;
     static MD5Builder _md5;
     uint8_t* dataPtr = (uint8_t*)(data + 1);
     uint8_t dataLen = len - 1;
@@ -1001,18 +1004,22 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
     DEBUG_WARN ("OTA message #%u", msgIdx);
     if (msgIdx > 0 && otaRunning) {
         if (msgIdx != (oldIdx + 1)) {
-            responseBuffer[0] = control_message_type::OTA_ANS;
-            responseBuffer[1] = ota_status::OTA_OUT_OF_SEQUENCE;
-            sendData (responseBuffer, sizeof (responseBuffer), true);
-            DEBUG_ERROR ("%u OTA messages missing before %u", msgIdx - oldIdx - 1, msgIdx);
-            otaRunning = false;
-            otaError = true;
-            return false;
+			if (!otaRecoverRequested) {
+				otaRecoverRequested = true;
+				responseBuffer[0] = control_message_type::OTA_ANS;
+				responseBuffer[1] = ota_status::OTA_OUT_OF_SEQUENCE;
+				memcpy (responseBuffer + 2, (uint8_t*)& oldIdx, sizeof (oldIdx));
+				sendData (responseBuffer, 4, true);
+				DEBUG_ERROR ("%u OTA messages missing before %u", msgIdx - oldIdx - 1, msgIdx);
+				//otaRunning = false;
+				//otaError = true;
+			}
+            return true;
         } else {
-            //Serial.println (msgIdx);
+			oldIdx = msgIdx;
+			otaRecoverRequested = false;
         }
     }
-    oldIdx = msgIdx;
     lastOTAmsg = millis ();
 
     if (msgIdx == 0) {
@@ -1036,7 +1043,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
         _md5.begin ();
         responseBuffer[0] = control_message_type::OTA_ANS;
         responseBuffer[1] = ota_status::OTA_STARTED;
-        if (sendData (responseBuffer, sizeof (responseBuffer), true)) {
+        if (sendData (responseBuffer, 2, true)) {
             DEBUG_INFO ("OTA STARTED");
             restart (false); // Force unregistration after boot so that sleepy status is synchronized
                              // on Gateway
@@ -1064,7 +1071,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
                 otaError = true;
                 responseBuffer[0] = control_message_type::OTA_ANS;
                 responseBuffer[1] = ota_status::OTA_START_ERROR;
-                sendData (responseBuffer, sizeof (responseBuffer), true);
+                sendData (responseBuffer,2, true);
                 DEBUG_ERROR ("OTA error. Message 0 not received");
             }
         }
@@ -1078,14 +1085,14 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
         DEBUG_DBG ("OTA MD5 %s", _md5.toString ().c_str ());
         _md5.getChars (md5calc);
         if (!memcmp (md5calc, md5buffer, 32)) {
-            DEBUG_WARN ("OTA MD5 check OK");
             responseBuffer[0] = control_message_type::OTA_ANS;
             responseBuffer[1] = ota_status::OTA_CHECK_OK;
-            sendData (responseBuffer, sizeof (responseBuffer), true);
-        } else {
+            sendData (responseBuffer, 2, true);
+			DEBUG_WARN ("OTA MD5 check OK");
+		} else {
             responseBuffer[0] = control_message_type::OTA_ANS;
             responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
-            sendData (responseBuffer, sizeof (responseBuffer), true);
+            sendData (responseBuffer, 2, true);
             DEBUG_ERROR ("OTA MD5 check failed");
         }
         Serial.print ('.');
@@ -1095,13 +1102,13 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
         }
         Serial.println ();
 
-        if (Update.end (true)) {
+        if (Update.end ()) {
             responseBuffer[0] = control_message_type::OTA_ANS;
             responseBuffer[1] = ota_status::OTA_FINISHED;
-            sendData (responseBuffer, sizeof (responseBuffer), true);
+            sendData (responseBuffer, 2, true);
             uint8_t otaErrorCode = Update.getError ();
             Update.printError (otaErrorStr);
-            otaErrorStr.trim (); // remove line ending
+            //otaErrorStr.trim (); // remove line ending
             DEBUG_WARN ("OTA Finished OK");
             DEBUG_WARN ("OTA eror code: %s", otaErrorStr.c_str ());
             Serial.println ("OTA OK");
@@ -1110,7 +1117,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
         } else {
             responseBuffer[0] = control_message_type::OTA_ANS;
             responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
-            sendData (responseBuffer, sizeof (responseBuffer), true);
+            sendData (responseBuffer, 2, true);
             uint8_t otaErrorCode = Update.getError ();
             Update.printError (otaErrorStr);
             otaErrorStr.trim (); // remove line ending
