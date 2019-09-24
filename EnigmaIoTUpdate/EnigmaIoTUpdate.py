@@ -15,7 +15,9 @@ sleepSetTopic = "/set/sleeptime"
 sleepResultTopic = "/result/sleeptime"
 otaSetTopic = "/set/ota"
 otaResultTopic = "/result/ota"
+otaOutOfSequenceError = "OTA out of sequence error"
 otaLength = 0
+idx = 0
 
 
 def on_connect(client, userdata, flags, rc):
@@ -28,18 +30,27 @@ def on_connect(client, userdata, flags, rc):
         print("Error connecting. Code ="+str(rc))
         return
 
-    sleepTopic = options.baseTopic+"/"+options.address+resultTopic
-    client.subscribe(sleepTopic)
+    sleep_topic = options.baseTopic+"/"+options.address+resultTopic
+    client.subscribe(sleep_topic)
     print("Subscribed")
 
 
 def on_message(client, userdata, msg):
     global sleepyNode
+    global idx
 
     print(msg.topic+" "+str(msg.payload))
 
-    if msg.topic.find(sleepResultTopic) and msg.payload == b'0':
+    if msg.topic.find(sleepResultTopic) >= 0 and msg.payload == b'0':
         sleepyNode = False
+    payload = msg.payload.decode ('utf-8')
+    if msg.topic.find(otaResultTopic) >= 0 and payload.find(otaOutOfSequenceError) >= 0:
+        # and msg.payload.find(otaOutOfSequenceError):
+        print('Encontrado')
+        print(payload.split(',')[0])
+        idx = int(payload.split(',')[0])
+
+        # print(msg.payload.split(',')[0])
 
 
 def main():
@@ -148,20 +159,23 @@ def main():
     # msg 0, file size, number of chunks, md5 checksum
     client.publish(ota_topic, "0," + str(otaLength) + "," + str(len(encoded_string)) + "," + md5_str)
 
-    i = 1
     # for i in range(0, len(chunked_string), 1):
     print("Sending file: "+options.filename)
-    for chunk in encoded_string:
-        # client.loop()
-        time.sleep(0.06)
+    global idx
+    while idx < len(encoded_string):
+        client.loop()
+        time.sleep(0.03)
         # time.sleep(0.2)
         # if i not in range(10,13):
-        client.publish(ota_topic, str(i)+","+chunk)
-        i = i + 1
+        i = idx + 1
+        client.publish(ota_topic, str(i)+","+encoded_string[idx])
+        idx = idx + 1
         if i % 2 == 0:
             print(".", end='')
         if i % 160 == 0:
             print(" %.f%%" % (i/len(encoded_string)*100))
+        if i == len(encoded_string):
+            time.sleep(2)
 
     print("100%")
     time.sleep(5)
