@@ -6,7 +6,7 @@ import optparse
 import os
 
 # EnigmaIoTUpdate -f <file.bin> -d <address> -t <basetopic> -u <mqttuser> -P <mqttpass> -s <mqttserver>
-#                       -p <mqttport> <-s>
+#                       -p <mqttport> <-s> -D <speed>
 
 options = None
 sleepyNode = True
@@ -17,9 +17,10 @@ otaSetTopic = "/set/ota"
 otaResultTopic = "/result/ota"
 otaOutOfSequenceError = "OTA out of sequence error"
 otaOK = "OTA finished OK"
-otaLength = 0
+# otaLength = 0
 otaFinished = False
 idx = 0
+packetDelay = 0.035
 
 
 def on_connect(client, userdata, flags, rc):
@@ -62,6 +63,7 @@ def main():
     global options
     global sleepyNode
     global otaFinished
+    global packetDelay
 
     opt = optparse.OptionParser()
     opt.add_option("-f", "--file",
@@ -72,7 +74,6 @@ def main():
     opt.add_option("-d", "--daddress",
                    type="string",
                    dest="address",
-                   default="00:00:00:00:00:00",
                    help="Device address")
     opt.add_option("-t", "--topic",
                    type="string",
@@ -108,15 +109,28 @@ def main():
                    dest="mqttSecure",
                    default=False,
                    help="Use secure plain TCP in MQTT connection. Normally you should use port 1883")
+    opt.add_option("-D", "--speed",
+                   type="string",
+                   dest="otaSpeed",
+                   default="fast",
+                   help="OTA update speed profile: 'fast', 'medium' or 'slow'. Default: %default")
 
     (options, args) = opt.parse_args()
+
+    if not options.address:
+        opt.error('Destination address not supplied')
 
     # print(options)
 
     ota_topic = options.baseTopic+"/"+options.address+otaSetTopic
     mqttclientname = "EnigmaIoTUpdate"
 
-    otaLength = os.stat(options.filename).st_size
+    ota_length = os.stat(options.filename).st_size
+
+    if options.otaSpeed == "medium":
+        packetDelay = 0.07
+    elif options.otaSpeed == "slow":
+        packetDelay = 0.14
 
     with open(options.filename, "rb") as binary_file:
         chunked_file = []
@@ -163,14 +177,14 @@ def main():
     md5_str = hash_md5.hexdigest()
 
     # msg 0, file size, number of chunks, md5 checksum
-    client.publish(ota_topic, "0," + str(otaLength) + "," + str(len(encoded_string)) + "," + md5_str)
+    client.publish(ota_topic, "0," + str(ota_length) + "," + str(len(encoded_string)) + "," + md5_str)
 
     # for i in range(0, len(chunked_string), 1):
     print("Sending file: "+options.filename)
     global idx
     while idx < len(encoded_string):
         client.loop()
-        time.sleep(0.035)
+        time.sleep(packetDelay)
         # time.sleep(0.2)
         # if i not in range(10,13):
         i = idx + 1
@@ -181,9 +195,9 @@ def main():
         if i % 160 == 0:
             print(" %.f%%" % (i/len(encoded_string)*100))
         if i == len(encoded_string):
-            for i in range(0, 20):
+            for i in range(0, 40):
                 client.loop()
-                time.sleep(1)
+                time.sleep(0.5)
                 if otaFinished:
                     print(" OTA OK ", end='')
                     break
