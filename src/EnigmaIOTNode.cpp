@@ -41,12 +41,15 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
         Serial.printf (" -- CRC: %s\n", printHexBuffer ((uint8_t*) & (data->crc32), sizeof (uint32_t)));
         Serial.printf (" -- Node Key: %s\n", printHexBuffer (data->nodeKey, KEY_LENGTH));
         Serial.printf (" -- Node key is %svalid\n", data->nodeKeyValid ? "" : "NOT ");
-        Serial.printf (" -- Node status is %s\n", data->nodeRegisterStatus == REGISTERED ? "REGISTERED" : "NOT REGISTERED");
+        Serial.printf (" -- Node status is %d: %s\n", data->nodeRegisterStatus, data->nodeRegisterStatus == REGISTERED ? "REGISTERED" : "NOT REGISTERED");
         Serial.printf (" -- Last message counter: %d\n", data->lastMessageCounter);
-        Serial.printf (" -- NodeID: %d\n", data->nodeId);
+		Serial.printf (" -- NodeID: %d\n", data->nodeId);
         Serial.printf (" -- Channel: %d\n", data->channel);
-        char gwAddress[18];
+        Serial.printf (" -- RSSI: %d\n", data->rssi);
+		Serial.printf (" -- Network name: %s\n", data->networkName);
+		char gwAddress[18];
         Serial.printf (" -- Gateway: %s\n", mac2str (data->gateway, gwAddress));
+		Serial.printf (" -- Comm errors: %d\n", data->commErrors);
         if (gateway)
             Serial.printf (" -- Gateway address: %s\n", mac2str (gateway, gwAddress));
         Serial.printf (" -- Network Key: %s\n", printHexBuffer (data->networkKey, KEY_LENGTH));
@@ -151,23 +154,26 @@ bool EnigmaIOTNodeClass::saveFlashData () {
 bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
     AsyncWebServer server (80);
     DNSServer dns;
-    char channel[4];
-    itoa ((int)(data->channel), channel, 10);
-    DEBUG_DBG ("Channel: %s %d", channel, data->channel);
-    char gateway[18] = "BE:DD:C2:24:14:97";
+    //char channel[4];
+    //itoa ((int)(data->channel), channel, 10);
+    //DEBUG_DBG ("Channel: %s %d", channel, data->channel);
+    //char gateway[18] = "BE:DD:C2:24:14:97"; // TODO: delete this
     //mac2str (data->gateway, gateway);
-    DEBUG_DBG ("Gateway Address: %s", gateway);
+    //DEBUG_DBG ("Gateway Address: %s", gateway);
     char networkKey[33] = "";
     char sleepy[5] = "10";
+	char networkName[NETWORK_NAME_LENGTH] = "";
 
     AsyncWiFiManager wifiManager (&server, &dns);
-    AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
-    AsyncWiFiManagerParameter gatewayParam ("gateway", "EnigmaIoT gateway", gateway, 18, "required type=\"text\" pattern=\"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$\"");
-    AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"text\" maxlength=32");
+	//AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
+	//AsyncWiFiManagerParameter gatewayParam ("gateway", "EnigmaIoT gateway", gateway, 18, "required type=\"text\" pattern=\"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$\"");
+	AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
+	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
     AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
 
-    wifiManager.addParameter (&channelParam);
-    wifiManager.addParameter (&gatewayParam);
+    //wifiManager.addParameter (&channelParam);
+    //wifiManager.addParameter (&gatewayParam);
+    wifiManager.addParameter (&networkNameParam);
     wifiManager.addParameter (&netKeyParam);
     wifiManager.addParameter (&sleepyParam);
     wifiManager.setDebugOutput (true);
@@ -177,17 +183,22 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
     String apname = "EnigmaIoTNode" + String (ESP.getChipId (), 16);
 
     boolean result = wifiManager.startConfigPortal (apname.c_str ());
-    if (result) {
+    if (true /*result*/) {
         DEBUG_DBG ("==== Config Portal result ====");
-        DEBUG_DBG ("Channel: %s", channelParam.getValue ());
-        DEBUG_DBG ("Gateway: %s", gatewayParam.getValue ());
+        //DEBUG_DBG ("Channel: %s", channelParam.getValue ());
+        //DEBUG_DBG ("Gateway: %s", gatewayParam.getValue ());
+        DEBUG_DBG ("Network Name: %s", networkNameParam.getValue ());
         DEBUG_DBG ("Network Key: %s", netKeyParam.getValue ());
         DEBUG_DBG ("Sleppy time: %s", sleepyParam.getValue ());
 
         data->lastMessageCounter = 0;
-        data->channel = atoi (channelParam.getValue ());
-        str2mac (gatewayParam.getValue (), data->gateway);
+        //data->channel = atoi (channelParam.getValue ());
+        //str2mac (gatewayParam.getValue (), data->gateway);
         //memcpy (this->gateway, data->gateway, comm->getAddressLength ());
+		//networkName = networkNameParam.getValue ();
+		memcpy (data->networkName, networkNameParam.getValue (), networkNameParam.getValueLength ());
+		//DEBUG_DBG ("Extracted network name: %s", networkName);
+		DEBUG_DBG ("Stored network name: %s", data->networkName);
         uint8_t keySize = netKeyParam.getValueLength ();
         if (netKeyParam.getValueLength () > KEY_LENGTH)
             keySize = KEY_LENGTH;
@@ -289,9 +300,33 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
             if (loadFlashData ()) { // If data present on flash, read and continue
                 node.setStatus (UNREGISTERED);
                 DEBUG_DBG ("Flash data loaded");
+				if (searchForGateway (&rtcmem_data)) {
+					DEBUG_DBG ("Found gateway. Storing");
+					rtcmem_data.commErrors = 0;
+					rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+					if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+						DEBUG_DBG ("Write configuration data to RTC memory");
+#if DEBUG_LEVEL >= VERBOSE
+						DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+						dumpRtcData (&rtcmem_data/*, this->gateway*/);
+#endif
+					}
+					SPIFFS.begin ();
+					if (!saveFlashData ()) {
+						DEBUG_ERROR ("Error saving data on flash. Restarting");
+					}
+					SPIFFS.end ();
+
+				}
             } else { // Configuration empty. Enter config AP mode
                 DEBUG_DBG ("No flash data present. Starting Configuration AP");
                 if (configWiFiManager (&rtcmem_data)) {// AP config data OK
+					if (!searchForGateway (&rtcmem_data)) {
+						SPIFFS.end ();
+						ESP.restart ();
+						return;
+					}
+
                     DEBUG_DBG ("Got configuration. Storing");
                     rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
                     if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
@@ -328,6 +363,29 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 
 }
 
+bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data) {
+	DEBUG_DBG ("Searching for Gateway");
+
+	WiFi.mode (WIFI_STA);
+	int numWifi = WiFi.scanNetworks (false, false, 0, (uint8_t*)(data->networkName));
+	if (numWifi > 0) {
+		DEBUG_WARN ("Gateway %s found %d", data->networkName, numWifi);
+		DEBUG_WARN ("BSSID: %s", WiFi.BSSIDstr (0).c_str());
+		DEBUG_WARN ("Channel: %d", WiFi.channel (0));
+		DEBUG_WARN ("RSSI: %d", WiFi.RSSI (0));
+		// TODO: In future, to manage redundancy select higher RSSI gateway
+		data->channel = WiFi.channel (0);
+		data->rssi = WiFi.RSSI (0);
+		memcpy (data->gateway, WiFi.BSSID (0), 6);
+
+		WiFi.scanDelete ();
+		
+		return true;
+	}
+	DEBUG_WARN ("Gateway %s not found", data->networkName);
+	return false;
+}
+
 
 void EnigmaIOTNodeClass::stop () {
     comm->stop ();
@@ -362,7 +420,7 @@ void EnigmaIOTNodeClass::setSleepTime (uint32_t sleepTime) {
 void EnigmaIOTNodeClass::handle () {
     static unsigned long blueOntime;
 
-    // Flash led if programmed (when data is transferred)
+	// Flash led if programmed (when data is transferred)
     if (led >= 0) {
         if (flashBlue) {
             blueOntime = millis ();
@@ -394,6 +452,16 @@ void EnigmaIOTNodeClass::handle () {
 			if (millis () - node.getLastMessageTime () > RECONNECTION_PERIOD) {
 				DEBUG_WARN ("Current node status: %d", node.getStatus ());
 				node.reset ();
+				rtcmem_data.nodeRegisterStatus = UNREGISTERED;
+				rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+				if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+					DEBUG_DBG ("Write configuration data to RTC memory");
+#if DEBUG_LEVEL >= VERBOSE
+					DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+					dumpRtcData (&rtcmem_data/*, this->gateway*/);
+#endif
+				}
+
 				DEBUG_INFO ("Registration timeout. Go to sleep for %lu ms", (uint32_t)(RECONNECTION_PERIOD * 4));
 				uint32_t rnd = Crypto.random (PRE_REG_DELAY * 1000); // nanoseconds
 				ESP.deepSleep (RECONNECTION_PERIOD * 4000 + rnd, RF_NO_CAL);
@@ -463,6 +531,31 @@ void EnigmaIOTNodeClass::handle () {
 		if (millis () - retartRequest > 2500) {
 			DEBUG_WARN ("Restart");
 			ESP.restart ();
+		}
+	}
+
+	if (rtcmem_data.commErrors >= COMM_ERRORS_BEFORE_SCAN) {
+		if (!gatewaySearchStarted) {
+			gatewaySearchStarted = true;
+			
+			if (searchForGateway (&rtcmem_data)) {
+				SPIFFS.begin ();
+				DEBUG_DBG ("Found gateway. Storing");
+				rtcmem_data.commErrors = 0;
+				rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+				if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+					DEBUG_DBG ("Write configuration data to RTC memory");
+#if DEBUG_LEVEL >= VERBOSE
+					DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+					dumpRtcData (&rtcmem_data/*, this->gateway*/);
+#endif
+				}
+				if (!saveFlashData ()) {
+					DEBUG_ERROR ("Error saving data on flash.");
+				}
+				SPIFFS.end ();
+
+			}
 		}
 	}
 
@@ -1340,10 +1433,21 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 
 
 void EnigmaIOTNodeClass::getStatus (uint8_t* mac_addr, uint8_t status) {
-    if (status == 0) {
+	gatewaySearchStarted = false;
+	if (status == 0) {
         DEBUG_DBG ("SENDStatus OK");
+		rtcmem_data.commErrors = 0;
     } else {
-        DEBUG_ERROR ("SENDStatus ERROR %d", status);
+		rtcmem_data.commErrors++;
+		rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+		if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+			DEBUG_DBG ("Write configuration data to RTC memory");
+#if DEBUG_LEVEL >= VERBOSE
+			DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+			dumpRtcData (&rtcmem_data/*, this->gateway*/);
+#endif
+		}
+        DEBUG_ERROR ("SENDStatus ERROR %d. Comm errors %u", status, rtcmem_data.commErrors);
     }
 }
 

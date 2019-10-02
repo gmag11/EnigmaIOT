@@ -395,22 +395,28 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	AsyncWebServer server (80);
 	DNSServer dns;
 	char networkKey[33] = "";
+	char networkName[NETWORK_NAME_LENGTH] = "";
 	char channel[4];
 	String (gwConfig.channel).toCharArray (channel, 4);
 
 	AsyncWiFiManager wifiManager (&server, &dns);
-	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"text\" maxlength=32");
+	AsyncWiFiManagerParameter netNameParam ("netname", "Network Name", networkName, (int)NETWORK_NAME_LENGTH-1, "required type=\"text\" maxlength=20");
+	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
 	AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
 
 	wifiManager.addParameter (&netKeyParam);
 	wifiManager.addParameter (&channelParam);
+	wifiManager.addParameter (&netNameParam);
 	wifiManager.setDebugOutput (true);
 	wifiManager.setBreakAfterConfig (true);
+	wifiManager.setTryConnectDuringConfigPortal (false);
 	boolean result = wifiManager.startConfigPortal ("EnigmaIoTGateway");
 	DEBUG_INFO ("==== Config Portal result ====");
+	DEBUG_INFO ("Network Name: %s", netNameParam.getValue ());
 	DEBUG_INFO ("Network Key: %s", netKeyParam.getValue ());
 	DEBUG_INFO ("Channel: %s", channelParam.getValue ());
 	if (result) {
+		memcpy (gwConfig.networkName, netNameParam.getValue (), netNameParam.getValueLength ());
 		uint8_t keySize = netKeyParam.getValueLength ();
 		if (keySize > KEY_LENGTH)
 			keySize = KEY_LENGTH;
@@ -458,6 +464,7 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 		DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
 		return false;
 	}
+	// TODO: Add CRC
 	configFile.write ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
 	configFile.close ();
 	DEBUG_VERBOSE ("Gateway configuration saved to flash: %s", printHexBuffer ((uint8_t*)(&gwConfig), sizeof (gateway_config_t)));

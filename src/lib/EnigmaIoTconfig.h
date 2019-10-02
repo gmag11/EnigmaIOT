@@ -14,6 +14,7 @@ static const uint8_t MAX_MESSAGE_LENGTH = 250; ///< @brief Maximum payload size 
 static const char ENIGMAIOT_PROT_VERS[] = "0.4.0"; ///< @brief EnitmaIoT Version
 static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on ESP-NOW
 static const uint32_t FLASH_LED_TIME = 50; ///< @brief Time that led keeps on during flash in ms
+static const uint8_t NETWORK_NAME_LENGTH = 21; ///< @brief Maximum number of characters of network name
 
 // Gateway configuration
 static const unsigned int MAX_KEY_VALIDITY = 86400000U; ///< @brief After this time (in ms) a nude is unregistered.
@@ -31,8 +32,9 @@ static const int MIN_SYNC_ACCURACY = 5; ///< @brief If calculated offset absolut
 static const int MAX_DATA_PAYLOAD_SIZE = 215; ///< @brief Maximun payload size for data packets
 static const uint32_t PRE_REG_DELAY = 5000; ///< @brief Time to wait before registration so that other nodes have time to communicate. Real delay is a random lower than this value.
 static const uint32_t POST_REG_DELAY = 1500; ///< @brief Time to waif before sending data after registration so that other nodes have time to finish their registration. Real delay is a random lower than this value.
+static const uint8_t COMM_ERRORS_BEFORE_SCAN = 2; ///< @brief Node will search for a gateway if this number of communication errors have happened.
 
-//Crypro configuration
+//Crypto configuration
 const uint8_t KEY_LENGTH = 32; ///< @brief Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing
 const uint8_t IV_LENGTH = 12; ///< @brief Initalization vector length used by selected crypto algorythm
 const uint8_t TAG_LENGTH = 16; ///< @brief Authentication tag length. For Poly1305 it is always 16

@@ -64,11 +64,15 @@ struct rtcmem_data_t {
 	uint16_t nodeId; /**< Node identification */
 	uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
 	uint8_t gateway[6]; /**< Gateway address */
+	int32_t rssi; /**< Gateway signal strength */
 	uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
+	char networkName[NETWORK_NAME_LENGTH]; /**< Network name. Used to search gateway peer */
 	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
 	bool sleepy; /**< Sleepy node */
 	uint32_t sleepTime = 0; /**< Time to sleep between sensor data delivery */
 	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
+	uint8_t commErrors = 0; /**< number of non acknowledged packets. May mean that gateway is not available or its channel has changed.
+							This is used to retrigger Gateway scan*/
 };
 
 typedef nodeMessageType nodeMessageType_t;
@@ -113,8 +117,8 @@ protected:
 	time_t identifyStart; ///< @brief Time when identification started flashing. Used to control identification timeout
 	clock_t timeSyncPeriod = QUICK_SYNC_TIME; ///< @brief Clock synchronization period
 	bool clockSyncEnabled = false; ///< @brief If true clock is synchronized with Gateway
-	bool shouldRestart = false;
-
+	bool shouldRestart = false; ///< @brief Triggers a restart if true
+	bool gatewaySearchStarted = false;
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -310,6 +314,8 @@ protected:
 	  * @return Returns `true` if message could be correcly sent
 	  */
 	bool sendData (const uint8_t* data, size_t len, bool controlMessage);
+
+	bool searchForGateway (rtcmem_data_t* data);
 
 public:
     /**

@@ -68,6 +68,7 @@ typedef void (*onNodeDisconnected_t)(const uint8_t*, gwInvalidateReason_t);
 typedef struct {
 	uint8_t channel = DEFAULT_CHANNEL; /**< Channel used for communications*/
 	uint8_t networkKey[KEY_LENGTH];   /**< Network key to protect key agreement*/
+	char networkName[NETWORK_NAME_LENGTH];   /**< Network name, used to help nodes to find gateway*/
 } gateway_config_t;
 
 /**
