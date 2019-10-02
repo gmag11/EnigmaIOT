@@ -37,6 +37,8 @@ typedef enum control_message_type {
 	SLEEP_SET = 0x03,
 	SLEEP_ANS = 0x82,
 	IDENTIFY = 0x04,
+	RESET = 0x05,
+	RESET_ANS = 0x85,
 	OTA = 0xEF,
 	OTA_ANS = 0xFF,
 	USERDATA = 0x00

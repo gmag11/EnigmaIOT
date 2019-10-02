@@ -25,6 +25,8 @@
 #define SET_OTA "set/ota"
 #define SET_OTA_ANS "result/ota"
 #define SET_IDENTIFY "set/identify"
+#define SET_RESET_CONFIG "set/reset"
+#define SET_RESET_ANS "result/reset"
 
 void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 	switch (data[0]) {
@@ -37,6 +39,9 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 			uint32_t sleepTime;
 			memcpy (&sleepTime, data + 1, sizeof (sleepTime));
 			Serial.printf ("~/%s/%s;%d\n", macStr, GET_SLEEP_ANS, sleepTime);
+			break;
+		case control_message_type::RESET_ANS:
+			Serial.printf ("~/%s/%s;\n", macStr, SET_RESET_ANS);
 			break;
 		case control_message_type::OTA_ANS:
 			Serial.printf ("~/%s/%s;", macStr, SET_OTA_ANS);
@@ -111,19 +116,23 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, u
 control_message_type_t checkMsgType (String data) {
 	if (data.indexOf (GET_VERSION) != -1) {
 		return control_message_type::VERSION;
-	}
+	} else
 	if (data.indexOf (GET_SLEEP) != -1) {
 		return control_message_type::SLEEP_GET;
-	}
+	} else
 	if (data.indexOf (SET_SLEEP) != -1) {
 		return control_message_type::SLEEP_SET;
-	}
+	} else
 	if (data.indexOf (SET_OTA) != -1) {
 		return control_message_type::OTA;
-	}
+	} else
 	if (data.indexOf (SET_IDENTIFY) != -1) {
 		DEBUG_WARN ("IDENTIFY MESSAGE %s", data.c_str ());
 		return control_message_type::IDENTIFY;
+	} else
+	if (data.indexOf (SET_RESET_CONFIG) != -1) {
+		DEBUG_WARN ("RESET CONFIG MESSAGE %s", data.c_str ());
+		return control_message_type::RESET;
 	}
 	return control_message_type::USERDATA;
 }

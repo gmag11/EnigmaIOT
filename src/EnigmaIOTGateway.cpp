@@ -89,6 +89,16 @@ bool buildSetIdentify (uint8_t* data, size_t& dataLen, const uint8_t* inputData,
 	return true;
 }
 
+bool buildSetResetConfig (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Reset Config' message from: %s", printHexBuffer (inputData, inputLen));
+	if (dataLen < 1) {
+		return false;
+	}
+	data[0] = (uint8_t)control_message_type::RESET;
+	dataLen = 1;
+	return true;
+}
+
 int getNextNumber (char* &data, size_t &len/*, char* &position*/) {
 	char strNum[10];
 	int number;
@@ -350,7 +360,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 		break;
 	case control_message_type::SLEEP_SET:
 		if (!buildSetSleep (downstreamData, dataLen, data, len)) {
-			DEBUG_ERROR ("Error building get Sleep message");
+			DEBUG_ERROR ("Error building set Sleep message");
 			return false;
 		}
 		DEBUG_VERBOSE ("Set Sleep. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
@@ -364,12 +374,20 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 		break;
 	case control_message_type::IDENTIFY:
 		if (!buildSetIdentify (downstreamData, dataLen, data, len)) {
-			DEBUG_ERROR ("Error building OTA message");
+			DEBUG_ERROR ("Error building Identify message");
 			return false;
 		}
-		DEBUG_VERBOSE ("OTA message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		DEBUG_VERBOSE ("Identify message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
+	case control_message_type::RESET:
+		if (!buildSetResetConfig (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building Reset message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Reset Config message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
 	}
+
 
 	DEBUG_INFO ("Send downstream");
 
@@ -386,7 +404,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 			return downstreamDataMessage (node, data, len, controlData);
 	} else {
 		char addr[18];
-		DEBUG_ERROR ("Downlink destionation %s not found", mac2str (mac, addr));
+		DEBUG_ERROR ("Downlink destination %s not found", mac2str (mac, addr));
 		return false;
 	}
 }

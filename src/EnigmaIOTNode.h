@@ -119,6 +119,7 @@ protected:
 	bool clockSyncEnabled = false; ///< @brief If true clock is synchronized with Gateway
 	bool shouldRestart = false; ///< @brief Triggers a restart if true
 	bool gatewaySearchStarted = false;
+	bool configCleared = false;
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -299,6 +300,15 @@ protected:
 	bool processSetIdentifyCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
 
 	/**
+	  * @brief Processes a request to reset node configuration
+	  * @param mac Gateway address
+	  * @param buf Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processSetResetConfigCommand (const uint8_t* mac, const uint8_t* buf, uint8_t len);
+	
+	/**
 	  * @brief Processes a request firmware version
 	  * @param mac Gateway address
 	  * @param buf Buffer to store received message
@@ -317,6 +327,10 @@ protected:
 	bool sendData (const uint8_t* data, size_t len, bool controlMessage);
 
 	bool searchForGateway (rtcmem_data_t* data);
+
+	void clearRTC ();
+
+	void clearFlash ();
 
 	bool saveRTCData ();
 

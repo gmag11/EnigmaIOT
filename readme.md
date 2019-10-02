@@ -260,6 +260,7 @@ This is the list of currently implemented control commands:
 - Set sleep duration time
 - OTA Update
 - Identify
+- Node configuration reset
 
 <table>
   <tr>
@@ -287,9 +288,14 @@ This is the list of currently implemented control commands:
     <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/ota &lt;ota_result_code&gt;</code></td>
   </tr>
   <tr>
-    <td>Identify sensor</td>
+    <td>Identify node</td>
     <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/identify</code></td>
     <td>None</td>
+  </tr>
+  <tr>
+    <td>Reset node configuration</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/reset</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/reset</code></td>
   </tr>
 </table>
 
@@ -302,11 +308,13 @@ Messages are encoded to reduce the amount of bytes to be sent over internal prot
 | Get version | `0x01` | None |
 | Version result | `0x81` | version as ASCII string |
 | Get sleep time | `0x02` | None |
-| Set sleep time | `0x02` | Sleep time in seconds (Unsigned integer - 32 bit) |
+| Set sleep time | `0x03` | Sleep time in seconds (Unsigned integer - 32 bit) |
 | Sleep time result | `0x82` | Sleep time in seconds (Unsigned integer - 23 bit) |
 | OTA Update | `0xEF` | OTA update specific format |
 | OTA Update result | `0xFF` | OTA result code |
 | Identify | `0x04` | None. Function to identify a physical node by flashing its LED |
+| Reset node configuration | `0x05` | None. This will set node to factory config |
+| Reset config confirmation | `0x85` | None |
 
 ## OTA Update
 

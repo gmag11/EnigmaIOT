@@ -133,6 +133,8 @@ bool EnigmaIOTNodeClass::loadFlashData () {
 }
 
 bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
+	if (configCleared)
+		return false;
 	if (!fsOpen)
 		SPIFFS.begin ();
     File configFile = SPIFFS.open (CONFIG_FILE, "w");
@@ -154,6 +156,8 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 }
 
 bool EnigmaIOTNodeClass::saveRTCData () {
+	if (configCleared)
+		return false;
 	rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 	if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
 		DEBUG_DBG ("Write configuration data to RTC memory");
@@ -164,6 +168,18 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 		return true;
 	}
 	return false;
+}
+
+void EnigmaIOTNodeClass::clearFlash () {
+	if (!SPIFFS.begin ()) {
+		DEBUG_ERROR ("Error on SPIFFS.begin()");
+	}
+	if (SPIFFS.remove (CONFIG_FILE)) {
+		DEBUG_DBG ("%s deleted", CONFIG_FILE);
+	} else {
+		DEBUG_ERROR ("Error on SPIFFS.remove(\"%s\")", CONFIG_FILE);
+	}
+	SPIFFS.end ();
 }
 
 bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
@@ -1007,6 +1023,41 @@ bool EnigmaIOTNodeClass::processSetIdentifyCommand (const uint8_t* mac, const ui
     startIdentifying (1000);
 }
 
+bool EnigmaIOTNodeClass::processSetResetConfigCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+    uint8_t buffer[MAX_MESSAGE_LENGTH];
+    uint8_t bufLength;
+
+    DEBUG_DBG ("Reset Config command received");
+    DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
+
+	buffer[0] = control_message_type::RESET_ANS;
+	bufLength = 1;
+
+	configCleared = true; // Disable any possible saving to flash or RTC memory
+
+	if (sendData (buffer, bufLength, true)) {
+		DEBUG_DBG ("Reset Config about to be executed", sleepTime);
+		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+	} else {
+		DEBUG_WARN ("Error sending Reset Config response");
+	}
+
+	clearRTC ();
+	clearFlash ();
+
+	ESP.restart ();
+}
+
+void EnigmaIOTNodeClass::clearRTC () {
+	uint8_t data[sizeof (rtcmem_data)];
+
+	memset (data, 0, sizeof (rtcmem_data));
+
+	ESP.rtcUserMemoryWrite (0, (uint32_t*)data, sizeof (rtcmem_data));
+
+	DEBUG_DBG ("RTC Cleared");
+}
+
 bool EnigmaIOTNodeClass::processSetSleepTimeCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
     uint8_t buffer[MAX_MESSAGE_LENGTH];
     uint8_t bufLength;
@@ -1245,6 +1296,8 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
         return processSetSleepTimeCommand (mac, data, len);
     case control_message_type::IDENTIFY:
         return processSetIdentifyCommand (mac, data, len);
+	case control_message_type::RESET:
+		return processSetResetConfigCommand (mac, data, len);
     case control_message_type::OTA:
         if (processOTACommand (mac, data, len)) {
             return true;
