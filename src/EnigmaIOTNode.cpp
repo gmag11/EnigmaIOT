@@ -388,10 +388,10 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data) {
 	WiFi.mode (WIFI_STA);
 	int numWifi = WiFi.scanNetworks (false, false, 0, (uint8_t*)(data->networkName));
 	if (numWifi > 0) {
-		DEBUG_WARN ("Gateway %s found %d", data->networkName, numWifi);
-		DEBUG_WARN ("BSSID: %s", WiFi.BSSIDstr (0).c_str());
-		DEBUG_WARN ("Channel: %d", WiFi.channel (0));
-		DEBUG_WARN ("RSSI: %d", WiFi.RSSI (0));
+		DEBUG_INFO ("Gateway %s found %d", data->networkName, numWifi);
+		DEBUG_INFO ("BSSID: %s", WiFi.BSSIDstr (0).c_str());
+		DEBUG_INFO ("Channel: %d", WiFi.channel (0));
+		DEBUG_INFO ("RSSI: %d", WiFi.RSSI (0));
 		// TODO: In future, to manage redundancy select higher RSSI gateway
 		data->channel = WiFi.channel (0);
 		data->rssi = WiFi.RSSI (0);
@@ -1019,7 +1019,7 @@ bool EnigmaIOTNodeClass::processSetIdentifyCommand (const uint8_t* mac, const ui
     DEBUG_DBG ("Set Identify command received");
     DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
 
-    DEBUG_ERROR ("IDENTIFY");
+    DEBUG_WARN ("IDENTIFY");
     startIdentifying (1000);
 }
 
