@@ -154,9 +154,10 @@ protected:
 
 	/**
 	* @brief Saves configuration to flash memory
+	* @param True if FileSystem has is managed in outter code
 	* @return Returns `true` if data could be written successfuly. `false` otherwise
 	*/
-	bool saveFlashData ();
+	bool saveFlashData (bool fsOpen = false);
 
 	/**
 	* @brief Starts configuration AP and web server and gets settings from it
@@ -316,6 +317,8 @@ protected:
 	bool sendData (const uint8_t* data, size_t len, bool controlMessage);
 
 	bool searchForGateway (rtcmem_data_t* data);
+
+	bool saveRTCData ();
 
 public:
     /**

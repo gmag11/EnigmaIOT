@@ -132,7 +132,9 @@ bool EnigmaIOTNodeClass::loadFlashData () {
     return false;
 }
 
-bool EnigmaIOTNodeClass::saveFlashData () {
+bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
+	if (!fsOpen)
+		SPIFFS.begin ();
     File configFile = SPIFFS.open (CONFIG_FILE, "w");
     if (!configFile) {
         DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
@@ -145,11 +147,24 @@ bool EnigmaIOTNodeClass::saveFlashData () {
     DEBUG_DBG ("Configuration saved to flash");
 #if DEBUG_LEVEL >= VERBOSE
     dumpRtcData (&rtcmem_data);
-#endif
-
+#endif	
+	if (!fsOpen)
+		SPIFFS.end ();
     return true;
 }
 
+bool EnigmaIOTNodeClass::saveRTCData () {
+	rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+	if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+		DEBUG_DBG ("Write configuration data to RTC memory");
+#if DEBUG_LEVEL >= VERBOSE
+		DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+		dumpRtcData (&rtcmem_data/*, this->gateway*/);
+#endif
+		return true;
+	}
+	return false;
+}
 
 bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
     AsyncWebServer server (80);
@@ -303,19 +318,12 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 				if (searchForGateway (&rtcmem_data)) {
 					DEBUG_DBG ("Found gateway. Storing");
 					rtcmem_data.commErrors = 0;
-					rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-					if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
-						DEBUG_DBG ("Write configuration data to RTC memory");
-#if DEBUG_LEVEL >= VERBOSE
-						DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
-						dumpRtcData (&rtcmem_data/*, this->gateway*/);
-#endif
+					if (!saveRTCData()) {
+						DEBUG_ERROR ("Error saving data on RTC");
 					}
-					SPIFFS.begin ();
 					if (!saveFlashData ()) {
-						DEBUG_ERROR ("Error saving data on flash. Restarting");
+						DEBUG_ERROR ("Error saving data on flash");
 					}
-					SPIFFS.end ();
 
 				}
             } else { // Configuration empty. Enter config AP mode
@@ -328,15 +336,10 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 					}
 
                     DEBUG_DBG ("Got configuration. Storing");
-                    rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-                    if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
-                        DEBUG_DBG ("Write configuration data to RTC memory");
-#if DEBUG_LEVEL >= VERBOSE
-                        DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
-                        dumpRtcData (&rtcmem_data/*, this->gateway*/);
-#endif
-                    }
-                    if (!saveFlashData ()) {
+					if (!saveRTCData ()) {
+						DEBUG_ERROR ("Error saving data on RTC");
+					}
+                    if (!saveFlashData (true)) {
                         DEBUG_ERROR ("Error saving data on flash. Restarting");
                     }
                     SPIFFS.end ();
@@ -453,13 +456,9 @@ void EnigmaIOTNodeClass::handle () {
 				DEBUG_WARN ("Current node status: %d", node.getStatus ());
 				node.reset ();
 				rtcmem_data.nodeRegisterStatus = UNREGISTERED;
-				rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-				if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
-					DEBUG_DBG ("Write configuration data to RTC memory");
-#if DEBUG_LEVEL >= VERBOSE
-					DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
-					dumpRtcData (&rtcmem_data/*, this->gateway*/);
-#endif
+				
+				if (!saveRTCData ()) {
+					DEBUG_ERROR ("Error saving data on RTC");
 				}
 
 				DEBUG_INFO ("Registration timeout. Go to sleep for %lu ms", (uint32_t)(RECONNECTION_PERIOD * 4));
@@ -539,21 +538,16 @@ void EnigmaIOTNodeClass::handle () {
 			gatewaySearchStarted = true;
 			
 			if (searchForGateway (&rtcmem_data)) {
-				SPIFFS.begin ();
+				//SPIFFS.begin ();
 				DEBUG_DBG ("Found gateway. Storing");
 				rtcmem_data.commErrors = 0;
-				rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-				if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
-					DEBUG_DBG ("Write configuration data to RTC memory");
-#if DEBUG_LEVEL >= VERBOSE
-					DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
-					dumpRtcData (&rtcmem_data/*, this->gateway*/);
-#endif
+				if (!saveRTCData ()) {
+					DEBUG_ERROR ("Error saving data on RTC");
 				}
 				if (!saveFlashData ()) {
 					DEBUG_ERROR ("Error saving data on flash.");
 				}
-				SPIFFS.end ();
+				//SPIFFS.end ();
 
 			}
 		}
@@ -971,14 +965,9 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
 #endif
 
     if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
-        rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-        if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
-            DEBUG_DBG ("Write configuration data to RTC memory");
-#if DEBUG_LEVEL >= VERBOSE
-            DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
-            dumpRtcData (&rtcmem_data);
-#endif
-        }
+		if (!saveRTCData ()) {
+			DEBUG_ERROR ("Error saving data on RTC");
+		}
     }
 
     return (comm->send (rtcmem_data.gateway, buf, packet_length + TAG_LENGTH) == 0);
@@ -1236,8 +1225,10 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 void EnigmaIOTNodeClass::restart (bool reboot) {
     rtcmem_data.nodeRegisterStatus = UNREGISTERED;
     rtcmem_data.nodeKeyValid = false; // Force resync
-    ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data));
-    DEBUG_DBG ("Reset configuration data in RTC memory");
+	if (!saveRTCData ()) {
+		DEBUG_ERROR ("Error saving data on RTC");
+	}
+	DEBUG_DBG ("Reset configuration data in RTC memory");
     if (reboot)
         ESP.restart (); // Reboot to recover normal status
 }
@@ -1358,11 +1349,9 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 				memcpy (rtcmem_data.nodeKey, node.getEncriptionKey (), KEY_LENGTH);
 				rtcmem_data.lastMessageCounter = 0;
 				rtcmem_data.nodeId = node.getNodeId ();
-				rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-
-				if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
-					DEBUG_DBG ("Write configuration data to RTC memory");
-					DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
+				
+				if (!saveRTCData ()) {
+					DEBUG_ERROR ("Error saving data on RTC");
 				}
 
 				// request clock sync if non sleepy
@@ -1439,13 +1428,8 @@ void EnigmaIOTNodeClass::getStatus (uint8_t* mac_addr, uint8_t status) {
 		rtcmem_data.commErrors = 0;
     } else {
 		rtcmem_data.commErrors++;
-		rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-		if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
-			DEBUG_DBG ("Write configuration data to RTC memory");
-#if DEBUG_LEVEL >= VERBOSE
-			DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
-			dumpRtcData (&rtcmem_data/*, this->gateway*/);
-#endif
+		if (!saveRTCData ()) {
+			DEBUG_ERROR ("Error saving data on RTC");
 		}
         DEBUG_ERROR ("SENDStatus ERROR %d. Comm errors %u", status, rtcmem_data.commErrors);
     }
