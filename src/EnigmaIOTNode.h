@@ -64,7 +64,7 @@ struct rtcmem_data_t {
 	uint16_t nodeId; /**< Node identification */
 	uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
 	uint8_t gateway[6]; /**< Gateway address */
-	int32_t rssi; /**< Gateway signal strength */
+	int8_t rssi; /**< Gateway signal strength */
 	uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
 	char networkName[NETWORK_NAME_LENGTH]; /**< Network name. Used to search gateway peer */
 	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
@@ -341,9 +341,11 @@ protected:
 
 	/**
 	* @brief Starts searching for a gateway that it using configured Network Name as WiFi AP. Stores this info for subsequent use
+	* @param data Node context structure
+	* @param shouldStoreData True if this method should save context in flash
 	* @return Returns `true` if gateway could be found. `false` otherwise
 	*/
-	bool searchForGateway (rtcmem_data_t* data);
+	bool searchForGateway (rtcmem_data_t* data, bool shouldStoreData = false);
 
 	/**
 	* @brief Clears configuration stored in RTC memory to recover factory state

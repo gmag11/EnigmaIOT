@@ -414,7 +414,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 
 }
 
-bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data) {
+bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStoreData) {
 	DEBUG_DBG ("Searching for AP %s", data->networkName);
 
 	WiFi.mode (WIFI_STA);
@@ -428,6 +428,15 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data) {
 		data->channel = WiFi.channel (0);
 		data->rssi = WiFi.RSSI (0);
 		memcpy (data->gateway, WiFi.BSSID (0), 6);
+
+		if (shouldStoreData) {
+			if (!saveRTCData ()) {
+				DEBUG_ERROR ("Error saving data on RTC");
+			}
+			if (!saveFlashData ()) {
+				DEBUG_ERROR ("Error saving data on flash.");
+			}
+		}
 
 		WiFi.scanDelete ();
 		
@@ -586,7 +595,6 @@ void EnigmaIOTNodeClass::handle () {
 			gatewaySearchStarted = true;
 			
 			if (searchForGateway (&rtcmem_data)) {
-				//SPIFFS.begin ();
 				DEBUG_DBG ("Found gateway. Storing");
 				rtcmem_data.commErrors = 0;
 				if (!saveRTCData ()) {
@@ -595,7 +603,6 @@ void EnigmaIOTNodeClass::handle () {
 				if (!saveFlashData ()) {
 					DEBUG_ERROR ("Error saving data on flash.");
 				}
-				//SPIFFS.end ();
 
 			}
 		}
@@ -1475,6 +1482,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
     case INVALIDATE_KEY:
         DEBUG_INFO (" <------- INVALIDATE KEY");
         invalidateReason = processInvalidateKey (mac, buf, count);
+		searchForGateway (&rtcmem_data, true);
         node.reset ();
 		TimeManager.reset ();
 		timeSyncPeriod = QUICK_SYNC_TIME;
