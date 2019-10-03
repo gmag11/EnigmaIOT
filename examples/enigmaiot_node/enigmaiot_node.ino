@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_node.ino
-  * @version 0.4.0
-  * @date 10/09/2019
+  * @version 0.5.0
+  * @date 03/10/2019
   * @author German Martin
   * @brief Node based on EnigmaIoT over ESP-NOW
   *
@@ -51,7 +51,7 @@ void setup () {
 	EnigmaIOTNode.onDataRx (processRxData);
 
 	EnigmaIOTNode.begin (&Espnow_hal);
-
+	
 	// Put here your code to read sensor and compose buffer
     CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
 
