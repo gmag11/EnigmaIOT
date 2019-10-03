@@ -180,8 +180,20 @@ protected:
       */
     bool clientHello ();
 
+	/**
+	  * @brief Build a **ClockRequest** messange and send it to gateway
+	  * @return Returns `true` if ClockRequest message was successfully sent. `false` otherwise
+	  */
     bool clockRequest ();
 
+	/**
+	  * @brief Gets a buffer containing a **ClockResponse** message and process it. It uses that message to
+	  * calculate clock difference against gateway and synchronize to it
+	  * @param mac Address where this message was received from
+	  * @param buf Pointer to the buffer that contains the message
+	  * @param count Message length in number of bytes of ClockResponse message
+	  * @return Returns `true` if message could be correcly processed
+	  */
     bool processClockResponse (const uint8_t mac[6], const uint8_t* buf, size_t count);
 
     /**
@@ -326,12 +338,26 @@ protected:
 	  */
 	bool sendData (const uint8_t* data, size_t len, bool controlMessage);
 
+	/**
+	* @brief Starts searching for a gateway that it using configured Network Name as WiFi AP. Stores this info for subsequent use
+	* @return Returns `true` if gateway could be found. `false` otherwise
+	*/
 	bool searchForGateway (rtcmem_data_t* data);
 
+	/**
+	* @brief Clears configuration stored in RTC memory to recover factory state
+	*/
 	void clearRTC ();
 
+	/**
+	* @brief Clears configuration stored in flash to recover factory state
+	*/
 	void clearFlash ();
 
+	/**
+	* @brief Save configuration to RTC to store current status and recover it after deep sleep
+	* @return Returns `true` if result is successful. `false` otherwise
+	*/
 	bool saveRTCData ();
 
 public:
