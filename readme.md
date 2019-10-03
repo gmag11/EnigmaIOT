@@ -227,6 +227,8 @@ In the case that gateway has changed its channel (for instance due to a reconfig
 
 If several transmission errors are detected by node, it starts searching for gateway again. When found it keeps sending messages normally.
 
+So, node will always follow the channel that gateway is working in.
+
 ## Output data from gateway
 
 ### Uplink messages
