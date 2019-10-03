@@ -89,6 +89,16 @@ bool buildSetIdentify (uint8_t* data, size_t& dataLen, const uint8_t* inputData,
 	return true;
 }
 
+bool buildGetRSSI (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Set Identify' message from: %s", printHexBuffer (inputData, inputLen));
+	if (dataLen < 1) {
+		return false;
+	}
+	data[0] = (uint8_t)control_message_type::RSSI_GET;
+	dataLen = 1;
+	return true;
+}
+
 bool buildSetResetConfig (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
 	DEBUG_VERBOSE ("Build 'Reset Config' message from: %s", printHexBuffer (inputData, inputLen));
 	if (dataLen < 1) {
@@ -385,6 +395,13 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 			return false;
 		}
 		DEBUG_VERBOSE ("Reset Config message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
+	case control_message_type::RSSI_GET:
+		if (!buildGetRSSI (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building get RSSI message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Get RSSI message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
 	}
 

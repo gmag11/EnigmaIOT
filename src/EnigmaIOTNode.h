@@ -120,6 +120,7 @@ protected:
 	bool shouldRestart = false; ///< @brief Triggers a restart if true
 	bool gatewaySearchStarted = false; ///< @brief Avoids start a new gateway scan if it already started
 	bool requestSearchGateway = false;
+	bool requestReportRSSI = false;
 	bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
 	int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
 
@@ -341,33 +342,48 @@ protected:
 	bool sendData (const uint8_t* data, size_t len, bool controlMessage);
 
 	/**
-	* @brief Starts searching for a gateway that it using configured Network Name as WiFi AP. Stores this info for subsequent use
-	* @param data Node context structure
-	* @param shouldStoreData True if this method should save context in flash
-	* @return Returns `true` if gateway could be found. `false` otherwise
-	*/
+	 * @brief Starts searching for a gateway that it using configured Network Name as WiFi AP. Stores this info for subsequent use
+	 * @param data Node context structure
+	 * @param shouldStoreData True if this method should save context in flash
+	 * @return Returns `true` if gateway could be found. `false` otherwise
+	 */
 	bool searchForGateway (rtcmem_data_t* data, bool shouldStoreData = false);
 
 	/**
-	* @brief Clears configuration stored in RTC memory to recover factory state
-	*/
+	 * @brief Clears configuration stored in RTC memory to recover factory state
+	 */
 	void clearRTC ();
 
 	/**
-	* @brief Clears configuration stored in flash to recover factory state
-	*/
+	 * @brief Clears configuration stored in flash to recover factory state
+	 */
 	void clearFlash ();
 
 	/**
-	* @brief Save configuration to RTC to store current status and recover it after deep sleep
-	* @return Returns `true` if result is successful. `false` otherwise
-	*/
+	 * @brief Save configuration to RTC to store current status and recover it after deep sleep
+	 * @return Returns `true` if result is successful. `false` otherwise
+	 */
 	bool saveRTCData ();
 
 	/**
-	* @brief Checks reset button status during startup
-	*/
+	 * @brief Checks reset button status during startup
+	 */
 	void checkResetButton ();
+
+	/**
+	  * @brief Sends RSSI value and channel to Gateway
+	  * @return True if report was sent successfuly
+	  */
+	bool reportRSSI ();
+
+	/**
+	  * @brief Processes a request to measure RSSI
+	  * @param mac Gateway address
+	  * @param buf Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processGetRSSICommand (const uint8_t* mac, const uint8_t* data, uint8_t len);
 
 public:
     /**

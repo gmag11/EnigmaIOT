@@ -121,8 +121,21 @@ class EnigmaIOTGatewayClass
       */
      bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
 
+	 /**
+	  * @brief Starts clock sync procedure from node to gateway
+	  * @param mac Address where this message was received from
+	  * @param buf Pointer to the buffer that contains the message
+	  * @param count Message length in number of bytes of ClockRequest message
+	  * @param node Node entry that Client Hello message comes from
+	  * @return Returns `true` if message could be correcly processed
+	  */
      bool processClockRequest (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node);
-
+	  
+	 /**
+	  * @brief Returns timestaps needed so that node can calculate time difference
+	  * @param Node Pointer to data that corresponds to originating node
+	  * @return Returns `true` if message could be correcly processed
+	  */
      bool clockResponse (Node* node);
 
      /**

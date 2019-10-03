@@ -436,7 +436,6 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		// TODO: In future, to manage redundancy select higher RSSI gateway
 		data->channel = WiFi.channel (0);
 		data->rssi = WiFi.RSSI (0);
-		DEBUG_WARN ("RSSI: %d dBm", getRSSI());
 		memcpy (data->gateway, WiFi.BSSID (0), 6);
 
 		if (shouldStoreData) {
@@ -449,7 +448,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		}
 
 		WiFi.scanDelete ();
-		
+		requestReportRSSI = true;
 		return true;
 	}
 	DEBUG_WARN ("Gateway %s not found", data->networkName);
@@ -487,13 +486,40 @@ void EnigmaIOTNodeClass::setSleepTime (uint32_t sleepTime) {
     }
 }
 
+bool EnigmaIOTNodeClass::reportRSSI () {
+	uint8_t buffer[MAX_MESSAGE_LENGTH];
+	uint8_t bufLength;
+
+	DEBUG_DBG ("Report RSSI and channel");
+
+	buffer[0] = control_message_type::RSSI_ANS;
+	buffer[1] = rtcmem_data.rssi;
+	buffer[2] = rtcmem_data.channel;
+	bufLength = 3;
+
+	if (sendData (buffer, bufLength, true)) {
+		DEBUG_DBG ("Sleep time is %d seconds", sleepTime);
+		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+		return true;
+	} else {
+		DEBUG_WARN ("Error sending version response");
+		return false;
+	}
+}
+
 void EnigmaIOTNodeClass::handle () {
     static unsigned long blueOntime;
 
-	//
+	// Locate gateway address, channel and rssi
 	if (requestSearchGateway) {
 		requestSearchGateway = false;
 		searchForGateway (&rtcmem_data, true);
+	}
+
+	// Report RSSI to gateway
+	if (requestReportRSSI && node.isRegistered ()) {
+		requestReportRSSI = false;
+		reportRSSI ();
 	}
 
 	// Flash led if programmed (when data is transferred)
@@ -1078,6 +1104,11 @@ bool EnigmaIOTNodeClass::processSetIdentifyCommand (const uint8_t* mac, const ui
     startIdentifying (1000);
 }
 
+bool EnigmaIOTNodeClass::processGetRSSICommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	requestSearchGateway = true;
+	requestReportRSSI = true;
+}
+
 bool EnigmaIOTNodeClass::processSetResetConfigCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
     uint8_t buffer[MAX_MESSAGE_LENGTH];
     uint8_t bufLength;
@@ -1353,6 +1384,8 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
         return processSetIdentifyCommand (mac, data, len);
 	case control_message_type::RESET:
 		return processSetResetConfigCommand (mac, data, len);
+	case control_message_type::RSSI_GET:
+		return processGetRSSICommand (mac, data, len);
     case control_message_type::OTA:
         if (processOTACommand (mac, data, len)) {
             return true;
