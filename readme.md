@@ -215,6 +215,18 @@ Example gateway code expands data message to JSON data, to be used easily as pay
 
 In any case you can use your own format or even raw unencoded data. Take care of maximum message length that communications layer uses. For ESP-NOW, maximum payload length it is 217 bytes.
 
+## ESP-NOW channel selection
+
+Gateway has always its WiFi interface working as an AP. Its name correspond to configured Network Name.
+
+During first start, after connecting supply, node tries to search for a WiFi AP with that name. Whet it is found, node will use its MAC address and channel as destination for ESP-NOW messages. It also gets RSSI (signal level) and reports it to gateway.
+
+This information is stored in flash so node will use it to communicate in all following messages.
+
+In the case that gateway has changed its channel (for instance due to a reconfiguration) node will not be able to communicate again.
+
+If several transmission errors are detected by node, it starts searching for gateway again. When found it keeps sending messages normally.
+
 ## Output data from gateway
 
 ### Uplink messages

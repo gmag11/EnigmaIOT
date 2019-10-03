@@ -118,8 +118,8 @@ protected:
 	clock_t timeSyncPeriod = QUICK_SYNC_TIME; ///< @brief Clock synchronization period
 	bool clockSyncEnabled = false; ///< @brief If true clock is synchronized with Gateway
 	bool shouldRestart = false; ///< @brief Triggers a restart if true
-	bool gatewaySearchStarted = false;
-	bool configCleared = false;
+	bool gatewaySearchStarted = false; ///< @brief Avoids start a new gateway scan if it already started
+	bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
