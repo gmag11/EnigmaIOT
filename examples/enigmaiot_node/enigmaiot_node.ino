@@ -57,10 +57,12 @@ void setup () {
 	// Put here your code to read sensor and compose buffer
     CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
 
-	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
-    msg.addTemperature (1, 20.34);
+	msg.addGenericSensor (0, EnigmaIOTNode.getRSSI ());
+	msg.addAnalogInput (1, (float)(ESP.getVcc ()) / 1000);
+    msg.addTemperature (2, 20.34);
 
 	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
+	Serial.printf ("RSSI: %d\n", EnigmaIOTNode.getRSSI ());
 	// End of user code
 
 	Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));

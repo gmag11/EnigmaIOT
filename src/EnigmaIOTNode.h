@@ -119,6 +119,7 @@ protected:
 	bool clockSyncEnabled = false; ///< @brief If true clock is synchronized with Gateway
 	bool shouldRestart = false; ///< @brief Triggers a restart if true
 	bool gatewaySearchStarted = false; ///< @brief Avoids start a new gateway scan if it already started
+	bool requestSearchGateway = false;
 	bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
 	int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
 
@@ -553,6 +554,14 @@ public:
 	  */
 	bool isRegistered () {
 		return node.isRegistered ();
+	}
+
+	/**
+	 * @brief Gets latest RSSI measurement. It is updated during start up or in case of transmission errors
+	 * @return RSSI value
+	 */
+	int8_t getRSSI () {
+		return rtcmem_data.rssi;
 	}
 
 };

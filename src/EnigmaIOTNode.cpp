@@ -419,6 +419,15 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 
 	WiFi.mode (WIFI_STA);
 	int numWifi = WiFi.scanNetworks (false, false, 0, (uint8_t*)(data->networkName));
+	time_t scanStarted = millis ();
+	while (!(WiFi.scanComplete () || (millis () - scanStarted) > 1500)) {
+#if DEBUG_LEVEL >= DBG
+		delay (250);
+		Serial.printf ("%d.", millis () - scanStarted);
+#else
+		delay (50);
+#endif
+	}
 	if (numWifi > 0) {
 		DEBUG_INFO ("Gateway %s found: %d", data->networkName, numWifi);
 		DEBUG_INFO ("BSSID: %s", WiFi.BSSIDstr (0).c_str());
@@ -427,6 +436,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		// TODO: In future, to manage redundancy select higher RSSI gateway
 		data->channel = WiFi.channel (0);
 		data->rssi = WiFi.RSSI (0);
+		DEBUG_WARN ("RSSI: %d dBm", getRSSI());
 		memcpy (data->gateway, WiFi.BSSID (0), 6);
 
 		if (shouldStoreData) {
@@ -479,6 +489,12 @@ void EnigmaIOTNodeClass::setSleepTime (uint32_t sleepTime) {
 
 void EnigmaIOTNodeClass::handle () {
     static unsigned long blueOntime;
+
+	//
+	if (requestSearchGateway) {
+		requestSearchGateway = false;
+		searchForGateway (&rtcmem_data, true);
+	}
 
 	// Flash led if programmed (when data is transferred)
     if (led >= 0) {
@@ -1482,8 +1498,8 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
     case INVALIDATE_KEY:
         DEBUG_INFO (" <------- INVALIDATE KEY");
         invalidateReason = processInvalidateKey (mac, buf, count);
-		searchForGateway (&rtcmem_data, true);
-        node.reset ();
+		requestSearchGateway = true;
+		node.reset ();
 		TimeManager.reset ();
 		timeSyncPeriod = QUICK_SYNC_TIME;
         if (notifyDisconnection) {
