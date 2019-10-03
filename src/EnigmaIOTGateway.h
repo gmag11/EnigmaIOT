@@ -134,28 +134,6 @@ class EnigmaIOTGatewayClass
      bool invalidateKey (Node *node, gwInvalidateReason_t reason);
 
      /**
-      * @brief Build and send a **cipherFinished** message.
-      *
-      * It includes some random data that is encrypted with a CRC to check integrity. This message is used to let node if gateway
-      * generated the correct shared key.
-      *
-      * @param node Node which key agreement is being made with
-      * @return Returns `true` if message could be correcly sent
-      */
-     //bool cipherFinished (Node *node);
-
-     /**
-      * @brief Gets a buffer containing a **KeyExchangeFinished** message and process it. It checks that node key is correct by
-      * decrypting this message random payload
-      * @param mac Address where this message was received from
-      * @param buf Pointer to the buffer that contains the message
-      * @param count Message length in number of bytes of CipherFinished message
-      * @param node Node entry on database
-      * @return Returns `true` if message syntax is correct and key was successfuly calculated `false` otherwise
-      */
-     //bool processKeyExchangeFinished (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
-
-     /**
       * @brief Processes data message from node
       * @param mac Node address
       * @param buf Buffer that stores received message
@@ -165,9 +143,7 @@ class EnigmaIOTGatewayClass
       */
      bool processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
 
-	 //bool processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t* output);
-
-     /**
+	 /**
       * @brief Builds, encrypts and sends a **DownstreamData** message.
       * @param node Node that downstream data message is going to
       * @param data Buffer to store payload to be sent

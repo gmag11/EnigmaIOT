@@ -155,7 +155,7 @@ protected:
 
 	/**
 	* @brief Saves configuration to flash memory
-	* @param True if FileSystem has is managed in outter code
+	* @param fsOpen True if FileSystem has is managed in outter code
 	* @return Returns `true` if data could be written successfuly. `false` otherwise
 	*/
 	bool saveFlashData (bool fsOpen = false);
