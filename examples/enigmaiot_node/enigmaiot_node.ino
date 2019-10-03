@@ -14,6 +14,7 @@
 #include <CayenneLPP.h>
 
 #define BLUE_LED LED_BUILTIN
+constexpr auto RESET_PIN = 13;
   //uint8_t gateway[6] = { 0x5E, 0xCF, 0x7F, 0x80, 0x34, 0x75 };
 uint8_t gateway[6] = { 0xBE, 0xDD, 0xC2, 0x24, 0x14, 0x97 };
 
@@ -46,6 +47,7 @@ void setup () {
 	time_t start = millis ();
 	
 	EnigmaIOTNode.setLed (BLUE_LED);
+	EnigmaIOTNode.setResetPin (RESET_PIN);
 	EnigmaIOTNode.onConnected (connectEventHandler);
 	EnigmaIOTNode.onDisconnected (disconnectEventHandler);
 	EnigmaIOTNode.onDataRx (processRxData);

@@ -23,6 +23,10 @@ void EnigmaIOTNodeClass::setLed (uint8_t led, time_t onTime) {
     ledOnTime = onTime;
 }
 
+void EnigmaIOTNodeClass::setResetPin (int pin) {
+	resetPin = pin;
+}
+
 void clearRtcData (rtcmem_data_t* data) {
     memset (data->nodeKey, 0, KEY_LENGTH);
     data->lastMessageCounter = 0;
@@ -60,7 +64,7 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
 }
 
 bool EnigmaIOTNodeClass::loadRTCData () {
-    if (ESP.rtcUserMemoryRead (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+    if (ESP.rtcUserMemoryRead (RTC_ADDRESS, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
         DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
     } else {
         DEBUG_ERROR ("Error reading RTC memory");
@@ -118,8 +122,8 @@ bool EnigmaIOTNodeClass::loadFlashData () {
             configFile.read ((uint8_t*)(&rtcmem_data), sizeof (rtcmem_data));
             configFile.close ();
             // TODO: Check CRC
-            DEBUG_VERBOSE ("Configuration successfuly read: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data_t)));
-#if DEBUG_LEVEL >= VERBOSE
+            DEBUG_DBG ("Configuration successfuly read: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data_t)));
+#if DEBUG_LEVEL >= DBG
             dumpRtcData (&rtcmem_data);
 #endif
             return true;
@@ -147,7 +151,7 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 	configFile.flush ();
     configFile.close ();
     DEBUG_DBG ("Configuration saved to flash");
-#if DEBUG_LEVEL >= VERBOSE
+#if DEBUG_LEVEL >= DBG
     dumpRtcData (&rtcmem_data);
 #endif	
 	if (!fsOpen)
@@ -159,7 +163,7 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 	if (configCleared)
 		return false;
 	rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-	if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
+	if (ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
 		DEBUG_DBG ("Write configuration data to RTC memory");
 #if DEBUG_LEVEL >= VERBOSE
 		DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
@@ -272,10 +276,35 @@ void EnigmaIOTNodeClass::stopIdentifying () {
     stopFlash ();
 }
 
+void EnigmaIOTNodeClass::checkResetButton () {
+	if (resetPin > 0) {
+		pinMode (resetPin, INPUT_PULLUP);
+		digitalWrite (led, LOW); // Turn on LED
+		if (digitalRead (resetPin) == LOW) { // If pin is grounded
+			time_t resetPinGrounded = millis ();
+			while (digitalRead (resetPin) == LOW) {
+				if (millis () - resetPinGrounded > RESET_PIN_DURATION) {
+					DEBUG_WARN ("Produce reset");
+					digitalWrite (led, HIGH); // Turn off LED
+					startFlash (50);
+					clearFlash ();
+					clearRTC ();
+					delay (5000);
+					ESP.restart ();
+				}
+				delay (50);
+			}
+		}
+	}
+}
+
 void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t* networkKey, bool useCounter, bool sleepy) {
     pinMode (led, OUTPUT);
+	ets_timer_setfn (&ledTimer, flashLed, (void*)& led);
+
+	checkResetButton ();
+
     digitalWrite (led, HIGH);
-    ets_timer_setfn (&ledTimer, flashLed, (void*)& led);
 
     this->comm = comm;
 
@@ -346,6 +375,9 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
                 DEBUG_DBG ("No flash data present. Starting Configuration AP");
                 if (configWiFiManager (&rtcmem_data)) {// AP config data OK
 					if (!searchForGateway (&rtcmem_data)) {
+						if (!saveFlashData (true)) {
+							DEBUG_ERROR ("Error saving data on flash. Restarting");
+						}
 						SPIFFS.end ();
 						ESP.restart ();
 						return;
@@ -383,12 +415,12 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 }
 
 bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data) {
-	DEBUG_DBG ("Searching for Gateway");
+	DEBUG_DBG ("Searching for AP %s", data->networkName);
 
 	WiFi.mode (WIFI_STA);
 	int numWifi = WiFi.scanNetworks (false, false, 0, (uint8_t*)(data->networkName));
 	if (numWifi > 0) {
-		DEBUG_INFO ("Gateway %s found %d", data->networkName, numWifi);
+		DEBUG_INFO ("Gateway %s found: %d", data->networkName, numWifi);
 		DEBUG_INFO ("BSSID: %s", WiFi.BSSIDstr (0).c_str());
 		DEBUG_INFO ("Channel: %d", WiFi.channel (0));
 		DEBUG_INFO ("RSSI: %d", WiFi.RSSI (0));
@@ -1053,7 +1085,7 @@ void EnigmaIOTNodeClass::clearRTC () {
 
 	memset (data, 0, sizeof (rtcmem_data));
 
-	ESP.rtcUserMemoryWrite (0, (uint32_t*)data, sizeof (rtcmem_data));
+	ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)data, sizeof (rtcmem_data));
 
 	DEBUG_DBG ("RTC Cleared");
 }

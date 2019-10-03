@@ -24,7 +24,7 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 	return tempStr;
 }
 
-void initWiFi (uint8_t channel, uint8_t role) {
+void initWiFi (uint8_t channel, uint8_t role, String networkName) {
 	DEBUG_DBG ("initWifi");
 	WiFi.mode (WIFI_AP);
 	//DEBUG_DBG ("AP started");
@@ -34,7 +34,7 @@ void initWiFi (uint8_t channel, uint8_t role) {
 		WiFi.mode (WIFI_STA);
 		DEBUG_DBG ("Mode set to STA");
 	} else { // Gateway
-		WiFi.softAP ("EnigmaGw", "12345678901234567890", channel);
+		WiFi.softAP (networkName, "2599657852368549566551", channel); // TODO: password should be true random
 		DEBUG_DBG ("Mode set to AP in channel %u", channel);
 	}
 

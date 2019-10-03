@@ -65,7 +65,7 @@ class Espnow_halClass : public Comms_halClass
       * @param channel Establishes a channel for the communication. Its use depends on actual communications subsystem
       * @param peerType Role that peer plays into the system, sensor node or gateway.
       */
-    void begin(uint8_t* gateway, uint8_t channel = 0, peerType_t peerType = COMM_SENSOR);
+    void begin(uint8_t* gateway, uint8_t channel = 0, peerType_t peerType = COMM_NODE);
 
 	/**
      * @brief Terminates communication and closes all connectrions

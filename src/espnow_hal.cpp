@@ -20,7 +20,7 @@ void Espnow_halClass::initComms (peerType_t peerType)
         ESP.restart ();
         delay (1);
     }
-    if (peerType == COMM_SENSOR) {
+    if (peerType == COMM_NODE) {
         esp_now_set_self_role (ESP_NOW_ROLE_CONTROLLER);
         esp_now_add_peer (gateway, ESP_NOW_ROLE_SLAVE, channel, NULL, 0);
     } else {
@@ -48,7 +48,7 @@ void Espnow_halClass::tx_cb (uint8_t * mac_addr, uint8_t status)
 
 void Espnow_halClass::begin (uint8_t* gateway, uint8_t channel, peerType_t peerType)
 {
-    if (peerType == COMM_SENSOR) {
+    if (peerType == COMM_NODE) {
         memcpy (this->gateway, gateway, 6);
         this->channel = channel;
     }

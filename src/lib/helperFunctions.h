@@ -49,7 +49,7 @@ uint8_t* str2mac (const char* mac, uint8_t* values);
   * @param channel WiFi channel for interface initialization
   * @param role 0 for node, 1 for gateway
   */
-void initWiFi (uint8_t channel = 3, uint8_t role = 0);
+void initWiFi (uint8_t channel = 3, uint8_t role = 0, String networkName = "EnigmaIOT");
 
 #endif
 

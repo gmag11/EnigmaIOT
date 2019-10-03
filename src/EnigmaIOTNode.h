@@ -120,6 +120,7 @@ protected:
 	bool shouldRestart = false; ///< @brief Triggers a restart if true
 	bool gatewaySearchStarted = false; ///< @brief Avoids start a new gateway scan if it already started
 	bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
+	int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -360,6 +361,11 @@ protected:
 	*/
 	bool saveRTCData ();
 
+	/**
+	* @brief Checks reset button status during startup
+	*/
+	void checkResetButton ();
+
 public:
     /**
       * @brief Initalizes communication basic data and starts node registration
@@ -421,6 +427,12 @@ public:
       * @param onTime Flash duration. 100ms by default.
       */
     void setLed (uint8_t led, time_t onTime = FLASH_LED_TIME);
+
+	/**
+	  * @brief Sets a pin to be used to reset configuration it it is connected to ground during startup
+	  * @param pin Reset pin
+	  */
+	void setResetPin (int pin);
 
     /**
       * @brief Starts a data message transmission

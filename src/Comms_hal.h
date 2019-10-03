@@ -20,7 +20,7 @@
     * @brief Peer role on communication
     */
 enum peerType_t {
-    COMM_SENSOR = 0, /**< Peer acts as a sensor node */
+    COMM_NODE = 0, /**< Peer acts as a node */
     COMM_GATEWAY = 1 /**< Peer acts as a gateway */
 };
 
@@ -38,7 +38,7 @@ class Comms_halClass
 
      /**
        * @brief Communication subsistem initialization
-       * @param peerType Role that peer plays into the system, sensor node or gateway.
+       * @param peerType Role that peer plays into the system, node or gateway.
        */
      virtual void initComms (peerType_t peerType) = 0;
 
@@ -48,9 +48,9 @@ class Comms_halClass
        * @brief Setup communication environment and establish the connection from node to gateway
        * @param gateway Address of gateway. It may be `NULL` in case this is used in the own gateway
        * @param channel Establishes a channel for the communication. Its use depends on actual communications subsystem
-       * @param peerType Role that peer plays into the system, sensor node or gateway.
+       * @param peerType Role that peer plays into the system, node or gateway.
        */
-     virtual void begin (uint8_t* gateway, uint8_t channel, peerType_t peerType = COMM_SENSOR) = 0;
+     virtual void begin (uint8_t* gateway, uint8_t channel, peerType_t peerType = COMM_NODE) = 0;
 
 	 /**
 	   * @brief Terminates communication and closes all connectrions
