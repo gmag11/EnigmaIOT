@@ -364,9 +364,10 @@ Options:
   -p MQTTPORT, --port=MQTTPORT
                         MQTT server port
   -s, --secure          Use secure TLS in MQTT connection. Normally you should
-                        use port 8883
+                          use port 8883
+  -D, --speed			Sets formware delivery speed [fast | medium | slow]. The fastest 						   the biggest chance to get troubles during update. Fast option 						   normally works but medium is more resilient
   --unsecure            Use secure plain TCP in MQTT connection. Normally you
-                        should use port 1883
+                          should use port 1883
 ```
 
 An example of this command could be like this:
@@ -380,6 +381,7 @@ python3 ./EnigmaIoTUpdate.py \
              -P "mymqttbrokerpassword" \
              -S mysecure.mqtt.server \
              -p 8883 \
+             -D medium \
              -s
 ```
 

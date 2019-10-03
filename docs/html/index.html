@@ -298,9 +298,10 @@ $(function() {
 <div class="line">  -p MQTTPORT, --port=MQTTPORT</div>
 <div class="line">                        MQTT server port</div>
 <div class="line">  -s, --secure          Use secure TLS in MQTT connection. Normally you should</div>
-<div class="line">                        use port 8883</div>
+<div class="line">                          use port 8883</div>
+<div class="line">  -D, --speed           Sets formware delivery speed [fast | medium | slow]. The fastest                           the biggest chance to get troubles during update. Fast option                           normally works but medium is more resilient</div>
 <div class="line">  --unsecure            Use secure plain TCP in MQTT connection. Normally you</div>
-<div class="line">                        should use port 1883</div>
+<div class="line">                          should use port 1883</div>
 </div><!-- fragment --><p>An example of this command could be like this:</p>
 <div class="fragment"><div class="line">python3 ./EnigmaIoTUpdate.py \</div>
 <div class="line">             -f EnigmaIOTsensor.bin \</div>
@@ -310,6 +311,7 @@ $(function() {
 <div class="line">             -P &quot;mymqttbrokerpassword&quot; \</div>
 <div class="line">             -S mysecure.mqtt.server \</div>
 <div class="line">             -p 8883 \</div>
+<div class="line">             -D medium \</div>
 <div class="line">             -s</div>
 </div><!-- fragment --><p>Notice that using ESP-NOW device address correspond to <b>MAC address</b> of your ESP8266.</p>
 <p>It is very important to configure user and password on you MQTT broker. Besides, if it is going to be accessed from the Internet you should activate TLS encryption and a certificate.</p>
