@@ -188,7 +188,8 @@ def main():
     print("Sending file: " + args.filename)
     global idx
 
-    error = False
+    # remove to simulate lost message
+    # error = False
 
     while idx < len(encoded_string):
         client.loop()
@@ -199,9 +200,10 @@ def main():
         client.publish(ota_topic, str(i) + "," + encoded_string[idx])
         idx = idx + 1
 
-        if idx == 100 and not error:
-            error = True
-            idx = idx + 1
+        # remove to simulate lost message
+        # if idx == 100 and not error:
+        #    error = True
+        #    idx = idx + 1
 
         if i % 2 == 0:
             print(".", end='')
