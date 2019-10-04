@@ -275,6 +275,7 @@ This is the list of currently implemented control commands:
 - OTA Update
 - Identify
 - Node configuration reset
+- Request measure RSSI
 
 <table>
   <tr>
@@ -284,22 +285,22 @@ This is the list of currently implemented control commands:
   <tr>
     <td>Get version</td>
     <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/version</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/version &lt;version&gt;</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/version {"version":"&lt;version&gt;"}</code></td>
   </tr>
   <tr>
     <td>Get sleep duration</td>
     <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/sleeptime</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime &lt;sleep_time&gt;</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime {"sleeptime":"&lt;sleep_time&gt;"}"</code></td>
   </tr>
   <tr>
     <td>Set sleep duration</td>
     <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/sleeptime &lt;sleep_time&gt;</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime &lt;sleep_time&gt;</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime {"sleeptime":"&lt;sleep_time&gt;"}</code></td>
   </tr>
   <tr>
     <td>OTA message</td>
     <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/ota &lt;ota message&gt;</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/ota &lt;ota_result_code&gt;</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/ota {"result":"&lt;ota_result_text&gt;,"status":"&lt;ota_result_code&gt;"}</code></td>
   </tr>
   <tr>
     <td>Identify node</td>
@@ -309,7 +310,12 @@ This is the list of currently implemented control commands:
   <tr>
     <td>Reset node configuration</td>
     <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/reset</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/reset</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/reset {}</code></td>
+  </tr>
+  <tr>
+    <td>Request measure RSSI</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/rssi</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/rssi {"rssi":&lt;RSSI&gt;,"channel":&lt;WiFi channel&gt;}</code></td>
   </tr>
 </table>
 
@@ -323,12 +329,14 @@ Messages are encoded to reduce the amount of bytes to be sent over internal prot
 | Version result | `0x81` | version as ASCII string |
 | Get sleep time | `0x02` | None |
 | Set sleep time | `0x03` | Sleep time in seconds (Unsigned integer - 32 bit) |
-| Sleep time result | `0x82` | Sleep time in seconds (Unsigned integer - 23 bit) |
+| Sleep time result | `0x82` | Sleep time in seconds (Unsigned integer - 32 bit) |
 | OTA Update | `0xEF` | OTA update specific format |
-| OTA Update result | `0xFF` | OTA result code |
+| OTA Update result | `0xFF` | OTA result code (text and integer code) |
 | Identify | `0x04` | None. Function to identify a physical node by flashing its LED |
 | Reset node configuration | `0x05` | None. This will set node to factory config |
 | Reset config confirmation | `0x85` | None |
+| Request measure RSSI | `0x06` | None |
+| Report measure RSSI | `0x86` | RSSI (signed integer - 8 bit), WiFi channel (unsigned integer - 8 bit) |
 
 ## OTA Update
 
@@ -365,7 +373,9 @@ Options:
                         MQTT server port
   -s, --secure          Use secure TLS in MQTT connection. Normally you should
                           use port 8883
-  -D, --speed			Sets formware delivery speed [fast | medium | slow]. The fastest 						   the biggest chance to get troubles during update. Fast option 						   normally works but medium is more resilient
+  -D, --speed			Sets formware delivery speed [fast | medium | slow]. The fastest
+                          the biggest chance to get troubles during update. Fast option
+                          normally works but medium is more resilient
   --unsecure            Use secure plain TCP in MQTT connection. Normally you
                           should use port 1883
 ```

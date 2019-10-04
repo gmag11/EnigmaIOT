@@ -48,13 +48,13 @@ typedef enum control_message_type {
 } control_message_type_t;
 
 typedef enum ota_status {
-	OTA_STARTED,
-	OTA_START_ERROR,
-	OTA_CHECK_OK,
-	OTA_CHECK_FAIL,
-	OTA_OUT_OF_SEQUENCE,
-	OTA_TIMEOUT,
-	OTA_FINISHED
+	OTA_STARTED = 0,
+	OTA_START_ERROR = 1,
+	OTA_CHECK_OK = 2,
+	OTA_CHECK_FAIL = 3,
+	OTA_OUT_OF_SEQUENCE =4 ,
+	OTA_TIMEOUT = 5,
+	OTA_FINISHED = 6
 } ota_status_t;
 
 /**

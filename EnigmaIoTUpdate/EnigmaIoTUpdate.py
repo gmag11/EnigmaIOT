@@ -4,6 +4,7 @@ import time
 import hashlib
 import argparse
 import os
+import json
 
 # EnigmaIoTUpdate -f <file.bin> -d <address> -t <basetopic> -u <mqttuser> -P <mqttpass> -s <mqttserver>
 #                       -p <mqttport> <-s> -D <speed>
@@ -20,6 +21,9 @@ otaOK = "OTA finished OK"
 # otaLength = 0
 otaFinished = False
 idx = 0
+
+OTA_OUT_OF_SEQUENCE = 4
+OTA_FINISHED = 6
 
 
 def on_connect(client, userdata, flags, rc):
@@ -41,19 +45,21 @@ def on_message(client, userdata, msg):
     global sleepyNode
     global idx, otaFinished
 
-    if msg.topic.find(sleepResultTopic) >= 0 and msg.payload == b'0':
+    payload = json.loads(msg.payload)
+
+    if msg.topic.find(sleepResultTopic) >= 0 and payload['sleeptime'] == 0:
         sleepyNode = False
         print(msg.topic + " " + str(msg.payload))
 
-    payload = msg.payload.decode('utf-8')
+    # payload = msg.payload.decode('utf-8')
 
     if msg.topic.find(otaResultTopic) >= 0:
 
-        if payload.find(otaOutOfSequenceError) >= 0:
-            print(payload.split(',')[0], end='')
-            idx = int(payload.split(',')[0])
+        if payload['status'] == OTA_OUT_OF_SEQUENCE:
+            print(payload['last_chunk'], end='')
+            idx = int(payload['last_chunk'])
 
-        elif payload.find(otaOK) >= 0:
+        elif payload['status'] == OTA_FINISHED:
             print(" OTA Finished ", end='')
             otaFinished = True
 
@@ -181,6 +187,9 @@ def main():
     # for i in range(0, len(chunked_string), 1):
     print("Sending file: " + args.filename)
     global idx
+
+    error = False
+
     while idx < len(encoded_string):
         client.loop()
         time.sleep(packet_delay)
@@ -189,6 +198,11 @@ def main():
         i = idx + 1
         client.publish(ota_topic, str(i) + "," + encoded_string[idx])
         idx = idx + 1
+
+        if idx == 100 and not error:
+            error = True
+            idx = idx + 1
+
         if i % 2 == 0:
             print(".", end='')
         if i % 160 == 0:

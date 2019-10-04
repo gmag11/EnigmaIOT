@@ -33,9 +33,9 @@
 void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 	switch (data[0]) {
 		case control_message_type::VERSION_ANS:
-			Serial.printf ("~/%s/%s;", macStr, GET_VERSION_ANS);
+			Serial.printf ("~/%s/%s;{\"version\":\"", macStr, GET_VERSION_ANS);
 			Serial.write (data + 1, length - 1);
-			Serial.println ();
+			Serial.println ("\"}");
 			break;
 		case control_message_type::SLEEP_ANS:
 			uint32_t sleepTime;
@@ -43,7 +43,7 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 			Serial.printf ("~/%s/%s;{\"sleeptime\":%d}\n", macStr, GET_SLEEP_ANS, sleepTime);
 			break;
 		case control_message_type::RESET_ANS:
-			Serial.printf ("~/%s/%s;\n", macStr, SET_RESET_ANS);
+			Serial.printf ("~/%s/%s;{}\n", macStr, SET_RESET_ANS);
 			break;
 		case control_message_type::RSSI_ANS:
 			Serial.printf ("~/%s/%s;{\"rssi\":%d,\"channel\":%u}\n", macStr, GET_RSSI_ANS, (int8_t)data[1], data[2]);
@@ -52,27 +52,27 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 			Serial.printf ("~/%s/%s;", macStr, SET_OTA_ANS);
 			switch (data[1]) {
 				case ota_status::OTA_STARTED:
-					Serial.printf ("{\"result\":\"OTA Started\"}\n");
+					Serial.printf ("{\"result\":\"OTA Started\",\"status\":%u}\n", data[1]);
 					break;
 				case ota_status::OTA_START_ERROR:
-					Serial.printf ("{\"result\":\"OTA Start error\"}\n");
+					Serial.printf ("{\"result\":\"OTA Start error\",\"status\":%u}\n", data[1]);
 					break;
 				case ota_status::OTA_OUT_OF_SEQUENCE:
 					uint16_t lastGoodIdx;
 					memcpy ((uint8_t*)& lastGoodIdx, data + 2, sizeof (uint16_t));
-					Serial.printf ("{\"last_chunk\":%d,\"result\":\"OTA out of sequence error\"}\n", lastGoodIdx);
+					Serial.printf ("{\"last_chunk\":%d,\"result\":\"OTA out of sequence error\",\"status\":%u}\n", lastGoodIdx, data[1]);
 					break;
 				case ota_status::OTA_CHECK_OK:
-					Serial.printf ("{\"result\":\"OTA check OK\"}\n");
+					Serial.printf ("{\"result\":\"OTA check OK\",\"status\":%u}\n", data[1]);
 					break;
 				case ota_status::OTA_CHECK_FAIL:
-					Serial.printf ("{\"result\":\"OTA check failed\"}\n");
+					Serial.printf ("{\"result\":\"OTA check failed\",\"status\":%u}\n", data[1]);
 					break;
 				case ota_status::OTA_TIMEOUT:
-					Serial.printf ("{\"result\":\"OTA timeout\"}\n");
+					Serial.printf ("{\"result\":\"OTA timeout\",\"status\":%u}\n", data[1]);
 					break;
 				case ota_status::OTA_FINISHED:
-					Serial.printf ("{\"result\":\"OTA finished OK\"}\n");
+					Serial.printf ("{\"result\":\"OTA finished OK\",\"status\":%u}\n", data[1]);
 					break;
 				default:
 					Serial.println ();
