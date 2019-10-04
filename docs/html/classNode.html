@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.5.0</span>
+   &#160;<span id="projectnumber">0.5.1</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
   </td>
@@ -152,8 +152,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae1a2a8c747a1af2e7d9467ae9199edd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets node working mode regarding battery saving strategy. If node is sleepy it will turn into deep sleep after sending a message. In this case it will wait for a short while for a downlink message from gateway.  <a href="classNode.html#ae1a2a8c747a1af2e7d9467ae9199edd7">More...</a><br /></td></tr>
 <tr class="separator:ae1a2a8c747a1af2e7d9467ae9199edd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3621fd27cee1a28145a7daa167ad0b3d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a3621fd27cee1a28145a7daa167ad0b3d">setInitAsSleepy</a> (bool sleepy)</td></tr>
+<tr class="memdesc:a3621fd27cee1a28145a7daa167ad0b3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Records if node started as a sleepy node or not. If it did not started so it will never accept sleep time changes.  <a href="classNode.html#a3621fd27cee1a28145a7daa167ad0b3d">More...</a><br /></td></tr>
 <tr class="separator:a3621fd27cee1a28145a7daa167ad0b3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89ccd5b416ac31593da426c48ec8562a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a89ccd5b416ac31593da426c48ec8562a">getInitAsSleepy</a> ()</td></tr>
+<tr class="memdesc:a89ccd5b416ac31593da426c48ec8562a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets initial sleepy mode.  <a href="classNode.html#a89ccd5b416ac31593da426c48ec8562a">More...</a><br /></td></tr>
 <tr class="separator:a89ccd5b416ac31593da426c48ec8562a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bf02d202c9cb76831de89e4d1ef8893"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a5bf02d202c9cb76831de89e4d1ef8893">getSleepy</a> ()</td></tr>
 <tr class="memdesc:a5bf02d202c9cb76831de89e4d1ef8893"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets node working mode regarding battery saving strategy. If node is sleepy it will turn into deep sleep after sending a message. In this case it will wait for a short while for a downlink message from gateway.  <a href="classNode.html#a5bf02d202c9cb76831de89e4d1ef8893">More...</a><br /></td></tr>
@@ -171,12 +173,16 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a0db2a4dfda51cfc5afe8c846a622ba54"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>True</code> if message should be sent just after next data message  <a href="classNode.html#a0db2a4dfda51cfc5afe8c846a622ba54">More...</a><br /></td></tr>
 <tr class="separator:a0db2a4dfda51cfc5afe8c846a622ba54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedfde4376c7c84dd8c88c2c530b3b102"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#aedfde4376c7c84dd8c88c2c530b3b102">packetNumber</a> = 0</td></tr>
+<tr class="memdesc:aedfde4376c7c84dd8c88c2c530b3b102"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of packets received from node to gateway.  <a href="classNode.html#aedfde4376c7c84dd8c88c2c530b3b102">More...</a><br /></td></tr>
 <tr class="separator:aedfde4376c7c84dd8c88c2c530b3b102"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e2e4c6afb4bf93ca10e60d239fd87c5"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a4e2e4c6afb4bf93ca10e60d239fd87c5">packetErrors</a> = 0</td></tr>
+<tr class="memdesc:a4e2e4c6afb4bf93ca10e60d239fd87c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of errored packets.  <a href="classNode.html#a4e2e4c6afb4bf93ca10e60d239fd87c5">More...</a><br /></td></tr>
 <tr class="separator:a4e2e4c6afb4bf93ca10e60d239fd87c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f8f6419cc10c972285178991b2cec78"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a2f8f6419cc10c972285178991b2cec78">per</a> = 0</td></tr>
+<tr class="memdesc:a2f8f6419cc10c972285178991b2cec78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current packet error rate of a specific node.  <a href="classNode.html#a2f8f6419cc10c972285178991b2cec78">More...</a><br /></td></tr>
 <tr class="separator:a2f8f6419cc10c972285178991b2cec78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc1ad898434142e44923f7220b6a2ae4"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#abc1ad898434142e44923f7220b6a2ae4">packetsHour</a> = 0</td></tr>
+<tr class="memdesc:abc1ad898434142e44923f7220b6a2ae4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Packet rate ffor a specific nope.  <a href="classNode.html#abc1ad898434142e44923f7220b6a2ae4">More...</a><br /></td></tr>
 <tr class="separator:abc1ad898434142e44923f7220b6a2ae4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b2d045175210803d1b3ff8e6aba0b9e"><td class="memItemLeft" align="right" valign="top">clock_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a7b2d045175210803d1b3ff8e6aba0b9e">t1</a></td></tr>
 <tr class="separator:a7b2d045175210803d1b3ff8e6aba0b9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,6 +191,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a0c1affef7b840f0a817a6203c4592ea5"><td class="memItemLeft" align="right" valign="top">clock_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a0c1affef7b840f0a817a6203c4592ea5">t3</a></td></tr>
 <tr class="separator:a0c1affef7b840f0a817a6203c4592ea5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0da220cd42bf9a9df169f28d7d897678"><td class="memItemLeft" align="right" valign="top">clock_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a0da220cd42bf9a9df169f28d7d897678">t4</a></td></tr>
+<tr class="memdesc:a0da220cd42bf9a9df169f28d7d897678"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timestaps to calculate clock offset.  <a href="classNode.html#a0da220cd42bf9a9df169f28d7d897678">More...</a><br /></td></tr>
 <tr class="separator:a0da220cd42bf9a9df169f28d7d897678"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
@@ -193,6 +200,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memdesc:a03e424c2251b5b96fb68444f008f6f17"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> shared key valid.  <a href="classNode.html#a03e424c2251b5b96fb68444f008f6f17">More...</a><br /></td></tr>
 <tr class="separator:a03e424c2251b5b96fb68444f008f6f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02eb5aa6340f2d4e0cfd48f7bb661dd3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="NodeList_8h.html#a6d12566cf69b6429f5cce300ab1f39c9">status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#a02eb5aa6340f2d4e0cfd48f7bb661dd3">status</a></td></tr>
+<tr class="memdesc:a02eb5aa6340f2d4e0cfd48f7bb661dd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current node status. See <code>enum node_status</code>  <a href="classNode.html#a02eb5aa6340f2d4e0cfd48f7bb661dd3">More...</a><br /></td></tr>
 <tr class="separator:a02eb5aa6340f2d4e0cfd48f7bb661dd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2378f7b085ccdc06314b12263fd2d34"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNode.html#af2378f7b085ccdc06314b12263fd2d34">lastMessageCounter</a></td></tr>
 <tr class="memdesc:af2378f7b085ccdc06314b12263fd2d34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last message counter state for specific <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a>.  <a href="classNode.html#af2378f7b085ccdc06314b12263fd2d34">More...</a><br /></td></tr>
@@ -227,7 +235,7 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class definition for a single sensor <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00078">78</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00080">80</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad7a34779cad45d997bfd6d3d8043c75f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad7a34779cad45d997bfd6d3d8043c75f">&#9670;&nbsp;</a></span>Node() <span class="overload">[1/2]</span></h2>
@@ -307,7 +315,7 @@ Friends</h2></td></tr>
 <p>Gets <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> encryption key. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns a pointer to <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> encryption key </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00121">121</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00123">123</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -334,7 +342,10 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00262">262</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Gets initial sleepy mode. </p>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if node started as sleepy. <code>false</code> otherwise </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00272">272</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -364,7 +375,7 @@ Friends</h2></td></tr>
 <p>Gets last time that key was agreed with gateway. </p>
 <dl class="section return"><dt>Returns</dt><dd>Time in milliseconds of last key agreement </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00135">135</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00137">137</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -394,7 +405,7 @@ Friends</h2></td></tr>
 <p>Gets counter for last received message from node. </p>
 <dl class="section return"><dt>Returns</dt><dd>Message counter </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00166">166</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00168">168</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -424,7 +435,7 @@ Friends</h2></td></tr>
 <p>Gets last time that node sent a message. </p>
 <dl class="section return"><dt>Returns</dt><dd>Time in milliseconds of last received node message </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00151">151</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00153">153</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -454,7 +465,7 @@ Friends</h2></td></tr>
 <p>Gets address from <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns a pointer to <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> address </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00097">97</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00099">99</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -506,7 +517,7 @@ Friends</h2></td></tr>
 <p>Gets <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> identifier. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> identifier </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00105">105</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00107">107</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -536,7 +547,7 @@ Friends</h2></td></tr>
 <p>Gets node working mode regarding battery saving strategy. If node is sleepy it will turn into deep sleep after sending a message. In this case it will wait for a short while for a downlink message from gateway. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if node sleeps after sending a message and wait for downlink. <code>false</code> if downlink may happen in any moment </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00271">271</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00281">281</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -566,7 +577,7 @@ Friends</h2></td></tr>
 <p>Gets status for finite state machine that represents node. </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> status </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00216">216</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00218">218</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -596,7 +607,7 @@ Friends</h2></td></tr>
 <p>Gets shared key validity for this node. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if node shared key is valid. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00192">192</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00194">194</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -626,7 +637,7 @@ Friends</h2></td></tr>
 <p>Gets registration state of this node. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if node is registered on gateway. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00208">208</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00210">210</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -731,7 +742,15 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00258">258</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Records if node started as a sleepy node or not. If it did not started so it will never accept sleep time changes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sleepy</td><td><code>true</code> if node started as sleepy. <code>false</code> otherwise </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00264">264</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -767,7 +786,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00200">200</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00202">202</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -803,7 +822,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00143">143</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00145">145</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -839,7 +858,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00174">174</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00176">176</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -868,7 +887,7 @@ Friends</h2></td></tr>
 
 <p>Sets current moment as last node message time. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00158">158</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00160">160</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -904,7 +923,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00182">182</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00184">184</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -940,7 +959,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00113">113</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00115">115</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -976,7 +995,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00250">250</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00252">252</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1012,7 +1031,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00224">224</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00226">226</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1037,7 +1056,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00298">298</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00308">308</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1064,7 +1083,7 @@ Friends</h2></td></tr>
 
 <p>Stores initial sleepy node. If this is false, this node does not accept sleep time changes. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00293">293</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00303">303</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1090,7 +1109,7 @@ Friends</h2></td></tr>
 
 <p>Shared key. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00295">295</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00305">305</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1116,7 +1135,7 @@ Friends</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> shared key valid. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00287">287</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00297">297</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1142,7 +1161,7 @@ Friends</h2></td></tr>
 
 <p>Last time that <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> and Gateway agreed a key. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00291">291</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00301">301</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1168,7 +1187,7 @@ Friends</h2></td></tr>
 
 <p>Last message counter state for specific <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00289">289</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00299">299</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1194,7 +1213,7 @@ Friends</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> state. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00296">296</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00306">306</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1220,7 +1239,7 @@ Friends</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> address. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00294">294</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00304">304</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1246,7 +1265,7 @@ Friends</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> identifier asigned by gateway. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00290">290</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00300">300</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1262,7 +1281,9 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00280">280</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Number of errored packets. </p>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00290">290</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1278,7 +1299,9 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00279">279</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Number of packets received from node to gateway. </p>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00289">289</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1294,7 +1317,9 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00282">282</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Packet rate ffor a specific nope. </p>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00292">292</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1310,7 +1335,9 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00281">281</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Current packet error rate of a specific node. </p>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00291">291</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1328,7 +1355,7 @@ Friends</h2></td></tr>
 
 <p>Queued message length. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00276">276</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00286">286</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1346,7 +1373,7 @@ Friends</h2></td></tr>
 
 <p><code>True</code> if message should be sent just after next data message </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00277">277</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00287">287</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1364,7 +1391,7 @@ Friends</h2></td></tr>
 
 <p>Message queued for sending to node in case of sleepy mode. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00275">275</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00285">285</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1390,7 +1417,7 @@ Friends</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> sleepy definition. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00292">292</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00302">302</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1414,7 +1441,9 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00288">288</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Current node status. See <code>enum node_status</code> </p>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00298">298</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1430,7 +1459,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00283">283</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00293">293</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1446,7 +1475,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00283">283</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00293">293</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1462,7 +1491,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00283">283</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00293">293</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -1478,7 +1507,9 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00283">283</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p>Timestaps to calculate clock offset. </p>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00293">293</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>

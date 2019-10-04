@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.5.0</span>
+   &#160;<span id="projectnumber">0.5.1</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
   </td>
@@ -228,22 +228,25 @@ $(function() {
 <li>OTA Update</li>
 <li>Identify</li>
 <li><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> configuration reset</li>
+<li>Request measure RSSI</li>
 </ul>
 <table class="doxtable">
 <tr>
 <th colspan="2">Command </th><th>Response  </th></tr>
 <tr>
-<td>Get version </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/version</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/version &lt;version&gt;</code>  </td></tr>
+<td>Get version </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/version</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/version {"version":"&amp;lt;version&amp;gt;"}</code>  </td></tr>
 <tr>
-<td>Get sleep duration </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/sleeptime</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime &lt;sleep_time&gt;</code>  </td></tr>
+<td>Get sleep duration </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/sleeptime</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime {"sleeptime":"&amp;lt;sleep_time&amp;gt;"}"</code>  </td></tr>
 <tr>
-<td>Set sleep duration </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/sleeptime &lt;sleep_time&gt;</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime &lt;sleep_time&gt;</code>  </td></tr>
+<td>Set sleep duration </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/sleeptime &lt;sleep_time&gt;</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime {"sleeptime":"&amp;lt;sleep_time&amp;gt;"}</code>  </td></tr>
 <tr>
-<td>OTA message </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/ota &lt;ota message&gt;</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/ota &lt;ota_result_code&gt;</code>  </td></tr>
+<td>OTA message </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/ota &lt;ota message&gt;</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/ota {"result":"&amp;lt;ota_result_text&amp;gt;,"status":"&lt;ota_result_code&gt;"}</code>  </td></tr>
 <tr>
 <td>Identify node </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/identify</code> </td><td>None  </td></tr>
 <tr>
-<td>Reset node configuration </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/reset</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/reset</code>  </td></tr>
+<td>Reset node configuration </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/reset</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/reset {}</code>  </td></tr>
+<tr>
+<td>Request measure RSSI </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/rssi</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/rssi {"rssi":&lt;RSSI&gt;,"channel":&lt;WiFi channel&gt;}</code>  </td></tr>
 </table>
 <p>For instance, publishing <code>enigmaiot/12:34:56:78:90:12/get/version</code> will produce <code>enigmaiot/12:34:56:78:90:12/result/version 0.2.0</code>.</p>
 <p>Messages are encoded to reduce the amount of bytes to be sent over internal protocol, so that the air time is as short as possible.</p>
@@ -259,17 +262,21 @@ $(function() {
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Set sleep time  </td><td class="markdownTableBodyNone"><code>0x03</code>  </td><td class="markdownTableBodyNone">Sleep time in seconds (Unsigned integer - 32 bit)   </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Sleep time result  </td><td class="markdownTableBodyNone"><code>0x82</code>  </td><td class="markdownTableBodyNone">Sleep time in seconds (Unsigned integer - 23 bit)   </td></tr>
+<td class="markdownTableBodyNone">Sleep time result  </td><td class="markdownTableBodyNone"><code>0x82</code>  </td><td class="markdownTableBodyNone">Sleep time in seconds (Unsigned integer - 32 bit)   </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">OTA Update  </td><td class="markdownTableBodyNone"><code>0xEF</code>  </td><td class="markdownTableBodyNone">OTA update specific format   </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">OTA Update result  </td><td class="markdownTableBodyNone"><code>0xFF</code>  </td><td class="markdownTableBodyNone">OTA result code   </td></tr>
+<td class="markdownTableBodyNone">OTA Update result  </td><td class="markdownTableBodyNone"><code>0xFF</code>  </td><td class="markdownTableBodyNone">OTA result code (text and integer code)   </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Identify  </td><td class="markdownTableBodyNone"><code>0x04</code>  </td><td class="markdownTableBodyNone">None. Function to identify a physical node by flashing its LED   </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Reset node configuration  </td><td class="markdownTableBodyNone"><code>0x05</code>  </td><td class="markdownTableBodyNone">None. This will set node to factory config   </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Reset config confirmation  </td><td class="markdownTableBodyNone"><code>0x85</code>  </td><td class="markdownTableBodyNone">None   </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Request measure RSSI  </td><td class="markdownTableBodyNone"><code>0x06</code>  </td><td class="markdownTableBodyNone">None   </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Report measure RSSI  </td><td class="markdownTableBodyNone"><code>0x86</code>  </td><td class="markdownTableBodyNone">RSSI (signed integer - 8 bit), WiFi channel (unsigned integer - 8 bit)   </td></tr>
 </table>
 <h1>OTA Update</h1>
 <p>OTA updates are transferred using the same mechanism. Firmware is sent over MQTT using a <a href="./EnigmaIoTUpdate/EnigmaIoTUpdate.py">Python script</a>. Then gateway selects the appropriate node and send this binary data over ESP-NOW.</p>
@@ -299,7 +306,9 @@ $(function() {
 <div class="line">                        MQTT server port</div>
 <div class="line">  -s, --secure          Use secure TLS in MQTT connection. Normally you should</div>
 <div class="line">                          use port 8883</div>
-<div class="line">  -D, --speed           Sets formware delivery speed [fast | medium | slow]. The fastest                           the biggest chance to get troubles during update. Fast option                           normally works but medium is more resilient</div>
+<div class="line">  -D, --speed           Sets formware delivery speed [fast | medium | slow]. The fastest</div>
+<div class="line">                          the biggest chance to get troubles during update. Fast option</div>
+<div class="line">                          normally works but medium is more resilient</div>
 <div class="line">  --unsecure            Use secure plain TCP in MQTT connection. Normally you</div>
 <div class="line">                          should use port 1883</div>
 </div><!-- fragment --><p>An example of this command could be like this:</p>

@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.5.0</span>
+   &#160;<span id="projectnumber">0.5.1</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
   </td>
@@ -130,6 +130,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a43abab3a73d46ff99f33c8596512dcaf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#a43abab3a73d46ff99f33c8596512dcaf">isRegistered</a> ()</td></tr>
 <tr class="memdesc:a43abab3a73d46ff99f33c8596512dcaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if node is registered.  <a href="classEnigmaIOTNodeClass.html#a43abab3a73d46ff99f33c8596512dcaf">More...</a><br /></td></tr>
 <tr class="separator:a43abab3a73d46ff99f33c8596512dcaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6176d81e34ccc835f6886c23ba47d93"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#ae6176d81e34ccc835f6886c23ba47d93">getRSSI</a> ()</td></tr>
+<tr class="memdesc:ae6176d81e34ccc835f6886c23ba47d93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets latest RSSI measurement. It is updated during start up or in case of transmission errors.  <a href="classEnigmaIOTNodeClass.html#ae6176d81e34ccc835f6886c23ba47d93">More...</a><br /></td></tr>
+<tr class="separator:ae6176d81e34ccc835f6886c23ba47d93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -208,9 +211,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a564b1f56e06c5b308c53c8240384a664"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#a564b1f56e06c5b308c53c8240384a664">sendData</a> (const uint8_t *data, size_t len, bool controlMessage)</td></tr>
 <tr class="memdesc:a564b1f56e06c5b308c53c8240384a664"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initiades data transmission distinguissing if it is payload or control data.  <a href="classEnigmaIOTNodeClass.html#a564b1f56e06c5b308c53c8240384a664">More...</a><br /></td></tr>
 <tr class="separator:a564b1f56e06c5b308c53c8240384a664"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9eeac1c2499422a1772ed3c8933d5cb6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#a9eeac1c2499422a1772ed3c8933d5cb6">searchForGateway</a> (<a class="el" href="structrtcmem__data__t.html">rtcmem_data_t</a> *data)</td></tr>
-<tr class="memdesc:a9eeac1c2499422a1772ed3c8933d5cb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts searching for a gateway that it using configured Network Name as WiFi AP. Stores this info for subsequent use.  <a href="classEnigmaIOTNodeClass.html#a9eeac1c2499422a1772ed3c8933d5cb6">More...</a><br /></td></tr>
-<tr class="separator:a9eeac1c2499422a1772ed3c8933d5cb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7a98adabe272649c3c65efd1c2cfe45"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#ad7a98adabe272649c3c65efd1c2cfe45">searchForGateway</a> (<a class="el" href="structrtcmem__data__t.html">rtcmem_data_t</a> *data, bool shouldStoreData=false)</td></tr>
+<tr class="memdesc:ad7a98adabe272649c3c65efd1c2cfe45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts searching for a gateway that it using configured Network Name as WiFi AP. Stores this info for subsequent use.  <a href="classEnigmaIOTNodeClass.html#ad7a98adabe272649c3c65efd1c2cfe45">More...</a><br /></td></tr>
+<tr class="separator:ad7a98adabe272649c3c65efd1c2cfe45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa97e9b5f9e73702c545a5e7b4c2c15f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#afa97e9b5f9e73702c545a5e7b4c2c15f">clearRTC</a> ()</td></tr>
 <tr class="memdesc:afa97e9b5f9e73702c545a5e7b4c2c15f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears configuration stored in RTC memory to recover factory state.  <a href="classEnigmaIOTNodeClass.html#afa97e9b5f9e73702c545a5e7b4c2c15f">More...</a><br /></td></tr>
 <tr class="separator:afa97e9b5f9e73702c545a5e7b4c2c15f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,6 +226,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a2cf188fbd1d22775605eea93ed561a53"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#a2cf188fbd1d22775605eea93ed561a53">checkResetButton</a> ()</td></tr>
 <tr class="memdesc:a2cf188fbd1d22775605eea93ed561a53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks reset button status during startup.  <a href="classEnigmaIOTNodeClass.html#a2cf188fbd1d22775605eea93ed561a53">More...</a><br /></td></tr>
 <tr class="separator:a2cf188fbd1d22775605eea93ed561a53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab95b384ed3f016217d9669c7982e8c08"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#ab95b384ed3f016217d9669c7982e8c08">reportRSSI</a> ()</td></tr>
+<tr class="memdesc:ab95b384ed3f016217d9669c7982e8c08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends RSSI value and channel to Gateway.  <a href="classEnigmaIOTNodeClass.html#ab95b384ed3f016217d9669c7982e8c08">More...</a><br /></td></tr>
+<tr class="separator:ab95b384ed3f016217d9669c7982e8c08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d4446a73e230333f972b233fa2dffdd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#a0d4446a73e230333f972b233fa2dffdd">processGetRSSICommand</a> (const uint8_t *mac, const uint8_t *data, uint8_t len)</td></tr>
+<tr class="memdesc:a0d4446a73e230333f972b233fa2dffdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a request to measure RSSI.  <a href="classEnigmaIOTNodeClass.html#a0d4446a73e230333f972b233fa2dffdd">More...</a><br /></td></tr>
+<tr class="separator:a0d4446a73e230333f972b233fa2dffdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
@@ -307,6 +316,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ad2beff45acb833796b079e741d13ec75"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#ad2beff45acb833796b079e741d13ec75">gatewaySearchStarted</a> = false</td></tr>
 <tr class="memdesc:ad2beff45acb833796b079e741d13ec75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Avoids start a new gateway scan if it already started.  <a href="classEnigmaIOTNodeClass.html#ad2beff45acb833796b079e741d13ec75">More...</a><br /></td></tr>
 <tr class="separator:ad2beff45acb833796b079e741d13ec75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa024db31641775e4de784d4d2ce545a1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#aa024db31641775e4de784d4d2ce545a1">requestSearchGateway</a> = false</td></tr>
+<tr class="memdesc:aa024db31641775e4de784d4d2ce545a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to control updating gateway address, RSSI and channel.  <a href="classEnigmaIOTNodeClass.html#aa024db31641775e4de784d4d2ce545a1">More...</a><br /></td></tr>
+<tr class="separator:aa024db31641775e4de784d4d2ce545a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d5665e7dfd598c618e5388b07271bb1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#a9d5665e7dfd598c618e5388b07271bb1">requestReportRSSI</a> = false</td></tr>
+<tr class="memdesc:a9d5665e7dfd598c618e5388b07271bb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to control RSSI reporting.  <a href="classEnigmaIOTNodeClass.html#a9d5665e7dfd598c618e5388b07271bb1">More...</a><br /></td></tr>
+<tr class="separator:a9d5665e7dfd598c618e5388b07271bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5aea95bd2dead51558a1f7fa312cf1c6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTNodeClass.html#a5aea95bd2dead51558a1f7fa312cf1c6">configCleared</a> = false</td></tr>
 <tr class="memdesc:a5aea95bd2dead51558a1f7fa312cf1c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">This flag disables asy configuration save after triggering a factory reset.  <a href="classEnigmaIOTNodeClass.html#a5aea95bd2dead51558a1f7fa312cf1c6">More...</a><br /></td></tr>
 <tr class="separator:a5aea95bd2dead51558a1f7fa312cf1c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -432,7 +447,7 @@ Protected Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if CRC check was successful. <code>false</code> otherwise <br  />
  </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00614">614</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00664">664</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -519,7 +534,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Clears configuration stored in RTC memory to recover factory state. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01083">1083</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01138">1138</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -549,7 +564,7 @@ Protected Attributes</h2></td></tr>
 <p>Build a <b>ClientHello</b> messange and send it to gateway. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if ClientHello message was successfully sent. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00624">624</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00674">674</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -571,7 +586,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets current clock counter. millis() + offset. </p>
 <dl class="section return"><dt>Returns</dt><dd>Clock value in <code>time_t</code> format </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00820">820</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00870">870</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -601,7 +616,7 @@ Protected Attributes</h2></td></tr>
 <p>Build a <b>ClockRequest</b> messange and send it to gateway. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if ClockRequest message was successfully sent. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00709">709</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00759">759</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -693,7 +708,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly sent </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00927">927</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00977">977</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -729,7 +744,37 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00420">420</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00439">439</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+
+</div>
+</div>
+<a id="ae6176d81e34ccc835f6886c23ba47d93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6176d81e34ccc835f6886c23ba47d93">&#9670;&nbsp;</a></span>getRSSI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int8_t EnigmaIOTNodeClass::getRSSI </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets latest RSSI measurement. It is updated during start up or in case of transmission errors. </p>
+<dl class="section return"><dt>Returns</dt><dd>RSSI value </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00579">579</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -759,7 +804,7 @@ Protected Attributes</h2></td></tr>
 <p>Returns sleep period in seconds. </p>
 <dl class="section return"><dt>Returns</dt><dd>Sleep period in seconds </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00401">401</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00420">420</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -806,7 +851,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01509">1509</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01567">1567</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -827,7 +872,7 @@ Protected Attributes</h2></td></tr>
 
 <p>This method should be called periodically for instance inside <code><a class="el" href="enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop()</a></code> function. It is used for internal node maintenance tasks. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00471">471</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00510">510</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -849,7 +894,7 @@ Protected Attributes</h2></td></tr>
 <p>Checks if internal clock is synchronized to gateway. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if clock is synchronized </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00829">829</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00879">879</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -879,7 +924,7 @@ Protected Attributes</h2></td></tr>
 <p>Checks if node is registered. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if node is registered </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00552">552</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00571">571</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -993,7 +1038,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01404">1404</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01461">1461</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1044,7 +1089,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00496">496</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00515">515</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -1095,7 +1140,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00469">469</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00488">488</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -1147,7 +1192,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00525">525</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00544">544</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -1202,7 +1247,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00759">759</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00809">809</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1257,7 +1302,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01319">1319</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01374">1374</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1319,7 +1364,62 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01344">1344</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01401">1401</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0d4446a73e230333f972b233fa2dffdd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d4446a73e230333f972b233fa2dffdd">&#9670;&nbsp;</a></span>processGetRSSICommand()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool EnigmaIOTNodeClass::processGetRSSICommand </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>mac</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Processes a request to measure RSSI. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mac</td><td>Gateway address </td></tr>
+    <tr><td class="paramname">data</td><td>Buffer to store received message </td></tr>
+    <tr><td class="paramname">len</td><td>Length of payload data </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01108">1108</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1374,7 +1474,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01024">1024</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01074">1074</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1429,7 +1529,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns the reason because key is not valid anymore. Check possible values in nodeInvalidateReason_t </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01394">1394</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01451">1451</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1484,7 +1584,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01152">1152</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01207">1207</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1539,7 +1639,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00836">836</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00886">886</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1594,7 +1694,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01047">1047</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01097">1097</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1649,7 +1749,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01058">1058</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01113">1113</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1704,7 +1804,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01093">1093</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01148">1148</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1759,7 +1859,37 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded and processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01134">1134</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01189">1189</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ab95b384ed3f016217d9669c7982e8c08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab95b384ed3f016217d9669c7982e8c08">&#9670;&nbsp;</a></span>reportRSSI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool EnigmaIOTNodeClass::reportRSSI </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sends RSSI value and channel to Gateway. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if report was sent successfuly </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00489">489</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1795,7 +1925,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01308">1308</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l01363">1363</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1849,7 +1979,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00606">606</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00656">656</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -1920,8 +2050,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9eeac1c2499422a1772ed3c8933d5cb6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9eeac1c2499422a1772ed3c8933d5cb6">&#9670;&nbsp;</a></span>searchForGateway()</h2>
+<a id="ad7a98adabe272649c3c65efd1c2cfe45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7a98adabe272649c3c65efd1c2cfe45">&#9670;&nbsp;</a></span>searchForGateway()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1933,8 +2063,18 @@ Protected Attributes</h2></td></tr>
           <td class="memname">bool EnigmaIOTNodeClass::searchForGateway </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structrtcmem__data__t.html">rtcmem_data_t</a> *&#160;</td>
-          <td class="paramname"><em>data</em></td><td>)</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>shouldStoreData</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -1945,6 +2085,13 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Starts searching for a gateway that it using configured Network Name as WiFi AP. Stores this info for subsequent use. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> context structure </td></tr>
+    <tr><td class="paramname">shouldStoreData</td><td>True if this method should save context in flash </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if gateway could be found. <code>false</code> otherwise </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00417">417</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
@@ -1994,7 +2141,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00442">442</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00461">461</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -2049,7 +2196,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly sent </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00900">900</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00950">950</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -2144,7 +2291,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00446">446</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00464">464</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -2166,7 +2313,7 @@ Protected Attributes</h2></td></tr>
 <p>Requests transition to sleep mode (low energy state) </p>
 <p>Sleep can be requested in any moment and will be triggered inmediatelly except if node is doing registration or is waiting for downlink </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00917">917</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00967">967</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -2223,7 +2370,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Stops EnigmaIoT protocol. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00441">441</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00459">459</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -2299,7 +2446,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00610">610</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00660">660</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -2378,7 +2525,7 @@ Protected Attributes</h2></td></tr>
 
 <p>This flag disables asy configuration save after triggering a factory reset. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00122">122</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00124">124</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -2798,6 +2945,58 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a9d5665e7dfd598c618e5388b07271bb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d5665e7dfd598c618e5388b07271bb1">&#9670;&nbsp;</a></span>requestReportRSSI</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool EnigmaIOTNodeClass::requestReportRSSI = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Flag to control RSSI reporting. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00123">123</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+
+</div>
+</div>
+<a id="aa024db31641775e4de784d4d2ce545a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa024db31641775e4de784d4d2ce545a1">&#9670;&nbsp;</a></span>requestSearchGateway</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool EnigmaIOTNodeClass::requestSearchGateway = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Flag to control updating gateway address, RSSI and channel. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00122">122</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+
+</div>
+</div>
 <a id="aea10660384ee02f0e6cf1aa3f1786144"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aea10660384ee02f0e6cf1aa3f1786144">&#9670;&nbsp;</a></span>resetPin</h2>
 
@@ -2820,7 +3019,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Pin used to reset configuration if it is connected to ground during startup. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00123">123</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00125">125</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -2985,15 +3184,15 @@ Protected Attributes</h2></td></tr>
 <li>src/<a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<div class="ttc" id="aEnigmaIOTNode_8cpp_html_aad0a67af9b0ad60557652e3170f8a2af"><div class="ttname"><a href="EnigmaIOTNode_8cpp.html#aad0a67af9b0ad60557652e3170f8a2af">EnigmaIOTNode</a></div><div class="ttdeci">EnigmaIOTNodeClass EnigmaIOTNode</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8cpp_source.html#l01524">EnigmaIOTNode.cpp:1524</a></div></div>
-<div class="ttc" id="aclassEnigmaIOTNodeClass_html_a636b6779d3c5a41e52fd6bb4b0ef31c0"><div class="ttname"><a href="classEnigmaIOTNodeClass.html#a636b6779d3c5a41e52fd6bb4b0ef31c0">EnigmaIOTNodeClass::onDisconnected</a></div><div class="ttdeci">void onDisconnected(onDisconnected_t handler)</div><div class="ttdoc">Defines a function callback that will be called everytime node is disconnected from gateway.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00525">EnigmaIOTNode.h:525</a></div></div>
-<div class="ttc" id="aenigmaiot__gateway_8ino_html_afe461d27b9c48d5921c00d521181f12f"><div class="ttname"><a href="enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a></div><div class="ttdeci">void loop()</div><div class="ttdef"><b>Definition:</b> <a href="enigmaiot__gateway_8ino_source.html#l00198">enigmaiot_gateway.ino:198</a></div></div>
-<div class="ttc" id="aclassEnigmaIOTNodeClass_html_acce855b22bb1045a9cf4af9c4130500f"><div class="ttname"><a href="classEnigmaIOTNodeClass.html#acce855b22bb1045a9cf4af9c4130500f">EnigmaIOTNodeClass::onConnected</a></div><div class="ttdeci">void onConnected(onConnected_t handler)</div><div class="ttdoc">Defines a function callback that will be called everytime node is registered on gateway.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00496">EnigmaIOTNode.h:496</a></div></div>
-<div class="ttc" id="aenigmaiot__gateway_8ino_html_a2ef41584e115125491e27e398576cb62"><div class="ttname"><a href="enigmaiot__gateway_8ino.html#a2ef41584e115125491e27e398576cb62">processRxData</a></div><div class="ttdeci">void processRxData(const uint8_t *mac, const uint8_t *buffer, uint8_t length, uint16_t lostMessages, bool control)</div><div class="ttdef"><b>Definition:</b> <a href="enigmaiot__gateway_8ino_source.html#l00079">enigmaiot_gateway.ino:79</a></div></div>
-<div class="ttc" id="aenigmaiot__gateway_8ino_html_a4fc01d736fe50cf5b977f755b675f11d"><div class="ttname"><a href="enigmaiot__gateway_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a></div><div class="ttdeci">void setup()</div><div class="ttdef"><b>Definition:</b> <a href="enigmaiot__gateway_8ino_source.html#l00187">enigmaiot_gateway.ino:187</a></div></div>
+<div class="ttc" id="aEnigmaIOTNode_8cpp_html_aad0a67af9b0ad60557652e3170f8a2af"><div class="ttname"><a href="EnigmaIOTNode_8cpp.html#aad0a67af9b0ad60557652e3170f8a2af">EnigmaIOTNode</a></div><div class="ttdeci">EnigmaIOTNodeClass EnigmaIOTNode</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8cpp_source.html#l01582">EnigmaIOTNode.cpp:1582</a></div></div>
+<div class="ttc" id="aclassEnigmaIOTNodeClass_html_a636b6779d3c5a41e52fd6bb4b0ef31c0"><div class="ttname"><a href="classEnigmaIOTNodeClass.html#a636b6779d3c5a41e52fd6bb4b0ef31c0">EnigmaIOTNodeClass::onDisconnected</a></div><div class="ttdeci">void onDisconnected(onDisconnected_t handler)</div><div class="ttdoc">Defines a function callback that will be called everytime node is disconnected from gateway.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00544">EnigmaIOTNode.h:544</a></div></div>
+<div class="ttc" id="aenigmaiot__gateway_8ino_html_afe461d27b9c48d5921c00d521181f12f"><div class="ttname"><a href="enigmaiot__gateway_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a></div><div class="ttdeci">void loop()</div><div class="ttdef"><b>Definition:</b> <a href="enigmaiot__gateway_8ino_source.html#l00207">enigmaiot_gateway.ino:207</a></div></div>
+<div class="ttc" id="aclassEnigmaIOTNodeClass_html_acce855b22bb1045a9cf4af9c4130500f"><div class="ttname"><a href="classEnigmaIOTNodeClass.html#acce855b22bb1045a9cf4af9c4130500f">EnigmaIOTNodeClass::onConnected</a></div><div class="ttdeci">void onConnected(onConnected_t handler)</div><div class="ttdoc">Defines a function callback that will be called everytime node is registered on gateway.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00515">EnigmaIOTNode.h:515</a></div></div>
+<div class="ttc" id="aenigmaiot__gateway_8ino_html_a2ef41584e115125491e27e398576cb62"><div class="ttname"><a href="enigmaiot__gateway_8ino.html#a2ef41584e115125491e27e398576cb62">processRxData</a></div><div class="ttdeci">void processRxData(const uint8_t *mac, const uint8_t *buffer, uint8_t length, uint16_t lostMessages, bool control)</div><div class="ttdef"><b>Definition:</b> <a href="enigmaiot__gateway_8ino_source.html#l00084">enigmaiot_gateway.ino:84</a></div></div>
+<div class="ttc" id="aenigmaiot__gateway_8ino_html_a4fc01d736fe50cf5b977f755b675f11d"><div class="ttname"><a href="enigmaiot__gateway_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a></div><div class="ttdeci">void setup()</div><div class="ttdef"><b>Definition:</b> <a href="enigmaiot__gateway_8ino_source.html#l00196">enigmaiot_gateway.ino:196</a></div></div>
 <div class="ttc" id="aenigmaiot__led__flasher_8ino_html_a940f8c4df553df52c9145ef2df107ad3"><div class="ttname"><a href="enigmaiot__led__flasher_8ino.html#a940f8c4df553df52c9145ef2df107ad3">connectEventHandler</a></div><div class="ttdeci">void connectEventHandler()</div><div class="ttdef"><b>Definition:</b> <a href="enigmaiot__led__flasher_8ino_source.html#l00022">enigmaiot_led_flasher.ino:22</a></div></div>
 <div class="ttc" id="aenigmaiot__led__flasher_8ino_html_a6f74da8da4899c962666353e8cb4e3d6"><div class="ttname"><a href="enigmaiot__led__flasher_8ino.html#a6f74da8da4899c962666353e8cb4e3d6">disconnectEventHandler</a></div><div class="ttdeci">void disconnectEventHandler()</div><div class="ttdef"><b>Definition:</b> <a href="enigmaiot__led__flasher_8ino_source.html#l00026">enigmaiot_led_flasher.ino:26</a></div></div>
-<div class="ttc" id="aclassEnigmaIOTNodeClass_html_a2c8523627fb660441dbdcbc8a796c3b4"><div class="ttname"><a href="classEnigmaIOTNodeClass.html#a2c8523627fb660441dbdcbc8a796c3b4">EnigmaIOTNodeClass::onDataRx</a></div><div class="ttdeci">void onDataRx(onNodeDataRx_t handler)</div><div class="ttdoc">Defines a function callback that will be called on every downlink data message that is received from ...</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00469">EnigmaIOTNode.h:469</a></div></div>
+<div class="ttc" id="aclassEnigmaIOTNodeClass_html_a2c8523627fb660441dbdcbc8a796c3b4"><div class="ttname"><a href="classEnigmaIOTNodeClass.html#a2c8523627fb660441dbdcbc8a796c3b4">EnigmaIOTNodeClass::onDataRx</a></div><div class="ttdeci">void onDataRx(onNodeDataRx_t handler)</div><div class="ttdoc">Defines a function callback that will be called on every downlink data message that is received from ...</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00488">EnigmaIOTNode.h:488</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

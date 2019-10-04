@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.5.0</span>
+   &#160;<span id="projectnumber">0.5.1</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
   </td>
@@ -138,29 +138,32 @@ Enumerations</h2></td></tr>
 <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a589b7d94a3d91d145720e2fed0eb3a05">RESET</a> = 0x05, 
 <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4aff67e54361d4815a1ecdb3824986f445">RESET_ANS</a> = 0x85, 
 <br />
-&#160;&#160;<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4af80e473af8c30c1a5b46b31b16a98d71">OTA</a> = 0xEF, 
+&#160;&#160;<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a4a8d5a4e8248c14514159e133ed08824">RSSI_GET</a> = 0x06, 
+<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a11a1e8fc74a27e4e59a430903fad58f1">RSSI_ANS</a> = 0x86, 
+<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4af80e473af8c30c1a5b46b31b16a98d71">OTA</a> = 0xEF, 
 <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4acae0d211be2418b0658ab3434b84835e">OTA_ANS</a> = 0xFF, 
-<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a3b00aac591dc212ac3734b887a4ae49c">USERDATA</a> = 0x00
+<br />
+&#160;&#160;<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a3b00aac591dc212ac3734b887a4ae49c">USERDATA</a> = 0x00
 <br />
  }</td></tr>
 <tr class="separator:af7c3a73e42834705926eba633e55daa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf9286a280a40f6ac98ad07d0ba308c4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4">ota_status</a> { <br />
-&#160;&#160;<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4aabbced4dc6a2570f1e2860a618bb83cf">OTA_STARTED</a>, 
-<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a3e70b739fe1b1afba9f135931e792450">OTA_START_ERROR</a>, 
-<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a07aff2a31f86d97f94267367f78113dc">OTA_CHECK_OK</a>, 
-<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a9a70526562f0658d24c805c22d54a513">OTA_CHECK_FAIL</a>, 
+&#160;&#160;<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4aabbced4dc6a2570f1e2860a618bb83cf">OTA_STARTED</a> = 0, 
+<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a3e70b739fe1b1afba9f135931e792450">OTA_START_ERROR</a> = 1, 
+<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a07aff2a31f86d97f94267367f78113dc">OTA_CHECK_OK</a> = 2, 
+<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a9a70526562f0658d24c805c22d54a513">OTA_CHECK_FAIL</a> = 3, 
 <br />
-&#160;&#160;<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a0bac1ff6d740d59bb4d8298120c7e236">OTA_OUT_OF_SEQUENCE</a>, 
-<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a5b388e1500c49706a49379d6710553ad">OTA_TIMEOUT</a>, 
-<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a2b1864027e692829ee112bf2bd42b88a">OTA_FINISHED</a>
+&#160;&#160;<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a0bac1ff6d740d59bb4d8298120c7e236">OTA_OUT_OF_SEQUENCE</a> =4, 
+<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a5b388e1500c49706a49379d6710553ad">OTA_TIMEOUT</a> = 5, 
+<a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a2b1864027e692829ee112bf2bd42b88a">OTA_FINISHED</a> = 6
 <br />
  }</td></tr>
 <tr class="separator:adf9286a280a40f6ac98ad07d0ba308c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>EnigmaIoT sensor node management structures. </p>
-<dl class="section version"><dt>Version</dt><dd>0.5.0 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>03/10/2019 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.5.1 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>04/10/2019 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
@@ -177,7 +180,7 @@ Enumerations</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00304">304</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00314">314</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -208,7 +211,7 @@ Enumerations</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00073">73</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00075">75</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -265,6 +268,8 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4a3b53675250beaefa566e7ff804d9f5d6"></a>IDENTIFY&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4a589b7d94a3d91d145720e2fed0eb3a05"></a>RESET&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4aff67e54361d4815a1ecdb3824986f445"></a>RESET_ANS&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4a4a8d5a4e8248c14514159e133ed08824"></a>RSSI_GET&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4a11a1e8fc74a27e4e59a430903fad58f1"></a>RSSI_ANS&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4af80e473af8c30c1a5b46b31b16a98d71"></a>OTA&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4acae0d211be2418b0658ab3434b84835e"></a>OTA_ANS&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4a3b00aac591dc212ac3734b887a4ae49c"></a>USERDATA&#160;</td><td class="fielddoc"></td></tr>
@@ -327,7 +332,7 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="adf9286a280a40f6ac98ad07d0ba308c4a2b1864027e692829ee112bf2bd42b88a"></a>OTA_FINISHED&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00048">48</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00050">50</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
