@@ -15,10 +15,7 @@
 
 #define BLUE_LED LED_BUILTIN
 constexpr auto RESET_PIN = 13;
-  //uint8_t gateway[6] = { 0x5E, 0xCF, 0x7F, 0x80, 0x34, 0x75 };
-uint8_t gateway[6] = { 0xBE, 0xDD, 0xC2, 0x24, 0x14, 0x97 };
 
-//#define SLEEP_TIME 20000000
 ADC_MODE (ADC_VCC);
 
 void connectEventHandler () {
