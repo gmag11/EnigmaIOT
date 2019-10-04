@@ -119,8 +119,8 @@ protected:
 	bool clockSyncEnabled = false; ///< @brief If true clock is synchronized with Gateway
 	bool shouldRestart = false; ///< @brief Triggers a restart if true
 	bool gatewaySearchStarted = false; ///< @brief Avoids start a new gateway scan if it already started
-	bool requestSearchGateway = false;
-	bool requestReportRSSI = false;
+	bool requestSearchGateway = false; ///< @brief Flag to control updating gateway address, RSSI and channel
+	bool requestReportRSSI = false; ///< @brief Flag to control RSSI reporting
 	bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
 	int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
 

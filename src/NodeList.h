@@ -257,10 +257,18 @@ public:
         }
     }
 
+	/**
+	  * @brief Records if node started as a sleepy node or not. If it did not started so it will never accept sleep time changes
+	  * @param sleepy `true` if node started as sleepy. `false` otherwise
+	  */
     void setInitAsSleepy (bool sleepy) {
         initAsSleepy = sleepy;
     }
 
+	/**
+	  * @brief Gets initial sleepy mode
+	  * @return `true` if node started as sleepy. `false` otherwise
+	  */
     bool getInitAsSleepy () {
         return initAsSleepy;
     }
@@ -278,16 +286,16 @@ public:
     size_t qMessageLength;  ///< @brief Queued message length
     bool qMessagePending = false; ///< @brief `True` if message should be sent just after next data message
 
-    uint32_t packetNumber = 0;
-    uint32_t packetErrors = 0;
-    double per = 0;
-    double packetsHour = 0;
-	clock_t t1, t2, t3, t4;
+    uint32_t packetNumber = 0; ///< @brief Number of packets received from node to gateway
+    uint32_t packetErrors = 0; ///< @brief Number of errored packets
+    double per = 0;  ///< @brief Current packet error rate of a specific node
+    double packetsHour = 0; ///< @brief Packet rate ffor a specific nope
+	clock_t t1, t2, t3, t4;  ///< @brief Timestaps to calculate clock offset
 
 protected:
 //#define KEYLENGTH 32
     bool keyValid; ///< @brief Node shared key valid
-    status_t status;
+    status_t status; ///< @brief Current node status. See `enum node_status`
     uint16_t lastMessageCounter; ///< @brief Last message counter state for specific Node
     uint16_t nodeId; ///< @brief Node identifier asigned by gateway
     timer_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
