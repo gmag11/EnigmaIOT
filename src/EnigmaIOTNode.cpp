@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTNode.cpp
-  * @version 0.5.0
-  * @date 03/10/2019
+  * @version 0.5.1
+  * @date 04/10/2019
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
@@ -624,6 +624,7 @@ void EnigmaIOTNodeClass::handle () {
 		}
 	}
 
+	// Check restart
 	if (shouldRestart) {
 		static unsigned long retartRequest = millis();
 		if (millis () - retartRequest > 2500) {

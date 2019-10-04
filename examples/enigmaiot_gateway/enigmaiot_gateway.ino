@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_gateway.ino
-  * @version 0.5.0
-  * @date 03/10/2019
+  * @version 0.5.1
+  * @date 04/10/2019
   * @author German Martin
   * @brief Gateway based on EnigmaIoT over ESP-NOW
   *

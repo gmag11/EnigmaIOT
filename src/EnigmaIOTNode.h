@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTNode.h
-  * @version 0.5.0
-  * @date 03/10/2019
+  * @version 0.5.1
+  * @date 04/10/2019
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
@@ -379,7 +379,7 @@ protected:
 	/**
 	  * @brief Processes a request to measure RSSI
 	  * @param mac Gateway address
-	  * @param buf Buffer to store received message
+	  * @param data Buffer to store received message
 	  * @param len Length of payload data
 	  * @return Returns `true` if message could be correcly decoded and processed
 	  */

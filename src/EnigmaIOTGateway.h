@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGateway.h
-  * @version 0.5.0
-  * @date 03/10/2019
+  * @version 0.5.1
+  * @date 04/10/2019
   * @author German Martin
   * @brief Library to build a gateway for EnigmaIoT system
   */
@@ -133,7 +133,7 @@ class EnigmaIOTGatewayClass
 	  
 	 /**
 	  * @brief Returns timestaps needed so that node can calculate time difference
-	  * @param Node Pointer to data that corresponds to originating node
+	  * @param node Pointer to data that corresponds to originating node
 	  * @return Returns `true` if message could be correcly processed
 	  */
      bool clockResponse (Node* node);

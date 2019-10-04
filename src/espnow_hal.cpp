@@ -1,7 +1,7 @@
 /**
   * @file espnow_hal.cpp
-  * @version 0.5.0
-  * @date 03/10/2019
+  * @version 0.5.1
+  * @date 04/10/2019
   * @author German Martin
   * @brief ESP-NOW communication system abstraction layer. To be used on ESP8266 or ESP32 platforms
   */
