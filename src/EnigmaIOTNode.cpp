@@ -959,7 +959,12 @@ bool EnigmaIOTNodeClass::sendData (const uint8_t* data, size_t len, bool control
             DEBUG_VERBOSE ("Data sent: %s", printHexBuffer (data, len));
         }
         flashBlue = true;
-        return dataMessage (data, len, controlMessage);
+		if (dataMessage (data, len, controlMessage)) {
+			dataMessageSentLength = 0;
+			return true;
+		} else
+			return false;
+
     }
     return false;
 }
@@ -1513,6 +1518,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 				if (invalidateReason < KEY_EXPIRED && dataMessageSentLength > 0) {
 					if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
 						if (dataMessageSentLength > 0) {
+							DEBUG_INFO ("Data pending to be sent. Length: %u", dataMessageSentLength);
 							DEBUG_VERBOSE ("Data sent: %s", printHexBuffer (dataMessageSent, dataMessageSentLength));
 							dataMessage ((uint8_t*)dataMessageSent, dataMessageSentLength);
 							dataMessageSentLength = 0;
