@@ -633,6 +633,7 @@ void EnigmaIOTNodeClass::handle () {
 		}
 	}
 
+	// In case of comm errors search for gateway again
 	if (rtcmem_data.commErrors >= COMM_ERRORS_BEFORE_SCAN) {
 		if (!gatewaySearchStarted) {
 			gatewaySearchStarted = true;
