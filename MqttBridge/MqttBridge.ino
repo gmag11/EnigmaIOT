@@ -170,7 +170,7 @@ bool configWiFiManager () {
 	wifiManager.addParameter (&mqttBaseTopicParam);
 
 	wifiManager.setSaveConfigCallback (saveConfigCallback);
-	wifiManager.setTryConnectDuringConfigPortal (true);
+	wifiManager.setTryConnectDuringConfigPortal (false);
 	wifiManager.setConnectTimeout (30);
 	wifiManager.setConfigPortalTimeout (240);
 //#ifndef BRIDGE_DEBUG
