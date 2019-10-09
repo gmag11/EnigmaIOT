@@ -99,11 +99,11 @@ void reconnect () {
 #ifdef SECURE_MQTT
 		setClock ();
 #endif
-		if (client.connect (clientId.c_str (), bridgeConfig.mqtt_user, bridgeConfig.mqtt_pass, gwTopic.c_str (), 0, 1, "0", true)) {
+		if (client.connect (clientId.c_str (), bridgeConfig.mqtt_user, bridgeConfig.mqtt_pass, gwTopic.c_str (), 0, true, "0", true)) {
 			Serial.println ("connected");
 			// Once connected, publish an announcement...
 			//String gwTopic = BASE_TOPIC + String("/gateway/hello");
-			client.publish (gwTopic.c_str (), "1");
+			client.publish (gwTopic.c_str (), "1", true);
 			// ... and resubscribe
 			String dlTopic = bridgeConfig.base_topic + String ("/+/set/#");
 			client.subscribe (dlTopic.c_str ());
