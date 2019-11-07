@@ -13,6 +13,16 @@
 #include <EnigmaIOTGateway.h>
 #include <espnow_hal.h>
 
+#include <ArduinoJson.h>
+#include <ESP8266WiFi.h>
+#include <Curve25519.h>
+#include <CRC32.h>
+#include <ESPAsyncWebServer.h>
+#include <ESPAsyncTCP.h>
+#include <Hash.h>
+#include <ESPAsyncWiFiManager.h>
+#include <DNSServer.h>
+
 #define BLUE_LED 2
 #define RED_LED 2
 
