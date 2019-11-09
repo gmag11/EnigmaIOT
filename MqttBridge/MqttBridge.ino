@@ -18,6 +18,10 @@
 #include <ESPAsyncWiFiManager.h>
 #include "bridge_config.h"
 
+#include <ESPAsyncTCP.h>
+#include <Hash.h>
+#include <DNSServer.h>
+
 #define DEFAULT_BASE_TOPIC "enigmaiot"
 
 //#define BRIDGE_DEBUG
