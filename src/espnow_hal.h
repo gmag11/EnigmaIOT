@@ -1,7 +1,7 @@
 /**
   * @file espnow_hal.h
-  * @version 0.5.1
-  * @date 04/10/2019
+  * @version 0.6.0
+  * @date 17/11/2019
   * @author German Martin
   * @brief ESP-NOW communication system abstraction layer. To be used on ESP8266 or ESP32 platforms
   */
@@ -29,9 +29,13 @@
   */
 class Espnow_halClass : public Comms_halClass
 {
+public:
+	static const size_t COMMS_HAL_MAX_MESSAGE_LENGTH = 250; ///< @brief Maximum message length for ESP-NOW
+	static const uint8_t COMMS_HAL_ADDR_LEN = 6; ///< @brief Address length for ESP-NOW. Correspond to mac address
+
  protected:
 
-     uint8_t gateway[6]; ///< @brief Gateway address
+     uint8_t gateway[COMMS_HAL_ADDR_LEN]; ///< @brief Gateway address
      uint8_t channel; ///< @brief WiFi channel to be used
 
      comms_hal_rcvd_data dataRcvd; ///< @brief Pointer to a function to be called on every received message
@@ -49,14 +53,14 @@ class Espnow_halClass : public Comms_halClass
        * @param data Data buffer that contain the message to be sent
        * @param len Data length in number of bytes
        */
-     static void rx_cb (u8 *mac_addr, u8 *data, u8 len);
+     static void ICACHE_FLASH_ATTR rx_cb (u8 *mac_addr, u8 *data, u8 len);
 
      /**
        * @brief Function that gets sending status
        * @param mac_addr Destination address to send the message to
        * @param status Sending status
        */
-     static void tx_cb (u8 *mac_addr, u8 status);
+     static void ICACHE_FLASH_ATTR tx_cb (u8 *mac_addr, u8 status);
 
  public:
     /**

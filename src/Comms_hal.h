@@ -1,7 +1,7 @@
 /**
   * @file Comms_hal.h
-  * @version 0.5.1
-  * @date 04/10/2019
+  * @version 0.6.0
+  * @date 17/11/2019
   * @author German Martin
   * @brief Generic communication system abstraction layer
   *
@@ -32,9 +32,17 @@ typedef void (*comms_hal_sent_data)(uint8_t *, uint8_t );
   */
 class Comms_halClass
 {
+public:
+	static const size_t COMMS_HAL_MAX_MESSAGE_LENGTH = 0; ///< @brief Maximum message length
+	static const uint8_t COMMS_HAL_ADDR_LEN = 1; ///< @brief Address length
+
  protected:
+	 uint8_t gateway[COMMS_HAL_ADDR_LEN]; ///< @brief Gateway address
+	 uint8_t channel; ///< @brief WiFi channel to be used
+
      comms_hal_rcvd_data dataRcvd = 0; ///< @brief Pointer to a function to be called on every received message
      comms_hal_sent_data sentResult = 0; ///< @brief Pointer to a function to be called to notify last sending status
+	 peerType_t _ownPeerType; ///< @Brief Stores peer type, node or gateway
 
      /**
        * @brief Communication subsistem initialization
