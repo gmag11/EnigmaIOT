@@ -320,7 +320,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
         node.setMacAddress (macAddress);
     }
 
-    if (loadRTCData ()) { // If data present on RTC node has waked up or it is just configured, continue
+    if (loadRTCData () && rtcmem_data.commErrors < COMM_ERRORS_BEFORE_SCAN) { // If data present on RTC node has waked up or it is just configured, continue
 #if DEBUG_LEVEL >= DBG
         char gwAddress[18];
         DEBUG_DBG ("RTC data loaded. Gateway: %s", mac2str (rtcmem_data.gateway, gwAddress));
