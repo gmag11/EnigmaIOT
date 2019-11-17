@@ -1,20 +1,18 @@
 /**
   * @file cryptModule.cpp
-  * @version 0.5.1
-  * @date 04/10/2019
+  * @version 0.6.0
+  * @date 17/11/2019
   * @author German Martin
   * @brief Crypto library that implements EnigmaIoT encryption, decryption and key agreement fuctions
   *
   * Uses [Arduino CryptoLib](https://rweather.github.io/arduinolibs/crypto.html) library
   */
 
-//#include <CFB.h>
-//#include <CryptoLW.h>
 #include "cryptModule.h"
-//#include <Speck.h>
 #include <Curve25519.h>
 #include <ChaChaPoly.h>
 #include <Poly1305.h>
+#include <SHA256.h>
 #include "helperFunctions.h"
 
 
@@ -29,12 +27,20 @@ uint8_t *CryptModule::getSHA256 (uint8_t* buffer, uint8_t length) {
         DEBUG_ERROR("Too small buffer. Should be 32 bytes");
         return NULL;
     }
+
+	SHA256 hash;
+
+	// hash.reset (); // Not needed, implicit to constructor
+	hash.update ((void*)buffer, length);
+	hash.finalize (key, HASH_LEN);
+	hash.clear ();
+
 	
-	br_sha256_context* shaContext = new br_sha256_context ();
+	/*br_sha256_context* shaContext = new br_sha256_context ();
 	br_sha256_init (shaContext);
 	br_sha224_update (shaContext, (void*)buffer, length);
 	br_sha256_out (shaContext, key);
-	delete shaContext;
+	delete shaContext;*/
 
     if (length > HASH_LEN) {
         length = HASH_LEN;
@@ -113,7 +119,11 @@ bool CryptModule::encryptBuffer (const uint8_t *data, size_t length,
 }
 
 uint32_t CryptModule::random () {
-    return *(volatile uint32_t *)RANDOM_32;
+#ifdef ESP8266
+	return *(volatile uint32_t*)RANDOM_32;
+#elif defined ESP32
+	return esp_random ();
+#endif
 }
 
 uint8_t *CryptModule::random (const uint8_t *buf, size_t len) {

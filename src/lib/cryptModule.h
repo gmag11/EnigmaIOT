@@ -1,7 +1,7 @@
 /**
   * @file cryptModule.h
-  * @version 0.5.1
-  * @date 04/10/2019
+  * @version 0.6.0
+  * @date 17/11/2019
   * @author German Martin
   * @brief Crypto library that implements EnigmaIoT encryption, decryption and key agreement fuctions
   *
@@ -18,7 +18,12 @@
 #endif
 #include "EnigmaIoTconfig.h"
 
+#define CRYPTMODULE_DEBUG_TAG "CryptModule"
+
+#ifdef ESP8266
 #define RANDOM_32 0x3FF20E44
+#endif
+
 const uint8_t RANDOM_LENGTH = sizeof (uint32_t); ///< @brief Length of random number generator values
 const uint8_t CRC_LENGTH = sizeof (uint32_t); ///< @brief Length of CRC
 
