@@ -7,6 +7,9 @@
   */
 
 #include "helperFunctions.h"
+#ifdef ESP32
+#include <esp_wifi.h>
+#endif
 
 #define MAX_STR_LEN 1000 ///< @brief Key length used by selected crypto algorythm
 
@@ -32,12 +35,11 @@ void initWiFi (uint8_t channel, uint8_t role, String networkName) {
 		//DEBUG_DBG ("Mode set to AP in channel %u", channel);
 		WiFi.mode (WIFI_STA);
 		WiFi.disconnect ();
-		//wifi_set_phy_mode (PHY_MODE_11B);
 		wifi_set_channel (channel);
-		DEBUG_DBG ("Mode set to AP. Channel %u", channel);
+		DEBUG_DBG ("Mode set to STA. Channel %u", channel);
 	} else { // Gateway
 		WiFi.mode (WIFI_AP);
-		WiFi.softAP (networkName, "2599657852368549566551", channel); // TODO: password should be true random
+		WiFi.softAP (networkName.c_str(), "2599657852368549566551", channel); // TODO: password should be true random
 		DEBUG_DBG ("Mode set to AP in channel %u", channel);
 	}
 
@@ -49,9 +51,11 @@ void initWiFi (uint8_t channel, uint8_t role, String networkName) {
 #undef MACSTR
 #define MACSTR "%02X:%02X:%02X:%02X:%02X:%02X"
 
-const char* mac2str (const uint8_t* mac, const char* buffer) {
+char* mac2str (const uint8_t* mac, char* buffer) {
 	if (mac && buffer) {
-		sprintf (const_cast<char*>(buffer), MACSTR, MAC2STR (mac));
+		//DEBUG_DBG ("mac2str %02x:%02x:%02x:%02x:%02x:%02x",mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+		snprintf (buffer, 18, MACSTR, MAC2STR (mac));
+		//DEBUG_DBG ("Address: %s", buffer);
 		return buffer;
 	}
 	return NULL;

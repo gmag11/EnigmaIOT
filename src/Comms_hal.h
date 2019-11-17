@@ -24,8 +24,8 @@ enum peerType_t {
     COMM_GATEWAY = 1 /**< Peer acts as a gateway */
 };
 
-typedef void (*comms_hal_rcvd_data)(uint8_t *, uint8_t *, uint8_t );
-typedef void (*comms_hal_sent_data)(uint8_t *, uint8_t );
+typedef void (*comms_hal_rcvd_data)(uint8_t * address, uint8_t * data, uint8_t len);
+typedef void (*comms_hal_sent_data)(uint8_t * address, uint8_t status);
 
 /**
   * @brief Interface for communication subsystem abstraction layer definition
@@ -37,8 +37,8 @@ public:
 	static const uint8_t COMMS_HAL_ADDR_LEN = 1; ///< @brief Address length
 
  protected:
-	 uint8_t gateway[COMMS_HAL_ADDR_LEN]; ///< @brief Gateway address
-	 uint8_t channel; ///< @brief WiFi channel to be used
+     uint8_t gateway[COMMS_HAL_ADDR_LEN]; ///< @brief Gateway address
+     uint8_t channel; ///< @brief WiFi channel to be used
 
      comms_hal_rcvd_data dataRcvd = 0; ///< @brief Pointer to a function to be called on every received message
      comms_hal_sent_data sentResult = 0; ///< @brief Pointer to a function to be called to notify last sending status
@@ -72,7 +72,7 @@ public:
        * @param len Data length in number of bytes
        * @return Returns sending status. 0 for success, any other value to indicate an error.
        */
-     virtual uint8_t send (uint8_t *da, uint8_t *data, int len) = 0;
+     virtual int32_t send (uint8_t *da, uint8_t *data, int len) = 0;
 
      /**
        * @brief Attach a callback function to be run on every received message

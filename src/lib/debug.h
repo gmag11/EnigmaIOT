@@ -73,7 +73,7 @@
 #endif
 #else
 #define DEBUG_VERBOSE(...)
-#define DEBUG_DEBUG(...)
+#define DEBUG_DBG(...)
 #define DEBUG_INFO(...)
 #define DEBUG_WARN(...)
 #define DEBUG_ERROR(...)

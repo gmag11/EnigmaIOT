@@ -15,7 +15,6 @@
 #include <SHA256.h>
 #include "helperFunctions.h"
 
-
 CYPHER_TYPE cipher;
 
 uint8_t *CryptModule::getSHA256 (uint8_t* buffer, uint8_t length) {
@@ -35,7 +34,6 @@ uint8_t *CryptModule::getSHA256 (uint8_t* buffer, uint8_t length) {
 	hash.finalize (key, HASH_LEN);
 	hash.clear ();
 
-	
 	/*br_sha256_context* shaContext = new br_sha256_context ();
 	br_sha256_init (shaContext);
 	br_sha224_update (shaContext, (void*)buffer, length);
@@ -129,7 +127,7 @@ uint32_t CryptModule::random () {
 uint8_t *CryptModule::random (const uint8_t *buf, size_t len) {
     if (buf) {
         for (unsigned int i = 0; i < len; i += sizeof (uint32_t)) {
-            uint32 rnd = random ();
+            uint32_t rnd = random ();
             if (i < len - (len % sizeof (int32_t))) {
                 memcpy (const_cast<uint8_t *>(buf) + i, &rnd, sizeof (uint32_t));
             } else {

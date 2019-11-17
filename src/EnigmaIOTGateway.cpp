@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGateway.cpp
-  * @version 0.5.1
-  * @date 04/10/2019
+  * @version 0.6.0
+  * @date 17/11/2019
   * @author German Martin
   * @brief Library to build a gateway for EnigmaIoT system
   */
@@ -9,9 +9,26 @@
 #include "EnigmaIOTGateway.h"
 #include <FS.h>
 #include "libb64/cdecode.h"
+#ifdef ESP8266
 #include <Updater.h>
+#elif defined ESP32
+#include <SPIFFS.h>
+#include <Update.h>
+#include <esp_wifi.h>
+#endif
 
 const char CONFIG_FILE[] = "/config.txt";
+
+bool shouldSave = false;
+
+void EnigmaIOTGatewayClass::doSave (void) {
+	DEBUG_INFO ("Configuration saving activated");
+	shouldSave = true;
+}
+
+bool EnigmaIOTGatewayClass::getShouldSave () {
+	return (shouldSave);
+}
 
 void EnigmaIOTGatewayClass::setTxLed (uint8_t led, time_t onTime) {
 	this->txled = led;
@@ -38,26 +55,6 @@ const void* memstr (const void* str, size_t str_size,
 
 	return NULL;
 }
-
-//bool EnigmaIOTGatewayClass::processOTAMessage (uint8_t* msg, size_t msgLen, uint8_t* output) {
-//	char* otaNumber = (char*)msg + 4;
-//	uint8_t* otaData = (uint8_t*)memchr (msg, ',', msgLen) + 1;
-//	size_t otaLen = msgLen - (otaData - msg);
-//	size_t otaNumberLen = (uint8_t*)otaData - (uint8_t*)otaNumber - 1;
-//	DEBUG_VERBOSE ("otaMsg = %p, otaNumber = %p, otaData = %p", msg, otaNumber, otaData);
-//
-//	char* number[6];
-//	memset (number, 0, 6);
-//	memcpy (number, otaNumber, otaNumberLen);
-//
-//	size_t decodedLen = base64_decode_chars ((char*)otaData, otaLen, (char*)output);
-//
-//	DEBUG_INFO ("OTA: %s otaLen %d, decodedLen %d", number, otaLen, decodedLen);
-//
-//	DEBUG_VERBOSE ("Decoded data: Len - %d -- %s", decodedLen, printHexBuffer (output, decodedLen));
-//
-//	return false;
-//}
 
 bool buildGetVersion (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
 	DEBUG_VERBOSE ("Build 'Get Version' message from: %s", printHexBuffer (inputData, inputLen));
@@ -427,40 +424,74 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 }
 
 bool EnigmaIOTGatewayClass::configWiFiManager () {
-	AsyncWebServer server (80);
-	DNSServer dns;
+	server = new AsyncWebServer (80);
+	dns = new DNSServer ();
+	wifiManager = new AsyncWiFiManager (server, dns);
+
 	char networkKey[33] = "";
-	char networkName[NETWORK_NAME_LENGTH] = "";
+	//char networkName[NETWORK_NAME_LENGTH] = "";
 	char channel[4];
 	String (gwConfig.channel).toCharArray (channel, 4);
 
-	AsyncWiFiManager wifiManager (&server, &dns);
-	AsyncWiFiManagerParameter netNameParam ("netname", "Network Name", networkName, (int)NETWORK_NAME_LENGTH-1, "required type=\"text\" maxlength=20");
+	//AsyncWiFiManager wifiManager (&server, &dns);
+	AsyncWiFiManagerParameter netNameParam ("netname", "Network Name", gwConfig.networkName, (int)NETWORK_NAME_LENGTH-1, "required type=\"text\" maxlength=20");
 	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
 	AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
 
-	wifiManager.addParameter (&netKeyParam);
-	wifiManager.addParameter (&channelParam);
-	wifiManager.addParameter (&netNameParam);
-	wifiManager.setDebugOutput (true);
-	wifiManager.setBreakAfterConfig (true);
-	wifiManager.setTryConnectDuringConfigPortal (false);
-	boolean result = wifiManager.startConfigPortal ("EnigmaIoTGateway");
+	wifiManager->addParameter (&netKeyParam);
+	wifiManager->addParameter (&channelParam);
+	wifiManager->addParameter (&netNameParam);
+	wifiManager->addParameter (new AsyncWiFiManagerParameter ("<br>"));
+
+	if (notifyWiFiManagerStarted) {
+		notifyWiFiManagerStarted ();
+	}
+
+	wifiManager->setDebugOutput (true);
+	//wifiManager->setBreakAfterConfig (true);
+	wifiManager->setTryConnectDuringConfigPortal (true);
+	wifiManager->setSaveConfigCallback (doSave);
+	wifiManager->setConfigPortalTimeout (150);
+
+	boolean result = wifiManager->autoConnect ("EnigmaIoTGateway");
 	DEBUG_INFO ("==== Config Portal result ====");
 	DEBUG_INFO ("Network Name: %s", netNameParam.getValue ());
 	DEBUG_INFO ("Network Key: %s", netKeyParam.getValue ());
 	DEBUG_INFO ("Channel: %s", channelParam.getValue ());
+	DEBUG_INFO ("Status: %s", result ? "true" : "false");
+	DEBUG_INFO ("Save config: %s", shouldSave ? "yes" : "no");
 	if (result) {
-		memcpy (gwConfig.networkName, netNameParam.getValue (), netNameParam.getValueLength ());
-		uint8_t keySize = netKeyParam.getValueLength ();
-		if (keySize > KEY_LENGTH)
-			keySize = KEY_LENGTH;
-		memcpy (this->gwConfig.networkKey, netKeyParam.getValue (), keySize);
-		CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
-		gwConfig.channel = atoi (channelParam.getValue ());
-		DEBUG_DBG ("Raw network Key: %s", printHexBuffer (this->gwConfig.networkKey, KEY_LENGTH));
-		DEBUG_VERBOSE ("WiFi ESP-NOW channel: %d", gwConfig.networkKey);
+		if (shouldSave) {
+			memcpy (gwConfig.networkName, netNameParam.getValue (), netNameParam.getValueLength ());
+			uint8_t keySize = netKeyParam.getValueLength ();
+			if (keySize > KEY_LENGTH)
+				keySize = KEY_LENGTH;
+			const char* netKey = netKeyParam.getValue ();
+			if (netKey && (netKey[0] != '\0')) {// If password is empty, keep the old one
+				memcpy (this->gwConfig.networkKey, netKeyParam.getValue (), keySize);
+				CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
+			} else {
+				DEBUG_INFO ("Network key password field empty. Keeping the old one");
+			}
+
+			gwConfig.channel = atoi (channelParam.getValue ());
+			DEBUG_DBG ("Raw network Key: %s", printHexBuffer (this->gwConfig.networkKey, KEY_LENGTH));
+			DEBUG_VERBOSE ("WiFi ESP-NOW channel: %d", this->gwConfig.channel);
+		} else {
+			DEBUG_DBG ("Configuration does not need to be saved");
+		}
+	} else {
+		DEBUG_ERROR ("WiFi connection unsuccessful. Restarting");
+		ESP.restart ();
 	}
+
+	if (notifyWiFiManagerExit) {
+		notifyWiFiManagerExit (result);
+	}
+
+	free (server);
+	free (dns);
+	free (wifiManager);
 
 	return result;
 }
@@ -475,21 +506,27 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			DEBUG_DBG ("%s opened", CONFIG_FILE);
 			size_t size = configFile.size ();
 			if (size < sizeof (gateway_config_t)) {
-				DEBUG_WARN ("Config file is corrupted. Deleting");
+				DEBUG_WARN ("Config file is corrupted. Deleting and formatting");
 				SPIFFS.remove (CONFIG_FILE);
+				SPIFFS.format ();
+				WiFi.begin ("0", "0"); // Delete WiFi credentials
 				return false;
 			}
 			configFile.read ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
 			DEBUG_DBG ("Config file stored channel: %u", gwConfig.channel);
 			configFile.close ();
 			DEBUG_VERBOSE ("Gateway configuration successfuly read: %s", printHexBuffer ((uint8_t*)(&gwConfig), sizeof (gateway_config_t)));
+			DEBUG_DBG ("Network Name: %s", gwConfig.networkName);
 			return true;
 		}
 	} else {
-		DEBUG_WARN ("%s do not exist", CONFIG_FILE);
+		DEBUG_WARN ("%s do not exist. Formatting", CONFIG_FILE);
+		SPIFFS.format ();
+		WiFi.begin ("0", "0"); // Delete WiFi credentials
 		return false;
 	}
 
+	WiFi.begin ("0", "0"); // Delete WiFi credentials
 	return false;
 }
 
@@ -520,13 +557,17 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 		}
 		if (!loadFlashData ()) { // Load from flash
 			if (configWiFiManager ()) {
-				DEBUG_DBG ("Got configuration. Storing");
-				if (saveFlashData ()) {
-					DEBUG_DBG ("Network Key stored on flash");
+				if (shouldSave) {
+					DEBUG_DBG ("Got configuration. Storing");
+					if (saveFlashData ()) {
+						DEBUG_DBG ("Network Key stored on flash");
+					} else {
+						DEBUG_ERROR ("Error saving data on flash");
+					}
+					ESP.restart ();
 				} else {
-					DEBUG_ERROR ("Error saving data on flash");
+					DEBUG_INFO ("Configuration has not to be saved");
 				}
-				ESP.restart ();
 			} else {
 				DEBUG_ERROR ("Configuration error. Restarting");
 				ESP.restart ();
@@ -542,16 +583,21 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	}
 }
 
-void EnigmaIOTGatewayClass::rx_cb (u8* mac_addr, u8* data, u8 len) {
+void EnigmaIOTGatewayClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
 	EnigmaIOTGateway.manageMessage (mac_addr, data, len);
 }
 
-void EnigmaIOTGatewayClass::tx_cb (u8* mac_addr, u8 status) {
+void EnigmaIOTGatewayClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
 	EnigmaIOTGateway.getStatus (mac_addr, status);
 }
 
-void EnigmaIOTGatewayClass::getStatus (u8* mac_addr, u8 status) {
+void EnigmaIOTGatewayClass::getStatus (uint8_t* mac_addr, uint8_t status) {
+	char buffer[18];
+#ifdef ESP8266
 	DEBUG_VERBOSE ("SENDStatus %s", status == 0 ? "OK" : "ERROR");
+#elif defined ESP32
+	DEBUG_VERBOSE ("SENDStatus %d. Peer %s", status, mac2str(mac_addr,buffer));
+#endif
 }
 
 void EnigmaIOTGatewayClass::handle () {
@@ -718,7 +764,7 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 	uint8_t data_idx = counter_idx + sizeof (int16_t);
 	uint8_t tag_idx = count - TAG_LENGTH;
 
-    uint8_t addDataLen = 1 + IV_LENGTH;
+    const uint8_t addDataLen = 1 + IV_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
     memcpy (aad, buf, addDataLen); // Copy message upto iv
@@ -756,7 +802,7 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 	DEBUG_DBG ("Payload length: %d bytes\n", tag_idx - data_idx);
 
 	if (notifyData) {
-		notifyData (mac, buf + data_idx, tag_idx - data_idx, 0, true);
+		notifyData (const_cast<uint8_t*>(mac), buf + data_idx, tag_idx - data_idx, 0, true);
 	}
 
 	return true;
@@ -780,7 +826,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
 	uint16_t counter;
 	size_t lostMessages = 0;
 
-    uint8_t addDataLen = 1 + IV_LENGTH;
+    const uint8_t addDataLen = 1 + IV_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
     memcpy (aad, buf, addDataLen); // Copy message upto iv
@@ -814,7 +860,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint
 	}
 
 	if (notifyData) {
-		notifyData (mac, &buf[data_idx], tag_idx - data_idx, lostMessages, false);
+		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false);
 	}
 
 	if (node->getSleepy ()) {
@@ -928,7 +974,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 	size_t cryptLen = packet_length - length_idx;
 
-    uint8_t addDataLen = 1 + IV_LENGTH;
+    const uint8_t addDataLen = 1 + IV_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
     memcpy (aad, buffer, addDataLen); // Copy message upto iv
@@ -1019,7 +1065,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 
 	memcpy (&clientHello_msg, buf, count);
 
-    uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - KEY_LENGTH;
+    const uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - KEY_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
     memcpy (aad, (uint8_t*)&clientHello_msg, addDataLen); // Copy message upto iv
@@ -1082,7 +1128,7 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[6], const uin
 
 	memcpy (&clockRequest_msg, buf, count);
 
-	uint8_t addDataLen = 1 + IV_LENGTH;
+	const uint8_t addDataLen = 1 + IV_LENGTH;
 	uint8_t aad[AAD_LENGTH + addDataLen];
 
 	memcpy (aad, buf, addDataLen); // Copy message upto iv
@@ -1142,7 +1188,7 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 	DEBUG_DBG ("T2: %u", node->t2);
 	DEBUG_DBG ("T3: %u", node->t3);
 
-	uint8_t addDataLen = 1 + IV_LENGTH ;
+	const uint8_t addDataLen = 1 + IV_LENGTH ;
 	uint8_t aad[AAD_LENGTH + addDataLen];
 
 	memcpy (aad, (uint8_t*)& clockResponse_msg, addDataLen); // Copy message upto iv
@@ -1214,7 +1260,7 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 
 	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN - TAG_LENGTH));
 
-    uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t) - KEY_LENGTH;
+    const uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t) - KEY_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];
 
     memcpy (aad, (uint8_t*)&serverHello_msg, addDataLen); // Copy message upto iv

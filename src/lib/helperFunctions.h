@@ -40,7 +40,7 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len);
   * @param buffer Buffer that will store resulting address. It must be 18 bytes long at least
   * @return Returns a pointer to input buffer after writting MAC address on human readable format
   */
-const char* mac2str (const uint8_t* mac, const char* buffer);
+char* mac2str (const uint8_t* mac, char* buffer);
 
 uint8_t* str2mac (const char* mac, uint8_t* values);
 

@@ -19,10 +19,11 @@
 #include <ESP8266WiFi.h>
 #elif defined(ESP32)
 #include <WiFi.h>
+#include <esp_now.h>
 #endif
 #include "Comms_hal.h"
-
-#define MAX_MESSAGE_LENGTH 250 ///< @brief Maximum message length for ESP-NOW
+#include "lib/helperFunctions.h"
+//#define MAX_MESSAGE_LENGTH 250 ///< @brief Maximum message length for ESP-NOW
 
 /**
   * @brief Definition for ESP-NOW hardware abstraction layer
@@ -53,14 +54,14 @@ public:
        * @param data Data buffer that contain the message to be sent
        * @param len Data length in number of bytes
        */
-     static void ICACHE_FLASH_ATTR rx_cb (u8 *mac_addr, u8 *data, u8 len);
+     static void ICACHE_FLASH_ATTR rx_cb (uint8_t *mac_addr, uint8_t *data, uint8_t len);
 
      /**
        * @brief Function that gets sending status
        * @param mac_addr Destination address to send the message to
        * @param status Sending status
        */
-     static void ICACHE_FLASH_ATTR tx_cb (u8 *mac_addr, u8 status);
+     static void ICACHE_FLASH_ATTR tx_cb (uint8_t *mac_addr, uint8_t status);
 
  public:
     /**
@@ -83,7 +84,7 @@ public:
       * @param len Data length in number of bytes
       * @return Returns sending status. 0 for success, 1 to indicate an error.
       */
-    uint8_t send (u8 *da, u8 *data, int len);
+	int32_t send (uint8_t *da, uint8_t *data, int len);
     /**
       * @brief Attach a callback function to be run on every received message
       * @param dataRcvd Pointer to the callback function
@@ -101,7 +102,7 @@ public:
       * @return Always returns the sice of 802.11 MAC address, equals to 6
       */
     uint8_t getAddressLength () {
-        return sizeof(gateway);
+        return COMMS_HAL_ADDR_LEN;
     }
 
     /**
@@ -109,7 +110,7 @@ public:
       * @return Always returns a value equal to 250
       */
     size_t getMaxMessageLength () {
-        return MAX_MESSAGE_LENGTH;
+        return COMMS_HAL_MAX_MESSAGE_LENGTH;
     }
 
 };

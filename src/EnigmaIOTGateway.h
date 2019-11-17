@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGateway.h
-  * @version 0.5.1
-  * @date 04/10/2019
+  * @version 0.6.0
+  * @date 17/11/2019
   * @author German Martin
   * @brief Library to build a gateway for EnigmaIoT system
   */
@@ -56,13 +56,17 @@ enum gwInvalidateReason_t {
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, uint16_t lostMessages, bool control)> onGwDataRx_t;
+typedef std::function<void (uint8_t* mac, const uint8_t* buf, uint8_t len, uint16_t lostMessages, bool control)> onGwDataRx_t;
 typedef std::function<void (uint8_t* mac)> onNewNode_t;
 typedef std::function<void (uint8_t* mac, gwInvalidateReason_t reason)> onNodeDisconnected_t;
+typedef std::function<void (boolean)> onWiFiManagerExit_t;
+typedef std::function<void (void)> onWiFiManagerStarted_t;
 #else
-typedef void (*onGwDataRx_t)(const uint8_t* mac, const uint8_t* data, uint8_t len, uint16_t lostMessages, bool control);
-typedef void (*onNewNode_t)(const uint8_t*);
-typedef void (*onNodeDisconnected_t)(const uint8_t*, gwInvalidateReason_t);
+typedef void (*onGwDataRx_t)(uint8_t* mac, const uint8_t* data, uint8_t len, uint16_t lostMessages, bool control);
+typedef void (*onNewNode_t)(uint8_t*);
+typedef void (*onNodeDisconnected_t)(uint8_t*, gwInvalidateReason_t);
+typedef void (*onWiFiManagerExit_t)(boolean);
+typedef void (*onWiFiManagerStarted_t)(void);
 #endif
 
 typedef struct {
@@ -93,7 +97,15 @@ class EnigmaIOTGatewayClass
      onNodeDisconnected_t notifyNodeDisconnection; ///< @brief Callback function that will be invoked when a node gets disconnected
      bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
 	 gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
-     
+
+	 AsyncWebServer* server;
+	 DNSServer* dns;
+	 AsyncWiFiManager* wifiManager;
+	 onWiFiManagerExit_t notifyWiFiManagerExit;
+	 onWiFiManagerStarted_t notifyWiFiManagerStarted;
+
+	 static void doSave (void);
+
      /**
       * @brief Build a **ServerHello** messange and send it to node
       * @param key Node public key to be used on Diffie Hellman algorithm
@@ -192,7 +204,7 @@ class EnigmaIOTGatewayClass
       * @param data Buffer that stores message bytes
       * @param len Length of message in number of bytes
       */
-     static void rx_cb (u8 *mac_addr, u8 *data, u8 len);
+     static void rx_cb (uint8_t *mac_addr, uint8_t *data, uint8_t len);
 
      /**
       * @brief Function that will be called anytime this gateway sends a message
@@ -200,20 +212,14 @@ class EnigmaIOTGatewayClass
       * @param mac_addr Address of message destination
       * @param status Result of sending process
       */
-     static void tx_cb (u8 *mac_addr, u8 status);
+     static void tx_cb (uint8_t *mac_addr, uint8_t status);
 
      /**
       * @brief Functrion to debug send status.
       * @param mac_addr Address of message sender
       * @param status Result status code
       */
-     void getStatus (u8 *mac_addr, u8 status);
-
-	 /**
-	 * @brief Starts configuration AP and web server and gets settings from it
-	 * @return Returns `true` if data was been correctly configured. `false` otherwise
-	 */
-	 bool configWiFiManager ();
+     void getStatus (uint8_t *mac_addr, uint8_t status);
 
 	 /**
 	 * @brief Loads configuration from flash memory
@@ -228,6 +234,36 @@ class EnigmaIOTGatewayClass
 	 bool saveFlashData ();
 
  public:
+	 bool getShouldSave ();
+
+	 char* getNetworkName () {
+		 return gwConfig.networkName;
+	 }
+
+	 char* getNetworkKey () {
+		 return (char*)(gwConfig.networkKey);
+	 }
+
+	 void addWiFiManagerParameter (AsyncWiFiManagerParameter* p) {
+		 if (wifiManager) {
+			 wifiManager->addParameter (p);
+		 }
+	 }
+
+	 void onWiFiManagerExit (onWiFiManagerExit_t handle) {
+		 notifyWiFiManagerExit = handle;
+	 }
+
+	 void onWiFiManagerStarted (onWiFiManagerStarted_t handle) {
+		 notifyWiFiManagerStarted = handle;
+	 }
+
+	 /**
+	 * @brief Starts configuration AP and web server and gets settings from it
+	 * @return Returns `true` if data was been correctly configured. `false` otherwise
+	 */
+	 bool configWiFiManager ();
+
      /**
       * @brief Initalizes communication basic data and starts accepting node registration
       * @param comm Physical layer to be used on this network
