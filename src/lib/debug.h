@@ -16,6 +16,9 @@
 #define _DEBUG_h
 
 #include <lib/EnigmaIoTconfig.h>
+#ifdef ESP32
+#include <esp_log.h>
+#endif
 
 #define NO_DEBUG	0 ///< @brief Debug level that will give no debug output
 #define ERROR	1 ///< @brief Debug level that will give error messages
@@ -24,10 +27,13 @@
 #define DBG	    4 ///< @brief Debug level that will give error, warning,info AND dbg messages
 #define VERBOSE	5 ///< @brief Debug level that will give all defined messages
 
-#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf_P(PSTR("[%lu] %lu free (%s:%d) "),millis(),(unsigned long)ESP.getFreeHeap(),__FUNCTION__,__LINE__)
+#ifdef ESP8266
+#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf_P (PSTR("[%lu] %lu free (%s:%d) "),millis(),(unsigned long)ESP.getFreeHeap(),__FUNCTION__,__LINE__)
+#endif
 
 #ifdef DEBUG_ESP_PORT
 
+#ifdef ESP8266
 #if DEBUG_LEVEL >= VERBOSE
 #define DEBUG_VERBOSE(text,...) DEBUG_ESP_PORT.print("V ");DEBUG_LINE_PREFIX();DEBUG_ESP_PORT.printf_P(PSTR(text),##__VA_ARGS__);DEBUG_ESP_PORT.println()
 #else
@@ -56,6 +62,14 @@
 #define DEBUG_ERROR(text,...) DEBUG_ESP_PORT.print("E ");DEBUG_LINE_PREFIX();DEBUG_ESP_PORT.printf_P(PSTR(text),##__VA_ARGS__);DEBUG_ESP_PORT.println()
 #else
 #define DEBUG_ERROR(...)
+#endif
+#elif defined ESP32
+#define DEFAULT_LOG_TAG "EnigmaIOT"
+#define DEBUG_VERBOSE(format,...) ESP_LOGV (DEFAULT_LOG_TAG,"Heap: %6d. " format, ESP.getFreeHeap(), ##__VA_ARGS__)
+#define DEBUG_DBG(format,...) ESP_LOGD (DEFAULT_LOG_TAG,"Heap: %6d " format, ESP.getFreeHeap(), ##__VA_ARGS__)
+#define DEBUG_INFO(format,...) ESP_LOGI (DEFAULT_LOG_TAG,"Heap: %6d " format, ESP.getFreeHeap(), ##__VA_ARGS__)
+#define DEBUG_WARN(format,...) ESP_LOGW (DEFAULT_LOG_TAG,"Heap: %6d " format, ESP.getFreeHeap(), ##__VA_ARGS__)
+#define DEBUG_ERROR(format,...) ESP_LOGE (DEFAULT_LOG_TAG,"Heap: %6d " format, ESP.getFreeHeap(), ##__VA_ARGS__)
 #endif
 #else
 #define DEBUG_VERBOSE(...)
