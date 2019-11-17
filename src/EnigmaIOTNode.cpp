@@ -316,7 +316,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 
     uint8_t macAddress[6];
 
-    if (wifi_get_macaddr (SOFTAP_IF, macAddress)) {
+    if (wifi_get_macaddr (STATION_IF, macAddress)) {
         node.setMacAddress (macAddress);
     }
 
@@ -410,14 +410,15 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 	//else if (!node.getSleepy () && node.isRegistered ()){
 		//clockRequest ();
 	//}
-    DEBUG_DBG ("Comms started");
+	wifi_set_channel (rtcmem_data.channel);
+    DEBUG_DBG ("Comms started. Channel %u", rtcmem_data.channel);
 
 }
 
 bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStoreData) {
 	DEBUG_DBG ("Searching for AP %s", data->networkName);
 
-	WiFi.mode (WIFI_STA);
+	//WiFi.mode (WIFI_STA);
 	int numWifi = WiFi.scanNetworks (false, false, 0, (uint8_t*)(data->networkName));
 	time_t scanStarted = millis ();
 	while (!(WiFi.scanComplete () || (millis () - scanStarted) > 1500)) {
@@ -434,7 +435,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		DEBUG_INFO ("Channel: %d", WiFi.channel (0));
 		DEBUG_INFO ("RSSI: %d", WiFi.RSSI (0));
 		// TODO: In future, to manage redundancy select higher RSSI gateway
-		data->channel = WiFi.channel (0);
+		data->channel = WiFi.channel (0); // It is done here, maybe
 		data->rssi = WiFi.RSSI (0);
 		memcpy (data->gateway, WiFi.BSSID (0), 6);
 
@@ -448,6 +449,11 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		}
 
 		WiFi.scanDelete ();
+		//WiFi.mode (WIFI_AP);
+		//WiFi.softAPdisconnect ();
+
+		wifi_set_channel (data->channel);
+
 		requestReportRSSI = true;
 		return true;
 	}
@@ -498,7 +504,7 @@ bool EnigmaIOTNodeClass::reportRSSI () {
 	bufLength = 3;
 
 	if (sendData (buffer, bufLength, true)) {
-		DEBUG_DBG ("Sleep time is %d seconds", sleepTime);
+		DEBUG_DBG ("Sleep time is %d seconds", sleepTime/1000000);
 		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
 		return true;
 	} else {
@@ -513,6 +519,7 @@ void EnigmaIOTNodeClass::handle () {
 	// Locate gateway address, channel and rssi
 	if (requestSearchGateway) {
 		requestSearchGateway = false;
+		requestReportRSSI = true;
 		searchForGateway (&rtcmem_data, true);
 	}
 
@@ -542,7 +549,7 @@ void EnigmaIOTNodeClass::handle () {
         if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered () && !indentifying) {
             uint64_t usSleep = sleepTime / (uint64_t)1000;
             DEBUG_INFO ("Go to sleep for %lu ms", (uint32_t)(usSleep));
-            ESP.deepSleep (sleepTime, RF_NO_CAL);
+            ESP.deepSleep (sleepTime);
         }
     }
 
@@ -695,7 +702,7 @@ bool EnigmaIOTNodeClass::clientHello () {
     node.setStatus (INIT);
     rtcmem_data.nodeRegisterStatus = INIT;
     uint8_t macAddress[6];
-    if (wifi_get_macaddr (SOFTAP_IF, macAddress)) {
+    if (wifi_get_macaddr (STATION_IF, macAddress)) {
         node.setMacAddress (macAddress);
     }
 
@@ -1459,7 +1466,7 @@ nodeInvalidateReason_t EnigmaIOTNodeClass::processInvalidateKey (const uint8_t m
     if (buf && count < IKMSG_LEN) {
         return UNKNOWN_ERROR;
     }
-    DEBUG_DBG ("Invalidate key request. Reason: %u", buf[1]);
+    DEBUG_WARN ("Invalidate key request. Reason: %u", buf[1]);
     uint8_t reason = buf[1];
     return (nodeInvalidateReason_t)reason;
 }

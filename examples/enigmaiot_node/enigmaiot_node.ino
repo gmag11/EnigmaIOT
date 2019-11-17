@@ -29,11 +29,11 @@ constexpr auto RESET_PIN = 13;
 ADC_MODE (ADC_VCC);
 
 void connectEventHandler () {
-	Serial.println ("Connected");
+	Serial.println ("Registered");
 }
 
 void disconnectEventHandler () {
-	Serial.println ("Disconnected");
+	Serial.println ("Unregistered");
 }
 
 void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length) {

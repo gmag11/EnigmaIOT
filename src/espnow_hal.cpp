@@ -51,6 +51,7 @@ void Espnow_halClass::begin (uint8_t* gateway, uint8_t channel, peerType_t peerT
     if (peerType == COMM_NODE) {
         memcpy (this->gateway, gateway, 6);
         this->channel = channel;
+		wifi_set_channel (channel);
     }
     initComms (peerType);
 }
@@ -64,6 +65,7 @@ void Espnow_halClass::stop () {
 
 uint8_t Espnow_halClass::send (uint8_t * da, uint8_t * data, int len)
 {
+	// Serial.printf ("Phy Mode ---> %d\n", (int)wifi_get_phy_mode ());
     return esp_now_send (da, data, len);
 }
 

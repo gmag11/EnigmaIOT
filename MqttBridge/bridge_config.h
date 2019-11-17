@@ -5,7 +5,7 @@
 #define SECURE_MQTT
 
 #ifdef SECURE_MQTT
-// Add here your server's Root CA cerrtificate. It is not needed to keep it secret
+// Add here your server's Root CA certificate. It is not needed to keep it secret
 static const char DSTrootCA[] PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----
 MIIDSjCCAjKgAwIBAgIQRK+wgNajJ7qJMDmGLvhAazANBgkqhkiG9w0BAQUFADA/
