@@ -1,13 +1,14 @@
 /**
   * @file EnigmaIOTNode.h
-  * @version 0.5.1
-  * @date 04/10/2019
+  * @version 0.6.0
+  * @date 17/11/2019
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
 
 #ifndef _ENIGMAIOTNODE_h
 #define _ENIGMAIOTNODE_h
+#ifdef ESP8266
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
@@ -585,4 +586,4 @@ public:
 extern EnigmaIOTNodeClass EnigmaIOTNode;
 
 #endif
-
+#endif

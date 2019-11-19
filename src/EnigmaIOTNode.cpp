@@ -1,11 +1,12 @@
 /**
   * @file EnigmaIOTNode.cpp
-  * @version 0.5.1
-  * @date 04/10/2019
+  * @version 0.6.0
+  * @date 17/11/2019
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
 
+#ifdef ESP8266
 #include <Arduino.h>
 #include "EnigmaIOTNode.h"
 #include "lib/timeManager.h"
@@ -1595,3 +1596,4 @@ void EnigmaIOTNodeClass::getStatus (uint8_t* mac_addr, uint8_t status) {
 
 EnigmaIOTNodeClass EnigmaIOTNode;
 
+#endif

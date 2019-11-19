@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_node_nonsleepy.ino
-  * @version 0.4.0
-  * @date 10/09/2019
+  * @version 0.6.0
+  * @date 17/11/2019
   * @author German Martin
   * @brief Node based on EnigmaIoT over ESP-NOW, in non sleeping mode
   *
@@ -12,6 +12,20 @@
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
 #include <CayenneLPP.h>
+
+#include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
+#include <Curve25519.h>
+#include <CRC32.h>
+#include <ESPAsyncWebServer.h>
+#include <ESPAsyncWiFiManager.h>
+#include <ESPAsyncTCP.h>
+#include <Hash.h>
+#include <DNSServer.h>
+
+#ifndef ESP8266
+#error Node only supports ESP8266 platform
+#endif
 
 #define BLUE_LED LED_BUILTIN
 

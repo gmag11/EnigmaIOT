@@ -1,12 +1,16 @@
 /**
   * @file enigmaiot_led_flasher.ino
-  * @version 0.4.0
-  * @date 10/09/2019
+  * @version 0.6.0
+  * @date 17/11/2019
   * @author German Martin
-  * @brief Node based on EnigmaIoT over ESP-NOW. Demonstrate clock synchronisation
+  * @brief Node based on EnigmaIoT over ESP-NOW using non sleeping mode. Demonstrate clock synchronisation function
   *
   * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
+
+#ifndef ESP8266
+#error Node only supports ESP8266 platform
+#endif
 
 #include <Arduino.h>
 #include <EnigmaIOTNode.h>

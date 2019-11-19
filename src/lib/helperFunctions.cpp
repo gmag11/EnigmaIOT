@@ -35,7 +35,9 @@ void initWiFi (uint8_t channel, uint8_t role, String networkName) {
 		//DEBUG_DBG ("Mode set to AP in channel %u", channel);
 		WiFi.mode (WIFI_STA);
 		WiFi.disconnect ();
+#ifdef ESP8266
 		wifi_set_channel (channel);
+#endif
 		DEBUG_DBG ("Mode set to STA. Channel %u", channel);
 	} else { // Gateway
 		WiFi.mode (WIFI_AP);

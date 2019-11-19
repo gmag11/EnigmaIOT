@@ -1,11 +1,12 @@
 /**
   * @file MqttBridge.ino
-  * @version 0.3.0
+  * @version 0.6.0
   * @date 28/08/2019
   * @author German Martin
   * @brief Bridge for EnigmaIoT system to forward data from serial to MQTT broker
   *
-  * Due to ESP-NOW limitations, it cannot be used with regular WiFi without problems. That's why this bridge is needed.
+  * Due to ESP-NOW RAM memory size limitations, secure MQTT cannot run while ESP-NOW encryption is working too.
+  * So, Gateway functionality is splitted into two ESP8266 modules, connected through serial communications.
   * It gets encoded data from serial port and forwards to a MQTT broker.
   *
   * Message format received over serial is in the form of lines like: `~\<address>\<subtopic>;<data>`
@@ -26,10 +27,9 @@
 
 //#define BRIDGE_DEBUG
 
-#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%lu] %lu free (%s:%d) ",millis(),(unsigned long)ESP.getFreeHeap(),__FUNCTION__,__LINE__);
-
 #ifdef BRIDGE_DEBUG
 #define DEBUG_ESP_PORT Serial
+#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf ("[%lu] %lu free (%s:%d) ",millis(),(unsigned long)ESP.getFreeHeap(),__FUNCTION__,__LINE__);
 #define _DEBUG_(...) DEBUG_LINE_PREFIX(); DEBUG_ESP_PORT.printf( __VA_ARGS__ ); DEBUG_ESP_PORT.println()
 #else
 #define _DEBUG_(...)
