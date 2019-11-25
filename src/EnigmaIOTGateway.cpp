@@ -449,7 +449,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 
 	wifiManager->setDebugOutput (true);
 	//wifiManager->setBreakAfterConfig (true);
-	wifiManager->setTryConnectDuringConfigPortal (true);
+	wifiManager->setTryConnectDuringConfigPortal (false);
 	wifiManager->setSaveConfigCallback (doSave);
 	wifiManager->setConfigPortalTimeout (150);
 
@@ -523,6 +523,7 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 		DEBUG_WARN ("%s do not exist. Formatting", CONFIG_FILE);
 		SPIFFS.format ();
 		WiFi.begin ("0", "0"); // Delete WiFi credentials
+		DEBUG_WARN ("Dummy STA config loaded");
 		return false;
 	}
 

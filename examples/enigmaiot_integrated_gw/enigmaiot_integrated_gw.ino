@@ -8,21 +8,39 @@
   * Communicates with a serial to MQTT gateway to send data to any IoT platform
   */
 
+#ifdef ESP32
+#include "GwOutput_mqtt.h"
+#include <WiFi.h> // Comment to compile for ESP8266
+#include <AsyncTCP.h> // Comment to compile for ESP8266
+#include <Update.h>
+#include <SPIFFS.h>
+#include "esp_system.h"
+#include "esp_event.h"
+#include "mqtt_client.h"
+#include "esp_tls.h"
+#elif defined(ESP8266)
+#include <ESP8266WiFi.h>
+//#include <ESPAsyncTCP.h> // Comment to compile for ESP32
+#include <Hash.h>
+#include <SPI.h>
+#include <PubSubClient.h>
+#ifdef SECURE_MQTT
+#include <WiFiClientSecure.h>
+#else
+#include <WiFiClient.h>
+#endif // SECURE_MQTT
+#endif // ESP32
+
+
 #include <Arduino.h>
 #include <CayenneLPP.h>
 #include <FS.h>
 
 #include "dstrootca.h"
 
-#include <ESP8266WiFi.h>
-#include <PubSubClient.h>
-#ifdef SECURE_MQTT
-#include <WiFiClientSecure.h>
-#else
-#include <WiFiClient.h>
-#endif
 #include "EnigmaIOTGateway.h"
 #include "lib/helperFunctions.h"
+#include "lib/debug.h"
 #include "espnow_hal.h"
 
 #include <Curve25519.h>
@@ -34,29 +52,21 @@
 #include <DNSServer.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
-#ifdef ESP32
-#include <AsyncTCP.h>
-#include <WiFi.h>
-#include <Update.h>
-#include <SPIFFS.h>
-#elif defined ESP8266
-#include <ESPAsyncTCP.h>
-#include <Hash.h>
-#include <SPI.h>
-#endif
+#include "GwOutput_generic.h"
 
 #ifndef BUILTIN_LED
 #define BUILTIN_LED 5
-#endif
+#endif // BUILTIN_LED
 
 #define BLUE_LED BUILTIN_LED
 #define RED_LED BUILTIN_LED
 
-#ifdef ESP8266
-ETSTimer connectionLedTimer;
-#elif defined ESP32
+#ifdef ESP32
 TimerHandle_t connectionLedTimer;
-#endif
+#elif defined(ESP8266)
+ETSTimer connectionLedTimer;
+#endif // ESP32
+
 const int connectionLed = BUILTIN_LED;
 boolean connectionLedFlashing = false;
 
@@ -81,25 +91,30 @@ typedef struct {
 	int mqtt_port = 8883;
 #else
 	int mqtt_port = 1883;
-#endif
+#endif //SECURE_MQTT
 	char mqtt_user[21];
 	char mqtt_pass[41];
 } mqttgw_config_t;
+
+#ifdef ESP32
+esp_mqtt_client_config_t mqtt_cfg;
+esp_mqtt_client_handle_t client;
+#endif // ESP32
 
 mqttgw_config_t mqttgw_config;
 const char CONFIG_FILE[] = "/mqtt.conf";
 bool shouldSaveConfig = false;
 
-#ifdef SECURE_MQTT
 #ifdef ESP8266
+#ifdef SECURE_MQTT
 BearSSL::X509List certificate (DSTroot_CA);
-#endif
 WiFiClientSecure secureClient;
 PubSubClient client (secureClient);
 #else
 WiFiClient unsecureClient;
 PubSubClient client (unsecureClient);
-#endif
+#endif // SECURE_MQTT
+#endif // ESP8266
 
 
 AsyncWiFiManagerParameter *mqttServerParam;
@@ -111,6 +126,7 @@ String netName;
 String clientId;
 String gwTopic;
 
+void publishMQTT (const char* topic, char* payload, size_t len, bool retain = false);
 
 void flashConnectionLed (void* led) {
 	//digitalWrite (*(int*)led, !digitalRead (*(int*)led));
@@ -118,35 +134,35 @@ void flashConnectionLed (void* led) {
 }
 
 void startConnectionFlash (int period) {
-#ifdef ESP8266
-	ets_timer_disarm (&connectionLedTimer);
-	if (!connectionLedFlashing) {
-		connectionLedFlashing = true;
-		ets_timer_arm_new (&connectionLedTimer, period, true, true);
-	}
-#elif defined ESP32
+#ifdef ESP32
 	if (!connectionLedFlashing) {
 		connectionLedFlashing = true;
 		connectionLedTimer = xTimerCreate ("led_flash", pdMS_TO_TICKS (period), pdTRUE, (void*)0, flashConnectionLed);
 		xTimerStart (connectionLedTimer, 0);
 	}
-#endif
+#elif defined (ESP8266)
+	ets_timer_disarm (&connectionLedTimer);
+	if (!connectionLedFlashing) {
+		connectionLedFlashing = true;
+		ets_timer_arm_new (&connectionLedTimer, period, true, true);
+	}
+#endif // ESP32
 }
 
 void stopConnectionFlash () {
-#ifdef ESP8266
-	if (connectionLedFlashing) {
-		connectionLedFlashing = false;
-		ets_timer_disarm (&connectionLedTimer);
-		digitalWrite (connectionLed, HIGH);
-	}
-#elif defined ESP32
+#ifdef ESP32
 	if (connectionLedFlashing) {
 		connectionLedFlashing = false;
 		xTimerStop (connectionLedTimer, 0);
 		xTimerDelete (connectionLedTimer, 0);
 	}
-#endif
+#elif defined(ESP8266)
+	if (connectionLedFlashing) {
+		connectionLedFlashing = false;
+		ets_timer_disarm (&connectionLedTimer);
+		digitalWrite (connectionLed, HIGH);
+	}
+#endif // ESP32
 }
 
 bool saveMQTTConfig () {
@@ -243,6 +259,8 @@ void wifiManagerExit (boolean status) {
 
 void wifiManagerStarted () {
 
+	//configManagerStart (EnigmaIOTGatewayClass configManager);
+
 	mqttServerParam = new AsyncWiFiManagerParameter ("mqttserver", "MQTT Server", mqttgw_config.mqtt_server, 41, "required type=\"text\" maxlength=40");
 	char port[10];
 	itoa (mqttgw_config.mqtt_port, port, 10);
@@ -257,14 +275,21 @@ void wifiManagerStarted () {
 
 }
 
-void onDlData (const char* topic, byte* payload, unsigned int length) {}
+void onDlData (const char* topic, char* payload, unsigned int length) {}
 
 void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
+	const int TOPIC_SIZE = 64;
+	const int PAYLOAD_SIZE = 512;
+	char* topic = (char*)malloc (TOPIC_SIZE);
+	char* payload = (char*)malloc (PAYLOAD_SIZE);
+	size_t pld_size;
+
 	switch (data[0]) {
 		case control_message_type::VERSION_ANS:
 			Serial.printf ("~/%s/%s;{\"version\":\"", macStr, GET_VERSION_ANS);
 			Serial.write (data + 1, length - 1);
 			Serial.println ("\"}");
+			Serial.printf ("%s/%s/%s;{\"version\":\"", EnigmaIOTGateway.getNetworkName (), macStr, GET_VERSION_ANS);
 			break;
 		case control_message_type::SLEEP_ANS:
 			uint32_t sleepTime;
@@ -275,7 +300,11 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 			Serial.printf ("~/%s/%s;{}\n", macStr, SET_RESET_ANS);
 			break;
 		case control_message_type::RSSI_ANS:
-			Serial.printf ("~/%s/%s;{\"rssi\":%d,\"channel\":%u}\n", macStr, GET_RSSI_ANS, (int8_t)data[1], data[2]);
+			//Serial.printf ("~/%s/%s;{\"rssi\":%d,\"channel\":%u}\n", macStr, GET_RSSI_ANS, (int8_t)data[1], data[2]);
+			snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, macStr, GET_RSSI_ANS);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"rssi\":%d,\"channel\":%u}", (int8_t)data[1], data[2]);
+			publishMQTT (topic, payload, pld_size);
+			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
 			break;
 		case control_message_type::OTA_ANS:
 			Serial.printf ("~/%s/%s;", macStr, SET_OTA_ANS);
@@ -310,6 +339,14 @@ void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 	}
 }
 
+void publishMQTT (const char* topic, char* payload, size_t len, bool retain) {
+#ifdef ESP32
+	esp_mqtt_client_publish (client, topic, payload, len, 0, retain);
+#elif defined(ESP8266)
+	client.publish (topic, payload, len, retain);
+#endif // ESP32
+}
+
 void processRxData (uint8_t* mac, const uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control) {
 	uint8_t *addr = mac;
 	const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);
@@ -325,6 +362,12 @@ void processRxData (uint8_t* mac, const uint8_t* buffer, uint8_t length, uint16_
 		return;
 	}
 
+	char* netName = EnigmaIOTGateway.getNetworkName ();
+	const int TOPIC_SIZE = 64;
+	const int PAYLOAD_SIZE = 512;
+	char* topic = (char*)malloc (TOPIC_SIZE);
+	char* payload = (char*)malloc (PAYLOAD_SIZE);
+
 	//Serial.printf ("Data from %s --> %s\n", macstr, printHexBuffer (buffer, length));
 
 	cayennelpp->decode ((uint8_t *)buffer, length, root);
@@ -332,20 +375,36 @@ void processRxData (uint8_t* mac, const uint8_t* buffer, uint8_t length, uint16_
 	free (cayennelpp);
 	
 	//Serial.println ();
-	Serial.printf ("~/%s/data;", mac_str);
-	serializeJson (root, Serial);
+	//Serial.printf ("~/%s/data;", mac_str);
+	snprintf (topic, TOPIC_SIZE, "%s/%s/data", netName, mac_str);
+	size_t pld_size = serializeJson (root, payload, PAYLOAD_SIZE);
+	publishMQTT (topic, payload, pld_size);
+	DEBUG_INFO ("Published MQTT %s %s", topic, payload);
 	if (lostMessages > 0) {
 		//serial.printf ("%u lost messages\n", lostmessages);
-		Serial.printf ("~/%s/debug/lostmessages;%u\n", mac_str, lostMessages);
+		//Serial.printf ("~/%s/debug/lostmessages;%u\n", mac_str, lostMessages);
+		snprintf (topic, TOPIC_SIZE, "%s/%s/debug/lostmessages", netName, mac_str);
+		pld_size = snprintf (payload, PAYLOAD_SIZE, "%u", lostMessages);
+		publishMQTT (topic, payload, pld_size);
+		DEBUG_INFO ("Published MQTT %s %s", topic, payload);
 	}
-	Serial.printf ("~/%s/status;{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}\n",
-		mac_str,
-		EnigmaIOTGateway.getPER ((uint8_t*)mac),
-		EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
-		EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
-		EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
-	//jsonBuffer.~BasicJsonDocument();
-	//Serial.println ();
+	//Serial.printf ("~/%s/status;{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}\n",
+	//	mac_str,
+	//	EnigmaIOTGateway.getPER ((uint8_t*)mac),
+	//	EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
+	//	EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
+	//	EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
+	snprintf (topic, TOPIC_SIZE, "%s/%s/status", netName, mac_str);
+	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}",
+			  EnigmaIOTGateway.getPER ((uint8_t*)mac),
+			  EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
+			  EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
+			  EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
+	publishMQTT (topic, payload, pld_size);
+	DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+
+	free (payload);
+	free (topic);
 }
 
 control_message_type_t checkMsgType (String data) {
@@ -412,7 +471,14 @@ void newNodeConnected (uint8_t * mac) {
 	char macstr[18];
 	mac2str (mac, macstr);
 	//Serial.printf ("New node connected: %s\n", macstr);
-	Serial.printf ("~/%s/hello\n", macstr);
+
+	const int TOPIC_SIZE = 64;
+	char* topic = (char*)malloc (TOPIC_SIZE);
+	snprintf (topic, TOPIC_SIZE, "%s/%s/hello", netName, macstr);
+	publishMQTT (topic, "", 0);
+	DEBUG_INFO ("Published MQTT %s", topic);
+
+	//Serial.printf ("~/%s/hello\n", macstr);
 }
 
 void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
@@ -441,7 +507,7 @@ void setClock () {
 }
 #endif
 
-
+#ifdef ESP8266
 void reconnect () {
 	// Loop until we're reconnected
 	while (!client.connected ()) {
@@ -460,7 +526,7 @@ void reconnect () {
 			DEBUG_INFO ("connected");
 			// Once connected, publish an announcement...
 			//String gwTopic = BASE_TOPIC + String("/gateway/hello");
-			client.publish (gwTopic.c_str (), "1", true);
+			publishMQTT (gwTopic.c_str (), "1", 1, true);
 			// ... and resubscribe
 			String dlTopic = netName + String ("/+/set/#");
 			client.subscribe (dlTopic.c_str ());
@@ -486,30 +552,112 @@ void reconnect () {
 		//delay (0);
 	}
 }
+#endif
 
 #ifdef ESP32
+static esp_err_t mqtt_event_handler (esp_mqtt_event_handle_t event) {
+	if (event->event_id == MQTT_EVENT_CONNECTED) {
+		ESP_LOGI ("TEST", "MQTT msgid= %d event: %d. MQTT_EVENT_CONNECTED", event->msg_id, event->event_id);
+		esp_mqtt_client_subscribe (client, "test/hello", 0);
+		//esp_mqtt_client_publish (client, "test/status", "1", 1, 0, false);
+		publishMQTT (gwTopic.c_str (), "1", 1, true);
+	} else if (event->event_id == MQTT_EVENT_DISCONNECTED) {
+		ESP_LOGI ("TEST", "MQTT event: %d. MQTT_EVENT_DISCONNECTED", event->event_id);
+		//esp_mqtt_client_reconnect (event->client); //not needed if autoconnect is enabled
+	} else  if (event->event_id == MQTT_EVENT_SUBSCRIBED) {
+		ESP_LOGI ("TEST", "MQTT msgid= %d event: %d. MQTT_EVENT_SUBSCRIBED", event->msg_id, event->event_id);
+	} else  if (event->event_id == MQTT_EVENT_UNSUBSCRIBED) {
+		ESP_LOGI ("TEST", "MQTT msgid= %d event: %d. MQTT_EVENT_UNSUBSCRIBED", event->msg_id, event->event_id);
+	} else  if (event->event_id == MQTT_EVENT_PUBLISHED) {
+		ESP_LOGI ("TEST", "MQTT event: %d. MQTT_EVENT_PUBLISHED", event->event_id);
+	} else  if (event->event_id == MQTT_EVENT_DATA) {
+		ESP_LOGI ("TEST", "MQTT msgid= %d event: %d. MQTT_EVENT_DATA", event->msg_id, event->event_id);
+		ESP_LOGI ("TEST", "Topic length %d. Data length %d", event->topic_len, event->data_len);
+		ESP_LOGI ("TEST", "Incoming data: %.*s %.*s\n", event->topic_len, event->topic, event->data_len, event->data);
+		onDlData (event->topic, event->data, event->data_len);
+
+	} else  if (event->event_id == MQTT_EVENT_BEFORE_CONNECT) {
+		ESP_LOGI ("TEST", "MQTT event: %d. MQTT_EVENT_BEFORE_CONNECT", event->event_id);
+	}
+}
+
 void EnigmaIOTGateway_handle (void * param) {
 	for (;;) {
 		EnigmaIOTGateway.handle ();
-		//client.loop ();
-		vTaskDelay (1);
+		vTaskDelay (0);
 	}
 }
 
 TaskHandle_t xEnigmaIOTGateway_handle = NULL;
 
-void client_reconnect (void* param) {
+/*void client_reconnect (void* param) {
 	for (;;) {
+		vTaskDelay (1);
 		if (!client.connected ()) {
 			DEBUG_INFO ("reconnect");
 			reconnect ();
-			vTaskDelay (1);
 		}
 	}
 }
 
-TaskHandle_t xClient_reconnect = NULL;
+TaskHandle_t xClient_reconnect = NULL;*/
+#endif // ESP32
+
+bool initMQTTclient () {
+#ifdef SECURE_MQTT
+#ifdef ESP32
+	esp_err_t err = esp_tls_set_global_ca_store ((const unsigned char*)DSTroot_CA, sizeof (DSTroot_CA));
+	ESP_LOGI ("TEST", "CA store set. Error = %d %s", err, esp_err_to_name (err));
+	if (err != ESP_OK) {
+		return false;
+	}
+#elif defined(ESP8266)
+	randomSeed (micros ());
+	secureClient.setTrustAnchors (&certificate);
+#endif // ESP32
+#endif // SECURE_MQTT
+#ifdef ESP8266
+	client.setServer (mqttgw_config.mqtt_server, mqttgw_config.mqtt_port);
+	DEBUG_INFO ("Set MQTT server %s - port %d", mqttgw_config.mqtt_server, mqttgw_config.mqtt_port);
 #endif
+
+	netName = String (EnigmaIOTGateway.getNetworkName ());
+
+#ifdef ESP32
+	uint64_t chipid = ESP.getEfuseMac ();
+	clientId = netName + String ((uint32_t)chipid, HEX);
+#elif defined(ESP8266)
+	clientId = netName + String (ESP.getChipId (), HEX);
+#endif // ESP32
+	gwTopic = netName + String ("/gateway/status");
+#ifdef ESP32
+	mqtt_cfg.host = mqttgw_config.mqtt_server;
+	mqtt_cfg.port = mqttgw_config.mqtt_port;
+	mqtt_cfg.username = mqttgw_config.mqtt_user;
+	mqtt_cfg.password = mqttgw_config.mqtt_pass;
+	mqtt_cfg.keepalive = 15;
+#ifdef SECURE_MQTT
+	mqtt_cfg.transport = MQTT_TRANSPORT_OVER_SSL;
+#else
+	mqtt_cfg.transport = MQTT_TRANSPORT_OVER_TCP;
+#endif
+	mqtt_cfg.event_handle = mqtt_event_handler;
+	mqtt_cfg.lwt_topic = gwTopic.c_str();
+	mqtt_cfg.lwt_msg = "0";
+	mqtt_cfg.lwt_msg_len = 1;
+	mqtt_cfg.lwt_retain = true;
+
+	client = esp_mqtt_client_init (&mqtt_cfg);
+	err = esp_mqtt_client_start (client);
+	ESP_LOGI ("TEST", "Client connect. Error = %d %s", err, esp_err_to_name (err));
+	if (err != ESP_OK)
+		return false;
+#elif defined(ESP8266)
+	reconnect ();
+#endif // ESP32
+	return true;
+}
+
 
 void setup () {
 	Serial.begin (115200); Serial.println (); Serial.println ();
@@ -553,41 +701,30 @@ void setup () {
 	DEBUG_INFO ("WiFi SSID: %s", WiFi.SSID ().c_str ());
 	DEBUG_INFO ("Network Name: %s", EnigmaIOTGateway.getNetworkName ());
 
-#ifdef SECURE_MQTT
-#ifdef ESP8266
-	randomSeed (micros ());
-	secureClient.setTrustAnchors (&certificate);
-#endif
-	secureClient.setCACert (DSTroot_CA);
-#endif
-	client.setServer (mqttgw_config.mqtt_server, mqttgw_config.mqtt_port);
-	DEBUG_INFO ("Set MQTT server %s - port %d", mqttgw_config.mqtt_server, mqttgw_config.mqtt_port);
-
-	netName = String (EnigmaIOTGateway.getNetworkName ());
-#ifdef ESP8266
-	clientId = netName + String (ESP.getChipId (), HEX);
-#elif defined ESP32
-	uint64_t chipid = ESP.getEfuseMac ();
-	clientId = netName + String ((uint32_t)chipid, HEX);
-#endif
-	gwTopic = netName + String ("/gateway/status");
+	initMQTTclient ();
 
 #ifdef ESP32
 	//xTaskCreate (EnigmaIOTGateway_handle, "handle", 10000, NULL, 1, &xEnigmaIOTGateway_handle);
-	xTaskCreatePinnedToCore (EnigmaIOTGateway_handle, "handle", 4096, NULL, 2, &xEnigmaIOTGateway_handle, 1);
-	xTaskCreatePinnedToCore (client_reconnect, "reconnect", 10000, NULL, 1, &xClient_reconnect, 1);
+	xTaskCreatePinnedToCore (EnigmaIOTGateway_handle, "handle", 4096, NULL, 1, &xEnigmaIOTGateway_handle, 1);
+	//xTaskCreatePinnedToCore (client_reconnect, "reconnect", 10000, NULL, 1, &xClient_reconnect, 1);
 #endif
 	}
 
 void loop () {
-	delay (0);
+	//delay (1);
+#ifdef ESP8266
+	client.loop ();
+#endif
+
 	//String message;
+	//if (client.connected ()) {
+	//}
 
 #ifdef ESP8266
 	EnigmaIOTGateway.handle ();
 
 	if (!client.connected ()) {
-		Serial.println ("reconnect");
+		DEBUG_INFO ("reconnect");
 		reconnect ();
 	}
 #endif
