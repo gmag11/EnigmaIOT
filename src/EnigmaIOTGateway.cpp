@@ -642,7 +642,7 @@ void EnigmaIOTGatewayClass::handle () {
 
 }
 
-void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count) {
+void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uint8_t count) {
 	Node* node;
 
 	DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
@@ -750,7 +750,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, const uint8_t* bu
 	}
 }
 
-bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
+bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node* node) {
 	/*
     * ----------------------------------------------------------------------------------------
     *| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | Tag (16) |
@@ -809,7 +809,7 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], const u
 	return true;
 }
 
-bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
+bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node* node) {
 	/*
 	* ----------------------------------------------------------------------------------------
 	*| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | Tag (16) |
