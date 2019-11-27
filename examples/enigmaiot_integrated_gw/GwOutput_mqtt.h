@@ -112,7 +112,9 @@ class GwOutput_MQTT: GatewayOutput_generic {
 	 void configManagerExit (boolean status);
 	 bool begin ();
 	 bool loadConfig ();
-	 bool outputSend (char* address, uint8_t *data, uint8_t length);
+	 bool outputControlSend (char* address, uint8_t *data, uint8_t length);
+	 void newNodeSend (char *address);
+	 void nodeDisconnectedSend (char* address, gwInvalidateReason_t reason);
 };
 
 extern GwOutput_MQTT GwOutput_mqtt;

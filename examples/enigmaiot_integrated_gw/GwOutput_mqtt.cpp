@@ -275,7 +275,7 @@ void GwOutput_MQTT::setClock () {
 }
 #endif
 
-bool GwOutput_MQTT::outputSend (char* address, uint8_t* data, uint8_t length) {
+bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t length) {
 	const int TOPIC_SIZE = 64;
 	const int PAYLOAD_SIZE = 512;
 	char* topic = (char*)malloc (TOPIC_SIZE);
@@ -339,4 +339,28 @@ bool GwOutput_MQTT::outputSend (char* address, uint8_t* data, uint8_t length) {
 	free (topic);
 	free (payload);
 
+}
+
+void GwOutput_MQTT::newNodeSend (char* address) {
+	const int TOPIC_SIZE = 64;
+	char* topic = (char*)malloc (TOPIC_SIZE);
+	snprintf (topic, TOPIC_SIZE, "%s/%s/hello", netName, address);
+	publishMQTT (this, topic, "", 0);
+	DEBUG_INFO ("Published MQTT %s", topic);
+	free (topic);
+}
+
+void GwOutput_MQTT::nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) {
+	const int TOPIC_SIZE = 64;
+	const int PAYLOAD_SIZE = 64;
+	char* topic = (char*)malloc (TOPIC_SIZE);
+	char* payload = (char*)malloc (PAYLOAD_SIZE);
+	size_t pld_size;
+
+	snprintf (topic, TOPIC_SIZE, "%s/%s/bye", netName, address);
+	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"reason\":%u}", reason);
+	publishMQTT (this, topic, payload, pld_size);
+	DEBUG_INFO ("Published MQTT %s", topic);
+	free (topic);
+	free (payload);
 }

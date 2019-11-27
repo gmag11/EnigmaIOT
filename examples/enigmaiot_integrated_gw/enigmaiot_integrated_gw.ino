@@ -115,7 +115,7 @@ void wifiManagerStarted () {
 
 void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 	if (data) {
-		GwOutput_mqtt.outputSend (macStr, data, length);
+		GwOutput_mqtt.outputControlSend (macStr, data, length);
 	}
 }
 
@@ -244,12 +244,7 @@ void newNodeConnected (uint8_t * mac) {
 	mac2str (mac, macstr);
 	//Serial.printf ("New node connected: %s\n", macstr);
 
-	const int TOPIC_SIZE = 64;
-	char* topic = (char*)malloc (TOPIC_SIZE);
-	// --> snprintf (topic, TOPIC_SIZE, "%s/%s/hello", netName, macstr);
-	// --> publishMQTT (topic, "", 0);
-	DEBUG_INFO ("Published MQTT %s", topic);
-
+	GwOutput_mqtt.newNodeSend (macstr);
 	//Serial.printf ("~/%s/hello\n", macstr);
 }
 
@@ -257,7 +252,8 @@ void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
 	char macstr[18];
 	mac2str (mac, macstr);
 	//Serial.printf ("Node %s disconnected. Reason %u\n", macstr, reason);
-	Serial.printf ("~/%s/bye;{\"reason\":%u}\n", macstr, reason);
+	GwOutput_mqtt.nodeDisconnectedSend (macstr, reason);
+	//Serial.printf ("~/%s/bye;{\"reason\":%u}\n", macstr, reason);
 }
 
 #ifdef ESP32
