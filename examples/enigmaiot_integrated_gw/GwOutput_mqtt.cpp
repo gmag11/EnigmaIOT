@@ -321,13 +321,18 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 		break;
 	case control_message_type::RESET_ANS:
 		Serial.printf ("~/%s/%s;{}\n", address, SET_RESET_ANS);
+		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, address, SET_RESET_ANS);
+		pld_size = snprintf (payload, PAYLOAD_SIZE, "{}");
+		if (publishMQTT (this, topic, payload, pld_size)) {
+			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+		}
 		break;
 	case control_message_type::RSSI_ANS:
-		//Serial.printf ("~/%s/%s;{\"rssi\":%d,\"channel\":%u}\n", macStr, GET_RSSI_ANS, (int8_t)data[1], data[2]);
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, address, GET_RSSI_ANS);
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"rssi\":%d,\"channel\":%u}", (int8_t)data[1], data[2]);
-		publishMQTT (this, topic, payload, pld_size);
-		DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+		if (publishMQTT (this, topic, payload, pld_size)) {
+			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+		}
 		break;
 	case control_message_type::OTA_ANS:
 		Serial.printf ("~/%s/%s;", address, SET_OTA_ANS);
