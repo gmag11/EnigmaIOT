@@ -22,6 +22,12 @@
 #include "WProgram.h"
 #endif
 
+typedef enum GwOutput_data_type {
+	data,
+	lostmessages,
+	status
+} GwOutput_data_type_t;
+
 class GatewayOutput_generic {
 protected:
 	EnigmaIOTGatewayClass* enigmaIotGateway;
@@ -40,7 +46,7 @@ public:
 	virtual bool outputControlSend (char* address, uint8_t* data, uint8_t length) = 0;
 	virtual bool newNodeSend (char* address) = 0;
 	virtual bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) = 0;
-	virtual bool outputDataSend (char* address, char* data, uint8_t length) = 0;
+	virtual bool outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type = data) = 0;
 };
 
 #endif // _GWOUT_GEN_h

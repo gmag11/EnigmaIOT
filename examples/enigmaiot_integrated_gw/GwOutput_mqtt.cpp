@@ -276,12 +276,21 @@ void GwOutput_MQTT::setClock () {
 }
 #endif
 
-bool GwOutput_MQTT::outputDataSend (char* address, char* data, uint8_t length) {
+bool GwOutput_MQTT::outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type) {
 	const int TOPIC_SIZE = 64;
 	char* topic = (char*)malloc (TOPIC_SIZE);
 	bool result;
-
-	snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, address, NODE_DATA);
+	switch (type){
+	case GwOutput_data_type::data:
+		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, address, NODE_DATA);
+		break;
+	case GwOutput_data_type::lostmessages:
+		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, address, LOST_MESSAGES);
+		break;
+	case GwOutput_data_type::status:
+		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, address, NODE_STATUS);
+		break;
+	}
 	if (result = publishMQTT (this, topic, data, length)) {
 		DEBUG_INFO ("Published MQTT %s", topic);
 	} else {

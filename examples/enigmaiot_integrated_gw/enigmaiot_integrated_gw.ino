@@ -135,49 +135,30 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 	}
 
 	char* netName = EnigmaIOTGateway.getNetworkName ();
-	const int TOPIC_SIZE = 64;
 	const int PAYLOAD_SIZE = 512;
-	char* topic = (char*)malloc (TOPIC_SIZE);
 	char* payload = (char*)malloc (PAYLOAD_SIZE);
-
-	//Serial.printf ("Data from %s --> %s\n", macstr, printHexBuffer (buffer, length));
 
 	cayennelpp->decode ((uint8_t *)buffer, length, root);
 	cayennelpp->CayenneLPP::~CayenneLPP();
 	free (cayennelpp);
 	
-	//Serial.println ();
-	//Serial.printf ("~/%s/data;", mac_str);
-	snprintf (topic, TOPIC_SIZE, "%s/%s/data", netName, mac_str);
 	size_t pld_size = serializeJson (root, payload, PAYLOAD_SIZE);
-	// --> publishMQTT (topic, payload, pld_size);
 	GwOutput.outputDataSend (mac_str, payload, pld_size);
-	DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+	DEBUG_INFO ("Published data message from %s: %s", mac_str, payload);
 	if (lostMessages > 0) {
-		//serial.printf ("%u lost messages\n", lostmessages);
-		//Serial.printf ("~/%s/debug/lostmessages;%u\n", mac_str, lostMessages);
-		snprintf (topic, TOPIC_SIZE, "%s/%s/debug/lostmessages", netName, mac_str);
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "%u", lostMessages);
-		// --> publishMQTT (topic, payload, pld_size);
-		DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+		GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::lostmessages);
+		DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
 	}
-	//Serial.printf ("~/%s/status;{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}\n",
-	//	mac_str,
-	//	EnigmaIOTGateway.getPER ((uint8_t*)mac),
-	//	EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
-	//	EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
-	//	EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
-	snprintf (topic, TOPIC_SIZE, "%s/%s/status", netName, mac_str);
 	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}",
 			  EnigmaIOTGateway.getPER ((uint8_t*)mac),
 			  EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
 			  EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
 			  EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
-	// --> publishMQTT (topic, payload, pld_size);
-	DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+	GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::status);
+	DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
 
 	free (payload);
-	free (topic);
 }
 
 control_message_type_t checkMsgType (String data) {

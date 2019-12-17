@@ -54,6 +54,8 @@
 #define GET_RSSI         "get/rssi"
 #define GET_RSSI_ANS     "result/rssi"
 #define NODE_DATA        "data"
+#define LOST_MESSAGES    "debug/lostmessages"
+#define NODE_STATUS      "status"
 
 constexpr auto CONFIG_FILE = "/mqtt.conf";
 
@@ -116,7 +118,7 @@ class GwOutput_MQTT: GatewayOutput_generic {
 	 bool outputControlSend (char* address, uint8_t *data, uint8_t length);
 	 bool newNodeSend (char *address);
 	 bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason);
-	 bool outputDataSend (char* address, char* data, uint8_t length);
+	 bool outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type = data);
 };
 
 extern GwOutput_MQTT GwOutput;
