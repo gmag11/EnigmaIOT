@@ -309,18 +309,27 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 
 	switch (data[0]) {
 	case control_message_type::VERSION_ANS:
-		Serial.printf ("~/%s/%s;{\"version\":\"", address, GET_VERSION_ANS);
-		Serial.write (data + 1, length - 1);
-		Serial.println ("\"}");
-		Serial.printf ("%s/%s/%s;{\"version\":\"", EnigmaIOTGateway.getNetworkName (), address, GET_VERSION_ANS);
+		//Serial.printf ("~/%s/%s;{\"version\":\"", address, GET_VERSION_ANS);
+		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, address, GET_VERSION_ANS);
+		//Serial.write (data + 1, length - 1);
+		//Serial.println ("\"}");
+		//Serial.printf ("%s/%s/%s;{\"version\":\"", EnigmaIOTGateway.getNetworkName (), address, GET_VERSION_ANS);
+		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"version\":\"%.*s\"}", length - 1, data + 1);
+		if (publishMQTT (this, topic, payload, pld_size)) {
+			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+		}
 		break;
 	case control_message_type::SLEEP_ANS:
 		uint32_t sleepTime;
 		memcpy (&sleepTime, data + 1, sizeof (sleepTime));
-		Serial.printf ("~/%s/%s;{\"sleeptime\":%d}\n", address, GET_SLEEP_ANS, sleepTime);
+		//Serial.printf ("~/%s/%s;{\"sleeptime\":%d}\n", address, GET_SLEEP_ANS, sleepTime);
+		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, address, GET_SLEEP_ANS);
+		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"sleeptime\":%d}", sleepTime);
+		if (publishMQTT (this, topic, payload, pld_size)) {
+			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+		}
 		break;
 	case control_message_type::RESET_ANS:
-		Serial.printf ("~/%s/%s;{}\n", address, SET_RESET_ANS);
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, address, SET_RESET_ANS);
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "{}");
 		if (publishMQTT (this, topic, payload, pld_size)) {
@@ -335,33 +344,41 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 		}
 		break;
 	case control_message_type::OTA_ANS:
-		Serial.printf ("~/%s/%s;", address, SET_OTA_ANS);
+		//Serial.printf ("~/%s/%s;", address, SET_OTA_ANS);
+		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, address, SET_OTA_ANS);
 		switch (data[1]) {
 		case ota_status::OTA_STARTED:
-			Serial.printf ("{\"result\":\"OTA Started\",\"status\":%u}\n", data[1]);
+			//Serial.printf ("{\"result\":\"OTA Started\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA Started\",\"status\":%u}\n", data[1]);
 			break;
 		case ota_status::OTA_START_ERROR:
-			Serial.printf ("{\"result\":\"OTA Start error\",\"status\":%u}\n", data[1]);
+			//Serial.printf ("{\"result\":\"OTA Start error\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA Start error\",\"status\":%u}\n", data[1]);
 			break;
 		case ota_status::OTA_OUT_OF_SEQUENCE:
 			uint16_t lastGoodIdx;
 			memcpy ((uint8_t*)&lastGoodIdx, data + 2, sizeof (uint16_t));
-			Serial.printf ("{\"last_chunk\":%d,\"result\":\"OTA out of sequence error\",\"status\":%u}\n", lastGoodIdx, data[1]);
+			//Serial.printf ("{\"last_chunk\":%d,\"result\":\"OTA out of sequence error\",\"status\":%u}\n", lastGoodIdx, data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"last_chunk\":%d,\"result\":\"OTA out of sequence error\",\"status\":%u}\n", lastGoodIdx, data[1]);
 			break;
 		case ota_status::OTA_CHECK_OK:
-			Serial.printf ("{\"result\":\"OTA check OK\",\"status\":%u}\n", data[1]);
+			//Serial.printf ("{\"result\":\"OTA check OK\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA check OK\",\"status\":%u}\n", data[1]);
 			break;
 		case ota_status::OTA_CHECK_FAIL:
-			Serial.printf ("{\"result\":\"OTA check failed\",\"status\":%u}\n", data[1]);
+			//Serial.printf ("{\"result\":\"OTA check failed\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA check failed\",\"status\":%u}\n", data[1]);
 			break;
 		case ota_status::OTA_TIMEOUT:
-			Serial.printf ("{\"result\":\"OTA timeout\",\"status\":%u}\n", data[1]);
+			//Serial.printf ("{\"result\":\"OTA timeout\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA timeout\",\"status\":%u}\n", data[1]);
 			break;
 		case ota_status::OTA_FINISHED:
-			Serial.printf ("{\"result\":\"OTA finished OK\",\"status\":%u}\n", data[1]);
+			//Serial.printf ("{\"result\":\"OTA finished OK\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA finished OK\",\"status\":%u}\n", data[1]);
 			break;
-		default:
-			Serial.println ();
+		//default:
+			//Serial.println ();
 		}
 		break;
 	}
