@@ -36,7 +36,7 @@
 #include <CayenneLPP.h>
 #include <FS.h>
 
-#include "EnigmaIOTGateway.h"
+#include <EnigmaIOTGateway.h>
 #include "lib/helperFunctions.h"
 #include "lib/debug.h"
 #include "espnow_hal.h"
@@ -106,16 +106,16 @@ void stopConnectionFlash () {
 }
 
 void wifiManagerExit (boolean status) {
-	GwOutput_mqtt.configManagerExit (status);
+	GwOutput.configManagerExit (status);
 }
 
 void wifiManagerStarted () {
-	GwOutput_mqtt.configManagerStart (&EnigmaIOTGateway);
+	GwOutput.configManagerStart (&EnigmaIOTGateway);
 }
 
 void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 	if (data) {
-		GwOutput_mqtt.outputControlSend (macStr, data, length);
+		GwOutput.outputControlSend (macStr, data, length);
 	}
 }
 
@@ -151,6 +151,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 	snprintf (topic, TOPIC_SIZE, "%s/%s/data", netName, mac_str);
 	size_t pld_size = serializeJson (root, payload, PAYLOAD_SIZE);
 	// --> publishMQTT (topic, payload, pld_size);
+	GwOutput.outputDataSend (mac_str, payload, pld_size);
 	DEBUG_INFO ("Published MQTT %s %s", topic, payload);
 	if (lostMessages > 0) {
 		//serial.printf ("%u lost messages\n", lostmessages);
@@ -244,7 +245,11 @@ void newNodeConnected (uint8_t * mac) {
 	mac2str (mac, macstr);
 	//Serial.printf ("New node connected: %s\n", macstr);
 
-	GwOutput_mqtt.newNodeSend (macstr);
+	if (!GwOutput.newNodeSend (macstr)) {
+		DEBUG_WARN ("Error senfing new node %s", macstr);
+	} else {
+		DEBUG_DBG ("New node %s message sent", macstr);
+	}
 	//Serial.printf ("~/%s/hello\n", macstr);
 }
 
@@ -252,7 +257,11 @@ void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
 	char macstr[18];
 	mac2str (mac, macstr);
 	//Serial.printf ("Node %s disconnected. Reason %u\n", macstr, reason);
-	GwOutput_mqtt.nodeDisconnectedSend (macstr, reason);
+	if (!GwOutput.nodeDisconnectedSend (macstr, reason)) {
+		DEBUG_WARN ("Error sending node disconnected %s reason %d", macstr, reason);
+	} else {
+		DEBUG_DBG ("Node %s disconnected message sent. Reason %d", macstr, reason);
+	}
 	//Serial.printf ("~/%s/bye;{\"reason\":%u}\n", macstr, reason);
 }
 
@@ -279,7 +288,7 @@ void setup () {
 	startConnectionFlash (100);
 
 
-	if (!GwOutput_mqtt.loadConfig ()) {
+	if (!GwOutput.loadConfig ()) {
 		DEBUG_WARN ("Error reading config file");
 	}
 
@@ -309,7 +318,7 @@ void setup () {
 	DEBUG_INFO ("WiFi SSID: %s", WiFi.SSID ().c_str ());
 	DEBUG_INFO ("Network Name: %s", EnigmaIOTGateway.getNetworkName ());
 
-	GwOutput_mqtt.begin ();
+	GwOutput.begin ();
 
 #ifdef ESP32
 	//xTaskCreate (EnigmaIOTGateway_handle, "handle", 10000, NULL, 1, &xEnigmaIOTGateway_handle);

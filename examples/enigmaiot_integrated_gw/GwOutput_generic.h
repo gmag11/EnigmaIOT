@@ -38,8 +38,9 @@ public:
 	virtual bool begin () = 0;
 	virtual bool loadConfig () = 0;
 	virtual bool outputControlSend (char* address, uint8_t* data, uint8_t length) = 0;
-	virtual void newNodeSend (char* address) = 0;
-	virtual void nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) = 0;
+	virtual bool newNodeSend (char* address) = 0;
+	virtual bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) = 0;
+	virtual bool outputDataSend (char* address, char* data, uint8_t length) = 0;
 };
 
 #endif // _GWOUT_GEN_h

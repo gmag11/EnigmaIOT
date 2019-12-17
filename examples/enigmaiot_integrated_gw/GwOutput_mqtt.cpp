@@ -4,7 +4,7 @@
 
 #include "GwOutput_mqtt.h"
 
-GwOutput_MQTT GwOutput_mqtt;
+GwOutput_MQTT GwOutput;
 
 void GwOutput_MQTT::configManagerStart (EnigmaIOTGatewayClass* enigmaIotGw) {
 	enigmaIotGateway = enigmaIotGw;
@@ -220,35 +220,36 @@ void GwOutput_MQTT::reconnect () {
 #ifdef ESP32
 esp_err_t GwOutput_MQTT::mqtt_event_handler (esp_mqtt_event_handle_t event) {
 	if (event->event_id == MQTT_EVENT_CONNECTED) {
-		ESP_LOGI ("TEST", "MQTT msgid= %d event: %d. MQTT_EVENT_CONNECTED", event->msg_id, event->event_id);
-		esp_mqtt_client_subscribe (GwOutput_mqtt.client, "test/hello", 0);
+		DEBUG_INFO ("MQTT msgid= %d event: %d. MQTT_EVENT_CONNECTED", event->msg_id, event->event_id);
+		esp_mqtt_client_subscribe (GwOutput.client, "test/hello", 0);
 		//esp_mqtt_client_publish (client, "test/status", "1", 1, 0, false);
-		publishMQTT (&GwOutput_mqtt, (char*)GwOutput_mqtt.gwTopic.c_str (), "1", 1, true);
+		publishMQTT (&GwOutput, (char*)GwOutput.gwTopic.c_str (), "1", 1, true);
 	} else if (event->event_id == MQTT_EVENT_DISCONNECTED) {
-		ESP_LOGI ("TEST", "MQTT event: %d. MQTT_EVENT_DISCONNECTED", event->event_id);
+		DEBUG_INFO ("MQTT event: %d. MQTT_EVENT_DISCONNECTED", event->event_id);
 		//esp_mqtt_client_reconnect (event->client); //not needed if autoconnect is enabled
 	} else  if (event->event_id == MQTT_EVENT_SUBSCRIBED) {
-		ESP_LOGI ("TEST", "MQTT msgid= %d event: %d. MQTT_EVENT_SUBSCRIBED", event->msg_id, event->event_id);
+		DEBUG_INFO ("MQTT msgid= %d event: %d. MQTT_EVENT_SUBSCRIBED", event->msg_id, event->event_id);
 	} else  if (event->event_id == MQTT_EVENT_UNSUBSCRIBED) {
-		ESP_LOGI ("TEST", "MQTT msgid= %d event: %d. MQTT_EVENT_UNSUBSCRIBED", event->msg_id, event->event_id);
+		DEBUG_INFO ("MQTT msgid= %d event: %d. MQTT_EVENT_UNSUBSCRIBED", event->msg_id, event->event_id);
 	} else  if (event->event_id == MQTT_EVENT_PUBLISHED) {
-		ESP_LOGI ("TEST", "MQTT event: %d. MQTT_EVENT_PUBLISHED", event->event_id);
+		DEBUG_INFO ("MQTT event: %d. MQTT_EVENT_PUBLISHED", event->event_id);
 	} else  if (event->event_id == MQTT_EVENT_DATA) {
-		ESP_LOGI ("TEST", "MQTT msgid= %d event: %d. MQTT_EVENT_DATA", event->msg_id, event->event_id);
-		ESP_LOGI ("TEST", "Topic length %d. Data length %d", event->topic_len, event->data_len);
-		ESP_LOGI ("TEST", "Incoming data: %.*s %.*s\n", event->topic_len, event->topic, event->data_len, event->data);
-		onDlData (&GwOutput_mqtt, event->topic, event->data, event->data_len);
+		DEBUG_INFO ("MQTT msgid= %d event: %d. MQTT_EVENT_DATA", event->msg_id, event->event_id);
+		DEBUG_INFO ("Topic length %d. Data length %d", event->topic_len, event->data_len);
+		DEBUG_INFO ("Incoming data: %.*s %.*s\n", event->topic_len, event->topic, event->data_len, event->data);
+		onDlData (&GwOutput, event->topic, event->data, event->data_len);
 
 	} else  if (event->event_id == MQTT_EVENT_BEFORE_CONNECT) {
-		ESP_LOGI ("TEST", "MQTT event: %d. MQTT_EVENT_BEFORE_CONNECT", event->event_id);
+		DEBUG_INFO ("MQTT event: %d. MQTT_EVENT_BEFORE_CONNECT", event->event_id);
 	}
 }
 #endif // ESP32
 
 bool GwOutput_MQTT::publishMQTT (GwOutput_MQTT* gw, char* topic, char* payload, size_t len, bool retain) {
 #ifdef ESP32
-	if (esp_mqtt_client_publish (gw->client, topic, payload, len, 0, retain))
-		return true;
+	int result = esp_mqtt_client_publish (gw->client, topic, payload, len, 0, retain);
+	DEBUG_INFO ("-----> MQTT result %d", result);
+	return true; // TODO: FIX --> result;
 #elif defined(ESP8266)
 	return client.publish (topic, payload, len, retain);
 #endif // ESP32
@@ -274,6 +275,21 @@ void GwOutput_MQTT::setClock () {
 #endif
 }
 #endif
+
+bool GwOutput_MQTT::outputDataSend (char* address, char* data, uint8_t length) {
+	const int TOPIC_SIZE = 64;
+	char* topic = (char*)malloc (TOPIC_SIZE);
+	bool result;
+
+	snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName, address, NODE_DATA);
+	if (result = publishMQTT (this, topic, data, length)) {
+		DEBUG_INFO ("Published MQTT %s", topic);
+	} else {
+		DEBUG_WARN ("Error publishing MQTT %s", topic);
+	}
+	free (topic);
+	return result;
+}
 
 bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t length) {
 	const int TOPIC_SIZE = 64;
@@ -341,16 +357,17 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 
 }
 
-void GwOutput_MQTT::newNodeSend (char* address) {
+bool GwOutput_MQTT::newNodeSend (char* address) {
 	const int TOPIC_SIZE = 64;
 	char* topic = (char*)malloc (TOPIC_SIZE);
 	snprintf (topic, TOPIC_SIZE, "%s/%s/hello", netName, address);
-	publishMQTT (this, topic, "", 0);
+	bool result = publishMQTT (this, topic, "", 0);
 	DEBUG_INFO ("Published MQTT %s", topic);
 	free (topic);
+	return result;
 }
 
-void GwOutput_MQTT::nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) {
+bool GwOutput_MQTT::nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) {
 	const int TOPIC_SIZE = 64;
 	const int PAYLOAD_SIZE = 64;
 	char* topic = (char*)malloc (TOPIC_SIZE);
@@ -359,8 +376,9 @@ void GwOutput_MQTT::nodeDisconnectedSend (char* address, gwInvalidateReason_t re
 
 	snprintf (topic, TOPIC_SIZE, "%s/%s/bye", netName, address);
 	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"reason\":%u}", reason);
-	publishMQTT (this, topic, payload, pld_size);
+	bool result = publishMQTT (this, topic, payload, pld_size);
 	DEBUG_INFO ("Published MQTT %s", topic);
 	free (topic);
 	free (payload);
+	return result;
 }
