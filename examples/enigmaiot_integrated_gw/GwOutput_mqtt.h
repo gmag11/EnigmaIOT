@@ -71,7 +71,7 @@ typedef struct {
 } mqttgw_config_t;
 
 
-class GwOutput_MQTT: GatewayOutput_generic {
+class GwOutput_MQTT: public GatewayOutput_generic {
  protected:
 	 AsyncWiFiManagerParameter* mqttServerParam;
 	 AsyncWiFiManagerParameter* mqttPortParam;
@@ -101,7 +101,6 @@ class GwOutput_MQTT: GatewayOutput_generic {
 #ifdef ESP32
 	 static esp_err_t mqtt_event_handler (esp_mqtt_event_handle_t event);
 #endif // ESP32
-	 static void onDlData (GwOutput_MQTT* gw, const char* topic, char* payload, unsigned int length);
 #ifdef SECURE_MQTT
 	 void setClock ();
 #endif // SECURE_MQTT
@@ -112,7 +111,7 @@ class GwOutput_MQTT: GatewayOutput_generic {
 
  public:
 	 void configManagerStart (EnigmaIOTGatewayClass* enigmaIotGw);
-	 void configManagerExit (boolean status);
+	 void configManagerExit (bool status);
 	 bool begin ();
 	 bool loadConfig ();
 	 bool outputControlSend (char* address, uint8_t *data, uint8_t length);

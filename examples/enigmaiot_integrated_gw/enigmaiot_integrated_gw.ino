@@ -189,6 +189,12 @@ control_message_type_t checkMsgType (String data) {
 	return control_message_type::USERDATA;
 }
 
+// TODO
+void onDownlinkData (const char* topic, char* payload, size_t len){
+	DEBUG_INFO ("DL Topic: %s", topic);
+	DEBUG_INFO ("DL Payload: %.*s", len, payload);
+}
+
 void onSerial (String message) {
 	uint8_t addr[6];
 
@@ -299,6 +305,7 @@ void setup () {
 	DEBUG_INFO ("WiFi SSID: %s", WiFi.SSID ().c_str ());
 	DEBUG_INFO ("Network Name: %s", EnigmaIOTGateway.getNetworkName ());
 
+	GwOutput.setDlCallback (onDownlinkData);
 	GwOutput.begin ();
 
 #ifdef ESP32

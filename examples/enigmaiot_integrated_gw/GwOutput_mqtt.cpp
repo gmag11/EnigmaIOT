@@ -78,7 +78,7 @@ bool GwOutput_MQTT::loadConfig () {
 }
 
 
-void GwOutput_MQTT::configManagerExit (boolean status) {
+void GwOutput_MQTT::configManagerExit (bool status) {
 	DEBUG_INFO ("==== Config Portal MQTTGW result ====");
 	DEBUG_INFO ("MQTT server: %s", mqttServerParam->getValue ());
 	DEBUG_INFO ("MQTT port: %s", mqttPortParam->getValue ());
@@ -237,7 +237,7 @@ esp_err_t GwOutput_MQTT::mqtt_event_handler (esp_mqtt_event_handle_t event) {
 		DEBUG_INFO ("MQTT msgid= %d event: %d. MQTT_EVENT_DATA", event->msg_id, event->event_id);
 		DEBUG_INFO ("Topic length %d. Data length %d", event->topic_len, event->data_len);
 		DEBUG_INFO ("Incoming data: %.*s %.*s\n", event->topic_len, event->topic, event->data_len, event->data);
-		onDlData (&GwOutput, event->topic, event->data, event->data_len);
+		GwOutput.downlinkCb (event->topic, event->data, event->data_len);
 
 	} else  if (event->event_id == MQTT_EVENT_BEFORE_CONNECT) {
 		DEBUG_INFO ("MQTT event: %d. MQTT_EVENT_BEFORE_CONNECT", event->event_id);
@@ -255,7 +255,9 @@ bool GwOutput_MQTT::publishMQTT (GwOutput_MQTT* gw, char* topic, char* payload, 
 #endif // ESP32
 }
 
-void GwOutput_MQTT::onDlData (GwOutput_MQTT* gw, const char* topic, char* payload, unsigned int length) {}
+//void GwOutput_MQTT::onDlData (GwOutput_MQTT* gw, const char* topic, char* payload, unsigned int length) {
+//	gw->downlinkCb (topic, payload, length);
+//}
 
 #ifdef SECURE_MQTT
 void GwOutput_MQTT::setClock () {
