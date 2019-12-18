@@ -109,6 +109,7 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	 void reconnect ()
 #endif
 	 static bool publishMQTT (GwOutput_MQTT* gw, char* topic, char* payload, size_t len, bool retain = false);
+	 static void onDlData (char* topic, uint8_t* data, unsigned int len);
 
  public:
 	 void configManagerStart (EnigmaIOTGatewayClass* enigmaIotGw);

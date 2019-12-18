@@ -29,7 +29,8 @@ typedef enum GwOutput_data_type {
 } GwOutput_data_type_t;
 
 #include <functional>
-typedef std::function<void (const char* topic, size_t topicLen, char* payload, size_t len)> onDlData_t;
+//typedef std::function<void (const char* topic, uint8_t* payload, unsigned int len)> onDlData_t;
+typedef std::function<void (uint8_t* address, char* command, char* data, unsigned int len)> onDlData_t;
 
 class GatewayOutput_generic {
 protected:

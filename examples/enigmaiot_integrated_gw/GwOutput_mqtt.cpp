@@ -239,14 +239,22 @@ esp_err_t GwOutput_MQTT::mqtt_event_handler (esp_mqtt_event_handle_t event) {
 		DEBUG_INFO ("Incoming data: %.*s %.*s\n", event->topic_len, event->topic, event->data_len, event->data);
 		// Reject big packets: total_data_len > data_len
 		// Reject continuations: topic_len = 0
-		if (event->total_data_len == event->data_len && event->topic_len > 0)
-			GwOutput.downlinkCb (event->topic, event->topic_len, event->data, event->data_len);
+		if (event->total_data_len == event->data_len && event->topic_len > 0) {
+			char* topic = (char*)malloc (event->topic_len + 1);
+			snprintf (topic, event->topic_len + 1, "%.*s", event->topic_len, event->topic);
+			onDlData (topic, (uint8_t*)event->data, event->data_len);
+			free (topic);
+		}
 
 	} else  if (event->event_id == MQTT_EVENT_BEFORE_CONNECT) {
 		DEBUG_INFO ("MQTT event: %d. MQTT_EVENT_BEFORE_CONNECT", event->event_id);
 	}
 }
 #endif // ESP32
+
+void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
+	//GwOutput.downlinkCb (topic, data, len);
+}
 
 bool GwOutput_MQTT::publishMQTT (GwOutput_MQTT* gw, char* topic, char* payload, size_t len, bool retain) {
 #ifdef ESP32
