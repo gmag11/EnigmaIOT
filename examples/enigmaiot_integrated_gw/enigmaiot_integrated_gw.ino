@@ -190,9 +190,9 @@ control_message_type_t checkMsgType (String data) {
 }
 
 // TODO
-void onDownlinkData (const char* topic, char* payload, size_t len){
-	DEBUG_INFO ("DL Topic: %s", topic);
-	DEBUG_INFO ("DL Payload: %.*s", len, payload);
+void onDownlinkData (const char* topic, size_t topic_len, char* payload, size_t len){
+	DEBUG_INFO ("DL Topic: %.*s", topic_len, topic);
+	//DEBUG_INFO ("DL Payload: %.*s", len, payload);
 }
 
 void onSerial (String message) {

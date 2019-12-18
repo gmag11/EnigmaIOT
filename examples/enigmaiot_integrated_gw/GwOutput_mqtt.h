@@ -56,6 +56,7 @@
 #define NODE_DATA        "data"
 #define LOST_MESSAGES    "debug/lostmessages"
 #define NODE_STATUS      "status"
+#define GW_STATUS        "/gateway/status"
 
 constexpr auto CONFIG_FILE = "/mqtt.conf";
 

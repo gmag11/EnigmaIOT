@@ -141,7 +141,7 @@ bool GwOutput_MQTT::begin () {
 #elif defined(ESP8266)
 	clientId = netName + String (ESP.getChipId (), HEX);
 #endif // ESP32
-	gwTopic = netName + String ("/gateway/status");
+	gwTopic = netName + GW_STATUS;
 #ifdef ESP32
 	mqtt_cfg.host = mqttgw_config.mqtt_server;
 	mqtt_cfg.port = mqttgw_config.mqtt_port;
@@ -235,9 +235,12 @@ esp_err_t GwOutput_MQTT::mqtt_event_handler (esp_mqtt_event_handle_t event) {
 		DEBUG_INFO ("MQTT event: %d. MQTT_EVENT_PUBLISHED", event->event_id);
 	} else  if (event->event_id == MQTT_EVENT_DATA) {
 		DEBUG_INFO ("MQTT msgid= %d event: %d. MQTT_EVENT_DATA", event->msg_id, event->event_id);
-		DEBUG_INFO ("Topic length %d. Data length %d", event->topic_len, event->data_len);
+		DEBUG_INFO ("Topic length %d. Total Data length %d. Data length %d", event->topic_len, event->total_data_len, event->data_len);
 		DEBUG_INFO ("Incoming data: %.*s %.*s\n", event->topic_len, event->topic, event->data_len, event->data);
-		GwOutput.downlinkCb (event->topic, event->data, event->data_len);
+		// Reject big packets: total_data_len > data_len
+		// Reject continuations: topic_len = 0
+		if (event->total_data_len == event->data_len && event->topic_len > 0)
+			GwOutput.downlinkCb (event->topic, event->topic_len, event->data, event->data_len);
 
 	} else  if (event->event_id == MQTT_EVENT_BEFORE_CONNECT) {
 		DEBUG_INFO ("MQTT event: %d. MQTT_EVENT_BEFORE_CONNECT", event->event_id);
@@ -254,10 +257,6 @@ bool GwOutput_MQTT::publishMQTT (GwOutput_MQTT* gw, char* topic, char* payload, 
 	return client.publish (topic, payload, len, retain);
 #endif // ESP32
 }
-
-//void GwOutput_MQTT::onDlData (GwOutput_MQTT* gw, const char* topic, char* payload, unsigned int length) {
-//	gw->downlinkCb (topic, payload, length);
-//}
 
 #ifdef SECURE_MQTT
 void GwOutput_MQTT::setClock () {

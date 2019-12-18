@@ -453,7 +453,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	wifiManager->setSaveConfigCallback (doSave);
 	wifiManager->setConfigPortalTimeout (150);
 
-	boolean result = wifiManager->autoConnect ("EnigmaIoTGateway");
+	boolean result = wifiManager->autoConnect ("EnigmaIoTGateway", NULL, 3, 2000);
 	DEBUG_INFO ("==== Config Portal result ====");
 	DEBUG_INFO ("Network Name: %s", netNameParam.getValue ());
 	DEBUG_INFO ("Network Key: %s", netKeyParam.getValue ());
