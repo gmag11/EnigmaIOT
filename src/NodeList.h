@@ -43,7 +43,9 @@ typedef enum control_message_type {
 	RSSI_ANS = 0x86,
 	OTA = 0xEF,
 	OTA_ANS = 0xFF,
-	USERDATA = 0x00
+	USERDATA_GET = 0x00,
+	USERDATA_SET = 0x20,
+    INVALID = 0xF0
 	//USERDATA_ANS = 0x90
 } control_message_type_t;
 

@@ -57,7 +57,7 @@ const void* memstr (const void* str, size_t str_size,
 }
 
 bool buildGetVersion (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
-	DEBUG_VERBOSE ("Build 'Get Version' message from: %s", printHexBuffer (inputData, inputLen));
+	DEBUG_DBG ("Build 'Get Version' message from: %s", printHexBuffer (inputData, inputLen));
 	if (dataLen < 1) {
 		return false;
 	}
@@ -341,10 +341,11 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 	Node* node = nodelist.getNodeFromMAC (mac);
 	uint8_t downstreamData[MAX_MESSAGE_LENGTH];
 
-	if (len <= 0 && controlData == USERDATA)
+	if (len == 0 && (controlData == USERDATA_GET || controlData == USERDATA_SET))
 		return false;
 
-	DEBUG_VERBOSE ("Downstream: %s MessageType: %d", printHexBuffer (data, len), controlData);
+	DEBUG_VERBOSE ("Downstream: %s", printHexBuffer (data, len));
+	DEBUG_DBG ("Downstream message type 0x%02X", controlData);
 
 	size_t dataLen = MAX_MESSAGE_LENGTH;
 
@@ -406,7 +407,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 	DEBUG_INFO ("Send downstream");
 
 	if (node) {
-		if (controlData != control_message_type::USERDATA)
+		if (controlData != control_message_type::USERDATA_GET && controlData != control_message_type::USERDATA_SET)
 			return downstreamDataMessage (node, downstreamData, dataLen, controlData);
 		else if (controlData == control_message_type::OTA) {
 			if (node->getSleepy ()) {
@@ -602,6 +603,7 @@ void EnigmaIOTGatewayClass::getStatus (uint8_t* mac_addr, uint8_t status) {
 }
 
 void EnigmaIOTGatewayClass::handle () {
+#ifdef ESP8266
 	static unsigned long rxOntime;
 	static unsigned long txOntime;
 
@@ -630,6 +632,7 @@ void EnigmaIOTGatewayClass::handle () {
 	if (!digitalRead (txled) && millis () - txOntime > txLedOnTime) {
 		digitalWrite (txled, HIGH);
 	}
+#endif
 
 	// Clean up dead nodes
 	for (int i = 0; i < NUM_NODES; i++) {
@@ -938,8 +941,10 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 		return false;
 	}
 
-	if (controlData == control_message_type::USERDATA) {
-        buffer[0] = (uint8_t)DOWNSTREAM_DATA;
+	if (controlData == control_message_type::USERDATA_GET) {
+		buffer[0] = (uint8_t)DOWNSTREAM_DATA_GET;
+	} else if (controlData == control_message_type::USERDATA_SET) {
+		buffer[0] = (uint8_t)DOWNSTREAM_DATA_SET;
 	} else {
         buffer[0] = (uint8_t)DOWNSTREAM_CTRL_DATA;
 	}

@@ -53,6 +53,8 @@
 #define SET_RESET_ANS    "result/reset"
 #define GET_RSSI         "get/rssi"
 #define GET_RSSI_ANS     "result/rssi"
+#define SET_USER_DATA    "set/data"
+#define GET_USER_DATA    "get/data"
 #define NODE_DATA        "data"
 #define LOST_MESSAGES    "debug/lostmessages"
 #define NODE_STATUS      "status"
@@ -89,12 +91,12 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 
 #ifdef ESP8266
 #ifdef SECURE_MQTT
-	 BearSSL::X509List certificate (DSTroot_CA);
+	 BearSSL::X509List certificate;
 	 WiFiClientSecure secureClient;
-	 PubSubClient client (secureClient);
+	 PubSubClient client;
 #else
 	 WiFiClient unsecureClient;
-	 PubSubClient client (unsecureClient);
+	 PubSubClient client;
 #endif // SECURE_MQTT
 #endif // ESP8266
 
@@ -106,12 +108,22 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	 void setClock ();
 #endif // SECURE_MQTT
 #ifdef ESP8266
-	 void reconnect ()
+	 void reconnect ();
 #endif
-	 static bool publishMQTT (GwOutput_MQTT* gw, char* topic, char* payload, size_t len, bool retain = false);
+	 static bool publishMQTT (GwOutput_MQTT* gw, const char* topic, char* payload, size_t len, bool retain = false);
 	 static void onDlData (char* topic, uint8_t* data, unsigned int len);
 
  public:
+	 GwOutput_MQTT ()
+#ifdef ESP8266
+#ifdef SECURE_MQTT
+		 : certificate (DSTroot_CA),
+		 client (secureClient)
+#else
+		 client (unsecureClient)
+#endif // SECURE_MQTT
+#endif // ESP8266
+	 {}
 	 void configManagerStart (EnigmaIOTGatewayClass* enigmaIotGw);
 	 void configManagerExit (bool status);
 	 bool begin ();
@@ -120,6 +132,7 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	 bool newNodeSend (char *address);
 	 bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason);
 	 bool outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type = data);
+	 void loop ();
 };
 
 extern GwOutput_MQTT GwOutput;

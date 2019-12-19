@@ -30,7 +30,8 @@
   */
 enum gatewayMessageType_t {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
-    DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for user commands */
+    DOWNSTREAM_DATA_SET = 0x02, /**< Data message from gateway. Downstream data for user commands */
+    DOWNSTREAM_DATA_GET = 0x12, /**< Data message from gateway. Downstream data for user commands */
 	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway. Used for OTA, settings configuration, etc */
 	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to sensor. Used for OTA, settings configuration, etc */
     CLOCK_REQUEST = 0x05, /**< Clock request message from node */
@@ -176,7 +177,7 @@ class EnigmaIOTGatewayClass
 	  * @param controlData Content data type if control data
       * @return Returns `true` if message could be correcly sent or scheduled
       */
-	 bool downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData = USERDATA);
+	 bool downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData);
 
 	 /**
 	 * @brief Processes control message from node
@@ -357,7 +358,7 @@ class EnigmaIOTGatewayClass
       * @param controlData Indicates if data is control data and its class
       * @return Returns true if everything went ok
       */
-     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len, control_message_type_t controlData = USERDATA);
+     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len, control_message_type_t controlData);
 
      /**
       * @brief Defines a function callback that will be called every time a node gets connected or reconnected

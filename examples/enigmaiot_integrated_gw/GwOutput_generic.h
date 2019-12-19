@@ -52,6 +52,7 @@ public:
 	virtual bool newNodeSend (char* address) = 0;
 	virtual bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) = 0;
 	virtual bool outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type = data) = 0;
+	virtual void loop () = 0;
 	void setDlCallback (onDlData_t cb) {
 		downlinkCb = cb;
 	}

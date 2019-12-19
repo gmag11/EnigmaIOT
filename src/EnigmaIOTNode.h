@@ -33,7 +33,8 @@
   */
 enum nodeMessageType {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
-    DOWNSTREAM_DATA = 0x02, /**< Data message from gateway. Downstream data for commands */
+    DOWNSTREAM_DATA_GET = 0x02, /**< Data message from gateway. Downstream data for commands */
+    DOWNSTREAM_DATA_SET = 0x12, /**< Data message from gateway. Downstream data for commands */
 	CONTROL_DATA = 0x03, /**< Internal control message from node to gateway. Used for OTA, settings configuration, etc */
 	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to node. Used for OTA, settings configuration, etc */
     CLOCK_REQUEST = 0x05, /**< Clock request message from node */
@@ -80,11 +81,11 @@ typedef nodeMessageType nodeMessageType_t;
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len)> onNodeDataRx_t;
+typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command)> onNodeDataRx_t;
 typedef std::function<void ()> onConnected_t;
 typedef std::function<void ()> onDisconnected_t;
 #else
-typedef void (*onNodeDataRx_t)(const uint8_t*, const uint8_t*, uint8_t);
+typedef void (*onNodeDataRx_t)(const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command);
 typedef void (*onConnected_t)();
 typedef void (*onDisconnected_t)();
 #endif

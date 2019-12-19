@@ -6,6 +6,7 @@
   * @brief Library to build a node for EnigmaIoT system
   */
 
+#define ESP8266
 #ifdef ESP8266
 #include <Arduino.h>
 #include "EnigmaIOTNode.h"
@@ -1454,7 +1455,7 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t mac[6], const uint
 
     DEBUG_VERBOSE ("Sending data notification. Payload length: %d", tag_idx - data_idx);
     if (notifyData) {
-        notifyData (mac, &buf[data_idx], tag_idx - data_idx);
+        notifyData (mac, &buf[data_idx], tag_idx - data_idx, (nodeMessageType_t)(buf[0]));
     }
 
     return true;
@@ -1555,12 +1556,18 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
             notifyDisconnection ();
         }
         break;
-    case DOWNSTREAM_DATA:
-        DEBUG_INFO (" <------- DOWNSTREAM DATA");
+    case DOWNSTREAM_DATA_SET:
+        DEBUG_INFO (" <------- DOWNSTREAM DATA SET");
         if (processDownstreamData (mac, buf, count)) {
-            DEBUG_INFO ("Downstream Data OK");
+            DEBUG_INFO ("Downstream Data set OK");
         }
         break;
+	case DOWNSTREAM_DATA_GET:
+		DEBUG_INFO (" <------- DOWNSTREAM DATA GET");
+		if (processDownstreamData (mac, buf, count)) {
+			DEBUG_INFO ("Downstream Data set OK");
+		}
+		break;
     case DOWNSTREAM_CTRL_DATA:
         DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
         if (processDownstreamData (mac, buf, count, true)) {

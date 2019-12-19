@@ -8,8 +8,8 @@
   * Communicates with a serial to MQTT gateway to send data to any IoT platform
   */
 
-#ifdef ESP32
 #include "GwOutput_mqtt.h"
+#ifdef ESP32
 #include <WiFi.h> // Comment to compile for ESP8266
 #include <AsyncTCP.h> // Comment to compile for ESP8266
 #include <Update.h>
@@ -161,11 +161,24 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 	free (payload);
 }
 
-// TODO
 void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* data, unsigned int len){
+	char *buffer;
+	unsigned int bufferLen = len;
+
 	DEBUG_INFO ("DL Message for " MACSTR ". Type 0x%02X", MAC2STR (address), msgType);
 	DEBUG_DBG ("Data: %.*s", len, data);
 
+	buffer = (char*)malloc (len + 1);
+	sprintf (buffer, "%.*s\0", len, data);
+	bufferLen ++;
+
+	if (!EnigmaIOTGateway.sendDownstream (address, (uint8_t*)buffer, bufferLen, msgType)) {
+		DEBUG_ERROR ("Error sending esp_now message to " MACSTR, MAC2STR (address));
+	} else {
+		DEBUG_DBG ("Esp-now message sent or queued correctly");
+	}
+
+	free (buffer);
 }
 
 /*void onSerial (String message) {
@@ -289,30 +302,9 @@ void setup () {
 	}
 
 void loop () {
-	//delay (1);
-#ifdef ESP8266
-	client.loop ();
-#endif
+	GwOutput.loop ();
 
-	//String message;
-	//if (client.connected ()) {
-	//}
-
-#ifdef ESP8266
+//#ifdef ESP8266
 	EnigmaIOTGateway.handle ();
-
-	if (!client.connected ()) {
-		DEBUG_INFO ("reconnect");
-		reconnect ();
-	}
-#endif
-
-	/*while (Serial.available () != 0) {
-		message = Serial.readStringUntil ('\n');
-		message.trim ();
-		if (message[0] == '%') {
-			onSerial (message);
-		}
-	}*/
-
+//#endif
 }
