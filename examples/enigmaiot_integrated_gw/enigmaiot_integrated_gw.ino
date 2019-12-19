@@ -161,41 +161,14 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 	free (payload);
 }
 
-control_message_type_t checkMsgType (String data) {
-	if (data.indexOf (GET_VERSION) != -1) {
-		return control_message_type::VERSION;
-	} else
-	if (data.indexOf (GET_SLEEP) != -1) {
-		return control_message_type::SLEEP_GET;
-	} else
-	if (data.indexOf (SET_SLEEP) != -1) {
-		return control_message_type::SLEEP_SET;
-	} else
-	if (data.indexOf (SET_OTA) != -1) {
-		return control_message_type::OTA;
-	} else
-	if (data.indexOf (SET_IDENTIFY) != -1) {
-		DEBUG_WARN ("IDENTIFY MESSAGE %s", data.c_str ());
-		return control_message_type::IDENTIFY;
-	} else
-	if (data.indexOf (SET_RESET_CONFIG) != -1) {
-		DEBUG_WARN ("RESET CONFIG MESSAGE %s", data.c_str ());
-		return control_message_type::RESET;
-	}
-	if (data.indexOf (GET_RSSI) != -1) {
-		DEBUG_INFO ("GET RSSI MESSAGE %s", data.c_str ());
-		return control_message_type::RSSI_GET;
-	}
-	return control_message_type::USERDATA;
-}
-
 // TODO
-void onDownlinkData (uint8_t* address, char* command, char* data, unsigned int len){
-	DEBUG_INFO ("DL Command: %s", command);
-	//DEBUG_INFO ("DL Payload: %.*s", len, payload);
+void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* data, unsigned int len){
+	DEBUG_INFO ("DL Message for " MACSTR ". Type 0x%02X", MAC2STR (address), msgType);
+	DEBUG_DBG ("Data: %.*s", len, data);
+
 }
 
-void onSerial (String message) {
+/*void onSerial (String message) {
 	uint8_t addr[6];
 
 	DEBUG_VERBOSE ("Downlink message: %s", message.c_str ());
@@ -225,7 +198,7 @@ void onSerial (String message) {
 	else {
 		DEBUG_DBG ("Esp-now message sent or queued correctly");
 	}
-}
+}*/
 
 void newNodeConnected (uint8_t * mac) {
 	char macstr[18];

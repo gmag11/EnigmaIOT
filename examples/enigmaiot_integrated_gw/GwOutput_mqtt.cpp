@@ -220,40 +220,142 @@ void GwOutput_MQTT::reconnect () {
 #ifdef ESP32
 esp_err_t GwOutput_MQTT::mqtt_event_handler (esp_mqtt_event_handle_t event) {
 	if (event->event_id == MQTT_EVENT_CONNECTED) {
-		DEBUG_INFO ("MQTT msgid= %d event: %d. MQTT_EVENT_CONNECTED", event->msg_id, event->event_id);
-		esp_mqtt_client_subscribe (GwOutput.client, "test/hello", 0);
+		DEBUG_DBG ("MQTT msgid= %d event: %d. MQTT_EVENT_CONNECTED", event->msg_id, event->event_id);
+		String topic = GwOutput.netName + "/#";
+		esp_mqtt_client_subscribe (GwOutput.client, topic.c_str(), 0);
 		//esp_mqtt_client_publish (client, "test/status", "1", 1, 0, false);
 		publishMQTT (&GwOutput, (char*)GwOutput.gwTopic.c_str (), "1", 1, true);
 	} else if (event->event_id == MQTT_EVENT_DISCONNECTED) {
-		DEBUG_INFO ("MQTT event: %d. MQTT_EVENT_DISCONNECTED", event->event_id);
+		DEBUG_WARN ("MQTT event: %d. MQTT_EVENT_DISCONNECTED", event->event_id);
 		//esp_mqtt_client_reconnect (event->client); //not needed if autoconnect is enabled
 	} else  if (event->event_id == MQTT_EVENT_SUBSCRIBED) {
-		DEBUG_INFO ("MQTT msgid= %d event: %d. MQTT_EVENT_SUBSCRIBED", event->msg_id, event->event_id);
+		DEBUG_DBG ("MQTT msgid= %d event: %d. MQTT_EVENT_SUBSCRIBED", event->msg_id, event->event_id);
 	} else  if (event->event_id == MQTT_EVENT_UNSUBSCRIBED) {
-		DEBUG_INFO ("MQTT msgid= %d event: %d. MQTT_EVENT_UNSUBSCRIBED", event->msg_id, event->event_id);
+		DEBUG_DBG ("MQTT msgid= %d event: %d. MQTT_EVENT_UNSUBSCRIBED", event->msg_id, event->event_id);
 	} else  if (event->event_id == MQTT_EVENT_PUBLISHED) {
-		DEBUG_INFO ("MQTT event: %d. MQTT_EVENT_PUBLISHED", event->event_id);
+		DEBUG_DBG ("MQTT event: %d. MQTT_EVENT_PUBLISHED", event->event_id);
 	} else  if (event->event_id == MQTT_EVENT_DATA) {
-		DEBUG_INFO ("MQTT msgid= %d event: %d. MQTT_EVENT_DATA", event->msg_id, event->event_id);
-		DEBUG_INFO ("Topic length %d. Total Data length %d. Data length %d", event->topic_len, event->total_data_len, event->data_len);
-		DEBUG_INFO ("Incoming data: %.*s %.*s\n", event->topic_len, event->topic, event->data_len, event->data);
+		DEBUG_DBG ("MQTT msgid= %d event: %d. MQTT_EVENT_DATA", event->msg_id, event->event_id);
+		DEBUG_DBG ("Topic length %d. Total Data length %d. Data length %d", event->topic_len, event->total_data_len, event->data_len);
+		DEBUG_DBG ("Incoming data: %.*s %.*s", event->topic_len, event->topic, event->data_len, event->data);
 		// Reject big packets: total_data_len > data_len
 		// Reject continuations: topic_len = 0
 		if (event->total_data_len == event->data_len && event->topic_len > 0) {
 			char* topic = (char*)malloc (event->topic_len + 1);
 			snprintf (topic, event->topic_len + 1, "%.*s", event->topic_len, event->topic);
+			DEBUG_DBG ("Built Topic %s", topic);
 			onDlData (topic, (uint8_t*)event->data, event->data_len);
 			free (topic);
 		}
 
 	} else  if (event->event_id == MQTT_EVENT_BEFORE_CONNECT) {
-		DEBUG_INFO ("MQTT event: %d. MQTT_EVENT_BEFORE_CONNECT", event->event_id);
+		DEBUG_DBG ("MQTT event: %d. MQTT_EVENT_BEFORE_CONNECT", event->event_id);
 	}
 }
 #endif // ESP32
 
+char* getTopicAddress (char* topic, unsigned int &len){
+	if (!topic) 
+		return NULL;
+
+	char* start = strchr (topic, '/') + 1;
+	char* end;
+	
+	if (start) {
+		end = strchr (start, '/');
+	} else {
+		return NULL;
+	}
+	//DEBUG_INFO ("Start %p : %d", start, start - topic);
+	//DEBUG_INFO ("End %p : %d", end, end - topic);
+	if (end) {
+		len = end - start;
+	} else {
+		len = strlen (topic) - (start - topic);
+	}
+
+	return start;
+}
+
+control_message_type_t checkMsgType (String data) {
+	if        (data == GET_VERSION) {
+		return control_message_type::VERSION;
+	} else if (data == GET_SLEEP) {
+		return control_message_type::SLEEP_GET;
+	} else if (data == SET_SLEEP) {
+		return control_message_type::SLEEP_SET;
+	} else if (data == SET_OTA) {
+		return control_message_type::OTA;
+	} else if (data == SET_IDENTIFY) {
+		DEBUG_WARN ("IDENTIFY MESSAGE %s", data.c_str ());
+		return control_message_type::IDENTIFY;
+	} else if (data == SET_RESET_CONFIG) {
+		DEBUG_WARN ("RESET CONFIG MESSAGE %s", data.c_str ());
+		return control_message_type::RESET;
+	} else if (data == GET_RSSI) {
+		DEBUG_INFO ("GET RSSI MESSAGE %s", data.c_str ());
+		return control_message_type::RSSI_GET;
+	} else
+		return control_message_type::USERDATA;
+}
+
+control_message_type_t getTopicType (char* topic) {
+	if (!topic)
+		return control_message_type::USERDATA;
+
+	String command;
+
+	char* start = strchr (topic, '/') + 1;
+	//DEBUG_INFO ("First Start %p", start);
+	if (start)
+		start = strchr (start, '/') + 1;
+	else
+		return control_message_type::USERDATA;
+	//DEBUG_INFO ("Second Start %p", start);
+	if ((int)start > 0x01) {
+		command = String(start);
+	} else {
+		return control_message_type::USERDATA;
+	}
+	//DEBUG_INFO ("Start %p : %d", start, start - topic);
+	//DEBUG_INFO ("Command %s", command.c_str());
+
+	control_message_type_t msgType = checkMsgType (command);
+
+	return msgType;
+}
+
+
 void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
-	//GwOutput.downlinkCb (topic, data, len);
+	uint8_t addr[6];
+	char* addressStr;
+	control_message_type_t msgType;
+
+
+	DEBUG_DBG ("Topic %s", topic);
+
+	unsigned int addressLen;
+
+	addressStr = getTopicAddress (topic, addressLen);
+	DEBUG_DBG ("addressStr %p : %d", addressStr, addressLen);
+
+	if (addressStr) {
+		//DEBUG_INFO ("Len: %u", addressLen);
+		DEBUG_DBG ("Address %.*s", addressLen, addressStr);
+		if (!str2mac (addressStr, addr)) {
+			DEBUG_ERROR ("Not a mac address");
+			return;
+		}
+		DEBUG_DBG ("Hex Address = %s", printHexBuffer (addr, 6));
+	} else
+		return;
+
+	msgType = getTopicType (topic);
+
+	DEBUG_DBG ("MsgType 0x%02X", msgType);
+	DEBUG_DBG ("Data: %.*s\n", len, data);
+
+	GwOutput.downlinkCb (addr, msgType, (char*)data, len);
 }
 
 bool GwOutput_MQTT::publishMQTT (GwOutput_MQTT* gw, char* topic, char* payload, size_t len, bool retain) {
