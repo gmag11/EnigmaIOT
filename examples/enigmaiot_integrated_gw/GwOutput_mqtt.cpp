@@ -3,6 +3,7 @@
 // 
 
 #include "GwOutput_mqtt.h"
+#include <ArduinoJson.h>
 
 GwOutput_MQTT GwOutput;
 
@@ -35,9 +36,32 @@ bool GwOutput_MQTT::saveMQTTConfig () {
 	} else {
 		DEBUG_DBG ("%s opened for writting", CONFIG_FILE);
 	}
-	configFile.write ((uint8_t*)(&mqttgw_config), sizeof (mqttgw_config));
+
+	DynamicJsonDocument doc (512);
+
+	doc["mqtt_server"] = mqttgw_config.mqtt_server;
+	doc["mqtt_port"] = mqttgw_config.mqtt_port;
+	doc["mqtt_user"] = mqttgw_config.mqtt_user;
+	doc["mqtt_pass"] = mqttgw_config.mqtt_pass;
+
+	if (serializeJson (doc, configFile) == 0) {
+		DEBUG_ERROR ("Failed to write to file");
+		configFile.close ();
+		//SPIFFS.remove (CONFIG_FILE);
+		return false;
+	}
+
+	String output;
+	serializeJsonPretty (doc, output);
+
+	DEBUG_DBG ("%s", output.c_str ());
+
+	configFile.flush ();
+	size_t size = configFile.size ();
+
+	//configFile.write ((uint8_t*)(&mqttgw_config), sizeof (mqttgw_config));
 	configFile.close ();
-	DEBUG_DBG ("Gateway configuration saved to flash");
+	DEBUG_DBG ("Gateway configuration saved to flash. %u bytes", size);
 	return true;
 }
 
@@ -51,23 +75,56 @@ bool GwOutput_MQTT::loadConfig () {
 	}
 
 	if (SPIFFS.exists (CONFIG_FILE)) {
+		bool json_correct = false;
+
 		DEBUG_DBG ("Opening %s file", CONFIG_FILE);
 		File configFile = SPIFFS.open (CONFIG_FILE, "r");
 		if (configFile) {
-			DEBUG_DBG ("%s opened", CONFIG_FILE);
 			size_t size = configFile.size ();
-			if (size < sizeof (mqttgw_config_t)) {
+			DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, size);
+			/*if (size < sizeof (mqttgw_config_t)) {
 				DEBUG_WARN ("Config file is corrupted. Deleting");
 				SPIFFS.remove (CONFIG_FILE);
 				return false;
+			}*/
+			DynamicJsonDocument doc (512);
+			DeserializationError error = deserializeJson (doc, configFile);
+			if (error) {
+				DEBUG_ERROR ("Failed to parse file");
+			} else {
+				DEBUG_DBG ("JSON file parsed");
+				json_correct = true;
 			}
-			configFile.read ((uint8_t*)(&mqttgw_config), sizeof (mqttgw_config_t));
+
+			if (doc.containsKey ("mqtt_server") && doc.containsKey ("mqtt_port")
+				&& doc.containsKey ("mqtt_user") && doc.containsKey ("mqtt_pass")) {
+				json_correct = true;
+			}
+
+			//configFile.read ((uint8_t*)(&mqttgw_config), sizeof (mqttgw_config_t));
+
+			strlcpy (mqttgw_config.mqtt_server, doc["mqtt_server"] | "", sizeof (mqttgw_config.mqtt_server));
+			mqttgw_config.mqtt_port = doc["mqtt_port"].as<int> ();
+			strlcpy (mqttgw_config.mqtt_user, doc["mqtt_user"] | "", sizeof (mqttgw_config.mqtt_user));
+			strlcpy (mqttgw_config.mqtt_pass, doc["mqtt_pass"] | "", sizeof (mqttgw_config.mqtt_pass));
+
+
 			configFile.close ();
-			DEBUG_INFO ("Gateway configuration successfuly read");
-			DEBUG_DBG ("MQTT server: %s", mqttgw_config.mqtt_server);
-			DEBUG_DBG ("MQTT port: %d", mqttgw_config.mqtt_port);
-			DEBUG_DBG ("MQTT user: %s", mqttgw_config.mqtt_user);
-			return true;
+			if (json_correct) {
+				DEBUG_INFO ("Gateway configuration successfuly read");
+			}
+			DEBUG_DBG (		"==== MQTT Configuration ====");
+			DEBUG_DBG (		"MQTT server: %s", mqttgw_config.mqtt_server);
+			DEBUG_DBG (		"MQTT port: %d", mqttgw_config.mqtt_port);
+			DEBUG_DBG (		"MQTT user: %s", mqttgw_config.mqtt_user);
+			DEBUG_VERBOSE (	"MQTT password: %s", mqttgw_config.mqtt_pass);
+
+			String output;
+			serializeJsonPretty (doc, output);
+
+			DEBUG_DBG ("JSON file %s", output.c_str ());
+
+			return json_correct;
 		}
 	} else {
 		DEBUG_WARN ("%s do not exist", CONFIG_FILE);
