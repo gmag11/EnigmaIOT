@@ -6,7 +6,6 @@
   * @brief Library to build a node for EnigmaIoT system
   */
 
-#define ESP8266
 #ifdef ESP8266
 #include <Arduino.h>
 #include "EnigmaIOTNode.h"
