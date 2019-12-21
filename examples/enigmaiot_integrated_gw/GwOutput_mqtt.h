@@ -116,8 +116,9 @@ class GwOutput_MQTT: public GatewayOutput_generic {
  public:
 	 GwOutput_MQTT ()
 #ifdef ESP8266
+		 :
 #ifdef SECURE_MQTT
-		 : certificate (DSTroot_CA),
+		 certificate (DSTroot_CA),
 		 client (secureClient)
 #else
 		 client (unsecureClient)
