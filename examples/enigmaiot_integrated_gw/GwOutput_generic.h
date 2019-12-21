@@ -36,6 +36,7 @@ class GatewayOutput_generic {
 protected:
 	EnigmaIOTGatewayClass* enigmaIotGateway;
 	onDlData_t downlinkCb;
+	virtual bool saveConfig () = 0;
 
 public:
 	String netName;

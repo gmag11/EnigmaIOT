@@ -23,7 +23,7 @@ void GwOutput_MQTT::configManagerStart (EnigmaIOTGatewayClass* enigmaIotGw) {
 
 }
 
-bool GwOutput_MQTT::saveMQTTConfig () {
+bool GwOutput_MQTT::saveConfig () {
 	if (!SPIFFS.begin ()) {
 		DEBUG_WARN ("Error opening filesystem");
 	}
@@ -157,7 +157,7 @@ void GwOutput_MQTT::configManagerExit (bool status) {
 			DEBUG_INFO ("MQTT password field empty. Keeping the old one");
 		}
 		DEBUG_DBG ("MQTT pass: %s", mqttgw_config.mqtt_pass);
-		if (!saveMQTTConfig ()) {
+		if (!saveConfig ()) {
 			DEBUG_ERROR ("Error writting MQTT config to filesystem.");
 		} else {
 			DEBUG_INFO ("Configuration stored");
