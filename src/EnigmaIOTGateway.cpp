@@ -9,6 +9,7 @@
 #include "EnigmaIOTGateway.h"
 #include <FS.h>
 #include "libb64/cdecode.h"
+#include <ArduinoJson.h>
 #ifdef ESP8266
 #include <Updater.h>
 #elif defined ESP32
@@ -17,7 +18,7 @@
 #include <esp_wifi.h>
 #endif
 
-const char CONFIG_FILE[] = "/config.txt";
+const char CONFIG_FILE[] = "/config.json";
 
 bool shouldSave = false;
 
@@ -499,37 +500,74 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 
 bool EnigmaIOTGatewayClass::loadFlashData () {
 	//SPIFFS.remove (CONFIG_FILE); // Only for testing
+	bool json_correct = false;
 
 	if (SPIFFS.exists (CONFIG_FILE)) {
+
 		DEBUG_DBG ("Opening %s file", CONFIG_FILE);
 		File configFile = SPIFFS.open (CONFIG_FILE, "r");
 		if (configFile) {
-			DEBUG_DBG ("%s opened", CONFIG_FILE);
 			size_t size = configFile.size ();
-			if (size < sizeof (gateway_config_t)) {
+			DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, size);
+			/*if (size < sizeof (gateway_config_t)) {
 				DEBUG_WARN ("Config file is corrupted. Deleting and formatting");
 				SPIFFS.remove (CONFIG_FILE);
 				SPIFFS.format ();
 				WiFi.begin ("0", "0"); // Delete WiFi credentials
 				return false;
+			}*/
+			DynamicJsonDocument doc (512);
+			DeserializationError error = deserializeJson (doc, configFile);
+			if (error) {
+				DEBUG_ERROR ("Failed to parse file");
+			} else {
+				DEBUG_DBG ("JSON file parsed");
+				//json_correct = true;
 			}
-			configFile.read ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
-			DEBUG_DBG ("Config file stored channel: %u", gwConfig.channel);
+
+			if (doc.containsKey ("channel") && doc.containsKey ("networkKey")
+				&& doc.containsKey ("networkName")) {
+				json_correct = true;
+			}
+
+			gwConfig.channel = doc["channel"].as<int> ();
+			strlcpy (gwConfig.networkKey, doc["networkKey"] | "", sizeof (mqttgw_config.networkKey));
+			strlcpy (gwConfig.networkName, doc["networkName"] | "", sizeof (mqttgw_config.networkName));
+
+			
+			
+			//configFile.read ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
 			configFile.close ();
-			DEBUG_VERBOSE ("Gateway configuration successfuly read: %s", printHexBuffer ((uint8_t*)(&gwConfig), sizeof (gateway_config_t)));
-			DEBUG_DBG ("Network Name: %s", gwConfig.networkName);
-			return true;
+			if (json_correct) {
+				DEBUG_VERBOSE ("Gateway configuration successfuly read");
+			}
+			DEBUG_DBG (		"==== EnigmaIOT Gateway Configuration ====");
+			DEBUG_DBG (		"Network name: %s", gwConfig.networkName);
+			DEBUG_DBG (		"WiFi channel: %u", gwConfig.channel);
+			DEBUG_VERBOSE (	"Network key: %s", printHexBuffer(mqttgw_config.networkKey,KEY_LENGTH);
+
+			String output;
+			serializeJsonPretty (doc, output);
+
+			DEBUG_DBG ("JSON file %s", output.c_str ());
+
+			//return json_correct;
+		} else {
+			DEBUG_WARN ("Error opening %s", CONFIG_FILE);
 		}
 	} else {
-		DEBUG_WARN ("%s do not exist. Formatting", CONFIG_FILE);
-		SPIFFS.format ();
-		WiFi.begin ("0", "0"); // Delete WiFi credentials
-		DEBUG_WARN ("Dummy STA config loaded");
-		return false;
+		DEBUG_WARN ("%s do not exist", CONFIG_FILE);
+		//SPIFFS.format ();
+		//WiFi.begin ("0", "0"); // Delete WiFi credentials
+		//DEBUG_WARN ("Dummy STA config loaded");
+		//return false;
 	}
 
-	WiFi.begin ("0", "0"); // Delete WiFi credentials
-	return false;
+	if (!json_correct) {
+		WiFi.begin ("0", "0"); // Delete WiFi credentials
+		DEBUG_WARN ("Dummy STA config loaded");
+	}
+	return json_correct;
 }
 
 bool EnigmaIOTGatewayClass::saveFlashData () {
@@ -538,10 +576,31 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 		DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
 		return false;
 	}
-	// TODO: Add CRC
-	configFile.write ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
+	
+	DynamicJsonDocument doc (512);
+
+	doc["channel"] = gwConfig.channel;
+	doc["networkKey"] = gwConfig.networkKey;
+	doc["networkName"] = gwConfig.networkName;
+
+	if (serializeJson (doc, configFile) == 0) {
+		DEBUG_ERROR ("Failed to write to file");
+		configFile.close ();
+		//SPIFFS.remove (CONFIG_FILE);
+		return false;
+	}
+
+	String output;
+	serializeJsonPretty (doc, output);
+
+	DEBUG_DBG ("%s", output.c_str ());
+
+	configFile.flush ();
+	size_t size = configFile.size ();
+
+	//configFile.write ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
 	configFile.close ();
-	DEBUG_VERBOSE ("Gateway configuration saved to flash: %s", printHexBuffer ((uint8_t*)(&gwConfig), sizeof (gateway_config_t)));
+	DEBUG_DBG ("Gateway configuration saved to flash. %u bytes", size);
 	return true;
 }
 
