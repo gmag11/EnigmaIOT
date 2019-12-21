@@ -66,7 +66,8 @@ bool GwOutput_MQTT::saveConfig () {
 }
 
 bool GwOutput_MQTT::loadConfig () {
-		//SPIFFS.remove (CONFIG_FILE); // Only for testing
+	//SPIFFS.remove (CONFIG_FILE); // Only for testing
+	bool json_correct = false;
 
 	if (!SPIFFS.begin ()) {
 		DEBUG_WARN ("Error starting filesystem. Formatting");
@@ -75,7 +76,6 @@ bool GwOutput_MQTT::loadConfig () {
 	}
 
 	if (SPIFFS.exists (CONFIG_FILE)) {
-		bool json_correct = false;
 
 		DEBUG_DBG ("Opening %s file", CONFIG_FILE);
 		File configFile = SPIFFS.open (CONFIG_FILE, "r");
@@ -93,7 +93,7 @@ bool GwOutput_MQTT::loadConfig () {
 				DEBUG_ERROR ("Failed to parse file");
 			} else {
 				DEBUG_DBG ("JSON file parsed");
-				json_correct = true;
+				//json_correct = true;
 			}
 
 			if (doc.containsKey ("mqtt_server") && doc.containsKey ("mqtt_port")
@@ -124,14 +124,16 @@ bool GwOutput_MQTT::loadConfig () {
 
 			DEBUG_DBG ("JSON file %s", output.c_str ());
 
-			return json_correct;
+			//return json_correct;
+		} else {
+			DEBUG_WARN ("Error opening %s", CONFIG_FILE);
 		}
 	} else {
 		DEBUG_WARN ("%s do not exist", CONFIG_FILE);
-		return false;
+		//return false;
 	}
 
-	return false;
+	return json_correct;
 }
 
 
