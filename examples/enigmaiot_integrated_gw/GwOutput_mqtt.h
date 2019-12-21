@@ -60,7 +60,7 @@
 #define NODE_STATUS      "status"
 #define GW_STATUS        "/gateway/status"
 
-constexpr auto CONFIG_FILE = "/mqtt.conf";
+constexpr auto CONFIG_FILE = "/mqtt.json";
 
 typedef struct {
 	char mqtt_server[41];
