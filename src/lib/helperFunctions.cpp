@@ -7,6 +7,7 @@
   */
 
 #include "helperFunctions.h"
+//#include <sstream>
 #ifdef ESP32
 #include <esp_wifi.h>
 #endif
@@ -16,7 +17,7 @@
 char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 	static char tempStr[MAX_STR_LEN];
 	int charIndex = 0;
-
+	
 	memset (tempStr, 0, MAX_STR_LEN);
 
 	for (int i = 0; i < len; i++) {

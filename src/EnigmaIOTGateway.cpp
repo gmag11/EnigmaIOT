@@ -470,7 +470,9 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 				keySize = KEY_LENGTH;
 			const char* netKey = netKeyParam.getValue ();
 			if (netKey && (netKey[0] != '\0')) {// If password is empty, keep the old one
-				memcpy (this->gwConfig.networkKey, netKeyParam.getValue (), keySize);
+				memset (this->gwConfig.networkKey, 0, KEY_LENGTH);
+				memcpy (this->gwConfig.networkKey, netKey, keySize);
+				memcpy (this->networkKey, netKey, keySize);
 				CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
 			} else {
 				DEBUG_INFO ("Network key password field empty. Keeping the old one");
@@ -531,8 +533,8 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			}
 
 			gwConfig.channel = doc["channel"].as<int> ();
-			strlcpy (gwConfig.networkKey, doc["networkKey"] | "", sizeof (mqttgw_config.networkKey));
-			strlcpy (gwConfig.networkName, doc["networkName"] | "", sizeof (mqttgw_config.networkName));
+			strlcpy ((char*)gwConfig.networkKey, doc["networkKey"] | "", sizeof (gwConfig.networkKey));
+			strlcpy (gwConfig.networkName, doc["networkName"] | "", sizeof (gwConfig.networkName));
 
 			
 			
@@ -544,7 +546,9 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			DEBUG_DBG (		"==== EnigmaIOT Gateway Configuration ====");
 			DEBUG_DBG (		"Network name: %s", gwConfig.networkName);
 			DEBUG_DBG (		"WiFi channel: %u", gwConfig.channel);
-			DEBUG_VERBOSE (	"Network key: %s", printHexBuffer(mqttgw_config.networkKey,KEY_LENGTH);
+			DEBUG_VERBOSE (	"Network key: %s", gwConfig.networkKey);
+			CryptModule::getSHA256 (gwConfig.networkKey, KEY_LENGTH);
+			DEBUG_VERBOSE (	"Raw Network key: %s", printHexBuffer(gwConfig.networkKey,KEY_LENGTH));
 
 			String output;
 			serializeJsonPretty (doc, output);
@@ -580,7 +584,7 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 	DynamicJsonDocument doc (512);
 
 	doc["channel"] = gwConfig.channel;
-	doc["networkKey"] = gwConfig.networkKey;
+	doc["networkKey"] = networkKey;
 	doc["networkName"] = gwConfig.networkName;
 
 	if (serializeJson (doc, configFile) == 0) {
@@ -598,8 +602,10 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 	configFile.flush ();
 	size_t size = configFile.size ();
 
-	//configFile.write ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
 	configFile.close ();
+
+	memset (networkKey, 0, KEY_LENGTH);
+
 	DEBUG_DBG ("Gateway configuration saved to flash. %u bytes", size);
 	return true;
 }

@@ -98,6 +98,7 @@ class EnigmaIOTGatewayClass
      onNodeDisconnected_t notifyNodeDisconnection; ///< @brief Callback function that will be invoked when a node gets disconnected
      bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
 	 gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
+     char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
 
 	 AsyncWebServer* server;
 	 DNSServer* dns;
