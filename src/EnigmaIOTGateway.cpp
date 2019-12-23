@@ -668,7 +668,7 @@ void EnigmaIOTGatewayClass::getStatus (uint8_t* mac_addr, uint8_t status) {
 }
 
 void EnigmaIOTGatewayClass::handle () {
-#ifdef ESP8266
+//#ifdef ESP8266
 	static unsigned long rxOntime;
 	static unsigned long txOntime;
 
@@ -697,7 +697,7 @@ void EnigmaIOTGatewayClass::handle () {
 	if (!digitalRead (txled) && millis () - txOntime > txLedOnTime) {
 		digitalWrite (txled, HIGH);
 	}
-#endif
+//#endif
 
 	// Clean up dead nodes
 	for (int i = 0; i < NUM_NODES; i++) {

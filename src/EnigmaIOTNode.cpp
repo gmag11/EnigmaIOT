@@ -14,8 +14,9 @@
 #include <MD5Builder.h>
 #include <Updater.h>
 #include <StreamString.h>
+#include <ArduinoJson.h>
 
-const char CONFIG_FILE[] = "/config.txt";
+const char CONFIG_FILE[] = "/config.json";
 
 ETSTimer ledTimer;
 
@@ -106,6 +107,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 
 bool EnigmaIOTNodeClass::loadFlashData () {
     //SPIFFS.remove (CONFIG_FILE); // Only for testing
+    bool json_correct = false;
 
     if (SPIFFS.exists (CONFIG_FILE)) {
         DEBUG_DBG ("Opening %s file", CONFIG_FILE);
@@ -113,45 +115,115 @@ bool EnigmaIOTNodeClass::loadFlashData () {
         if (configFile) {
             DEBUG_DBG ("%s opened", CONFIG_FILE);
             size_t size = configFile.size ();
-            if (size != sizeof (rtcmem_data)) {
+            /*if (size != sizeof (rtcmem_data)) {
                 DEBUG_WARN ("Config file is corrupted. Deleting");
                 SPIFFS.remove (CONFIG_FILE);
 				if (SPIFFS.format ())
 					DEBUG_WARN ("File system formatted");
                 return false;
+            }*/
+
+            DynamicJsonDocument doc (512);
+            DeserializationError error = deserializeJson (doc, configFile);
+            if (error) {
+                DEBUG_ERROR ("Failed to parse file");
+            } else {
+                DEBUG_DBG ("JSON file parsed");
+                //json_correct = true;
             }
-            configFile.read ((uint8_t*)(&rtcmem_data), sizeof (rtcmem_data));
+
+            if (doc.containsKey ("networkName") && doc.containsKey ("networkKey")
+                && doc.containsKey ("sleepTime")) {
+                json_correct = true;
+            }
+
+            strlcpy (rtcmem_data.networkName, doc["networkName"] | "", sizeof (rtcmem_data.networkName));
+            rtcmem_data.sleepTime = doc["sleepTime"].as<int> ();
+            rtcmem_data.sleepy = !(rtcmem_data.sleepTime == 0);
+            
+            memset (rtcmem_data.networkKey, 0, KEY_LENGTH);
+            strlcpy ((char*)rtcmem_data.networkKey, doc["networkKey"] | "", sizeof (rtcmem_data.networkKey));
+            DEBUG_DBG ("Network Key dump: %s", printHexBuffer (rtcmem_data.networkKey, KEY_LENGTH));
+            strlcpy (networkKey, doc["networkKey"] | "", sizeof (networkKey));
+
+            uint8_t gwAddr[6];
+            char gwAddrStr[18];
+            if (doc.containsKey ("gateway")) {
+                strlcpy (gwAddrStr, doc["gateway"], sizeof (gwAddrStr));
+                str2mac (gwAddrStr, gwAddr);
+                memcpy (rtcmem_data.gateway, gwAddr, 6);
+            }
+
             configFile.close ();
             // TODO: Check CRC
-            DEBUG_DBG ("Configuration successfuly read: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data_t)));
-#if DEBUG_LEVEL >= DBG
-            dumpRtcData (&rtcmem_data);
-#endif
-            return true;
+            if (json_correct) {
+                DEBUG_VERBOSE ("Configuration successfuly read");
+            }
+
+            DEBUG_DBG ("==== EnigmaIOT Node Configuration ====");
+            DEBUG_DBG ("Network name: %s", rtcmem_data.networkName);
+            DEBUG_DBG ("Sleep time: %u", rtcmem_data.sleepTime);
+            DEBUG_DBG ("Gateway: %s", gwAddrStr);
+            DEBUG_VERBOSE ("Network key: %s", rtcmem_data.networkKey);
+            CryptModule::getSHA256 (rtcmem_data.networkKey, KEY_LENGTH);
+            DEBUG_VERBOSE ("Raw Network key: %s", printHexBuffer (rtcmem_data.networkKey, KEY_LENGTH));
+
+            String output;
+            serializeJsonPretty (doc, output);
+
+            DEBUG_DBG ("JSON file %s", output.c_str ());
+
+            //return true;
         }
     } else {
         DEBUG_WARN ("%s do not exist", CONFIG_FILE);
-        return false;
+        //return false;
     }
 
-    return false;
+    return json_correct;
 }
 
 bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 	if (configCleared)
 		return false;
+
 	if (!fsOpen)
 		SPIFFS.begin ();
+
     File configFile = SPIFFS.open (CONFIG_FILE, "w");
     if (!configFile) {
         DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
         return false;
     }
-    // TODO: Recalcule CRC ???
-    configFile.write ((uint8_t*)(&rtcmem_data), sizeof (rtcmem_data));
-	configFile.flush ();
+
+    DynamicJsonDocument doc (512);
+
+    char gwAddrStr[18];
+    mac2str (rtcmem_data.gateway, gwAddrStr);
+
+    doc["networkName"] = rtcmem_data.networkName;
+    doc["networkKey"] = networkKey;
+    DEBUG_INFO ("NetworkKey --> %s", networkKey);
+    doc["sleepTime"] = rtcmem_data.sleepTime;
+    doc["gateway"] = gwAddrStr;
+
+    if (serializeJson (doc, configFile) == 0) {
+        DEBUG_ERROR ("Failed to write to file");
+        configFile.close ();
+        //SPIFFS.remove (CONFIG_FILE);
+        return false;
+    }
+
+    String output;
+    serializeJsonPretty (doc, output);
+
+    DEBUG_DBG ("%s", output.c_str ());
+
+    configFile.flush ();
+    size_t size = configFile.size ();
+
     configFile.close ();
-    DEBUG_DBG ("Configuration saved to flash");
+    DEBUG_DBG ("Configuration saved to flash. %u bytes", size);
 #if DEBUG_LEVEL >= DBG
     dumpRtcData (&rtcmem_data);
 #endif	
@@ -190,28 +262,21 @@ void EnigmaIOTNodeClass::clearFlash () {
 bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
     AsyncWebServer server (80);
     DNSServer dns;
-    //char channel[4];
-    //itoa ((int)(data->channel), channel, 10);
-    //DEBUG_DBG ("Channel: %s %d", channel, data->channel);
-    //char gateway[18] = "BE:DD:C2:24:14:97"; // TODO: delete this
-    //mac2str (data->gateway, gateway);
-    //DEBUG_DBG ("Gateway Address: %s", gateway);
+
     char networkKey[33] = "";
     char sleepy[5] = "10";
 	char networkName[NETWORK_NAME_LENGTH] = "";
 
     AsyncWiFiManager wifiManager (&server, &dns);
-	//AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
-	//AsyncWiFiManagerParameter gatewayParam ("gateway", "EnigmaIoT gateway", gateway, 18, "required type=\"text\" pattern=\"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$\"");
-	AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
+
+    AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
 	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
     AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
 
-    //wifiManager.addParameter (&channelParam);
-    //wifiManager.addParameter (&gatewayParam);
     wifiManager.addParameter (&networkNameParam);
     wifiManager.addParameter (&netKeyParam);
     wifiManager.addParameter (&sleepyParam);
+
     wifiManager.setDebugOutput (true);
     wifiManager.setConnectTimeout (30);
     wifiManager.setBreakAfterConfig (true);
@@ -221,26 +286,26 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
     boolean result = wifiManager.startConfigPortal (apname.c_str ());
     if (true /*result*/) {
         DEBUG_DBG ("==== Config Portal result ====");
-        //DEBUG_DBG ("Channel: %s", channelParam.getValue ());
-        //DEBUG_DBG ("Gateway: %s", gatewayParam.getValue ());
+
         DEBUG_DBG ("Network Name: %s", networkNameParam.getValue ());
         DEBUG_DBG ("Network Key: %s", netKeyParam.getValue ());
         DEBUG_DBG ("Sleppy time: %s", sleepyParam.getValue ());
 
         data->lastMessageCounter = 0;
-        //data->channel = atoi (channelParam.getValue ());
-        //str2mac (gatewayParam.getValue (), data->gateway);
-        //memcpy (this->gateway, data->gateway, comm->getAddressLength ());
-		//networkName = networkNameParam.getValue ();
-		memcpy (data->networkName, networkNameParam.getValue (), networkNameParam.getValueLength ());
-		//DEBUG_DBG ("Extracted network name: %s", networkName);
-		DEBUG_DBG ("Stored network name: %s", data->networkName);
+
+        memcpy (data->networkName, networkNameParam.getValue (), networkNameParam.getValueLength ());
+
+        DEBUG_DBG ("Stored network name: %s", data->networkName);
         uint8_t keySize = netKeyParam.getValueLength ();
         if (netKeyParam.getValueLength () > KEY_LENGTH)
             keySize = KEY_LENGTH;
+        memset (this->networkKey, 0, KEY_LENGTH);
+        memcpy (this->networkKey, netKeyParam.getValue (), keySize);
         memcpy (data->networkKey, netKeyParam.getValue (), keySize);
+
         CryptModule::getSHA256 (data->networkKey, KEY_LENGTH);
         DEBUG_DBG ("Calculated network key: %s", printHexBuffer (data->networkKey, KEY_LENGTH));
+        DEBUG_DBG ("User network key: %s", this->networkKey, KEY_LENGTH);
         data->nodeRegisterStatus = UNREGISTERED;
         int sleepyVal = atoi (sleepyParam.getValue ());
         if (sleepyVal > 0) {
@@ -361,36 +426,41 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
             if (loadFlashData ()) { // If data present on flash, read and continue
                 node.setStatus (UNREGISTERED);
                 DEBUG_DBG ("Flash data loaded");
-				if (searchForGateway (&rtcmem_data)) {
-					DEBUG_DBG ("Found gateway. Storing");
+                uint8_t prevGwAddr[6];
+                memcpy (prevGwAddr, rtcmem_data.gateway, 6);
+				if (searchForGateway (&rtcmem_data),true) {
+					//DEBUG_DBG ("Found gateway. Storing");
 					rtcmem_data.commErrors = 0;
-					if (!saveRTCData()) {
-						DEBUG_ERROR ("Error saving data on RTC");
-					}
-					if (!saveFlashData ()) {
-						DEBUG_ERROR ("Error saving data on flash");
-					}
+					//if (!saveRTCData()) {
+					//	DEBUG_ERROR ("Error saving data on RTC");
+					//}
+     //               //disabled
+     //               if (memcmp (prevGwAddr, rtcmem_data.gateway, 6)) {
+     //                   if (!saveFlashData ()) {
+     //                       DEBUG_ERROR ("Error saving data on flash");
+     //                   }
+     //               }
 
 				}
             } else { // Configuration empty. Enter config AP mode
                 DEBUG_DBG ("No flash data present. Starting Configuration AP");
                 if (configWiFiManager (&rtcmem_data)) {// AP config data OK
-					if (!searchForGateway (&rtcmem_data)) {
-						if (!saveFlashData (true)) {
-							DEBUG_ERROR ("Error saving data on flash. Restarting");
-						}
+                    DEBUG_DBG ("Got configuration. Storing");
+                    if (!searchForGateway (&rtcmem_data),true) {
+						//if (!saveFlashData (true)) {
+						//	DEBUG_ERROR ("Error saving data on flash. Restarting");
+						//}
 						SPIFFS.end ();
 						ESP.restart ();
 						return;
 					}
 
-                    DEBUG_DBG ("Got configuration. Storing");
-					if (!saveRTCData ()) {
-						DEBUG_ERROR ("Error saving data on RTC");
-					}
-                    if (!saveFlashData (true)) {
-                        DEBUG_ERROR ("Error saving data on flash. Restarting");
-                    }
+					//if (!saveRTCData ()) {
+					//	DEBUG_ERROR ("Error saving data on RTC");
+					//}
+     //               if (!saveFlashData (true)) {
+     //                   DEBUG_ERROR ("Error saving data on flash. Restarting");
+     //               }
                     SPIFFS.end ();
                     ESP.restart ();
                 } else { // Configuration error
@@ -430,6 +500,10 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		delay (50);
 #endif
 	}
+    
+    uint8_t prevGwAddr[6];
+    memcpy (prevGwAddr, data->gateway, 6);
+
 	if (numWifi > 0) {
 		DEBUG_INFO ("Gateway %s found: %d", data->networkName, numWifi);
 		DEBUG_INFO ("BSSID: %s", WiFi.BSSIDstr (0).c_str());
@@ -441,13 +515,16 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		memcpy (data->gateway, WiFi.BSSID (0), 6);
 
 		if (shouldStoreData) {
+            DEBUG_DBG ("Found gateway. Storing");
 			if (!saveRTCData ()) {
 				DEBUG_ERROR ("Error saving data on RTC");
 			}
-			if (!saveFlashData ()) {
-				DEBUG_ERROR ("Error saving data on flash.");
-			}
-		}
+            if (memcmp (prevGwAddr, data->gateway, 6)) {
+                if (!saveFlashData ()) {
+                    DEBUG_ERROR ("Error saving data on flash");
+                }
+            }
+        }
 
 		WiFi.scanDelete ();
 		//WiFi.mode (WIFI_AP);
@@ -646,15 +723,16 @@ void EnigmaIOTNodeClass::handle () {
 		if (!gatewaySearchStarted) {
 			gatewaySearchStarted = true;
 			
-			if (searchForGateway (&rtcmem_data)) {
-				DEBUG_DBG ("Found gateway. Storing");
+			if (searchForGateway (&rtcmem_data),true) {
+				//DEBUG_DBG ("Found gateway. Storing");
 				rtcmem_data.commErrors = 0;
-				if (!saveRTCData ()) {
-					DEBUG_ERROR ("Error saving data on RTC");
-				}
-				if (!saveFlashData ()) {
-					DEBUG_ERROR ("Error saving data on flash.");
-				}
+				//if (!saveRTCData ()) {
+				//	DEBUG_ERROR ("Error saving data on RTC");
+				//}
+                //disabled
+				//if (!saveFlashData ()) {
+				//	DEBUG_ERROR ("Error saving data on flash.");
+				//}
 
 			}
 		}
@@ -815,7 +893,7 @@ bool EnigmaIOTNodeClass::clockRequest () {
 
 }
 
-bool EnigmaIOTNodeClass::processClockResponse (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t* buf, size_t count) {
     struct __attribute__ ((packed, aligned (1))) {
         uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
@@ -892,7 +970,7 @@ bool EnigmaIOTNodeClass::hasClockSync () {
 		return false;
 }
 
-bool EnigmaIOTNodeClass::processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+bool EnigmaIOTNodeClass::processServerHello (const uint8_t* mac, const uint8_t* buf, size_t count) {
     /*
     * ------------------------------------------------------
     *| msgType (1) | random (12) | DH Kslave (32) | Tag (16) |
@@ -1165,6 +1243,13 @@ bool EnigmaIOTNodeClass::processSetSleepTimeCommand (const uint8_t* mac, const u
 
     DEBUG_DBG ("Set Sleep command received");
     DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
+    if (!SPIFFS.begin ()) {
+        DEBUG_ERROR ("Error mounting flash");
+    }
+    bool result = loadFlashData ();
+    if (!result) {
+        DEBUG_WARN ("Error loading configuration");
+    }
 
     buffer[0] = control_message_type::SLEEP_ANS;
 
@@ -1175,15 +1260,13 @@ bool EnigmaIOTNodeClass::processSetSleepTimeCommand (const uint8_t* mac, const u
     // TODO Store config on flash if sleep time > 0
     sleepTime = getSleepTime ();
     if (sleepTime > 0) {
-        if (!SPIFFS.begin ()) {
-            DEBUG_ERROR ("Error mounting flash");
-        } else
-            if (!saveFlashData ()) {
-                DEBUG_WARN ("Error saving data after set sleep time command");
-            } else {
+        if (result) {
+            if (result = saveFlashData ()) {
                 DEBUG_DBG ("Saved config data after set sleep time command");
+            } else {
+                DEBUG_WARN ("Error saving data after set sleep time command");
             }
-
+        }
         SPIFFS.end ();
     }
     memcpy (buffer + 1, &sleepTime, sizeof (sleepTime));
@@ -1192,7 +1275,7 @@ bool EnigmaIOTNodeClass::processSetSleepTimeCommand (const uint8_t* mac, const u
     if (sendData (buffer, bufLength, true)) {
         DEBUG_DBG ("Sleep time is %d seconds", sleepTime);
         DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
-        return true;
+        return result;
     } else {
         DEBUG_WARN ("Error sending version response");
         return false;
@@ -1412,7 +1495,7 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
     return false;
 }
 
-bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count, bool control) {
+bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_t* buf, size_t count, bool control) {
     /*
     * --------------------------------------------------------------------------
     *| msgType (1) | IV (12) | length (2) | NodeId (2) | Data (....) | Tag (16) |
@@ -1462,7 +1545,7 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t mac[6], const uint
 }
 
 
-nodeInvalidateReason_t EnigmaIOTNodeClass::processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count) {
+nodeInvalidateReason_t EnigmaIOTNodeClass::processInvalidateKey (const uint8_t* mac, const uint8_t* buf, size_t count) {
 #define IKMSG_LEN 2
     if (buf && count < IKMSG_LEN) {
         return UNKNOWN_ERROR;

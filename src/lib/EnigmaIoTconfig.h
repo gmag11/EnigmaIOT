@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIoTconfig.h
-  * @version 0.6.0
-  * @date 17/11/2019
+  * @version 0.7.0
+  * @date 23/12/2019
   * @author German Martin
   * @brief Parameter configuration
   */
@@ -11,7 +11,7 @@
 
 // Global configuration. Physical layer settings
 static const uint8_t MAX_MESSAGE_LENGTH = 250; ///< @brief Maximum payload size on ESP-NOW
-static const char ENIGMAIOT_PROT_VERS[] = "0.4.0"; ///< @brief EnitmaIoT Version
+static const char ENIGMAIOT_PROT_VERS[] = "0.7.0"; ///< @brief EnitmaIoT Version
 static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on ESP-NOW
 static const uint32_t FLASH_LED_TIME = 50; ///< @brief Time that led keeps on during flash in ms
 static const uint8_t NETWORK_NAME_LENGTH = 21; ///< @brief Maximum number of characters of network name
@@ -23,7 +23,7 @@ static const unsigned int MAX_NODE_INACTIVITY = 86400000U; ///< @brief After thi
 
 // Node configuration
 static const int16_t RECONNECTION_PERIOD = 1500; ///< @brief Time to retry Gateway connection
-static const uint16_t DOWNLINK_WAIT_TIME = 200; ///< @brief Time to wait for downlink message before sleep. Setting less than 180 ms causes ESP-NOW errors due to lack of ACK processing
+static const uint16_t DOWNLINK_WAIT_TIME = 400; ///< @brief Time to wait for downlink message before sleep. Setting less than 180 ms causes ESP-NOW errors due to lack of ACK processing
 static const uint32_t DEFAULT_SLEEP_TIME = 10; ///< @brief Default sleep time if it was not set
 static const uint32_t OTA_TIMEOUT_TIME = 10000; ///< @brief Timeout between OTA messages. In milliseconds
 static const time_t IDENTIFY_TIMEOUT = 10000; ///< @brief How long LED will be flashing during identification
@@ -45,6 +45,6 @@ const uint8_t AAD_LENGTH = 8; ///< @brief Number of bytes from last part of key 
 
 //Debug
 #define DEBUG_ESP_PORT Serial ///< @brief Stream to output debug info. It will normally be `Serial`
-#define DEBUG_LEVEL DBG ///< @brief Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE
+#define DEBUG_LEVEL WARN ///< @brief Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE
 
 #endif

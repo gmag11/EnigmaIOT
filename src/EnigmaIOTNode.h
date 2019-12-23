@@ -125,6 +125,7 @@ protected:
 	bool requestReportRSSI = false; ///< @brief Flag to control RSSI reporting
 	bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
 	int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
+    char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
 
     /**
       * @brief Check that a given CRC matches to calulated value from a buffer
@@ -199,7 +200,7 @@ protected:
 	  * @param count Message length in number of bytes of ClockResponse message
 	  * @return Returns `true` if message could be correcly processed
 	  */
-    bool processClockResponse (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    bool processClockResponse (const uint8_t* mac, const uint8_t* buf, size_t count);
 
     /**
       * @brief Gets a buffer containing a **ServerHello** message and process it. It uses that message to calculate a shared key using Diffie Hellman algorithm
@@ -208,7 +209,7 @@ protected:
       * @param count Message length in number of bytes of ServerHello message
       * @return Returns `true` if message could be correcly processed
       */
-    bool processServerHello (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    bool processServerHello (const uint8_t* mac, const uint8_t* buf, size_t count);
 
     /**
       * @brief Gets a buffer containing an **InvalidateKey** message and process it. This trigger a new key agreement to start
@@ -217,7 +218,7 @@ protected:
       * @param count Message length in number of bytes of InvalidateKey message
       * @return Returns the reason because key is not valid anymore. Check possible values in nodeInvalidateReason_t
       */
-    nodeInvalidateReason_t processInvalidateKey (const uint8_t mac[6], const uint8_t* buf, size_t count);
+    nodeInvalidateReason_t processInvalidateKey (const uint8_t* mac, const uint8_t* buf, size_t count);
     
     /**
       * @brief Builds, encrypts and sends a **Data** message.
@@ -244,7 +245,7 @@ protected:
 	  * @param len Length of payload data
 	  * @return Returns `true` if message could be correcly decoded and processed
 	  */
-	bool processControlCommand (const uint8_t mac[6], const uint8_t* data, size_t len);
+	bool processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len);
 
     /**
       * @brief Processes downstream data from gateway
@@ -254,7 +255,7 @@ protected:
 	  * @param control Idicates if downstream message is user or control data. If true it is a control message
       * @return Returns `true` if message could be correcly decoded
       */
-    bool processDownstreamData (const uint8_t mac[6], const uint8_t* buf, size_t count, bool control = false);
+    bool processDownstreamData (const uint8_t* mac, const uint8_t* buf, size_t count, bool control = false);
 
     /**
       * @brief Process every received message.

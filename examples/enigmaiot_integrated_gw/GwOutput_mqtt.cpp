@@ -579,6 +579,9 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 		//default:
 			//Serial.println ();
 		}
+		if (publishMQTT (this, topic, payload, pld_size)) {
+			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+		}
 		break;
 	}
 
