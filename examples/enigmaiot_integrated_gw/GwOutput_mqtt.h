@@ -14,8 +14,8 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 #include <EnigmaIOTGateway.h>
-#include <lib/helperFunctions.h>
-#include <lib/debug.h>
+#include <helperFunctions.h>
+#include <debug.h>
 
 #ifdef ESP32
 #include <WiFi.h> // Comment to compile for ESP8266

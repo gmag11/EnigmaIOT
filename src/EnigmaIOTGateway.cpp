@@ -47,10 +47,10 @@ void EnigmaIOTGatewayClass::setRxLed (uint8_t led, time_t onTime) {
 
 const void* memstr (const void* str, size_t str_size,
 					const char* target, size_t target_size) {
-
+	const uint8_t* pointer = (const uint8_t*)str;
 	for (size_t i = 0; i != str_size - target_size; ++i) {
-		if (!memcmp (str + i, target, target_size)) {
-			return str + i;
+		if (!memcmp (pointer + i, target, target_size)) {
+			return pointer + i;
 		}
 	}
 
@@ -158,8 +158,8 @@ int getNextNumber (char* &data, size_t &len/*, char* &position*/) {
 bool isHexChar (char c) {
 	//DEBUG_DBG ("Is Hex Char %c", c);
 	return (
-		c >= '0' && c <= '9' 
-		|| c >= 'a' && c <= 'f'
+		(c >= '0' && c <= '9')
+		|| (c >= 'a' && c <= 'f')
 		//|| c >= 'A' && c <= 'F'
 		);
 }
@@ -168,7 +168,7 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 	//char strNum[6];
 	char* payload;
 	size_t payloadLen;
-	int strIndex;
+	//int strIndex;
 	int number;
 	uint8_t *tempData = data;
 
@@ -198,28 +198,28 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 		decodedLen += base64_decode_chars (payload, payloadLen, (char*)(data + 1 + sizeof (uint16_t)));
 	} else {
 
-		int8_t ASCIIHexToInt[] =
-		{
-			// ASCII
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1,
-			-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		// int8_t ASCIIHexToInt[] =
+		// {
+		// 	// ASCII
+		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		// 	 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1,
+		// 	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		// 	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 
-			// 0x80-FF (Omit this if you don't need to check for non-ASCII)
-			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-			-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		};
+		// 	// 0x80-FF (Omit this if you don't need to check for non-ASCII)
+		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+		// };
 
 		if (inputLen < 39) {
 			DEBUG_ERROR ("OTA message format error. Message #0 too short to be a MD5 string");
@@ -350,7 +350,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 
 	size_t dataLen = MAX_MESSAGE_LENGTH;
 
-	bool result;
+	//bool result;
 
 	switch (controlData) {
 	case control_message_type::VERSION:
@@ -402,6 +402,8 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 		}
 		DEBUG_VERBOSE ("Get RSSI message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
+	default:
+		return false;
 	}
 
 
@@ -1041,9 +1043,9 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	DEBUG_VERBOSE ("Downlink message: %s", printHexBuffer (buffer, packet_length));
 	DEBUG_VERBOSE ("Message length: %d bytes", packet_length);
 
-	uint8_t* crypt_buf = buffer + length_idx;
+	//uint8_t* crypt_buf = buffer + length_idx;
 
-	size_t cryptLen = packet_length - length_idx;
+	//size_t cryptLen = packet_length - length_idx;
 
     const uint8_t addDataLen = 1 + IV_LENGTH;
     uint8_t aad[AAD_LENGTH + addDataLen];

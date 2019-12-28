@@ -6,3 +6,5 @@ DS18B20/
 *.txt
 examples/enigmaiot_sensor/enigmaiot_sensor.ino.rej
 Libraries/
+.pio
+.vscode

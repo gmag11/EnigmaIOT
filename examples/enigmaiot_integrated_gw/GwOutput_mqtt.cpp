@@ -282,6 +282,8 @@ void GwOutput_MQTT::reconnect () {
 
 #ifdef ESP32
 esp_err_t GwOutput_MQTT::mqtt_event_handler (esp_mqtt_event_handle_t event) {
+	esp_err_t error = ESP_OK;
+
 	if (event->event_id == MQTT_EVENT_CONNECTED) {
 		DEBUG_DBG ("MQTT msgid= %d event: %d. MQTT_EVENT_CONNECTED", event->msg_id, event->event_id);
 		String topic = GwOutput.netName + "/+/set/#";
@@ -289,7 +291,11 @@ esp_err_t GwOutput_MQTT::mqtt_event_handler (esp_mqtt_event_handle_t event) {
 		topic = GwOutput.netName + "/+/get/#";
 		esp_mqtt_client_subscribe (GwOutput.client, topic.c_str (), 0);
 		//esp_mqtt_client_publish (client, "test/status", "1", 1, 0, false);
-		publishMQTT (&GwOutput, (char*)GwOutput.gwTopic.c_str (), "1", 1, true);
+		char payload[] = "1";
+		if (publishMQTT (&GwOutput, (char*)GwOutput.gwTopic.c_str (), payload, 1, true))
+			error = ESP_OK;
+		else
+			error = ESP_FAIL;			
 	} else if (event->event_id == MQTT_EVENT_DISCONNECTED) {
 		DEBUG_WARN ("MQTT event: %d. MQTT_EVENT_DISCONNECTED", event->event_id);
 		//esp_mqtt_client_reconnect (event->client); //not needed if autoconnect is enabled
@@ -316,6 +322,7 @@ esp_err_t GwOutput_MQTT::mqtt_event_handler (esp_mqtt_event_handle_t event) {
 	} else  if (event->event_id == MQTT_EVENT_BEFORE_CONNECT) {
 		DEBUG_DBG ("MQTT event: %d. MQTT_EVENT_BEFORE_CONNECT", event->event_id);
 	}
+	return error;
 }
 #endif // ESP32
 
@@ -490,7 +497,7 @@ bool GwOutput_MQTT::outputDataSend (char* address, char* data, uint8_t length, G
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, NODE_STATUS);
 		break;
 	}
-	if (result = publishMQTT (this, topic, data, length)) {
+	if ((result = publishMQTT (this, topic, data, length))) {
 		DEBUG_INFO ("Published MQTT %s", topic);
 	} else {
 		DEBUG_WARN ("Error publishing MQTT %s", topic);
@@ -504,7 +511,8 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 	const int PAYLOAD_SIZE = 512;
 	char* topic = (char*)malloc (TOPIC_SIZE);
 	char* payload = (char*)malloc (PAYLOAD_SIZE);
-	size_t pld_size;
+	size_t pld_size = 0;
+	bool result = false;
 
 	switch (data[0]) {
 	case control_message_type::VERSION_ANS:
@@ -516,6 +524,7 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"version\":\"%.*s\"}", length - 1, data + 1);
 		if (publishMQTT (this, topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+			result = true;
 		}
 		break;
 	case control_message_type::SLEEP_ANS:
@@ -526,6 +535,7 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"sleeptime\":%d}", sleepTime);
 		if (publishMQTT (this, topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+			result = true;
 		}
 		break;
 	case control_message_type::RESET_ANS:
@@ -533,6 +543,7 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "{}");
 		if (publishMQTT (this, topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+			result = true;
 		}
 		break;
 	case control_message_type::RSSI_ANS:
@@ -540,6 +551,7 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"rssi\":%d,\"channel\":%u}", (int8_t)data[1], data[2]);
 		if (publishMQTT (this, topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+			result = true;
 		}
 		break;
 	case control_message_type::OTA_ANS:
@@ -581,20 +593,21 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 		}
 		if (publishMQTT (this, topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+			result = true;
 		}
 		break;
 	}
 
 	free (topic);
 	free (payload);
-
+	return result;
 }
 
 bool GwOutput_MQTT::newNodeSend (char* address) {
 	const int TOPIC_SIZE = 64;
 	char* topic = (char*)malloc (TOPIC_SIZE);
 	snprintf (topic, TOPIC_SIZE, "%s/%s/hello", netName.c_str(), address);
-	bool result = publishMQTT (this, topic, "", 0);
+	bool result = publishMQTT (this, topic, NULL, 0);
 	DEBUG_INFO ("Published MQTT %s", topic);
 	free (topic);
 	return result;

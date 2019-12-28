@@ -13,8 +13,8 @@
 
 #include <ESPAsyncWiFiManager.h>
 #include <EnigmaIOTGateway.h>
-#include <lib/helperFunctions.h>
-#include <lib/debug.h>
+#include <helperFunctions.h>
+#include <debug.h>
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"

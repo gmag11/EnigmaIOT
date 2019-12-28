@@ -37,9 +37,9 @@
 #include <FS.h>
 
 #include <EnigmaIOTGateway.h>
-#include "lib/helperFunctions.h"
-#include "lib/debug.h"
-#include "espnow_hal.h"
+#include <helperFunctions.h>
+#include <debug.h>
+#include <espnow_hal.h>
 
 #include <Curve25519.h>
 #include <ChaChaPoly.h>
@@ -134,7 +134,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 		return;
 	}
 
-	char* netName = EnigmaIOTGateway.getNetworkName ();
+	//char* netName = EnigmaIOTGateway.getNetworkName ();
 	const int PAYLOAD_SIZE = 512;
 	char* payload = (char*)malloc (PAYLOAD_SIZE);
 
@@ -169,7 +169,7 @@ void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* dat
 	DEBUG_DBG ("Data: %.*s", len, data);
 
 	buffer = (char*)malloc (len + 1);
-	sprintf (buffer, "%.*s\0", len, data);
+	sprintf (buffer, "%.*s", len, data);
 	bufferLen ++;
 
 	if (!EnigmaIOTGateway.sendDownstream (address, (uint8_t*)buffer, bufferLen, msgType)) {

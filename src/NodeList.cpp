@@ -6,7 +6,7 @@
   * @brief EnigmaIoT sensor node management structures
   */
 #include "NodeList.h"
-#include "lib/helperFunctions.h"
+#include "helperFunctions.h"
 
 void Node::setEncryptionKey (const uint8_t* key) {
     if (key) {

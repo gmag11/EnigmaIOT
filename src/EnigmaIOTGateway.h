@@ -14,9 +14,9 @@
 #else
 	#include "WProgram.h"
 #endif
-#include "lib/EnigmaIoTconfig.h"
-#include "lib/cryptModule.h"
-#include "lib/helperFunctions.h"
+#include "EnigmaIoTconfig.h"
+#include "cryptModule.h"
+#include "helperFunctions.h"
 #include "Comms_hal.h"
 #include "NodeList.h"
 #include <CRC32.h>

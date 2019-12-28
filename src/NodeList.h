@@ -14,7 +14,7 @@
 #else
 	#include "WProgram.h"
 #endif
-#include "lib/EnigmaIoTconfig.h"
+#include "EnigmaIoTconfig.h"
 
 /**
   * @brief State definition for nodes

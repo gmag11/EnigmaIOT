@@ -15,7 +15,7 @@
 #ifndef _DEBUG_h
 #define _DEBUG_h
 
-#include <lib/EnigmaIoTconfig.h>
+#include "EnigmaIoTconfig.h"
 #ifdef ESP32
 #include <esp_log.h>
 #endif

@@ -22,7 +22,7 @@
 #include <esp_now.h>
 #endif
 #include "Comms_hal.h"
-#include "lib/helperFunctions.h"
+#include "helperFunctions.h"
 //#define MAX_MESSAGE_LENGTH 250 ///< @brief Maximum message length for ESP-NOW
 
 /**

@@ -23,7 +23,7 @@ Espnow_halClass Espnow_hal;
 peerType_t _peerType;
 
 #ifdef ESP32
-static const char* TAG = "esp-now_hal";
+//static const char* TAG = "esp-now_hal";
 #endif
 
 void Espnow_halClass::initComms (peerType_t peerType)
