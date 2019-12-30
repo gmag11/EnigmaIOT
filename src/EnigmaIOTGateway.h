@@ -15,15 +15,12 @@
 	#include "WProgram.h"
 #endif
 #include "EnigmaIoTconfig.h"
-#include "cryptModule.h"
-#include "helperFunctions.h"
-#include "Comms_hal.h"
 #include "NodeList.h"
-#include <CRC32.h>
-#include <cstddef>
-#include <cstdint>
+#include "Comms_hal.h"
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
+#include <DNSServer.h>
+
 
 /**
   * @brief Message code definition
@@ -100,12 +97,15 @@ class EnigmaIOTGatewayClass
 	 gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
      char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
 
-	 AsyncWebServer* server;
-	 DNSServer* dns;
-	 AsyncWiFiManager* wifiManager;
-	 onWiFiManagerExit_t notifyWiFiManagerExit;
-	 onWiFiManagerStarted_t notifyWiFiManagerStarted;
+	 AsyncWebServer* server; ///< @brief WebServer that holds configuration portal
+	 DNSServer* dns; ///< @brief DNS server used by configuration portal
+	 AsyncWiFiManager* wifiManager; ///< @brief Wifi configuration portal
+	 onWiFiManagerExit_t notifyWiFiManagerExit; ///< @brief Function called when configuration portal exits
+	 onWiFiManagerStarted_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
 
+	 /**
+	  * @brief Activates a flag that signals that configuration has to be saved
+	  */
 	 static void doSave (void);
 
      /**
@@ -229,33 +229,57 @@ class EnigmaIOTGatewayClass
 	 */
 	 bool loadFlashData ();
 
-	 /**
+	/**
 	 * @brief Saves configuration to flash memory
 	 * @return Returns `true` if data could be written successfuly. `false` otherwise
 	 */
 	 bool saveFlashData ();
 
  public:
+	/**
+	 * @brief Gets flag that indicates if configuration should be saved
+	 * @return Returns `true` if config data should be saved. `false` otherwise
+	 */
 	 bool getShouldSave ();
 
+	/**
+	 * @brief Gets EnigmaIOT network name
+	 * @return Returns EnigmaIOT network name
+	 */
 	 char* getNetworkName () {
 		 return gwConfig.networkName;
 	 }
 
+	/**
+	 * @brief Gets EnigmaIOT network key
+	 * @return Returns EnigmaIOT network key
+	 */
 	 char* getNetworkKey () {
 		 return (char*)(gwConfig.networkKey);
 	 }
 
+	/**
+	 * @brief Adds a parameter to configuration portal
+	 * @param p Configuration parameter
+	 */
 	 void addWiFiManagerParameter (AsyncWiFiManagerParameter* p) {
 		 if (wifiManager) {
 			 wifiManager->addParameter (p);
 		 }
 	 }
 
+	/**
+	 * @brief Register callback to be called on wifi manager exit
+	 * @param handle Callback function pointer
+	 */
 	 void onWiFiManagerExit (onWiFiManagerExit_t handle) {
 		 notifyWiFiManagerExit = handle;
 	 }
 
+	/**
+	 * @brief Register callback to be called on wifi manager start
+	 * @param handle Callback function pointer
+	 */
 	 void onWiFiManagerStarted (onWiFiManagerStarted_t handle) {
 		 notifyWiFiManagerStarted = handle;
 	 }

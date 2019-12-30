@@ -9,7 +9,7 @@
 #ifdef ESP8266
 #include <Arduino.h>
 #include "EnigmaIOTNode.h"
-#include "lib/timeManager.h"
+#include "timeManager.h"
 #include <FS.h>
 #include <MD5Builder.h>
 #include <Updater.h>

@@ -1,7 +1,7 @@
 /**
   * @file GwOutput_generic.h
-  * @version 0.6.0
-  * @date 24/11/2019
+  * @version 0.7.0
+  * @date 30/12/2019
   * @author German Martin
   * @brief Generic Gateway output module template
   *
@@ -11,10 +11,8 @@
 #ifndef _GWOUT_GEN_h
 #define _GWOUT_GEN_h
 
-#include <ESPAsyncWiFiManager.h>
+#include <Arduino.h>
 #include <EnigmaIOTGateway.h>
-#include <helperFunctions.h>
-#include <debug.h>
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"
@@ -29,7 +27,6 @@ typedef enum GwOutput_data_type {
 } GwOutput_data_type_t;
 
 #include <functional>
-//typedef std::function<void (const char* topic, uint8_t* payload, unsigned int len)> onDlData_t;
 typedef std::function<void (uint8_t* address, control_message_type_t msgType, char* data, unsigned int len)> onDlData_t;
 
 class GatewayOutput_generic {
@@ -45,6 +42,7 @@ public:
 
 	//virtual int send () = 0;
 	//virtual void onReveive () = 0;
+
 	virtual void configManagerStart (EnigmaIOTGatewayClass* enigmaIotGw) = 0;
 	virtual void configManagerExit (bool status) = 0;
 	virtual bool begin () = 0;

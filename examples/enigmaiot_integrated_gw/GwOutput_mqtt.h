@@ -4,41 +4,23 @@
 #define _GWOUTPUT_MQTT_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+	#include "Arduino.h"
 #else
 	#include "WProgram.h"
 #endif
 
 #include "GwOutput_generic.h"
 #include "dstrootca.h"
-#include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 #include <EnigmaIOTGateway.h>
-#include <helperFunctions.h>
-#include <debug.h>
 
 #ifdef ESP32
-#include <WiFi.h> // Comment to compile for ESP8266
-#include <AsyncTCP.h> // Comment to compile for ESP8266
-#include <SPIFFS.h>
-#include "esp_system.h"
-#include "esp_event.h"
 #include "mqtt_client.h"
-#include "esp_tls.h"
 #elif defined(ESP8266)
-#include <ESP8266WiFi.h>
-//#include <ESPAsyncTCP.h> // Comment to compile for ESP32
-#include <Hash.h>
-#include <SPI.h>
 #include <PubSubClient.h>
-#ifdef SECURE_MQTT
-#include <WiFiClientSecure.h>
 #else
-#include <WiFiClient.h>
-#endif // SECURE_MQTT
-#endif // ESP32
-
-#include <FS.h>
+#error "Platform is not ESP32 or ESP8266"
+#endif
 
 // DOWNLINK MESSAGES
 #define GET_VERSION      "get/version"

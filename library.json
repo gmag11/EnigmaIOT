@@ -1,0 +1,56 @@
+{
+  "name": "EnigmaIOT",
+  "frameworks": "arduino",
+  "version": "0.7.0",
+  "keywords": "esp-now, sensor, gateway, node, home",
+  "platforms": ["espressif32", "espressif8266"],
+  "description": "EnigmaIoT is an open source solution for wireless multi sensor systems",
+  "url": "https://gmag11.github.io/EnigmaIOT",
+  "authors":
+    {
+      "name": "Germán Martín",
+      "email": "enigmaiot@gmartin.net"
+    },
+  "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/gmag11/EnigmaIOT.git"
+    },
+  "examples": "examples/*/*.ino",
+  "license": "GPL-3.0-or-later",
+  "export":
+    {
+      "exclude":
+      [
+        "docs/*",
+        "img/*",
+        "logo/*",
+        "LowPower measurements/*",
+        "Case/*"
+      ]
+    },
+    "dependencies": 
+    [
+      {
+        "name":"ArduinoJson",
+        "version":">6.0.0"
+      },
+      {
+        "name":"ESPAsyncWiFiManager"
+      },
+      {
+        "name":"ESP Async WebServer"
+      },
+      {
+        "name":"CRC32"
+      },
+      {
+        "name":"CayenneLPP"
+      },
+      {
+        "name":"CryptoArduino",
+        "version":"https://github.com/gmag11/CryptoArduino.git"
+      }
+    ]
+}
+

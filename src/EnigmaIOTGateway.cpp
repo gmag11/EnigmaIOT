@@ -18,6 +18,13 @@
 #include <esp_wifi.h>
 #endif
 
+#include "cryptModule.h"
+#include "helperFunctions.h"
+#include <CRC32.h>
+#include <cstddef>
+#include <cstdint>
+
+
 const char CONFIG_FILE[] = "/config.json";
 
 bool shouldSave = false;

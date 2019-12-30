@@ -1,16 +1,18 @@
 /**
   * @file enigmaiot_gateway.ino
-  * @version 0.6.0
-  * @date 17/11/2019
+  * @version 0.7.0
+  * @date 30/12/2019
   * @author German Martin
-  * @brief Gateway based on EnigmaIoT over ESP-NOW
+  * @brief MQTT Gateway based on EnigmaIoT over ESP-NOW
   *
-  * Communicates with a serial to MQTT gateway to send data to any IoT platform
+  * EnigmaIOT Gateway to connect nodes to MQTT broker
   */
 
+
+#include <Arduino.h>
 #include "GwOutput_mqtt.h"
 #ifdef ESP32
-#include <WiFi.h> // Comment to compile for ESP8266
+#include <WiFi.h>
 #include <AsyncTCP.h> // Comment to compile for ESP8266
 #include <Update.h>
 #include <SPIFFS.h>
@@ -32,7 +34,6 @@
 #endif // ESP32
 
 
-#include <Arduino.h>
 #include <CayenneLPP.h>
 #include <FS.h>
 
@@ -181,38 +182,6 @@ void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* dat
 	free (buffer);
 }
 
-/*void onSerial (String message) {
-	uint8_t addr[6];
-
-	DEBUG_VERBOSE ("Downlink message: %s", message.c_str ());
-	String addressStr = message.substring (message.indexOf ('/') + 1, message.indexOf ('/', 2));
-	DEBUG_INFO ("Downlink message to: %s", addressStr.c_str ());
-	if (!str2mac (addressStr.c_str (), addr)) {
-		DEBUG_ERROR ("Not a mac address");
-		return;
-	}
-	String dataStr = message.substring (message.indexOf ('/', 2) + 1);
-	dataStr.trim ();
-
-	control_message_type_t msgType = checkMsgType (dataStr);
-
-	// Add end of string to all control messages
-	if (msgType != control_message_type::USERDATA) {
-		dataStr = dataStr.substring (dataStr.indexOf (';') + 1);
-		dataStr += '\0';
-	}
-
-	DEBUG_VERBOSE ("Message %s", dataStr.c_str ());
-	DEBUG_INFO ("Message type %d", msgType);
-	DEBUG_INFO ("Data length %d", dataStr.length ());
-	if (!EnigmaIOTGateway.sendDownstream (addr, (uint8_t*)dataStr.c_str (), dataStr.length (), msgType)) {
-		DEBUG_ERROR ("Error sending esp_now message to %s", addressStr.c_str ());
-	}
-	else {
-		DEBUG_DBG ("Esp-now message sent or queued correctly");
-	}
-}*/
-
 void newNodeConnected (uint8_t * mac) {
 	char macstr[18];
 	mac2str (mac, macstr);
@@ -223,7 +192,6 @@ void newNodeConnected (uint8_t * mac) {
 	} else {
 		DEBUG_DBG ("New node %s message sent", macstr);
 	}
-	//Serial.printf ("~/%s/hello\n", macstr);
 }
 
 void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
@@ -235,7 +203,6 @@ void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
 	} else {
 		DEBUG_DBG ("Node %s disconnected message sent. Reason %d", macstr, reason);
 	}
-	//Serial.printf ("~/%s/bye;{\"reason\":%u}\n", macstr, reason);
 }
 
 #ifdef ESP32
