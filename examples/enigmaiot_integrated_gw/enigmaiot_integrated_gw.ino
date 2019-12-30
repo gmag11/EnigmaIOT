@@ -122,11 +122,6 @@ void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 
 void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control) {
 	uint8_t *addr = mac;
-	const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);
-	DynamicJsonDocument jsonBuffer (capacity);
-	//StaticJsonDocument<capacity> jsonBuffer;
-	JsonArray root = jsonBuffer.createNestedArray ();
-	CayenneLPP *cayennelpp = new CayenneLPP(MAX_DATA_PAYLOAD_SIZE);
 
 	char mac_str[18];
 	mac2str (addr, mac_str);
@@ -134,15 +129,21 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 		processRxControlData (mac_str, buffer, length);
 		return;
 	}
-
 	//char* netName = EnigmaIOTGateway.getNetworkName ();
+	const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);
+	DynamicJsonDocument jsonBuffer (capacity);
+	//StaticJsonDocument<capacity> jsonBuffer;
+	JsonArray root = jsonBuffer.createNestedArray ();
+	CayenneLPP* cayennelpp = new CayenneLPP (MAX_DATA_PAYLOAD_SIZE);
+
 	const int PAYLOAD_SIZE = 512;
+
 	char* payload = (char*)malloc (PAYLOAD_SIZE);
 
-	cayennelpp->decode ((uint8_t *)buffer, length, root);
-	cayennelpp->CayenneLPP::~CayenneLPP();
+	cayennelpp->decode ((uint8_t*)buffer, length, root);
+	cayennelpp->CayenneLPP::~CayenneLPP ();
 	free (cayennelpp);
-	
+
 	size_t pld_size = serializeJson (root, payload, PAYLOAD_SIZE);
 	GwOutput.outputDataSend (mac_str, payload, pld_size);
 	DEBUG_INFO ("Published data message from %s: %s", mac_str, payload);
@@ -152,13 +153,12 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 		DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
 	}
 	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}",
-			  EnigmaIOTGateway.getPER ((uint8_t*)mac),
-			  EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
-			  EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
-			  EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
+							EnigmaIOTGateway.getPER ((uint8_t*)mac),
+							EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
+							EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
+							EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
 	GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::status);
 	DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
-
 	free (payload);
 }
 
@@ -188,7 +188,7 @@ void newNodeConnected (uint8_t * mac) {
 	//Serial.printf ("New node connected: %s\n", macstr);
 
 	if (!GwOutput.newNodeSend (macstr)) {
-		DEBUG_WARN ("Error senfing new node %s", macstr);
+		DEBUG_WARN ("Error sending new node %s", macstr);
 	} else {
 		DEBUG_DBG ("New node %s message sent", macstr);
 	}

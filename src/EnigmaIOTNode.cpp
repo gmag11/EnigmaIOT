@@ -447,9 +447,9 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
                 if (configWiFiManager (&rtcmem_data)) {// AP config data OK
                     DEBUG_DBG ("Got configuration. Storing");
                     if (!searchForGateway (&rtcmem_data),true) {
-						//if (!saveFlashData (true)) {
-						//	DEBUG_ERROR ("Error saving data on flash. Restarting");
-						//}
+						if (!saveFlashData (true)) {
+							DEBUG_ERROR ("Error saving data on flash. Restarting");
+						}
 						SPIFFS.end ();
 						ESP.restart ();
 						return;
@@ -1369,7 +1369,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
         responseBuffer[0] = control_message_type::OTA_ANS;
         responseBuffer[1] = ota_status::OTA_STARTED;
         if (sendData (responseBuffer, 2, true)) {
-            DEBUG_INFO ("OTA STARTED");
+            DEBUG_WARN ("OTA STARTED");
             restart (false); // Force unregistration after boot so that sleepy status is synchronized
                              // on Gateway
             if (!Update.begin (otaSize)) {

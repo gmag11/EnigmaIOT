@@ -36,9 +36,9 @@ protected:
 	virtual bool saveConfig () = 0;
 
 public:
-	String netName;
-	String clientId;
-	String gwTopic;
+	String netName; ///< @brief EnigmaIOT network name
+	String clientId; ///< @brief MQTT clientId
+	String gwTopic; ///< @brief MQTT topic for gateway
 
 	//virtual int send () = 0;
 	//virtual void onReveive () = 0;
@@ -47,6 +47,14 @@ public:
 	virtual void configManagerExit (bool status) = 0;
 	virtual bool begin () = 0;
 	virtual bool loadConfig () = 0;
+
+	 /**
+	  * @brief Send control data from nodes
+	  * @param address Node Address
+	  * @param data Message data buffer
+	  * @param length Data buffer length
+	  * @return Returns `true` if sending was successful. `false` otherwise
+	  */
 	virtual bool outputControlSend (char* address, uint8_t* data, uint8_t length) = 0;
 	virtual bool newNodeSend (char* address) = 0;
 	virtual bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) = 0;

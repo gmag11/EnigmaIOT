@@ -277,7 +277,7 @@ void GwOutput_MQTT::reconnect () {
 				   mqttgw_config.mqtt_user, mqttgw_config.mqtt_pass, gwTopic.c_str ());
 	   //client.setServer (mqttgw_config.mqtt_server, mqttgw_config.mqtt_port);
 		if (client.connect (clientId.c_str (), mqttgw_config.mqtt_user, mqttgw_config.mqtt_pass, gwTopic.c_str (), 0, true, "0", true)) {
-			DEBUG_INFO ("connected");
+			DEBUG_WARN ("MQTT connected");
 			// Once connected, publish an announcement...
 			//String gwTopic = BASE_TOPIC + String("/gateway/hello");
 			publishMQTT (this, gwTopic.c_str (), "1", 1, true);
@@ -313,7 +313,7 @@ esp_err_t GwOutput_MQTT::mqtt_event_handler (esp_mqtt_event_handle_t event) {
 	esp_err_t error = ESP_OK;
 
 	if (event->event_id == MQTT_EVENT_CONNECTED) {
-		DEBUG_DBG ("MQTT msgid= %d event: %d. MQTT_EVENT_CONNECTED", event->msg_id, event->event_id);
+		DEBUG_WARN ("MQTT msgid= %d event: %d. MQTT_EVENT_CONNECTED", event->msg_id, event->event_id);
 		String topic = GwOutput.netName + "/+/set/#";
 		esp_mqtt_client_subscribe (GwOutput.client, topic.c_str(), 0);
 		topic = GwOutput.netName + "/+/get/#";

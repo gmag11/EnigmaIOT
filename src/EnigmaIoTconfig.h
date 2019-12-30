@@ -20,12 +20,13 @@ static const int RESET_PIN_DURATION = 5000; ///< @brief Number of milliseconds t
 // Gateway configuration
 static const unsigned int MAX_KEY_VALIDITY = 86400000U; ///< @brief After this time (in ms) a nude is unregistered.
 static const unsigned int MAX_NODE_INACTIVITY = 86400000U; ///< @brief After this time (in ms) a node is marked as gone
+static const int OTA_GW_TIMEOUT = 6000; ///< @brief OTA mode timeout
 
 // Node configuration
 static const int16_t RECONNECTION_PERIOD = 1500; ///< @brief Time to retry Gateway connection
 static const uint16_t DOWNLINK_WAIT_TIME = 400; ///< @brief Time to wait for downlink message before sleep. Setting less than 180 ms causes ESP-NOW errors due to lack of ACK processing
 static const uint32_t DEFAULT_SLEEP_TIME = 10; ///< @brief Default sleep time if it was not set
-static const uint32_t OTA_TIMEOUT_TIME = 10000; ///< @brief Timeout between OTA messages. In milliseconds
+static const uint32_t OTA_TIMEOUT_TIME = 5000; ///< @brief Timeout between OTA messages. In milliseconds
 static const time_t IDENTIFY_TIMEOUT = 10000; ///< @brief How long LED will be flashing during identification
 static const uint32_t TIME_SYNC_PERIOD = 30000; ///< @brief Period of clock synchronization request
 static const unsigned int QUICK_SYNC_TIME = 5000; ///< @brief Period of clock synchronization request in case of resync is needed 

@@ -28,6 +28,9 @@
 const char CONFIG_FILE[] = "/config.json";
 
 bool shouldSave = false;
+bool OTAongoing = false;
+time_t lastOTAmsg = 0;
+
 
 void EnigmaIOTGatewayClass::doSave (void) {
 	DEBUG_INFO ("Configuration saving activated");
@@ -197,13 +200,16 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 	size_t decodedLen = sizeof (uint8_t) + sizeof (uint16_t);
 	tempData += sizeof (uint16_t);
 
-	DEBUG_INFO ("OTA message number %u", msgIdx);
+	DEBUG_WARN ("OTA message number %u", msgIdx);
 	//DEBUG_INFO ("Payload len = %u", payloadLen);
 	//DEBUG_INFO ("Payload data: %s", payload);
 
 	if (msgIdx > 0) {
 		decodedLen += base64_decode_chars (payload, payloadLen, (char*)(data + 1 + sizeof (uint16_t)));
+		lastOTAmsg = millis ();
 	} else {
+		OTAongoing = true;
+		lastOTAmsg = millis ();
 
 		// int8_t ASCIIHexToInt[] =
 		// {
@@ -256,8 +262,8 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 		tempData += sizeof (uint16_t);
 		decodedLen += sizeof (uint16_t);
 
-		DEBUG_DBG ("Number of OTA chunks %u", msgNum);
-		DEBUG_DBG ("OTA length = %u bytes", fileSize);
+		DEBUG_WARN ("Number of OTA chunks %u", msgNum);
+		DEBUG_WARN ("OTA length = %u bytes", fileSize);
 		//DEBUG_INFO ("Payload data: %s", payload);
 
 		//uint8_t* md5hex = tempData;// data + 1 + sizeof (uint16_t) + sizeof (uint16_t);
@@ -717,6 +723,14 @@ void EnigmaIOTGatewayClass::handle () {
 		}
 	}
 
+	if (OTAongoing) {
+		time_t currentTime = millis ();
+		if ((currentTime - lastOTAmsg) > OTA_GW_TIMEOUT) {
+			OTAongoing = false;
+			DEBUG_WARN ("OTA ongoing = false");
+			DEBUG_WARN ("millis() = %u, lastOTAmsg = %u, diff = %d", currentTime, lastOTAmsg, currentTime - lastOTAmsg);
+		}
+	}
 }
 
 void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uint8_t count) {
@@ -788,22 +802,26 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		break;
 	case SENSOR_DATA:
 		DEBUG_INFO (" <------- DATA");
-		if (node->getStatus () == REGISTERED) {
-			node->packetsHour = (double)1 / ((millis () - node->getLastMessageTime ()) / (double)3600000);
-			if (processDataMessage (mac, buf, count, node)) {
-				node->setLastMessageTime ();
-				DEBUG_INFO ("Data OK");
-				DEBUG_VERBOSE ("Key valid from %lu ms", millis () - node->getKeyValidFrom ());
-				if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
-					invalidateKey (node, KEY_EXPIRED);
+		if (!OTAongoing) {
+			if (node->getStatus () == REGISTERED) {
+				node->packetsHour = (double)1 / ((millis () - node->getLastMessageTime ()) / (double)3600000);
+				if (processDataMessage (mac, buf, count, node)) {
+					node->setLastMessageTime ();
+					DEBUG_INFO ("Data OK");
+					DEBUG_VERBOSE ("Key valid from %lu ms", millis () - node->getKeyValidFrom ());
+					if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
+						invalidateKey (node, KEY_EXPIRED);
+					}
+				} else {
+					invalidateKey (node, WRONG_DATA);
+					DEBUG_INFO ("Data not OK");
 				}
-			} else {
-				invalidateKey (node, WRONG_DATA);
-				DEBUG_INFO ("Data not OK");
-			}
 
+			} else {
+				invalidateKey (node, UNREGISTERED_NODE);
+			}
 		} else {
-			invalidateKey (node, UNREGISTERED_NODE);
+			DEBUG_WARN ("Data ignored. OTA ongoing");
 		}
         break;
     case CLOCK_REQUEST:

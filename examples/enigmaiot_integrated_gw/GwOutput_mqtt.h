@@ -111,6 +111,14 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	 void configManagerExit (bool status);
 	 bool begin ();
 	 bool loadConfig ();
+
+	 /**
+	  * @brief Send control data from nodes
+	  * @param address Node Address
+	  * @param data Message data buffer
+	  * @param length Data buffer length
+	  * @return Returns `true` if sending was successful. `false` otherwise
+	  */
 	 bool outputControlSend (char* address, uint8_t *data, uint8_t length);
 	 bool newNodeSend (char *address);
 	 bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason);
