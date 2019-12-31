@@ -5,6 +5,8 @@
   * @author German Martin
   * @brief Bridge for EnigmaIoT system to forward data from serial to MQTT broker
   *
+  * *DEPRECATED*
+  *
   * Due to ESP-NOW RAM memory size limitations, secure MQTT cannot run while ESP-NOW encryption is working too.
   * So, Gateway functionality is splitted into two ESP8266 modules, connected through serial communications.
   * It gets encoded data from serial port and forwards to a MQTT broker.

@@ -199,11 +199,13 @@ Invalidate Key message is always sent unencrypted.
 
 ### Node
 
-tbd.
+A node is a ESP8266 board with a number of sensors. A node may sleep between sensor readings, status is stored so that it may send data without reconnection.
+
+Any ESP8266 board with at least 1 MB of flash is valid.
 
 ### Gateway
 
-tbd.
+Since version 0.7.0 Gateway is a ESP32 or ESP8266 board with 4 MB of flash memory or more. ESP8266 gateways cannot use MQTT TLS encryption due to memory limitations.
 
 ## Data format
 
@@ -243,22 +245,20 @@ After every received message, gateway detects if any packet has been lost before
 ```
 <configurable prefix>/<node address>/status {"per":<packet error rate>,"lostmessages":<Number of lost messages>,"totalmessages":<Total number of messages>,"packetshour":<Packet rate>}
 ```
-If ESP-NOW is used for node communication, ESP8266 cannot use WiFi in a reliable way. That's why in this case gateway will be formed by two ESP8266 linked by serial port. First one will output MQTT data in form of ascii strings and second one will forward them to MQTT broker.
-
 ### Downlink messages
 
 EnigmaIoT allows sending messages from gateway to nodes. In my implementation I use MQTT to trigger downlink messages too.
 
 To make it simpler, downlink messages use the same structure than uplink.
 ```
-<configurable prefix>/<node address>/<command> <data>
+<network name>/<node address>/<get | set>/<command> <data>
 ```
 Node address means destination node address. Configurable prefix is the same used for uplink communication.
 
 Commands are developed by user, but some are reserved for control commands. An uplink message could be like this
 
 ```
-enigmaiot/12:34:56:78:90:12/light ON
+enigmaiot/12:34:56:78:90:12/set/light ON
 ```
 
 ### Control messages
@@ -406,8 +406,7 @@ It is very important to configure user and password on you MQTT broker. Besides,
 - ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager version > 0.22
   
 - Arduino Crypto Library -- https://github.com/gmag11/CryptoArduino forked and formatted from https://github.com/rweather
-- ~~ESP8266TrueRandom -- https://github.com/marvinroger/ESP8266TrueRandom~~
 - PubSubClient -- https://github.com/knolleary/pubsubclient
 - CayenneLPP -- https://github.com/sabas1080/CayenneLPP version > 1.0.2
-- ArduinoJSON 6 -- https://github.com/bblanchon/ArduinoJson
+- ArduinoJSON 6 -- https://github.com/bblanchon/ArduinoJson version > 6.0.0
 

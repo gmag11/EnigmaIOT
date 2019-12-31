@@ -1,14 +1,11 @@
 var searchData=
 [
-  ['t1_750',['t1',['../classNode.html#a7b2d045175210803d1b3ff8e6aba0b9e',1,'Node']]],
-  ['t2_751',['t2',['../classNode.html#a4c12dac9f762d0e677a6499dbc41004c',1,'Node']]],
-  ['t3_752',['t3',['../classNode.html#a0c1affef7b840f0a817a6203c4592ea5',1,'Node']]],
-  ['t4_753',['t4',['../classNode.html#a0da220cd42bf9a9df169f28d7d897678',1,'Node']]],
-  ['tag_5flength_754',['TAG_LENGTH',['../EnigmaIoTconfig_8h.html#a2e80e7a8216a26293d66f1e35829df71',1,'EnigmaIoTconfig.h']]],
-  ['time_5fsync_5fperiod_755',['TIME_SYNC_PERIOD',['../EnigmaIoTconfig_8h.html#a2f387a44ed85c58ad43c40dbc632699c',1,'EnigmaIoTconfig.h']]],
-  ['timeisadjusted_756',['timeIsAdjusted',['../classTimeManagerClass.html#a1e2a434bb89a84d777f40b03d499ba6f',1,'TimeManagerClass']]],
-  ['timemanager_757',['TimeManager',['../timeManager_8cpp.html#aa2f15646607c9908039f67741ccbab58',1,'TimeManager():&#160;timeManager.cpp'],['../timeManager_8h.html#aa2f15646607c9908039f67741ccbab58',1,'TimeManager():&#160;timeManager.cpp']]],
-  ['timesyncperiod_758',['timeSyncPeriod',['../classEnigmaIOTNodeClass.html#a10d221c32311c32d19d670a68044aca4',1,'EnigmaIOTNodeClass']]],
-  ['txled_759',['txled',['../classEnigmaIOTGatewayClass.html#a8d86390169309396f3d21149c3649453',1,'EnigmaIOTGatewayClass']]],
-  ['txledontime_760',['txLedOnTime',['../classEnigmaIOTGatewayClass.html#aacbd1597e7a6be2957ac4f3ade9dc243',1,'EnigmaIOTGatewayClass']]]
+  ['sentresult',['sentResult',['../classComms__halClass.html#a3fb9182d9e9b0729d8798c43f133a130',1,'Comms_halClass::sentResult()'],['../classEspnow__halClass.html#a7a2dbc59ff5036ec52126b00a0e1db81',1,'Espnow_halClass::sentResult()']]],
+  ['server',['server',['../classEnigmaIOTGatewayClass.html#a6de87231a98aa132483ae97120b0f4d5',1,'EnigmaIOTGatewayClass']]],
+  ['shouldsave',['shouldSave',['../EnigmaIOTGateway_8cpp.html#a5b2105a285d12dbe89e9384d2351e1a9',1,'EnigmaIOTGateway.cpp']]],
+  ['shouldsaveconfig',['shouldSaveConfig',['../classGwOutput__MQTT.html#aa8a75a12858e138be2e92c69f2111038',1,'GwOutput_MQTT::shouldSaveConfig()'],['../MqttBridge_8ino.html#a8c9617f4630b59fe7c1baebd4ea84b5d',1,'shouldSaveConfig():&#160;MqttBridge.ino']]],
+  ['sleepresulttopic',['sleepResultTopic',['../namespaceEnigmaIoTUpdate.html#a880799b2afdcda342a0c9413cc31c4be',1,'EnigmaIoTUpdate']]],
+  ['sleepsettopic',['sleepSetTopic',['../namespaceEnigmaIoTUpdate.html#aa26175595b8bee3fa7d7df8300e036d0',1,'EnigmaIoTUpdate']]],
+  ['sleepynode',['sleepyNode',['../structnode__instance.html#adc14b97d211609ff286c2edc4bcbe061',1,'node_instance::sleepyNode()'],['../classNode.html#a774efd63a9d427c0911b07dc3a7ac11d',1,'Node::sleepyNode()'],['../namespaceEnigmaIoTUpdate.html#ad7b06ea4bc715581c290476212ae10c8',1,'EnigmaIoTUpdate.sleepyNode()']]],
+  ['status',['status',['../structnode__instance.html#a784768cbda2285978d85c6dd17c01158',1,'node_instance::status()'],['../classNode.html#a02eb5aa6340f2d4e0cfd48f7bb661dd3',1,'Node::status()']]]
 ];

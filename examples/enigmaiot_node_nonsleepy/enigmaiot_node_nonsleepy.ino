@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_node_nonsleepy.ino
-  * @version 0.6.0
-  * @date 17/11/2019
+  * @version 0.7.0
+  * @date 31/12/2019
   * @author German Martin
   * @brief Node based on EnigmaIoT over ESP-NOW, in non sleeping mode
   *
@@ -39,16 +39,23 @@ void disconnectEventHandler () {
 	Serial.println ("Disconnected");
 }
 
-void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length) {
+void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, nodeMessageType_t command) {
 	char macstr[18];
+	String commandStr;
+
 	mac2str (mac, macstr);
 	Serial.println ();
 	Serial.printf ("Data from %s --> %s\n", macstr, printHexBuffer (buffer, length));
-	for (int i = 0; i < length; i++) {
-		Serial.print ((char)buffer[i]);
-	}
-	Serial.println ();
-	Serial.println ();
+	if (command == nodeMessageType_t::DOWNSTREAM_DATA_GET)
+		commandStr = "GET";
+	else if (command == nodeMessageType_t::DOWNSTREAM_DATA_SET)
+		commandStr = "SET";
+	else
+		return;
+
+	Serial.printf ("Command %s\n", commandStr.c_str ());
+	Serial.printf ("Data: %s\n", printHexBuffer (buffer, length));
+
 }
 
 void setup () {

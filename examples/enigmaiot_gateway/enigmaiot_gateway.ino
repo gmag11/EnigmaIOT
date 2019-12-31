@@ -1,9 +1,11 @@
 /**
   * @file enigmaiot_gateway.ino
-  * @version 0.5.1
-  * @date 04/10/2019
+  * @version 0.7.0
+  * @date 31/12/2019
   * @author German Martin
   * @brief Gateway based on EnigmaIoT over ESP-NOW
+  *
+  * *DEPRECATED*
   *
   * Communicates with a serial to MQTT gateway to send data to any IoT platform
   */
@@ -39,6 +41,8 @@
 #define SET_RESET_ANS    "result/reset"
 #define GET_RSSI         "get/rssi"
 #define GET_RSSI_ANS     "result/rssi"
+#define SET_USER_DATA    "set/data"
+#define GET_USER_DATA    "get/data"
 
 void processRxControlData (char* macStr, const uint8_t* data, uint8_t length) {
 	switch (data[0]) {
@@ -148,12 +152,20 @@ control_message_type_t checkMsgType (String data) {
 	if (data.indexOf (SET_RESET_CONFIG) != -1) {
 		DEBUG_WARN ("RESET CONFIG MESSAGE %s", data.c_str ());
 		return control_message_type::RESET;
-	}
+	} else
 	if (data.indexOf (GET_RSSI) != -1) {
 		DEBUG_INFO ("GET RSSI MESSAGE %s", data.c_str ());
 		return control_message_type::RSSI_GET;
-	}
-	return control_message_type::USERDATA;
+	} else 
+	if (data == SET_USER_DATA) {
+		DEBUG_INFO ("USER DATA %s", data.c_str ());
+		return control_message_type::USERDATA_SET;
+	} else 
+	if (data == GET_USER_DATA) {
+		DEBUG_INFO ("USER DATA %s", data.c_str ());
+		return control_message_type::USERDATA_GET;
+	} else
+		return control_message_type::INVALID;
 }
 
 void onSerial (String message) {
@@ -172,7 +184,7 @@ void onSerial (String message) {
 	control_message_type_t msgType = checkMsgType (dataStr);
 
 	// Add end of string to all control messages
-	if (msgType != control_message_type::USERDATA) {
+	if (msgType != control_message_type::USERDATA_GET && msgType != control_message_type::USERDATA_SET) {
 		dataStr = dataStr.substring (dataStr.indexOf (';') + 1);
 		dataStr += '\0';
 	}

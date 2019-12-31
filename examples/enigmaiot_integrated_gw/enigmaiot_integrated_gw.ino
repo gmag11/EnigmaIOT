@@ -1,7 +1,7 @@
 /**
-  * @file enigmaiot_gateway.ino
+  * @file enigmaiot_integrated_gw.ino
   * @version 0.7.0
-  * @date 30/12/2019
+  * @date 31/12/2019
   * @author German Martin
   * @brief MQTT Gateway based on EnigmaIoT over ESP-NOW
   *

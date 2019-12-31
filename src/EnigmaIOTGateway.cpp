@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGateway.cpp
-  * @version 0.6.0
-  * @date 17/11/2019
+  * @version 0.7.0
+  * @date 31/12/2019
   * @author German Martin
   * @brief Library to build a gateway for EnigmaIoT system
   */
@@ -755,33 +755,37 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		// TODO: Do no accept new Client Hello if registration is on process on any node?? Possible DoS Attack??
 		// May cause undesired behaviour in case a node registration message is lost
 		DEBUG_INFO (" <------- CLIENT HELLO");
-		if (espNowError == 0) {
-			if (processClientHello (mac, buf, count, node)) {
-				if (serverHello (myPublicKey, node)) {
-					DEBUG_INFO ("Server Hello sent");
-					node->setStatus (REGISTERED);
-					node->setKeyValidFrom (millis ());
-					node->setLastMessageCounter (0);
-					node->setLastMessageTime ();
-					if (notifyNewNode) {
-						notifyNewNode (node->getMacAddress ());
-					}
+		if (!OTAongoing) {
+			if (espNowError == 0) {
+				if (processClientHello (mac, buf, count, node)) {
+					if (serverHello (myPublicKey, node)) {
+						DEBUG_INFO ("Server Hello sent");
+						node->setStatus (REGISTERED);
+						node->setKeyValidFrom (millis ());
+						node->setLastMessageCounter (0);
+						node->setLastMessageTime ();
+						if (notifyNewNode) {
+							notifyNewNode (node->getMacAddress ());
+						}
 #if DEBUG_LEVEL >= INFO
 						nodelist.printToSerial (&DEBUG_ESP_PORT);
 #endif
-				} else {
-					node->reset ();
-					DEBUG_INFO ("Error sending Server Hello");
-				}
+					} else {
+						node->reset ();
+						DEBUG_INFO ("Error sending Server Hello");
+					}
 
+				} else {
+					// Ignore message in case of error
+					//invalidateKey (node, WRONG_CLIENT_HELLO);
+					node->reset ();
+					DEBUG_ERROR ("Error processing client hello");
+				}
 			} else {
-				// Ignore message in case of error
-				//invalidateKey (node, WRONG_CLIENT_HELLO);
-				node->reset ();
-				DEBUG_ERROR ("Error processing client hello");
+				DEBUG_ERROR ("Error adding peer %d", espNowError);
 			}
 		} else {
-			DEBUG_ERROR ("Error adding peer %d", espNowError);
+			DEBUG_WARN ("OTA ongoing. Registration ignored");
 		}
 		break;
 	case CONTROL_DATA:

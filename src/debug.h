@@ -7,8 +7,8 @@
   * If `DEBUG_ESP_PORT` is not defined library will give no debug output at all
   *
   * @file debug.h
-  * @version 0.6.0
-  * @date 17/11/2019
+  * @version 0.7.0
+  * @date 31/12/2019
   * @author German Martin
   */
 

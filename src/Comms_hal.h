@@ -1,7 +1,7 @@
 /**
   * @file Comms_hal.h
-  * @version 0.6.0
-  * @date 17/11/2019
+  * @version 0.7.0
+  * @date 31/12/2019
   * @author German Martin
   * @brief Generic communication system abstraction layer
   *
@@ -42,7 +42,7 @@ public:
 
      comms_hal_rcvd_data dataRcvd = 0; ///< @brief Pointer to a function to be called on every received message
      comms_hal_sent_data sentResult = 0; ///< @brief Pointer to a function to be called to notify last sending status
-	 peerType_t _ownPeerType; ///< @Brief Stores peer type, node or gateway
+	 peerType_t _ownPeerType; ///< @brief Stores peer type, node or gateway
 
      /**
        * @brief Communication subsistem initialization

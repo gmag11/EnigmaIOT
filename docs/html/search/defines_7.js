@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['macstr_850',['MACSTR',['../helperFunctions_8cpp.html#ad6e69a2870c8f219cc679677af110849',1,'helperFunctions.cpp']]],
-  ['max_5fmessage_5flength_851',['MAX_MESSAGE_LENGTH',['../espnow__hal_8h.html#ab234d1358562b66925fb7223c087556b',1,'espnow_hal.h']]],
-  ['max_5fstr_5flen_852',['MAX_STR_LEN',['../helperFunctions_8cpp.html#a58ce36916c399104e18d32ff090f21c6',1,'helperFunctions.cpp']]]
+  ['lost_5fmessages',['LOST_MESSAGES',['../GwOutput__mqtt_8h.html#a2aa30d8c4ad4f2895fefd1b1d425ee66',1,'GwOutput_mqtt.h']]]
 ];

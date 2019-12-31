@@ -1,6 +1,12 @@
-// 
-// 
-// 
+/**
+  * @file GwOutput_mqtt.cpp
+  * @version 0.7.0
+  * @date 31/12/2019
+  * @author German Martin
+  * @brief MQTT Gateway output module
+  *
+  * Module to send and receive EnigmaIOT information from MQTT broker
+  */
 
 #include <Arduino.h>
 #include "GwOutput_mqtt.h"
@@ -10,8 +16,8 @@
 #include <debug.h>
 
 #ifdef ESP32
-#include <WiFi.h> // Comment to compile for ESP8266
-#include <AsyncTCP.h> // Comment to compile for ESP8266
+#include <WiFi.h>
+#include <AsyncTCP.h>
 #include <SPIFFS.h>
 #include "esp_system.h"
 #include "esp_event.h"
@@ -19,7 +25,7 @@
 #include "esp_tls.h"
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h> // Comment to compile for ESP32
+#include <ESPAsyncTCP.h>
 #include <Hash.h>
 #include <SPI.h>
 #include <PubSubClient.h>
@@ -110,18 +116,12 @@ bool GwOutput_MQTT::loadConfig () {
 		if (configFile) {
 			size_t size = configFile.size ();
 			DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, size);
-			/*if (size < sizeof (mqttgw_config_t)) {
-				DEBUG_WARN ("Config file is corrupted. Deleting");
-				SPIFFS.remove (CONFIG_FILE);
-				return false;
-			}*/
 			DynamicJsonDocument doc (512);
 			DeserializationError error = deserializeJson (doc, configFile);
 			if (error) {
 				DEBUG_ERROR ("Failed to parse file");
 			} else {
 				DEBUG_DBG ("JSON file parsed");
-				//json_correct = true;
 			}
 
 			if (doc.containsKey ("mqtt_server") && doc.containsKey ("mqtt_port")
@@ -129,13 +129,10 @@ bool GwOutput_MQTT::loadConfig () {
 				json_correct = true;
 			}
 
-			//configFile.read ((uint8_t*)(&mqttgw_config), sizeof (mqttgw_config_t));
-
 			strlcpy (mqttgw_config.mqtt_server, doc["mqtt_server"] | "", sizeof (mqttgw_config.mqtt_server));
 			mqttgw_config.mqtt_port = doc["mqtt_port"].as<int> ();
 			strlcpy (mqttgw_config.mqtt_user, doc["mqtt_user"] | "", sizeof (mqttgw_config.mqtt_user));
 			strlcpy (mqttgw_config.mqtt_pass, doc["mqtt_pass"] | "", sizeof (mqttgw_config.mqtt_pass));
-
 
 			configFile.close ();
 			if (json_correct) {
@@ -152,13 +149,11 @@ bool GwOutput_MQTT::loadConfig () {
 
 			DEBUG_DBG ("JSON file %s", output.c_str ());
 
-			//return json_correct;
 		} else {
 			DEBUG_WARN ("Error opening %s", CONFIG_FILE);
 		}
 	} else {
 		DEBUG_WARN ("%s do not exist", CONFIG_FILE);
-		//return false;
 	}
 
 	return json_correct;
@@ -279,7 +274,6 @@ void GwOutput_MQTT::reconnect () {
 		if (client.connect (clientId.c_str (), mqttgw_config.mqtt_user, mqttgw_config.mqtt_pass, gwTopic.c_str (), 0, true, "0", true)) {
 			DEBUG_WARN ("MQTT connected");
 			// Once connected, publish an announcement...
-			//String gwTopic = BASE_TOPIC + String("/gateway/hello");
 			publishMQTT (this, gwTopic.c_str (), "1", 1, true);
 			// ... and resubscribe
 			String dlTopic = netName + String ("/+/set/#");
@@ -318,7 +312,6 @@ esp_err_t GwOutput_MQTT::mqtt_event_handler (esp_mqtt_event_handle_t event) {
 		esp_mqtt_client_subscribe (GwOutput.client, topic.c_str(), 0);
 		topic = GwOutput.netName + "/+/get/#";
 		esp_mqtt_client_subscribe (GwOutput.client, topic.c_str (), 0);
-		//esp_mqtt_client_publish (client, "test/status", "1", 1, 0, false);
 		char payload[] = "1";
 		if (publishMQTT (&GwOutput, (char*)GwOutput.gwTopic.c_str (), payload, 1, true))
 			error = ESP_OK;
@@ -544,11 +537,7 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 
 	switch (data[0]) {
 	case control_message_type::VERSION_ANS:
-		//Serial.printf ("~/%s/%s;{\"version\":\"", address, GET_VERSION_ANS);
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, GET_VERSION_ANS);
-		//Serial.write (data + 1, length - 1);
-		//Serial.println ("\"}");
-		//Serial.printf ("%s/%s/%s;{\"version\":\"", EnigmaIOTGateway.getNetworkName (), address, GET_VERSION_ANS);
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"version\":\"%.*s\"}", length - 1, data + 1);
 		if (publishMQTT (this, topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
@@ -558,7 +547,6 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 	case control_message_type::SLEEP_ANS:
 		uint32_t sleepTime;
 		memcpy (&sleepTime, data + 1, sizeof (sleepTime));
-		//Serial.printf ("~/%s/%s;{\"sleeptime\":%d}\n", address, GET_SLEEP_ANS, sleepTime);
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, GET_SLEEP_ANS);
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"sleeptime\":%d}", sleepTime);
 		if (publishMQTT (this, topic, payload, pld_size)) {
@@ -583,41 +571,31 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t len
 		}
 		break;
 	case control_message_type::OTA_ANS:
-		//Serial.printf ("~/%s/%s;", address, SET_OTA_ANS);
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str(), address, SET_OTA_ANS);
 		switch (data[1]) {
 		case ota_status::OTA_STARTED:
-			//Serial.printf ("{\"result\":\"OTA Started\",\"status\":%u}\n", data[1]);
 			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA Started\",\"status\":%u}\n", data[1]);
 			break;
 		case ota_status::OTA_START_ERROR:
-			//Serial.printf ("{\"result\":\"OTA Start error\",\"status\":%u}\n", data[1]);
 			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA Start error\",\"status\":%u}\n", data[1]);
 			break;
 		case ota_status::OTA_OUT_OF_SEQUENCE:
 			uint16_t lastGoodIdx;
 			memcpy ((uint8_t*)&lastGoodIdx, data + 2, sizeof (uint16_t));
-			//Serial.printf ("{\"last_chunk\":%d,\"result\":\"OTA out of sequence error\",\"status\":%u}\n", lastGoodIdx, data[1]);
 			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"last_chunk\":%d,\"result\":\"OTA out of sequence error\",\"status\":%u}\n", lastGoodIdx, data[1]);
 			break;
 		case ota_status::OTA_CHECK_OK:
-			//Serial.printf ("{\"result\":\"OTA check OK\",\"status\":%u}\n", data[1]);
 			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA check OK\",\"status\":%u}\n", data[1]);
 			break;
 		case ota_status::OTA_CHECK_FAIL:
-			//Serial.printf ("{\"result\":\"OTA check failed\",\"status\":%u}\n", data[1]);
 			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA check failed\",\"status\":%u}\n", data[1]);
 			break;
 		case ota_status::OTA_TIMEOUT:
-			//Serial.printf ("{\"result\":\"OTA timeout\",\"status\":%u}\n", data[1]);
 			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA timeout\",\"status\":%u}\n", data[1]);
 			break;
 		case ota_status::OTA_FINISHED:
-			//Serial.printf ("{\"result\":\"OTA finished OK\",\"status\":%u}\n", data[1]);
 			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA finished OK\",\"status\":%u}\n", data[1]);
 			break;
-		//default:
-			//Serial.println ();
 		}
 		if (publishMQTT (this, topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);

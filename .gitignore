@@ -8,3 +8,4 @@ examples/enigmaiot_sensor/enigmaiot_sensor.ino.rej
 Libraries/
 .pio
 .vscode
+**/config.json
