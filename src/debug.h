@@ -66,11 +66,11 @@
 #endif
 #elif defined ESP32
 #define DEFAULT_LOG_TAG "EnigmaIOT"
-#define DEBUG_VERBOSE(format,...) ESP_LOGV (DEFAULT_LOG_TAG,"Heap: %6d. " format, ESP.getFreeHeap(), ##__VA_ARGS__)
-#define DEBUG_DBG(format,...) ESP_LOGD (DEFAULT_LOG_TAG,"Heap: %6d " format, ESP.getFreeHeap(), ##__VA_ARGS__)
-#define DEBUG_INFO(format,...) ESP_LOGI (DEFAULT_LOG_TAG,"Heap: %6d " format, ESP.getFreeHeap(), ##__VA_ARGS__)
-#define DEBUG_WARN(format,...) ESP_LOGW (DEFAULT_LOG_TAG,"Heap: %6d " format, ESP.getFreeHeap(), ##__VA_ARGS__)
-#define DEBUG_ERROR(format,...) ESP_LOGE (DEFAULT_LOG_TAG,"Heap: %6d " format, ESP.getFreeHeap(), ##__VA_ARGS__)
+#define DEBUG_VERBOSE(format,...) ESP_LOGV (DEFAULT_LOG_TAG,"%d Heap: %6d. " format, millis(), ESP.getFreeHeap(), ##__VA_ARGS__)
+#define DEBUG_DBG(format,...) ESP_LOGD (DEFAULT_LOG_TAG,"%d Heap: %6d " format, millis(), ESP.getFreeHeap(), ##__VA_ARGS__)
+#define DEBUG_INFO(format,...) ESP_LOGI (DEFAULT_LOG_TAG,"%d Heap: %6d " format, millis(), ESP.getFreeHeap(), ##__VA_ARGS__)
+#define DEBUG_WARN(format,...) ESP_LOGW (DEFAULT_LOG_TAG,"%d Heap: %6d " format, millis(), ESP.getFreeHeap(), ##__VA_ARGS__)
+#define DEBUG_ERROR(format,...) ESP_LOGE (DEFAULT_LOG_TAG,"%d Heap: %6d " format, millis(), ESP.getFreeHeap(), ##__VA_ARGS__)
 #endif
 #else
 #define DEBUG_VERBOSE(...)
