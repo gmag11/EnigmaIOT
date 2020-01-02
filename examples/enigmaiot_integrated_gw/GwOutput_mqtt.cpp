@@ -229,7 +229,21 @@ bool GwOutput_MQTT::begin () {
 #endif // ESP32
 	gwTopic = netName + GW_STATUS;
 #ifdef ESP32
-	mqtt_cfg.host = mqttgw_config.mqtt_server;
+	IPAddress ip;
+	int result = 0;
+
+	if (WiFi.isConnected ()) {
+		result = WiFi.hostByName (mqttgw_config.mqtt_server, ip);
+	}
+
+	if (result) {
+		mqtt_cfg.host = ip.toString ().c_str ();
+	} else {
+		mqtt_cfg.host = mqttgw_config.mqtt_server;
+	}
+
+	DEBUG_WARN ("MQTT Host: %s", mqtt_cfg.host);
+	//mqtt_cfg.host = mqttgw_config.mqtt_server;
 	mqtt_cfg.port = mqttgw_config.mqtt_port;
 	mqtt_cfg.username = mqttgw_config.mqtt_user;
 	mqtt_cfg.password = mqttgw_config.mqtt_pass;
