@@ -134,7 +134,7 @@ def main():
 
     ota_length = os.stat(args.filename).st_size
 
-    delay_options = {"fast": 0.035, "medium": 0.07, "slow": 0.14}
+    delay_options = {"fast": 0.02, "medium": 0.06, "slow": 0.18}
     packet_delay = delay_options.get(args.otaSpeed, 0.07)
 
     with open(args.filename, "rb") as binary_file:
