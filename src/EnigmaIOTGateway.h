@@ -82,7 +82,7 @@ class EnigmaIOTGatewayClass
  protected:
      uint8_t myPublicKey[KEY_LENGTH]; ///< @brief Temporary public key store used during key agreement
      bool flashTx = false; ///< @brief `true` if Tx LED should flash
-     bool flashRx = false; ///< @brief `true` if Rx LED should flash
+     volatile bool flashRx = false; ///< @brief `true` if Rx LED should flash
      node_t node; ///< @brief temporary store to keep node data while processing a message
      NodeList nodelist; ///< @brief Node database that keeps status and shared keys
      Comms_halClass *comm; ///< @brief Instance of physical communication layer

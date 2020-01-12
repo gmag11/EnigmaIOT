@@ -21,6 +21,7 @@ static const int RESET_PIN_DURATION = 5000; ///< @brief Number of milliseconds t
 static const unsigned int MAX_KEY_VALIDITY = 86400000U; ///< @brief After this time (in ms) a nude is unregistered.
 static const unsigned int MAX_NODE_INACTIVITY = 86400000U; ///< @brief After this time (in ms) a node is marked as gone
 static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mode all data messages are ignored
+static const size_t MAX_MQTT_QUEUE_SIZE = 5; ///< @ brief Maximum number of MQTT messages to be sent
 
 // Node configuration
 static const int16_t RECONNECTION_PERIOD = 1500; ///< @brief Time to retry Gateway connection

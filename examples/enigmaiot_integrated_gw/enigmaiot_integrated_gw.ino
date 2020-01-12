@@ -11,6 +11,15 @@
 
 #include <Arduino.h>
 #include "GwOutput_mqtt.h"
+
+#define MQTT_MAX_PACKET_SIZE 2048
+#include <PubSubClient.h>
+#ifdef SECURE_MQTT
+#include <WiFiClientSecure.h>
+#else
+#include <WiFiClient.h>
+#endif // SECURE_MQTT
+
 #ifdef ESP32
 #include <WiFi.h>
 #include <AsyncTCP.h> // Comment to compile for ESP8266
@@ -18,19 +27,12 @@
 #include <SPIFFS.h>
 #include "esp_system.h"
 #include "esp_event.h"
-#include "mqtt_client.h"
 #include "esp_tls.h"
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 //#include <ESPAsyncTCP.h> // Comment to compile for ESP32
 #include <Hash.h>
 #include <SPI.h>
-#include <PubSubClient.h>
-#ifdef SECURE_MQTT
-#include <WiFiClientSecure.h>
-#else
-#include <WiFiClient.h>
-#endif // SECURE_MQTT
 #endif // ESP32
 
 
@@ -213,7 +215,15 @@ void EnigmaIOTGateway_handle (void * param) {
 	}
 }
 
+void GwOutput_handle (void* param) {
+	for (;;) {
+		GwOutput.loop ();
+		vTaskDelay (0);
+	}
+}
+
 TaskHandle_t xEnigmaIOTGateway_handle = NULL;
+TaskHandle_t gwoutput_handle = NULL;
 #endif // ESP32
 
 void setup () {
@@ -263,15 +273,14 @@ void setup () {
 
 #ifdef ESP32
 	//xTaskCreate (EnigmaIOTGateway_handle, "handle", 10000, NULL, 1, &xEnigmaIOTGateway_handle);
-	xTaskCreatePinnedToCore (EnigmaIOTGateway_handle, "handle", 4096, NULL, 1, &xEnigmaIOTGateway_handle, 1);
-	//xTaskCreatePinnedToCore (client_reconnect, "reconnect", 10000, NULL, 1, &xClient_reconnect, 1);
+	//xTaskCreatePinnedToCore (EnigmaIOTGateway_handle, "handle", 4096, NULL, 0, &xEnigmaIOTGateway_handle, 1);
+	//xTaskCreatePinnedToCore (GwOutput_handle, "gwoutput", 10000, NULL, 2, &gwoutput_handle, 1);
 #endif
 	}
 
 void loop () {
-	GwOutput.loop ();
 
-//#ifdef ESP8266
+	GwOutput.loop ();
 	EnigmaIOTGateway.handle ();
-//#endif
+
 }

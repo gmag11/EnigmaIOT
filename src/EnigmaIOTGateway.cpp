@@ -688,6 +688,8 @@ void EnigmaIOTGatewayClass::handle () {
 	static unsigned long txOntime;
 
 	if (flashRx) {
+		DEBUG_DBG ("EnigmaIOTGatewayClass::flashrx");
+
         if (rxled == txled){
             flashTx = true;
         } else {
@@ -755,38 +757,38 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		// TODO: Do no accept new Client Hello if registration is on process on any node?? Possible DoS Attack??
 		// May cause undesired behaviour in case a node registration message is lost
 		DEBUG_INFO (" <------- CLIENT HELLO");
-		if (!OTAongoing) {
-			if (espNowError == 0) {
-				if (processClientHello (mac, buf, count, node)) {
-					if (serverHello (myPublicKey, node)) {
-						DEBUG_INFO ("Server Hello sent");
-						node->setStatus (REGISTERED);
-						node->setKeyValidFrom (millis ());
-						node->setLastMessageCounter (0);
-						node->setLastMessageTime ();
-						if (notifyNewNode) {
-							notifyNewNode (node->getMacAddress ());
-						}
-#if DEBUG_LEVEL >= INFO
-						nodelist.printToSerial (&DEBUG_ESP_PORT);
-#endif
-					} else {
-						node->reset ();
-						DEBUG_INFO ("Error sending Server Hello");
+		//if (!OTAongoing) {
+		if (espNowError == 0) {
+			if (processClientHello (mac, buf, count, node)) {
+				if (serverHello (myPublicKey, node)) {
+					DEBUG_INFO ("Server Hello sent");
+					node->setStatus (REGISTERED);
+					node->setKeyValidFrom (millis ());
+					node->setLastMessageCounter (0);
+					node->setLastMessageTime ();
+					if (notifyNewNode) {
+						notifyNewNode (node->getMacAddress ());
 					}
-
+#if DEBUG_LEVEL >= INFO
+					nodelist.printToSerial (&DEBUG_ESP_PORT);
+#endif
 				} else {
-					// Ignore message in case of error
-					//invalidateKey (node, WRONG_CLIENT_HELLO);
 					node->reset ();
-					DEBUG_ERROR ("Error processing client hello");
+					DEBUG_INFO ("Error sending Server Hello");
 				}
+
 			} else {
-				DEBUG_ERROR ("Error adding peer %d", espNowError);
+				// Ignore message in case of error
+				//invalidateKey (node, WRONG_CLIENT_HELLO);
+				node->reset ();
+				DEBUG_ERROR ("Error processing client hello");
 			}
 		} else {
-			DEBUG_WARN ("OTA ongoing. Registration ignored");
+			DEBUG_ERROR ("Error adding peer %d", espNowError);
 		}
+		//} else {
+		//	DEBUG_WARN ("OTA ongoing. Registration ignored");
+		//}
 		break;
 	case CONTROL_DATA:
 		DEBUG_INFO (" <------- CONTROL MESSAGE");
@@ -806,27 +808,27 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		break;
 	case SENSOR_DATA:
 		DEBUG_INFO (" <------- DATA");
-		if (!OTAongoing) {
-			if (node->getStatus () == REGISTERED) {
-				node->packetsHour = (double)1 / ((millis () - node->getLastMessageTime ()) / (double)3600000);
-				if (processDataMessage (mac, buf, count, node)) {
-					node->setLastMessageTime ();
-					DEBUG_INFO ("Data OK");
-					DEBUG_VERBOSE ("Key valid from %lu ms", millis () - node->getKeyValidFrom ());
-					if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
-						invalidateKey (node, KEY_EXPIRED);
-					}
-				} else {
-					invalidateKey (node, WRONG_DATA);
-					DEBUG_INFO ("Data not OK");
+		//if (!OTAongoing) {
+		if (node->getStatus () == REGISTERED) {
+			node->packetsHour = (double)1 / ((millis () - node->getLastMessageTime ()) / (double)3600000);
+			if (processDataMessage (mac, buf, count, node)) {
+				node->setLastMessageTime ();
+				DEBUG_INFO ("Data OK");
+				DEBUG_VERBOSE ("Key valid from %lu ms", millis () - node->getKeyValidFrom ());
+				if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
+					invalidateKey (node, KEY_EXPIRED);
 				}
-
 			} else {
-				invalidateKey (node, UNREGISTERED_NODE);
+				invalidateKey (node, WRONG_DATA);
+				DEBUG_INFO ("Data not OK");
 			}
+
 		} else {
-			DEBUG_WARN ("Data ignored. OTA ongoing");
+			invalidateKey (node, UNREGISTERED_NODE);
 		}
+		//} else {
+		//	DEBUG_WARN ("Data ignored. OTA ongoing");
+		//}
         break;
     case CLOCK_REQUEST:
         DEBUG_INFO (" <------- CLOCK REQUEST");

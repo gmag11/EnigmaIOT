@@ -21,14 +21,14 @@
 #include "dstrootca.h"
 #include <ESPAsyncWiFiManager.h>
 #include <EnigmaIOTGateway.h>
-
-#ifdef ESP32
-#include "mqtt_client.h"
-#elif defined(ESP8266)
 #include <PubSubClient.h>
+#include <queue>
+#ifdef SECURE_MQTT
+#include <WiFiClientSecure.h>
 #else
-#error "Platform is not ESP32 or ESP8266"
-#endif
+#include <WiFiClient.h>
+#endif // SECURE_MQTT
+
 
 // DOWNLINK MESSAGES
 #define GET_VERSION      "get/version"
@@ -63,6 +63,13 @@ typedef struct {
 	char mqtt_pass[41]; /**< MQTT broker user password*/
 } mqttgw_config_t;
 
+typedef struct {
+	char* topic; /**< Message topic*/
+	char* payload; /**< Message payload*/
+	size_t payload_len; /**< Payload length*/
+	bool retain; /**< MQTT retain flag*/
+} mqtt_queue_item_t;
+
 
 class GwOutput_MQTT: public GatewayOutput_generic {
  protected:
@@ -71,50 +78,65 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	 AsyncWiFiManagerParameter* mqttUserParam; ///< @brief Configuration field for MQTT server user name
 	 AsyncWiFiManagerParameter* mqttPassParam; ///< @brief Configuration field for MQTT server password
 
-#ifdef ESP32
-	 esp_mqtt_client_config_t mqtt_cfg; ///< @brief MQTT server configuration structure
-	 esp_mqtt_client_handle_t client; ///< @brief MQTT client handle
-#endif // ESP32
+	 std::queue<mqtt_queue_item_t*> mqtt_queue; ///< @brief Output MQTT messages queue. It acts as a FIFO queue
 
 	 mqttgw_config_t mqttgw_config; ///< @brief MQTT server configuration data
 	 bool shouldSaveConfig = false; ///< @brief Flag to indicate if configuration should be saved
 
-#ifdef ESP8266
 #ifdef SECURE_MQTT
+	 WiFiClientSecure espClient; ///< @brief TLS client
+#ifdef ESP8266
 	 BearSSL::X509List certificate; ///< @brief CA certificate for TLS
-	 WiFiClientSecure secureClient; ///< @brief TLS client
-#else
-	 WiFiClient unsecureClient; ///< @brief TCP client
-#endif // SECURE_MQTT
-	 PubSubClient client; ///< @brief MQTT client
 #endif // ESP8266
+#else
+	 WiFiClient espClient; ///< @brief TCP client
+#endif // SECURE_MQTT
+	 PubSubClient mqtt_client; ///< @brief MQTT client
 
 	/**
 	  * @brief Saves output module configuration
 	  * @return Returns `true` if save was successful. `false` otherwise
 	  */
 	 bool saveConfig ();
-#ifdef ESP32
+//#ifdef ESP32
 	/**
 	  * @brief Manages incoming MQTT events
 	  * @param event Event type
 	  * @return Error code
 	  */
-	 static esp_err_t mqtt_event_handler (esp_mqtt_event_handle_t event);
-#endif // ESP32
+//	 static esp_err_t mqtt_event_handler (esp_mqtt_event_handle_t event);
+//#endif // ESP32
 #ifdef SECURE_MQTT
 	/**
 	  * @brief Synchronizes time over NTP to check certifitate expiration time
 	  */
 	 void setClock ();
 #endif // SECURE_MQTT
-#ifdef ESP8266
 	/**
 	  * @brief Called when wifi manager starts config portal
 	  * @param enigmaIotGw Pointer to EnigmaIOT gateway instance
 	  */
 	 void reconnect ();
-#endif
+
+	/**
+	  * @brief Add MQTT message to queue
+	  * @param topic MQTT message topic
+	  * @param payload MQTT message payload
+	  * @param len MQTT payload length
+	  * @param retain Message retain flag
+	  */
+	 bool addMQTTqueue (const char* topic, char* payload, size_t len, bool retain = false);
+
+	/**
+	  * @brief Gets next item in the queue
+	  * @return Next MQTT message to be sent
+	  */
+	 mqtt_queue_item_t *getMQTTqueue ();
+
+	/**
+	  * @brief Deletes next item in the queue
+	  */
+	 void popMQTTqueue ();
 
 	 /**
 	  * @brief Publishes data over MQTT
@@ -124,7 +146,7 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	  * @param len Payload length
 	  * @param retain `true` if message should be retained
 	  */
-	 static bool publishMQTT (GwOutput_MQTT* gw, const char* topic, char* payload, size_t len, bool retain = false);
+	 bool publishMQTT (const char* topic, char* payload, size_t len, bool retain = false);
 
 	/**
 	  * @brief Function that processes downlink data from network to node
@@ -138,16 +160,11 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	/**
 	  * @brief Constructor to initialize MQTT client
 	  */
-	 GwOutput_MQTT ()
-#ifdef ESP8266
-		 :
-#ifdef SECURE_MQTT
-		 certificate (DSTroot_CA),
-		 client (secureClient)
-#else
-		 client (unsecureClient)
-#endif // SECURE_MQTT
-#endif // ESP8266
+	 GwOutput_MQTT () :
+#if defined ESP8266 && defined SECURE_MQTT
+		certificate (DSTroot_CA),
+#endif // ESP8266 && SECURE_MQTT
+		mqtt_client (espClient)
 	 {}
 
 	/**
@@ -209,12 +226,12 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	bool outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type = data);
 
 	 /**
-	  * @brief Should be called often for module management
+	  * @brief Should be called regularly for module management
 	  */
 	void loop ();
 };
 
 extern GwOutput_MQTT GwOutput;
 
-#endif
+#endif // _GWOUTPUT_MQTT_h
 
