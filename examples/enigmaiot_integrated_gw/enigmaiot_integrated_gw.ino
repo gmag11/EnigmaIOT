@@ -10,7 +10,6 @@
 
 
 #include <Arduino.h>
-#include "GwOutput_mqtt.h"
 
 #define MQTT_MAX_PACKET_SIZE 2048
 #include <PubSubClient.h>
@@ -19,6 +18,9 @@
 #else
 #include <WiFiClient.h>
 #endif // SECURE_MQTT
+
+#include <GwOutput_generic.h>
+#include "GwOutput_mqtt.h"
 
 #ifdef ESP32
 #include <WiFi.h>
@@ -53,7 +55,6 @@
 #include <DNSServer.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
-#include "GwOutput_generic.h"
 
 #ifndef BUILTIN_LED
 #define BUILTIN_LED 5

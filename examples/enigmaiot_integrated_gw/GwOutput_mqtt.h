@@ -17,7 +17,7 @@
 	#include "WProgram.h"
 #endif
 
-#include "GwOutput_generic.h"
+#include <GwOutput_generic.h>
 #include "dstrootca.h"
 #include <ESPAsyncWiFiManager.h>
 #include <EnigmaIOTGateway.h>
