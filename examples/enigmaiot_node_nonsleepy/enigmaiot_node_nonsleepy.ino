@@ -1,12 +1,16 @@
 /**
   * @file enigmaiot_node_nonsleepy.ino
-  * @version 0.7.0
-  * @date 31/12/2019
+  * @version 0.8.0
+  * @date 13/01/2020
   * @author German Martin
   * @brief Node based on EnigmaIoT over ESP-NOW, in non sleeping mode
   *
   * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
+
+#ifndef ESP8266
+#error Node only supports ESP8266 platform
+#endif
 
 #include <Arduino.h>
 #include <EnigmaIOTNode.h>

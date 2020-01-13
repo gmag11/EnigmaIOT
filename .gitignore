@@ -10,3 +10,4 @@ Libraries/
 .vscode
 **/config.json
 platformio.ini
+*.json

@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGateway.cpp
-  * @version 0.7.0
-  * @date 31/12/2019
+  * @version 0.8.0
+  * @date 13/01/2020
   * @author German Martin
   * @brief Library to build a gateway for EnigmaIoT system
   */
