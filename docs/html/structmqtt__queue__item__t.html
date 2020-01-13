@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>EnigmaIOT: mqttgw_config_t Struct Reference</title>
+<title>EnigmaIOT: mqtt_queue_item_t Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,9 +63,9 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structmqttgw__config__t-members.html">List of all members</a>  </div>
+<a href="structmqtt__queue__item__t-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">mqttgw_config_t Struct Reference</div>  </div>
+<div class="title">mqtt_queue_item_t Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -73,84 +73,84 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a0991f261ed379635918b3e09ee6f9326"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqttgw__config__t.html#a0991f261ed379635918b3e09ee6f9326">mqtt_server</a> [41]</td></tr>
-<tr class="separator:a0991f261ed379635918b3e09ee6f9326"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a61979dca0bcdab6b0ac8975ed002cd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqttgw__config__t.html#a5a61979dca0bcdab6b0ac8975ed002cd">mqtt_port</a> = 1883</td></tr>
-<tr class="separator:a5a61979dca0bcdab6b0ac8975ed002cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7739560775997dbbdb6ed76d37b6dbfe"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqttgw__config__t.html#a7739560775997dbbdb6ed76d37b6dbfe">mqtt_user</a> [21]</td></tr>
-<tr class="separator:a7739560775997dbbdb6ed76d37b6dbfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab992a4e4c889751714b8f27fd11fff31"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqttgw__config__t.html#ab992a4e4c889751714b8f27fd11fff31">mqtt_pass</a> [41]</td></tr>
-<tr class="separator:ab992a4e4c889751714b8f27fd11fff31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac59a2accfe1847e78f793cddbc0434c"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqtt__queue__item__t.html#aac59a2accfe1847e78f793cddbc0434c">topic</a></td></tr>
+<tr class="separator:aac59a2accfe1847e78f793cddbc0434c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8883bfd38fdf3dd3c6e43235762ae570"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqtt__queue__item__t.html#a8883bfd38fdf3dd3c6e43235762ae570">payload</a></td></tr>
+<tr class="separator:a8883bfd38fdf3dd3c6e43235762ae570"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62c6546560a1c32ef4beee7366949b71"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqtt__queue__item__t.html#a62c6546560a1c32ef4beee7366949b71">payload_len</a></td></tr>
+<tr class="separator:a62c6546560a1c32ef4beee7366949b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97156ce99d23165972659f5cf86ed570"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqtt__queue__item__t.html#a97156ce99d23165972659f5cf86ed570">retain</a></td></tr>
+<tr class="separator:a97156ce99d23165972659f5cf86ed570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00055">55</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00066">66</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="ab992a4e4c889751714b8f27fd11fff31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab992a4e4c889751714b8f27fd11fff31">&#9670;&nbsp;</a></span>mqtt_pass</h2>
+<a id="a8883bfd38fdf3dd3c6e43235762ae570"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8883bfd38fdf3dd3c6e43235762ae570">&#9670;&nbsp;</a></span>payload</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char mqttgw_config_t::mqtt_pass[41]</td>
+          <td class="memname">char* mqtt_queue_item_t::payload</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>MQTT broker user password </p>
+<p>Message payload </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00063">63</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00068">68</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
-<a id="a5a61979dca0bcdab6b0ac8975ed002cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a61979dca0bcdab6b0ac8975ed002cd">&#9670;&nbsp;</a></span>mqtt_port</h2>
+<a id="a62c6546560a1c32ef4beee7366949b71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62c6546560a1c32ef4beee7366949b71">&#9670;&nbsp;</a></span>payload_len</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int mqttgw_config_t::mqtt_port = 1883</td>
+          <td class="memname">size_t mqtt_queue_item_t::payload_len</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>MQTT broker TCP port </p>
+<p>Payload length </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00060">60</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00069">69</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
-<a id="a0991f261ed379635918b3e09ee6f9326"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0991f261ed379635918b3e09ee6f9326">&#9670;&nbsp;</a></span>mqtt_server</h2>
+<a id="a97156ce99d23165972659f5cf86ed570"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97156ce99d23165972659f5cf86ed570">&#9670;&nbsp;</a></span>retain</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char mqttgw_config_t::mqtt_server[41]</td>
+          <td class="memname">bool mqtt_queue_item_t::retain</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>MQTT broker address </p>
+<p>MQTT retain flag </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00056">56</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00070">70</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
-<a id="a7739560775997dbbdb6ed76d37b6dbfe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7739560775997dbbdb6ed76d37b6dbfe">&#9670;&nbsp;</a></span>mqtt_user</h2>
+<a id="aac59a2accfe1847e78f793cddbc0434c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac59a2accfe1847e78f793cddbc0434c">&#9670;&nbsp;</a></span>topic</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char mqttgw_config_t::mqtt_user[21]</td>
+          <td class="memname">char* mqtt_queue_item_t::topic</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>MQTT broker user name </p>
+<p>Message topic </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00062">62</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00067">67</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>

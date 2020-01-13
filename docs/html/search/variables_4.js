@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['datarcvd',['dataRcvd',['../classComms__halClass.html#a5bbed119e5e361b9be85a33404cf2e83',1,'Comms_halClass::dataRcvd()'],['../classEspnow__halClass.html#abab5ac687881d32ddc3cf889cf32a85a',1,'Espnow_halClass::dataRcvd()']]],
-  ['default_5fchannel',['DEFAULT_CHANNEL',['../EnigmaIoTconfig_8h.html#af561a36a9d4be8596b2187252342ffdf',1,'EnigmaIoTconfig.h']]],
-  ['default_5fsleep_5ftime',['DEFAULT_SLEEP_TIME',['../EnigmaIoTconfig_8h.html#a4400d84e20bfd15aed72aa991dd87d4f',1,'EnigmaIoTconfig.h']]],
-  ['dns',['dns',['../classEnigmaIOTGatewayClass.html#aa057eae7440f60abe236ae5b121dbf7c',1,'EnigmaIOTGatewayClass']]],
-  ['downlink_5fwait_5ftime',['DOWNLINK_WAIT_TIME',['../EnigmaIoTconfig_8h.html#a52ec03c6ad068419f98e52f60718626e',1,'EnigmaIoTconfig.h']]],
-  ['downlinkcb',['downlinkCb',['../classGatewayOutput__generic.html#ada169ba682e6632f72d62724887f92de',1,'GatewayOutput_generic']]]
+  ['enigmaiot_5fprot_5fvers',['ENIGMAIOT_PROT_VERS',['../EnigmaIoTconfig_8h.html#ac00fc04374b3c61f75a7f0f2f4eb60f9',1,'EnigmaIoTconfig.h']]],
+  ['enigmaiotgateway',['enigmaIotGateway',['../classGatewayOutput__generic.html#aa4855724d46b50a35735f9900494b889',1,'GatewayOutput_generic::enigmaIotGateway()'],['../EnigmaIOTGateway_8cpp.html#abcd4985de3ef6fbe1994af85093ca034',1,'EnigmaIOTGateway():&#160;EnigmaIOTGateway.cpp'],['../EnigmaIOTGateway_8h.html#abcd4985de3ef6fbe1994af85093ca034',1,'EnigmaIOTGateway():&#160;EnigmaIOTGateway.cpp']]],
+  ['espclient',['espClient',['../classGwOutput__MQTT.html#ae1bac550738c7f1a92deb3450c1e929a',1,'GwOutput_MQTT']]],
+  ['espnow_5fhal',['Espnow_hal',['../espnow__hal_8cpp.html#a3eef8679955ce5f4743338cbc6bf1e0e',1,'Espnow_hal():&#160;espnow_hal.cpp'],['../espnow__hal_8h.html#a3eef8679955ce5f4743338cbc6bf1e0e',1,'Espnow_hal():&#160;espnow_hal.cpp']]]
 ];

@@ -38,13 +38,13 @@ PROJECT_NAME           = EnigmaIOT
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 0.7.0
+PROJECT_NUMBER         = 0.8.0
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
 # quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          = "Secure sensor and gateway platform based on ESP8266"
+PROJECT_BRIEF          = "Secure sensor and gateway platform based on ESP8266 and ESP32"
 
 # With the PROJECT_LOGO tag one can specify a logo or an icon that is included
 # in the documentation. The maximum height of the logo should not exceed 55
@@ -875,22 +875,23 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = examples/enigmaiot_gateway/__vm \
-                         examples/enigmaiot_gateway/Release \
-                         examples/enigmaiot_node/__vm \
+EXCLUDE                = examples/enigmaiot_node/__vm \
                          examples/enigmaiot_node/Release \
-                         MqttBridge/__vm \
-                         MqttBridge/Release \
-                         MqttBridge/bridge_config.h \
-                         MqttBridge/Debug \
-                         examples/enigmaiot_gateway/Debug \
+                         examples/enigmaiot_integrated_gw/Debug \
                          examples/enigmaiot_node/Debug \
                          EnigmaIoTUpdate/.idea \
                          EnigmaIoTUpdate/__pycache__ \
                          EnigmaIoTUpdate/venv \
                          examples/enigmaiot_led_flasher/__vm \
                          examples/enigmaiot_led_flasher/data \
-                         examples/enigmaiot_led_flasher/Debug
+                         examples/enigmaiot_led_flasher/Debug \
+                         examples/enigmaiot_integrated_gw/Release \
+                         examples/enigmaiot_integrated_gw/__vm \
+                         examples/enigmaiot_integrated_gw/data \
+                         examples/enigmaiot_node/data \
+                         examples/enigmaiot_node_nonsleepy/__vm \
+                         examples/enigmaiot_node_nonsleepy/Debug \
+                         examples/enigmaiot_node_nonsleepy/data
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded

@@ -1,17 +1,14 @@
 var searchData=
 [
-  ['netname',['netName',['../classGatewayOutput__generic.html#a088ff06222b9cbc391f2c216b8c689fa',1,'GatewayOutput_generic']]],
-  ['network_5fname_5flength',['NETWORK_NAME_LENGTH',['../EnigmaIoTconfig_8h.html#a9865adf18595ebc6eb73154e6267380e',1,'EnigmaIoTconfig.h']]],
-  ['networkkey',['networkKey',['../structgateway__config__t.html#a0ff4851d0c71213fa6a1a63acb5c9d6f',1,'gateway_config_t::networkKey()'],['../classEnigmaIOTGatewayClass.html#a5f84b344b3796ad65f7d5b332a246e98',1,'EnigmaIOTGatewayClass::networkKey()']]],
-  ['networkname',['networkName',['../structgateway__config__t.html#a3203f7006f14c8a96c432703c519c8d6',1,'gateway_config_t']]],
-  ['node',['node',['../classEnigmaIOTGatewayClass.html#a69e6d53334b842b054fc9e3cfdbb6067',1,'EnigmaIOTGatewayClass']]],
-  ['nodeid',['nodeId',['../structnode__instance.html#a1033bf3bedf4c20a40176e4dd458a58f',1,'node_instance::nodeId()'],['../classNode.html#a4f9547a1ede244be2b33d1fcf6de68b0',1,'Node::nodeId()']]],
-  ['nodelist',['nodelist',['../classEnigmaIOTGatewayClass.html#a1ef5d02770b1b3bf2acf0adf7b410a17',1,'EnigmaIOTGatewayClass']]],
-  ['nodes',['nodes',['../classNodeList.html#a57a69c9dde4327beeb404c83defdbdaa',1,'NodeList']]],
-  ['notifled',['notifLed',['../MqttBridge_8ino.html#a57e55abdb3768e074f2e0cba08953e79',1,'MqttBridge.ino']]],
-  ['notifydata',['notifyData',['../classEnigmaIOTGatewayClass.html#ab21597ced9ee31298c8a8eefed562ff9',1,'EnigmaIOTGatewayClass']]],
-  ['notifynewnode',['notifyNewNode',['../classEnigmaIOTGatewayClass.html#a27ddc1b8decbcf821a0427faa3c1ced3',1,'EnigmaIOTGatewayClass']]],
-  ['notifynodedisconnection',['notifyNodeDisconnection',['../classEnigmaIOTGatewayClass.html#ac311b64885137edaab70f3692e47f061',1,'EnigmaIOTGatewayClass']]],
-  ['notifywifimanagerexit',['notifyWiFiManagerExit',['../classEnigmaIOTGatewayClass.html#a88c43de63b862f5a19a79e9d5558beba',1,'EnigmaIOTGatewayClass']]],
-  ['notifywifimanagerstarted',['notifyWiFiManagerStarted',['../classEnigmaIOTGatewayClass.html#ae9c6988dba886bf5b3e6540e60c9658c',1,'EnigmaIOTGatewayClass']]]
+  ['offset',['offset',['../classTimeManagerClass.html#a18dbda6ff57544a6b029cc55dda46d30',1,'TimeManagerClass']]],
+  ['ota_5ffinished',['OTA_FINISHED',['../namespaceEnigmaIoTUpdate.html#a56955d84eb178a78a16db3ed6e2a1c7e',1,'EnigmaIoTUpdate']]],
+  ['ota_5fgw_5ftimeout',['OTA_GW_TIMEOUT',['../EnigmaIoTconfig_8h.html#aad94db36f97a563732bfd0ca10b164f9',1,'EnigmaIoTconfig.h']]],
+  ['ota_5fout_5fof_5fsequence',['OTA_OUT_OF_SEQUENCE',['../namespaceEnigmaIoTUpdate.html#ad815631b097bdf448ecd824fc28bfec6',1,'EnigmaIoTUpdate']]],
+  ['ota_5ftimeout_5ftime',['OTA_TIMEOUT_TIME',['../EnigmaIoTconfig_8h.html#aeb4681294ade5149d1db83df99744f6e',1,'EnigmaIoTconfig.h']]],
+  ['otafinished',['otaFinished',['../namespaceEnigmaIoTUpdate.html#a1efdbd8359ee1708af1bcf3be3eff850',1,'EnigmaIoTUpdate']]],
+  ['otaok',['otaOK',['../namespaceEnigmaIoTUpdate.html#af461562efece05d0467c0e17edd2e58f',1,'EnigmaIoTUpdate']]],
+  ['otaongoing',['OTAongoing',['../EnigmaIOTGateway_8cpp.html#a96db16d874da26d9a7b199c904da0d5f',1,'EnigmaIOTGateway.cpp']]],
+  ['otaoutofsequenceerror',['otaOutOfSequenceError',['../namespaceEnigmaIoTUpdate.html#ade24b0154bfadccc5f69ee560a33de8b',1,'EnigmaIoTUpdate']]],
+  ['otaresulttopic',['otaResultTopic',['../namespaceEnigmaIoTUpdate.html#af04fd96058043d8861cd38175cb99e6c',1,'EnigmaIoTUpdate']]],
+  ['otasettopic',['otaSetTopic',['../namespaceEnigmaIoTUpdate.html#aefdb455c166193127480d7b5afe88a66',1,'EnigmaIoTUpdate']]]
 ];

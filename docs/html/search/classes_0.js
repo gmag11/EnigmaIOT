@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['bridge_5fconfig_5ft',['bridge_config_t',['../structbridge__config__t.html',1,'']]]
+  ['comms_5fhalclass',['Comms_halClass',['../classComms__halClass.html',1,'']]],
+  ['cryptmodule',['CryptModule',['../classCryptModule.html',1,'']]]
 ];

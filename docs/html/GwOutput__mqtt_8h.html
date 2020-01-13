@@ -23,9 +23,9 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.7.0</span>
+   &#160;<span id="projectnumber">0.8.0</span>
    </div>
-   <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
+   <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
  </tr>
  </tbody>
@@ -77,16 +77,21 @@ $(function() {
 <p>MQTT Gateway output module.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;WProgram.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="GwOutput__generic_8h_source.html">GwOutput_generic.h</a>&quot;</code><br />
+<code>#include &lt;<a class="el" href="GwOutput__generic_8h_source.html">GwOutput_generic.h</a>&gt;</code><br />
 <code>#include &quot;<a class="el" href="dstrootca_8h_source.html">dstrootca.h</a>&quot;</code><br />
 <code>#include &lt;ESPAsyncWiFiManager.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>&gt;</code><br />
+<code>#include &lt;PubSubClient.h&gt;</code><br />
+<code>#include &lt;queue&gt;</code><br />
+<code>#include &lt;WiFiClient.h&gt;</code><br />
 </div>
 <p><a href="GwOutput__mqtt_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqttgw__config__t.html">mqttgw_config_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqtt__queue__item__t.html">mqtt_queue_item_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html">GwOutput_MQTT</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,8 +145,8 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>MQTT Gateway output module. </p>
-<dl class="section version"><dt>Version</dt><dd>0.7.0 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>31/12/2019 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.8.0 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>13/01/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin Module to send and receive EnigmaIOT information from MQTT broker </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>

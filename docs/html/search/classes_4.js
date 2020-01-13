@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['mqttgw_5fconfig_5ft',['mqttgw_config_t',['../structmqttgw__config__t.html',1,'']]]
+  ['node',['Node',['../classNode.html',1,'']]],
+  ['node_5finstance',['node_instance',['../structnode__instance.html',1,'']]],
+  ['nodelist',['NodeList',['../classNodeList.html',1,'']]]
 ];

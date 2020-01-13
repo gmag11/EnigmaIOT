@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['keccakcore_2ecpp_2ed',['KeccakCore.cpp.d',['../enigmaiot__integrated__gw_2Debug_2CryptoArduino_2KeccakCore_8cpp_8d.html',1,'(Global Namespace)'],['../enigmaiot__node__nonsleepy_2Debug_2CryptoArduino_2KeccakCore_8cpp_8d.html',1,'(Global Namespace)']]],
   ['key',['key',['../structnode__instance.html#a6591d96da1e646fcbd846e61af3e5ef2',1,'node_instance::key()'],['../classNode.html#aad088b52de3eb46a8c89e6cb87bdf887',1,'Node::key()']]],
   ['key_5fexpired',['KEY_EXPIRED',['../EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977a09a1d3d5daa36af5469fa79c12a027fe',1,'EnigmaIOTGateway.h']]],
   ['key_5flength',['KEY_LENGTH',['../EnigmaIoTconfig_8h.html#a863ca9be67da8cdc5fb9447378021e07',1,'EnigmaIoTconfig.h']]],

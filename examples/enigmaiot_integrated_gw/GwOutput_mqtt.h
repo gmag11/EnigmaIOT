@@ -98,14 +98,6 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	  * @return Returns `true` if save was successful. `false` otherwise
 	  */
 	 bool saveConfig ();
-//#ifdef ESP32
-	/**
-	  * @brief Manages incoming MQTT events
-	  * @param event Event type
-	  * @return Error code
-	  */
-//	 static esp_err_t mqtt_event_handler (esp_mqtt_event_handle_t event);
-//#endif // ESP32
 #ifdef SECURE_MQTT
 	/**
 	  * @brief Synchronizes time over NTP to check certifitate expiration time
@@ -113,8 +105,11 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	 void setClock ();
 #endif // SECURE_MQTT
 	/**
-	  * @brief Called when wifi manager starts config portal
-	  * @param enigmaIotGw Pointer to EnigmaIOT gateway instance
+	  * @brief This is called anytime MQTT client is disconnected.
+	  *
+	  * It tries to connect to MQTT broker. After reconnection is done it resubscribes
+	  * to network topics.
+	  * It waits for connection and times out after 5 seconds
 	  */
 	 void reconnect ();
 
@@ -140,7 +135,6 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 
 	 /**
 	  * @brief Publishes data over MQTT
-	  * @param gw MQTT output gateway module instance
 	  * @param topic Topic that indicates message type
 	  * @param payload Message payload data
 	  * @param len Payload length

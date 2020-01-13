@@ -43,7 +43,7 @@ During this project conception I decided that it should fulfil this list of requ
 - [x] Automatic and transparent node attachment
 - [x] Avoid rogue node, rogue gateway and man-in-the-middle attack
 
-Notice that network key used to implement this feature is stored on flash. ESP8266 do not allow flash encryption so network key may be recovered reading flash. On the other side, ESP32 is able to encrypt flash memory, but EnigmaIoT is not still tested on it.
+Notice that network key used to implement this feature is stored on flash. ESP8266 do not allow flash encryption so network key may be recovered reading flash.
 
 - [x] Pluggable physical layer communication. Right now only ESP-NOW protocol is developed but you can easily add more communication alternatives
 - [x] When using ESP-NOW only esp8266 is needed. No more electronics apart from sensor
@@ -59,7 +59,6 @@ Notice that network key used to implement this feature is stored on flash. ESP82
 - [x] OTA over MQTT/ESP-NOW
 - [x] Sensor identification by using a flashing LED. This is useful when you have a bunch of nodes together :D
 - [ ] Broadcast messages that go to all nodes. Under study
-- [ ] ~~Node grouping to send messages to several nodes at once~~
 
 ## Design
 
@@ -203,9 +202,23 @@ A node is a ESP8266 board with a number of sensors. A node may sleep between sen
 
 Any ESP8266 board with at least 1 MB of flash is valid.
 
+There are several implementations in [examples](https://github.com/gmag11/EnigmaIOT/tree/master/examples):
+
+[EnigmaIOT Node](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node): Basic node with deep sleep function. Sensor data is mocked up in example, you only need to replace it with your sensor reading code. Expected duration with 2 AA type batteries is more than one year, but a low power booster/regulator should be used in a custom ESP8266 board.
+
+[EnigmaIOT Node NonSleepy](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_nonsleepy): Same functionality as previous example but this does not sleep. This may be useful for sensors or actuators which are connected to mains.
+
+[EnigmaIOT LED Flasher](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_led_flasher): On non sleepy nodes a common clock may be synchronized with gateway. This is an example of this. All nodes that include this firmware will flash their built in LED synchronously after successful registration. 
+
 ### Gateway
 
+A gateway concentrates communication from all nodes, manages their registrations status, negotiate session key with them and outputs their messages to an output protocol.
+
+[EnigmaIOT integrated GW](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_integrated_gw) is the implementation for a MQTT gateway.
+
 Since version 0.7.0 Gateway is a ESP32 or ESP8266 board with 4 MB of flash memory or more. ESP8266 gateways cannot use MQTT TLS encryption due to memory limitations.
+
+Thanks to modular design, other output modules may be easily developed by implementing `GwOutput_generic.h`. Examples of this may be LoRaWAN output gateway, COAP gateway or any other network protocol that is needed. Even an offline SD data logger could be done.
 
 ## Data format
 

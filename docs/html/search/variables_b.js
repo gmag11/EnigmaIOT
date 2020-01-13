@@ -1,19 +1,16 @@
 var searchData=
 [
-  ['mac',['mac',['../structnode__instance.html#a5ef197acf3ea44c1ae2b5e7f7fe04959',1,'node_instance::mac()'],['../classNode.html#a03db56f17c4186a74d4afdb44597475f',1,'Node::mac()']]],
-  ['max_5fdata_5fpayload_5fsize',['MAX_DATA_PAYLOAD_SIZE',['../EnigmaIoTconfig_8h.html#a8df0346a1f3e282d6875b04a9fe4ec8f',1,'EnigmaIoTconfig.h']]],
-  ['max_5fkey_5fvalidity',['MAX_KEY_VALIDITY',['../EnigmaIoTconfig_8h.html#aadcc5d2ec146be476018bdfc71d04f79',1,'EnigmaIoTconfig.h']]],
-  ['max_5fmessage_5flength',['MAX_MESSAGE_LENGTH',['../EnigmaIoTconfig_8h.html#a9dbccd523bb0ed9a3266bc8c448f4432',1,'EnigmaIoTconfig.h']]],
-  ['max_5fnode_5finactivity',['MAX_NODE_INACTIVITY',['../EnigmaIoTconfig_8h.html#a718f713933a902050be33c5651800011',1,'EnigmaIoTconfig.h']]],
-  ['min_5fsync_5faccuracy',['MIN_SYNC_ACCURACY',['../EnigmaIoTconfig_8h.html#a6be31758c99161d257bf66a6a809047d',1,'EnigmaIoTconfig.h']]],
-  ['mqtt_5fpass',['mqtt_pass',['../structmqttgw__config__t.html#ab992a4e4c889751714b8f27fd11fff31',1,'mqttgw_config_t::mqtt_pass()'],['../structbridge__config__t.html#a988bc4f6dd69c3a94e7bde130ee7a2c4',1,'bridge_config_t::mqtt_pass()']]],
-  ['mqtt_5fport',['mqtt_port',['../structmqttgw__config__t.html#a5a61979dca0bcdab6b0ac8975ed002cd',1,'mqttgw_config_t::mqtt_port()'],['../structbridge__config__t.html#aa0fa8130ca2b003a027b1afb47b083b0',1,'bridge_config_t::mqtt_port()']]],
-  ['mqtt_5fserver',['mqtt_server',['../structmqttgw__config__t.html#a0991f261ed379635918b3e09ee6f9326',1,'mqttgw_config_t::mqtt_server()'],['../structbridge__config__t.html#a5dad9b7bbd9b0bcda179ce438d3aab6c',1,'bridge_config_t::mqtt_server()']]],
-  ['mqtt_5fuser',['mqtt_user',['../structmqttgw__config__t.html#a7739560775997dbbdb6ed76d37b6dbfe',1,'mqttgw_config_t::mqtt_user()'],['../structbridge__config__t.html#a18fac216c36cb2ce9da39542380be362',1,'bridge_config_t::mqtt_user()']]],
-  ['mqttgw_5fconfig',['mqttgw_config',['../classGwOutput__MQTT.html#a13bd3d7f5d5a221627886a8b4ce29516',1,'GwOutput_MQTT']]],
-  ['mqttpassparam',['mqttPassParam',['../classGwOutput__MQTT.html#ad4d784744aeee89199092987f9ba5c53',1,'GwOutput_MQTT']]],
-  ['mqttportparam',['mqttPortParam',['../classGwOutput__MQTT.html#a7949ebf56b8a63b24553fe02d857373d',1,'GwOutput_MQTT']]],
-  ['mqttserverparam',['mqttServerParam',['../classGwOutput__MQTT.html#a6c30a4c67499253c238fc8646f3285ef',1,'GwOutput_MQTT']]],
-  ['mqttuserparam',['mqttUserParam',['../classGwOutput__MQTT.html#a24682127079586d71ac858f7e2f78f6f',1,'GwOutput_MQTT']]],
-  ['mypublickey',['myPublicKey',['../classEnigmaIOTGatewayClass.html#adefe71141a5aa6f9c46712487b6feb31',1,'EnigmaIOTGatewayClass']]]
+  ['netname',['netName',['../classGatewayOutput__generic.html#a088ff06222b9cbc391f2c216b8c689fa',1,'GatewayOutput_generic']]],
+  ['network_5fname_5flength',['NETWORK_NAME_LENGTH',['../EnigmaIoTconfig_8h.html#a9865adf18595ebc6eb73154e6267380e',1,'EnigmaIoTconfig.h']]],
+  ['networkkey',['networkKey',['../structgateway__config__t.html#a0ff4851d0c71213fa6a1a63acb5c9d6f',1,'gateway_config_t::networkKey()'],['../classEnigmaIOTGatewayClass.html#a5f84b344b3796ad65f7d5b332a246e98',1,'EnigmaIOTGatewayClass::networkKey()']]],
+  ['networkname',['networkName',['../structgateway__config__t.html#a3203f7006f14c8a96c432703c519c8d6',1,'gateway_config_t']]],
+  ['node',['node',['../classEnigmaIOTGatewayClass.html#a69e6d53334b842b054fc9e3cfdbb6067',1,'EnigmaIOTGatewayClass']]],
+  ['nodeid',['nodeId',['../structnode__instance.html#a1033bf3bedf4c20a40176e4dd458a58f',1,'node_instance::nodeId()'],['../classNode.html#a4f9547a1ede244be2b33d1fcf6de68b0',1,'Node::nodeId()']]],
+  ['nodelist',['nodelist',['../classEnigmaIOTGatewayClass.html#a1ef5d02770b1b3bf2acf0adf7b410a17',1,'EnigmaIOTGatewayClass']]],
+  ['nodes',['nodes',['../classNodeList.html#a57a69c9dde4327beeb404c83defdbdaa',1,'NodeList']]],
+  ['notifydata',['notifyData',['../classEnigmaIOTGatewayClass.html#ab21597ced9ee31298c8a8eefed562ff9',1,'EnigmaIOTGatewayClass']]],
+  ['notifynewnode',['notifyNewNode',['../classEnigmaIOTGatewayClass.html#a27ddc1b8decbcf821a0427faa3c1ced3',1,'EnigmaIOTGatewayClass']]],
+  ['notifynodedisconnection',['notifyNodeDisconnection',['../classEnigmaIOTGatewayClass.html#ac311b64885137edaab70f3692e47f061',1,'EnigmaIOTGatewayClass']]],
+  ['notifywifimanagerexit',['notifyWiFiManagerExit',['../classEnigmaIOTGatewayClass.html#a88c43de63b862f5a19a79e9d5558beba',1,'EnigmaIOTGatewayClass']]],
+  ['notifywifimanagerstarted',['notifyWiFiManagerStarted',['../classEnigmaIOTGatewayClass.html#ae9c6988dba886bf5b3e6540e60c9658c',1,'EnigmaIOTGatewayClass']]]
 ];

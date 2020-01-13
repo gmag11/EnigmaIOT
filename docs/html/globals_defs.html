@@ -23,9 +23,9 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.7.0</span>
+   &#160;<span id="projectnumber">0.8.0</span>
    </div>
-   <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
+   <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
  </tr>
  </tbody>
@@ -63,20 +63,12 @@ $(function() {
 <div class="contents">
 &#160;
 
-<h3><a id="index__"></a>- _ -</h3><ul>
-<li>_DEBUG_
-: <a class="el" href="MqttBridge_8ino.html#affeac4b5549224963efef42287bca6a4">MqttBridge.ino</a>
-</li>
-</ul>
-
-
 <h3><a id="index_b"></a>- b -</h3><ul>
 <li>BLUE_LED
-: <a class="el" href="enigmaiot__gateway_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">enigmaiot_gateway.ino</a>
-, <a class="el" href="enigmaiot__integrated__gw_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">enigmaiot_integrated_gw.ino</a>
+: <a class="el" href="enigmaiot__integrated__gw_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">enigmaiot_integrated_gw.ino</a>
 , <a class="el" href="enigmaiot__led__flasher_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">enigmaiot_led_flasher.ino</a>
-, <a class="el" href="enigmaiot__node_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">enigmaiot_node.ino</a>
 , <a class="el" href="enigmaiot__node__nonsleepy_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">enigmaiot_node_nonsleepy.ino</a>
+, <a class="el" href="enigmaiot__node_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">enigmaiot_node.ino</a>
 </li>
 <li>BUILTIN_LED
 : <a class="el" href="enigmaiot__integrated__gw_8ino.html#a4a71aecac635579082c10addb16df4a0">enigmaiot_integrated_gw.ino</a>
@@ -110,9 +102,6 @@ $(function() {
 <li>DEBUG_LEVEL
 : <a class="el" href="EnigmaIoTconfig_8h.html#ac2d33ccaf63f5d5b66552b95426c0137">EnigmaIoTconfig.h</a>
 </li>
-<li>DEFAULT_BASE_TOPIC
-: <a class="el" href="MqttBridge_8ino.html#a76d14defee787d426451f3ad0480df70">MqttBridge.ino</a>
-</li>
 <li>DSTROOTCA_H
 : <a class="el" href="dstrootca_8h.html#ac124c2449b0ec4b04fe4bc4e61632e33">dstrootca.h</a>
 </li>
@@ -128,32 +117,25 @@ $(function() {
 
 <h3><a id="index_g"></a>- g -</h3><ul>
 <li>GET_RSSI
-: <a class="el" href="enigmaiot__gateway_8ino.html#ae274ed0194e5685c280ab9148dbcba69">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#ae274ed0194e5685c280ab9148dbcba69">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#ae274ed0194e5685c280ab9148dbcba69">GwOutput_mqtt.h</a>
 </li>
 <li>GET_RSSI_ANS
-: <a class="el" href="enigmaiot__gateway_8ino.html#a44bf9b184af7520ec127c6b705991c8f">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a44bf9b184af7520ec127c6b705991c8f">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a44bf9b184af7520ec127c6b705991c8f">GwOutput_mqtt.h</a>
 </li>
 <li>GET_SLEEP
-: <a class="el" href="enigmaiot__gateway_8ino.html#a8fa3ce9af2986feed0592ad3f82b0e8a">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a8fa3ce9af2986feed0592ad3f82b0e8a">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a8fa3ce9af2986feed0592ad3f82b0e8a">GwOutput_mqtt.h</a>
 </li>
 <li>GET_SLEEP_ANS
-: <a class="el" href="enigmaiot__gateway_8ino.html#a8d48508893d087bd76ac4061b112cce7">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a8d48508893d087bd76ac4061b112cce7">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a8d48508893d087bd76ac4061b112cce7">GwOutput_mqtt.h</a>
 </li>
 <li>GET_USER_DATA
-: <a class="el" href="enigmaiot__gateway_8ino.html#ac6dad41b3de63cebfef84fc4677cded8">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#ac6dad41b3de63cebfef84fc4677cded8">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#ac6dad41b3de63cebfef84fc4677cded8">GwOutput_mqtt.h</a>
 </li>
 <li>GET_VERSION
-: <a class="el" href="enigmaiot__gateway_8ino.html#ae9ef65fac5a6e3c6594811a7c8ee2291">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#ae9ef65fac5a6e3c6594811a7c8ee2291">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#ae9ef65fac5a6e3c6594811a7c8ee2291">GwOutput_mqtt.h</a>
 </li>
 <li>GET_VERSION_ANS
-: <a class="el" href="enigmaiot__gateway_8ino.html#a1bbd404f93aed82bc0d713238fa2bf6b">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a1bbd404f93aed82bc0d713238fa2bf6b">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a1bbd404f93aed82bc0d713238fa2bf6b">GwOutput_mqtt.h</a>
 </li>
 <li>GW_STATUS
 : <a class="el" href="GwOutput__mqtt_8h.html#a13c1b13340e4cfcf8fa233d3f941853e">GwOutput_mqtt.h</a>
@@ -185,6 +167,9 @@ $(function() {
 <li>MAX_STR_LEN
 : <a class="el" href="helperFunctions_8cpp.html#a58ce36916c399104e18d32ff090f21c6">helperFunctions.cpp</a>
 </li>
+<li>MQTT_MAX_PACKET_SIZE
+: <a class="el" href="enigmaiot__integrated__gw_8ino.html#ae09b594688a59f1427c7e45259e039b9">enigmaiot_integrated_gw.ino</a>
+</li>
 </ul>
 
 
@@ -206,40 +191,32 @@ $(function() {
 
 <h3><a id="index_r"></a>- r -</h3><ul>
 <li>RED_LED
-: <a class="el" href="enigmaiot__gateway_8ino.html#a073dbcb7f5bc4f4b45dc048b55eaff3d">enigmaiot_gateway.ino</a>
-, <a class="el" href="enigmaiot__integrated__gw_8ino.html#a073dbcb7f5bc4f4b45dc048b55eaff3d">enigmaiot_integrated_gw.ino</a>
+: <a class="el" href="enigmaiot__integrated__gw_8ino.html#a073dbcb7f5bc4f4b45dc048b55eaff3d">enigmaiot_integrated_gw.ino</a>
 </li>
 </ul>
 
 
 <h3><a id="index_s"></a>- s -</h3><ul>
 <li>SET_IDENTIFY
-: <a class="el" href="enigmaiot__gateway_8ino.html#a523454d3069bcc08356f43906870a8eb">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a523454d3069bcc08356f43906870a8eb">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a523454d3069bcc08356f43906870a8eb">GwOutput_mqtt.h</a>
 </li>
 <li>SET_OTA
-: <a class="el" href="enigmaiot__gateway_8ino.html#a03d78690a77ad7c71da69356e13f4111">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a03d78690a77ad7c71da69356e13f4111">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a03d78690a77ad7c71da69356e13f4111">GwOutput_mqtt.h</a>
 </li>
 <li>SET_OTA_ANS
-: <a class="el" href="enigmaiot__gateway_8ino.html#a82391b9a9738bbf392fbad554f7ef527">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a82391b9a9738bbf392fbad554f7ef527">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a82391b9a9738bbf392fbad554f7ef527">GwOutput_mqtt.h</a>
 </li>
 <li>SET_RESET_ANS
-: <a class="el" href="enigmaiot__gateway_8ino.html#a7e8363a72c676c15de7221529988ee48">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a7e8363a72c676c15de7221529988ee48">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a7e8363a72c676c15de7221529988ee48">GwOutput_mqtt.h</a>
 </li>
 <li>SET_RESET_CONFIG
-: <a class="el" href="enigmaiot__gateway_8ino.html#a9ed6c45eceed73f4dc32d6147957fed5">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a9ed6c45eceed73f4dc32d6147957fed5">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a9ed6c45eceed73f4dc32d6147957fed5">GwOutput_mqtt.h</a>
 </li>
 <li>SET_SLEEP
-: <a class="el" href="enigmaiot__gateway_8ino.html#a0ffae85da5eb98e796fd818c50ac147a">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a0ffae85da5eb98e796fd818c50ac147a">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a0ffae85da5eb98e796fd818c50ac147a">GwOutput_mqtt.h</a>
 </li>
 <li>SET_USER_DATA
-: <a class="el" href="enigmaiot__gateway_8ino.html#ad7c2efab8087395f360a163faecc66eb">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#ad7c2efab8087395f360a163faecc66eb">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#ad7c2efab8087395f360a163faecc66eb">GwOutput_mqtt.h</a>
 </li>
 <li>SHMSG_LEN
 : <a class="el" href="EnigmaIOTGateway_8cpp.html#ab9b144ebcf09f24dd9b85f95e6d118d0">EnigmaIOTGateway.cpp</a>

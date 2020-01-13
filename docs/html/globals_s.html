@@ -23,9 +23,9 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.7.0</span>
+   &#160;<span id="projectnumber">0.8.0</span>
    </div>
-   <div id="projectbrief">Secure sensor and gateway platform based on ESP8266</div>
+   <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
  </tr>
  </tbody>
@@ -64,12 +64,6 @@ $(function() {
 <div class="textblock">Here is a list of all file members with links to the files they belong to:</div>
 
 <h3><a id="index_s"></a>- s -</h3><ul>
-<li>saveBridgeConfig()
-: <a class="el" href="MqttBridge_8ino.html#a27c46d2342a793295890965fdf0a848e">MqttBridge.ino</a>
-</li>
-<li>saveConfigCallback()
-: <a class="el" href="MqttBridge_8ino.html#a3a93d19401009ce28e89880837e3ec79">MqttBridge.ino</a>
-</li>
 <li>SENSOR_DATA
 : <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613aa8ba55203a30122cc271cc66b2909b21">EnigmaIOTGateway.h</a>
 </li>
@@ -77,52 +71,37 @@ $(function() {
 : <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a28914d3bb26ec8c2bd2d5ad9781cbf8c">EnigmaIOTGateway.h</a>
 </li>
 <li>SET_IDENTIFY
-: <a class="el" href="enigmaiot__gateway_8ino.html#a523454d3069bcc08356f43906870a8eb">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a523454d3069bcc08356f43906870a8eb">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a523454d3069bcc08356f43906870a8eb">GwOutput_mqtt.h</a>
 </li>
 <li>SET_OTA
 : <a class="el" href="GwOutput__mqtt_8h.html#a03d78690a77ad7c71da69356e13f4111">GwOutput_mqtt.h</a>
-, <a class="el" href="enigmaiot__gateway_8ino.html#a03d78690a77ad7c71da69356e13f4111">enigmaiot_gateway.ino</a>
 </li>
 <li>SET_OTA_ANS
-: <a class="el" href="enigmaiot__gateway_8ino.html#a82391b9a9738bbf392fbad554f7ef527">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a82391b9a9738bbf392fbad554f7ef527">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a82391b9a9738bbf392fbad554f7ef527">GwOutput_mqtt.h</a>
 </li>
 <li>SET_RESET_ANS
-: <a class="el" href="enigmaiot__gateway_8ino.html#a7e8363a72c676c15de7221529988ee48">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a7e8363a72c676c15de7221529988ee48">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a7e8363a72c676c15de7221529988ee48">GwOutput_mqtt.h</a>
 </li>
 <li>SET_RESET_CONFIG
-: <a class="el" href="enigmaiot__gateway_8ino.html#a9ed6c45eceed73f4dc32d6147957fed5">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#a9ed6c45eceed73f4dc32d6147957fed5">GwOutput_mqtt.h</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#a9ed6c45eceed73f4dc32d6147957fed5">GwOutput_mqtt.h</a>
 </li>
 <li>SET_SLEEP
 : <a class="el" href="GwOutput__mqtt_8h.html#a0ffae85da5eb98e796fd818c50ac147a">GwOutput_mqtt.h</a>
-, <a class="el" href="enigmaiot__gateway_8ino.html#a0ffae85da5eb98e796fd818c50ac147a">enigmaiot_gateway.ino</a>
 </li>
 <li>SET_USER_DATA
-: <a class="el" href="enigmaiot__gateway_8ino.html#ad7c2efab8087395f360a163faecc66eb">enigmaiot_gateway.ino</a>
-, <a class="el" href="GwOutput__mqtt_8h.html#ad7c2efab8087395f360a163faecc66eb">GwOutput_mqtt.h</a>
-</li>
-<li>setClock()
-: <a class="el" href="MqttBridge_8ino.html#acdf16bd2889d55d8f923cd78be164fb3">MqttBridge.ino</a>
+: <a class="el" href="GwOutput__mqtt_8h.html#ad7c2efab8087395f360a163faecc66eb">GwOutput_mqtt.h</a>
 </li>
 <li>setup()
-: <a class="el" href="enigmaiot__node_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_node.ino</a>
-, <a class="el" href="enigmaiot__gateway_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_gateway.ino</a>
-, <a class="el" href="enigmaiot__integrated__gw_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_integrated_gw.ino</a>
+: <a class="el" href="enigmaiot__integrated__gw_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_integrated_gw.ino</a>
 , <a class="el" href="enigmaiot__led__flasher_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_led_flasher.ino</a>
+, <a class="el" href="enigmaiot__node_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_node.ino</a>
 , <a class="el" href="enigmaiot__node__nonsleepy_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_node_nonsleepy.ino</a>
-, <a class="el" href="MqttBridge_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">MqttBridge.ino</a>
 </li>
 <li>SHMSG_LEN
 : <a class="el" href="EnigmaIOTGateway_8cpp.html#ab9b144ebcf09f24dd9b85f95e6d118d0">EnigmaIOTGateway.cpp</a>
 </li>
 <li>shouldSave
 : <a class="el" href="EnigmaIOTGateway_8cpp.html#a5b2105a285d12dbe89e9384d2351e1a9">EnigmaIOTGateway.cpp</a>
-</li>
-<li>shouldSaveConfig
-: <a class="el" href="MqttBridge_8ino.html#a8c9617f4630b59fe7c1baebd4ea84b5d">MqttBridge.ino</a>
 </li>
 <li>SLEEP
 : <a class="el" href="NodeList_8h.html#a8dd9280b6a6e53e65414115f47b0df6aad6137abebe4fdc59e2f0f2c84bdbe3fa">NodeList.h</a>
@@ -139,9 +118,6 @@ $(function() {
 <li>startConnectionFlash()
 : <a class="el" href="enigmaiot__integrated__gw_8ino.html#a6ff09343e5169937476aa04932b76915">enigmaiot_integrated_gw.ino</a>
 </li>
-<li>startFlash()
-: <a class="el" href="MqttBridge_8ino.html#a2c078b8bfa2e57a7f39eb083be793ee8">MqttBridge.ino</a>
-</li>
 <li>status
 : <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">GwOutput_generic.h</a>
 </li>
@@ -151,12 +127,9 @@ $(function() {
 <li>stopConnectionFlash()
 : <a class="el" href="enigmaiot__integrated__gw_8ino.html#ad85ae6aaf68f30aa59facd8f80635ffd">enigmaiot_integrated_gw.ino</a>
 </li>
-<li>stopFlash()
-: <a class="el" href="MqttBridge_8ino.html#ad072ccb795ca00a2cc374f3ce7bd5d55">MqttBridge.ino</a>
-</li>
 <li>str2mac()
-: <a class="el" href="helperFunctions_8cpp.html#a02961b325403161b54533152d242696a">helperFunctions.cpp</a>
-, <a class="el" href="helperFunctions_8h.html#a0fdf837000194d53f0d019f024e0f4a1">helperFunctions.h</a>
+: <a class="el" href="helperFunctions_8h.html#a0fdf837000194d53f0d019f024e0f4a1">helperFunctions.h</a>
+, <a class="el" href="helperFunctions_8cpp.html#a02961b325403161b54533152d242696a">helperFunctions.cpp</a>
 </li>
 </ul>
 </div><!-- contents -->

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['begin',['begin',['../classGatewayOutput__generic.html#af234219fb72002629fbef3ea2301ef03',1,'GatewayOutput_generic::begin()'],['../classGwOutput__MQTT.html#a0ef6cb16df04d8d2dc8b854eec0529f3',1,'GwOutput_MQTT::begin()'],['../classComms__halClass.html#a1b7f86efd799761dead77fcccf036d1d',1,'Comms_halClass::begin()'],['../classEnigmaIOTGatewayClass.html#a9a6b2d2a88c39a839f414e9ce861c5a0',1,'EnigmaIOTGatewayClass::begin()'],['../classEspnow__halClass.html#a4a115caab9605dd4e3d32eefb00f18db',1,'Espnow_halClass::begin()']]],
+  ['begin',['begin',['../classGwOutput__MQTT.html#a0ef6cb16df04d8d2dc8b854eec0529f3',1,'GwOutput_MQTT::begin()'],['../classComms__halClass.html#a1b7f86efd799761dead77fcccf036d1d',1,'Comms_halClass::begin()'],['../classEnigmaIOTGatewayClass.html#a9a6b2d2a88c39a839f414e9ce861c5a0',1,'EnigmaIOTGatewayClass::begin()'],['../classEspnow__halClass.html#a4a115caab9605dd4e3d32eefb00f18db',1,'Espnow_halClass::begin()'],['../classGatewayOutput__generic.html#af234219fb72002629fbef3ea2301ef03',1,'GatewayOutput_generic::begin()']]],
   ['buildgetrssi',['buildGetRSSI',['../EnigmaIOTGateway_8cpp.html#a20d09b7746e96e3f2706652522c121fa',1,'EnigmaIOTGateway.cpp']]],
   ['buildgetsleep',['buildGetSleep',['../EnigmaIOTGateway_8cpp.html#a90e4277194db83896803d38387ec0369',1,'EnigmaIOTGateway.cpp']]],
   ['buildgetversion',['buildGetVersion',['../EnigmaIOTGateway_8cpp.html#a7bb1ee00fcd42cf937a7f6173e2a8647',1,'EnigmaIOTGateway.cpp']]],
