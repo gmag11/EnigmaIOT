@@ -123,7 +123,7 @@ class EnigmaIOTGatewayClass
       * @param crc Received CRC to check against calculation
       * @return Returns `true` if CRC check was successful. `false` otherwise
       */
-     bool checkCRC (const uint8_t *buf, size_t count, const uint32_t *crc);
+     //bool checkCRC (const uint8_t *buf, size_t count, const uint32_t *crc);
 
      /**
       * @brief Gets a buffer containing a **ClientHello** message and process it. This carries node public key to be used on Diffie Hellman algorithm

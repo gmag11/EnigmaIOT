@@ -20,7 +20,7 @@
 
 #include "cryptModule.h"
 #include "helperFunctions.h"
-#include <CRC32.h>
+//#include <CRC32.h>
 #include <cstddef>
 #include <cstdint>
 
@@ -1399,14 +1399,14 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 	}
 }
 
-bool EnigmaIOTGatewayClass::checkCRC (const uint8_t* buf, size_t count, const uint32_t* crc) {
-	uint32_t recvdCRC;
-
-	memcpy (&recvdCRC, crc, sizeof (uint32_t)); // Use of memcpy is a must to ensure code does not try to read non memory aligned int
-	uint32_t _crc = CRC32::calculate (buf, count);
-	DEBUG_VERBOSE ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X %s", _crc, recvdCRC, (_crc == recvdCRC) ? "OK" : "FAIL");
-	return (_crc == recvdCRC);
-}
+//bool EnigmaIOTGatewayClass::checkCRC (const uint8_t* buf, size_t count, const uint32_t* crc) {
+//	uint32_t recvdCRC;
+//
+//	memcpy (&recvdCRC, crc, sizeof (uint32_t)); // Use of memcpy is a must to ensure code does not try to read non memory aligned int
+//	uint32_t _crc = CRC32::calculate (buf, count);
+//	DEBUG_VERBOSE ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X %s", _crc, recvdCRC, (_crc == recvdCRC) ? "OK" : "FAIL");
+//	return (_crc == recvdCRC);
+//}
 
 
 EnigmaIOTGatewayClass EnigmaIOTGateway;

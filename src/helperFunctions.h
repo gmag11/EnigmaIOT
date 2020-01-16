@@ -52,5 +52,7 @@ uint8_t* str2mac (const char* mac, uint8_t* values);
   */
 void initWiFi (uint8_t channel = 3, uint8_t role = 0, String networkName = "EnigmaIOT");
 
+uint32_t calculateCRC32 (const uint8_t* data, size_t length);
+
 #endif
 

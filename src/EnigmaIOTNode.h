@@ -20,7 +20,7 @@
 #include "cryptModule.h"
 #include "helperFunctions.h"
 #include "Comms_hal.h"
-#include <CRC32.h>
+//#include <CRC32.h>
 #include "NodeList.h"
 #include <cstddef>
 #include <cstdint>

@@ -20,7 +20,7 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 #include <Curve25519.h>
-#include <CRC32.h>
+//#include <CRC32.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 #include <ESPAsyncTCP.h>

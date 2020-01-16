@@ -50,7 +50,7 @@
 #include <ChaChaPoly.h>
 #include <Poly1305.h>
 #include <SHA256.h>
-#include <CRC32.h>
+//#include <CRC32.h>
 #include <ArduinoJson.h>
 #include <DNSServer.h>
 #include <ESPAsyncWebServer.h>

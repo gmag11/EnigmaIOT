@@ -235,7 +235,7 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 bool EnigmaIOTNodeClass::saveRTCData () {
 	if (configCleared)
 		return false;
-	rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 	if (ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
 		DEBUG_DBG ("Write configuration data to RTC memory");
 #if DEBUG_LEVEL >= VERBOSE
@@ -313,7 +313,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
         }
         data->sleepTime = sleepyVal;
         data->nodeKeyValid = false;
-        data->crc32 = CRC32::calculate ((uint8_t*)(data->nodeKey), sizeof (rtcmem_data_t) - sizeof (uint32_t));
+        data->crc32 = calculateCRC32 ((uint8_t*)(data->nodeKey), sizeof (rtcmem_data_t) - sizeof (uint32_t));
     }
     return result;
 }
@@ -753,7 +753,7 @@ bool EnigmaIOTNodeClass::checkCRC (const uint8_t* buf, size_t count, uint32_t* c
 
     memcpy (&recvdCRC, crc, sizeof (uint32_t));
     //DEBUG_VERBOSE ("Received CRC32: 0x%08X", *crc32);
-    uint32_t _crc = CRC32::calculate (buf, count);
+    uint32_t _crc = calculateCRC32 (buf, count);
     DEBUG_VERBOSE ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X Length: %d", _crc, recvdCRC, count);
     return (_crc == recvdCRC);
 }
