@@ -1,7 +1,7 @@
 /**
   * @file timeManager.cpp
-  * @version 0.8.0
-  * @date 13/01/2020
+  * @version 0.8.1
+  * @date 17/01/2020
   * @author German Martin
   * @brief Clock synchronisation calculations
   */
