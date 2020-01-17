@@ -1,5 +1,5 @@
 /**
-  * @file enigmaiot_integrated_gw.ino
+  * @file EnigmaIOTGatewayMQTT.ino
   * @version 0.8.1
   * @date 17/01/2020
   * @author German Martin
