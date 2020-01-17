@@ -197,7 +197,7 @@ $(function() {
 <p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_led_flasher">EnigmaIOT LED Flasher</a>: On non sleepy nodes a common clock may be synchronized with gateway. This is an example of this. All nodes that include this firmware will flash their built in LED synchronously after successful registration.</p>
 <h2>Gateway</h2>
 <p>A gateway concentrates communication from all nodes, manages their registrations status, negotiate session key with them and outputs their messages to an output protocol.</p>
-<p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_integrated_gw">EnigmaIOT integrated GW</a> is the implementation for a MQTT gateway.</p>
+<p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOTGatewayMQTT">EnigmaIOT MQTT Gateway</a> is the implementation for a MQTT gateway.</p>
 <p>Since version 0.7.0 Gateway is a ESP32 or ESP8266 board with 4 MB of flash memory or more. ESP8266 gateways cannot use MQTT TLS encryption due to memory limitations.</p>
 <p>Thanks to modular design, other output modules may be easily developed by implementing <code><a class="el" href="GwOutput__generic_8h.html" title="Generic Gateway output module template.">GwOutput_generic.h</a></code>. Examples of this may be LoRaWAN output gateway, COAP gateway or any other network protocol that is needed. Even an offline SD data logger could be done.</p>
 <h1>Data format</h1>

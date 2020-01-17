@@ -214,7 +214,7 @@ There are several implementations in [examples](https://github.com/gmag11/Enigma
 
 A gateway concentrates communication from all nodes, manages their registrations status, negotiate session key with them and outputs their messages to an output protocol.
 
-[EnigmaIOT integrated GW](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_integrated_gw) is the implementation for a MQTT gateway.
+[EnigmaIOT MQTT Gateway](https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOTGatewayMQTT) is the implementation for a MQTT gateway.
 
 Since version 0.7.0 Gateway is a ESP32 or ESP8266 board with 4 MB of flash memory or more. ESP8266 gateways cannot use MQTT TLS encryption due to memory limitations.
 
