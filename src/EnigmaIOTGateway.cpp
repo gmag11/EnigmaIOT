@@ -629,6 +629,14 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	this->comm = comm;
 	this->useCounter = useDataCounter;
 
+	rateFilter = new FilterClass (AVERAGE_FILTER, RATE_AVE_ORDER);
+
+	float weight = 1;
+
+	for (int i = 0; i < RATE_AVE_ORDER; i++) {
+		rateFilter->addWeigth (weight);
+		weight = weight / 2;
+	}
 	if (networkKey) {
 		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
 		CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
@@ -810,7 +818,8 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		DEBUG_INFO (" <------- DATA");
 		//if (!OTAongoing) {
 		if (node->getStatus () == REGISTERED) {
-			node->packetsHour = (double)1 / ((millis () - node->getLastMessageTime ()) / (double)3600000);
+			float packetsHour = (float)1 / ((millis () - node->getLastMessageTime ()) / (float)3600000);
+			node->packetsHour = rateFilter->addValue (packetsHour);
 			if (processDataMessage (mac, buf, count, node)) {
 				node->setLastMessageTime ();
 				DEBUG_INFO ("Data OK");

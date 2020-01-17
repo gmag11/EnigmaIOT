@@ -16,6 +16,7 @@
 #endif
 #include "EnigmaIoTconfig.h"
 #include "NodeList.h"
+#include "Filter.h"
 #include "Comms_hal.h"
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
@@ -96,6 +97,7 @@ class EnigmaIOTGatewayClass
      bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
 	 gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
      char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
+     FilterClass *rateFilter;
 
 	 AsyncWebServer* server; ///< @brief WebServer that holds configuration portal
 	 DNSServer* dns; ///< @brief DNS server used by configuration portal

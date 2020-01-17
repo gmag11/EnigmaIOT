@@ -42,6 +42,7 @@
 #include <FS.h>
 
 #include <EnigmaIOTGateway.h>
+#include <Filter.h>
 #include <helperFunctions.h>
 #include <debug.h>
 #include <espnow_hal.h>
