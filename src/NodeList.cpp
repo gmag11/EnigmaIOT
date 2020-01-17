@@ -64,10 +64,22 @@ void Node::printToSerial (Stream *port)
     port->println ();
 }
 
+void Node::initRateFilter () {
+    float weight = 1;
+
+    rateFilter = new FilterClass (AVERAGE_FILTER, RATE_AVE_ORDER);
+    for (int i = 0; i < RATE_AVE_ORDER; i++) {
+        rateFilter->addWeigth (weight);
+        weight = weight / 2;
+    }
+
+}
+
 Node::Node () :
     keyValid (false),
     status (UNREGISTERED)
 {
+    initRateFilter ();
 }
 
 Node::Node (node_t nodeData) :
@@ -82,15 +94,27 @@ Node::Node (node_t nodeData) :
 {
     memcpy (key, nodeData.key, sizeof (uint16_t));
     memcpy (mac, nodeData.mac, 6);
+
+    initRateFilter ();
 }
 
+void Node::updatePacketsRate (float value) {
+    packetsHour = rateFilter->addValue (value);
+}
+
+
 void Node::reset () {
+    DEBUG_DBG ("Reset node");
     memset (mac, 0, 6);
     memset (key, 0, KEY_LENGTH);
     keyValid = false;
     lastMessageCounter = 0;
     keyValidFrom = 0;
     status = UNREGISTERED;
+    if (rateFilter) {
+        DEBUG_DBG ("Reset packet rate");
+        rateFilter->clear ();
+    }
     //sleepyNode = true;
 }
 

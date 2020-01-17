@@ -15,6 +15,7 @@
 	#include "WProgram.h"
 #endif
 #include "EnigmaIoTconfig.h"
+#include "Filter.h"
 
 /**
   * @brief State definition for nodes
@@ -284,6 +285,12 @@ public:
         return sleepyNode;
     }
 
+    /**
+      * @brief Adds a new message rate value for filter calculation
+      * @param value Next value for calculation
+      */
+    void updatePacketsRate (float value);
+
     uint8_t queuedMessage[MAX_MESSAGE_LENGTH]; ///< @brief Message queued for sending to node in case of sleepy mode
     size_t qMessageLength;  ///< @brief Queued message length
     bool qMessagePending = false; ///< @brief `True` if message should be sent just after next data message
@@ -306,6 +313,12 @@ protected:
     uint8_t mac[6]; ///< @brief Node address
     uint8_t key[KEY_LENGTH]; ///< @brief Shared key
     timer_t lastMessageTime; ///< @brief Node state
+    FilterClass* rateFilter; ///< @brief Filter for message rate smoothing
+
+     /**
+      * @brief Starts smoothing filter
+      */
+    void initRateFilter ();
 
     friend class NodeList;
 };
@@ -315,28 +328,84 @@ protected:
 class NodeList {
 #define NUM_NODES 20
 public:
+
+    /**
+      * @brief Node list constructor
+      */
     NodeList ();
 
+    /**
+      * @brief Gets node that correspond with given nodeId
+      * @param nodeId NodeId to search for
+      * @return Node instance that has given nodeId. NULL if it was not found
+      */
     Node *getNodeFromID (uint16_t nodeId);
 
+    /**
+      * @brief Gets node that correspond with given address
+      * @param mac address to search for
+      * @return Node instance that has given address. NULL if it was not found
+      */
     Node *getNodeFromMAC (const uint8_t* mac);
     
+    /**
+      * @brief Searches for a free place for a new Node instance
+      * @return Node instance to hold new instance
+      */
     Node *findEmptyNode ();
     
+     /**
+      * @brief Gets hte number of active nodes (registered or registeing)
+      * @return Number of active nodes
+      */
     uint16_t countActiveNodes ();
     
+    /**
+      * @brief Frees up a node and marks it as available
+      * @param nodeId NodeId to free up
+      * @return 'True' if it was deleted. 'False' if nodeId was not found
+      */
     bool unregisterNode (uint16_t nodeId);
     
+    /**
+      * @brief Frees up a node and marks it as available
+      * @param mac Address to free up
+      * @return 'True' if it was deleted. 'False' if address was not found
+      */
     bool unregisterNode (const uint8_t* mac);
     
+    /**
+      * @brief Frees up a node using a pointer to it
+      * @param node Pointer to node instance
+      * @return 'True' if it was deleted. 'False' if it was already deleted
+      */
     bool unregisterNode (Node *node);
 
+    /**
+      * @brief Gets next active node by nodeId
+      * @param nodeId NodeId of the node to find
+      * @return Pointer to node or NULL if it was not found
+      */
     Node *getNextActiveNode (uint16_t nodeId);
 
+    /**
+      * @brief Gets next active node by instance where to get nodeId
+      * @param node Node which have the nodeId to find
+      * @return Pointer to node or NULL if it was not found
+      */
     Node *getNextActiveNode (Node node);
 
+     /**
+      * @brief Finds a node that correspond with given address of creates a new one if it does not exist
+      * @param mac address to search for
+      * @return Node instance. NULL if it Node store is full
+      */
     Node *getNewNode (const uint8_t* mac);
 
+      /**
+      * @brief Dumps node list data to a Stream object
+      * @param port Stram port
+      */
     void printToSerial (Stream *port);
 
 protected:

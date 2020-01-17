@@ -1,16 +1,13 @@
-// 
-// 
-// 
+/**
+  * @file Filter.cpp
+  * @version 0.8.1
+  * @date 17/01/2020
+  * @author German Martin
+  * @brief Filter to process message rate or other values
+  */
 
 #include "Filter.h"
 #include "debug.h"
-
-//#ifdef DEBUG
-//#define DBG_OUTPUT_PORT Serial
-//#define DEBUGLOG(...) DBG_OUTPUT_PORT.printf(__VA_ARGS__)
-//#else
-//#define DEBUGLOG(...)
-//#endif
 
 float FilterClass::addValue(float value)
 {
@@ -38,9 +35,9 @@ float FilterClass::addWeigth (float coeff) {
 		sumWeight += _weightValues[i];
 	}
 	
-	for (int i = 0; i < _order; i++) {
-		DEBUG_VERBOSE (" %f", _weightValues[i]);
-	}
+	//for (int i = 0; i < _order; i++) {
+	//	DEBUG_VERBOSE (" %f", _weightValues[i]);
+	//}
 	DEBUG_VERBOSE ("SumWeight: %f", sumWeight);
 
 	return sumWeight;
@@ -92,13 +89,11 @@ float FilterClass::aveFilter(float value)
 
 	procValue = sumValue / sumWeight;
 
-	//dtostrf(procValue, 6, 4, strValue);
 	DEBUG_VERBOSE ("Average: %f\n", procValue);
 
 	return procValue;
 }
 
-// Función para dividir el array y hacer los intercambios
 int FilterClass::divide(float *array, int start, int end) {
 	int left;
 	int right;
@@ -109,7 +104,7 @@ int FilterClass::divide(float *array, int start, int end) {
 	left = start;
 	right = end;
 
-	// Mientras no se cruzen los índices
+	// While indexes do not cross
 	while (left < right) {
 		while (array[right] > pivot) {
 			right--;
@@ -119,7 +114,7 @@ int FilterClass::divide(float *array, int start, int end) {
 			left++;
 		}
 
-		// Si todavía no se cruzan los indices seguimos intercambiando
+		// If indexes have not crossed yet we continue doing exchanges
 		if (left < right) {
 			temp = array[left];
 			array[left] = array[right];
@@ -127,12 +122,12 @@ int FilterClass::divide(float *array, int start, int end) {
 		}
 	}
 
-	// Los índices ya se han cruzado, ponemos el pivot en el lugar que le corresponde
+	// Indexes have crossed. We put the pivot on place
 	temp = array[right];
 	array[right] = array[start];
 	array[start] = temp;
 
-	// La nueva posición del pivot
+	// NEw pivot position
 	return right;
 }
 
@@ -140,7 +135,7 @@ void FilterClass::clear () {
 	for (int i = 0; i < _order; i++) {
 		_rawValues[i] = 0;
 		_orderedValues[i] = 0;
-		_weightValues[i] = 1;
+		//_weightValues[i] = 1;
 	}
 	_index = 0;
 }
@@ -151,7 +146,6 @@ FilterClass::~FilterClass () {
 	free (_weightValues);
 }
 
-// Función recursiva para hacer el ordenamiento
 void FilterClass::quicksort(float *array, int start, int end)
 {
 	float pivot;
@@ -212,7 +206,6 @@ float FilterClass::medianFilter(float value)
 
 	DEBUG_VERBOSE ("Raw values:");
 	for (int i = 0; i < _order; i++) {
-		//dtostrf(_rawValues[i], 6, 4, strValue);
 		DEBUG_VERBOSE (" %f", _rawValues[i]);
 	}
 
@@ -226,7 +219,6 @@ float FilterClass::medianFilter(float value)
 	
 	DEBUG_VERBOSE ("Ordered values:");
 	for (int i = 0; i < _order; i++) {
-		//dtostrf(_orderedValues[i], 6, 4, strValue);
 		DEBUG_VERBOSE (" %f", _orderedValues[i]);
 	}
 
@@ -238,7 +230,6 @@ float FilterClass::medianFilter(float value)
 		procValue = (_orderedValues[medianIdx] + _orderedValues[medianIdx+1]) / 2.0F;
 	}
 
-	//dtostrf(procValue, 6, 4, strValue);
 	DEBUG_VERBOSE ("Median: %f\n", procValue);
 	return procValue; // return mid value
 }
@@ -272,5 +263,3 @@ FilterClass::FilterClass(FilterType_t type, uint8_t order)
 
 }
 
-
-//FilterClass Filter;

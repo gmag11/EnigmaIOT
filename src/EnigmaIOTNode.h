@@ -20,13 +20,11 @@
 #include "cryptModule.h"
 #include "helperFunctions.h"
 #include "Comms_hal.h"
-//#include <CRC32.h>
 #include "NodeList.h"
 #include <cstddef>
 #include <cstdint>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
-//#include <ESP8266TrueRandom.h>
 
 /**
   * @brief Message code definition

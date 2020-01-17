@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_node.ino
-  * @version 0.8.0
-  * @date 13/01/2020
+  * @version 0.8.1
+  * @date 17/01/2020
   * @author German Martin
   * @brief Node based on EnigmaIoT over ESP-NOW
   *
@@ -20,7 +20,6 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 #include <Curve25519.h>
-//#include <CRC32.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 #include <ESPAsyncTCP.h>

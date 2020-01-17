@@ -11,7 +11,7 @@
 
 // Global configuration. Physical layer settings
 static const uint8_t MAX_MESSAGE_LENGTH = 250; ///< @brief Maximum payload size on ESP-NOW
-static const char ENIGMAIOT_PROT_VERS[] = "0.7.0"; ///< @brief EnitmaIoT Version
+static const char ENIGMAIOT_PROT_VERS[] = "0.8.1"; ///< @brief EnitmaIoT Version
 static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on ESP-NOW
 static const uint32_t FLASH_LED_TIME = 50; ///< @brief Time that led keeps on during flash in ms
 static const uint8_t NETWORK_NAME_LENGTH = 21; ///< @brief Maximum number of characters of network name
@@ -21,8 +21,8 @@ static const int RESET_PIN_DURATION = 5000; ///< @brief Number of milliseconds t
 static const unsigned int MAX_KEY_VALIDITY = 86400000U; ///< @brief After this time (in ms) a nude is unregistered.
 static const unsigned int MAX_NODE_INACTIVITY = 86400000U; ///< @brief After this time (in ms) a node is marked as gone
 static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mode all data messages are ignored
-static const size_t MAX_MQTT_QUEUE_SIZE = 5; ///< @ brief Maximum number of MQTT messages to be sent
-static const int RATE_AVE_ORDER = 5;
+static const size_t MAX_MQTT_QUEUE_SIZE = 5; ///< @brief Maximum number of MQTT messages to be sent
+static const int RATE_AVE_ORDER = 5; ///< @brief Message rate filter order
 
 // Node configuration
 static const int16_t RECONNECTION_PERIOD = 1500; ///< @brief Time to retry Gateway connection
