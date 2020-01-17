@@ -118,15 +118,6 @@ class EnigmaIOTGatewayClass
      bool serverHello (const uint8_t *key, Node *node);
 
      /**
-      * @brief Check that a given CRC matches to calulated value from a buffer
-      * @param buf Pointer to the buffer that contains the stream to calculate CRC
-      * @param count Buffer length in number of bytes
-      * @param crc Received CRC to check against calculation
-      * @return Returns `true` if CRC check was successful. `false` otherwise
-      */
-     //bool checkCRC (const uint8_t *buf, size_t count, const uint32_t *crc);
-
-     /**
       * @brief Gets a buffer containing a **ClientHello** message and process it. This carries node public key to be used on Diffie Hellman algorithm
       * @param mac Address where this message was received from
       * @param buf Pointer to the buffer that contains the message

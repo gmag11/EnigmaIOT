@@ -84,7 +84,7 @@ class FilterClass
 
 	 /**
 	  * @brief Pushes a new value for calculation. Until the buffer is filled up to filter order, only first valid values are used in calculation
-	  * @param coeff Next value
+	  * @param value Next value
 	  * @return Weighted average value
 	  */
 	 float addValue(float value);

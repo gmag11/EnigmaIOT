@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['unregisternode',['unregisterNode',['../classNodeList.html#a2892fb1e6830073f3419da35ddad8725',1,'NodeList::unregisterNode(uint16_t nodeId)'],['../classNodeList.html#ae5aaadb6ddbe6d4c5e1a5e7289ac3aa8',1,'NodeList::unregisterNode(const uint8_t *mac)'],['../classNodeList.html#a52e67df2a4891252279101a492453038',1,'NodeList::unregisterNode(Node *node)']]]
+  ['tx_5fcb_628',['tx_cb',['../classEnigmaIOTGatewayClass.html#a0ab81e6867a72fc7dac05f24fe7fa484',1,'EnigmaIOTGatewayClass::tx_cb()'],['../classEspnow__halClass.html#a5d5442d3095c57dee6ba5bc05691f587',1,'Espnow_halClass::tx_cb()']]]
 ];

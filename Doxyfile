@@ -916,7 +916,7 @@ RECURSIVE              = YES
 
 EXCLUDE                = examples/enigmaiot_node/__vm \
                          examples/enigmaiot_node/Release \
-                         examples/enigmaiot_integrated_gw/Debug \
+                         examples/EnigmaIOTGatewayMQTT/Debug \
                          examples/enigmaiot_node/Debug \
                          EnigmaIoTUpdate/.idea \
                          EnigmaIoTUpdate/__pycache__ \
@@ -924,9 +924,9 @@ EXCLUDE                = examples/enigmaiot_node/__vm \
                          examples/enigmaiot_led_flasher/__vm \
                          examples/enigmaiot_led_flasher/data \
                          examples/enigmaiot_led_flasher/Debug \
-                         examples/enigmaiot_integrated_gw/Release \
-                         examples/enigmaiot_integrated_gw/__vm \
-                         examples/enigmaiot_integrated_gw/data \
+                         examples/EnigmaIOTGatewayMQTT/Release \
+                         examples/EnigmaIOTGatewayMQTT/__vm \
+                         examples/EnigmaIOTGatewayMQTT/data \
                          examples/enigmaiot_node/data \
                          examples/enigmaiot_node_nonsleepy/__vm \
                          examples/enigmaiot_node_nonsleepy/Debug \

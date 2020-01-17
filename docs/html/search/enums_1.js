@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['gatewaymessagetype_5ft',['gatewayMessageType_t',['../EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613',1,'EnigmaIOTGateway.h']]],
-  ['gwinvalidatereason_5ft',['gwInvalidateReason_t',['../EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977',1,'EnigmaIOTGateway.h']]],
-  ['gwoutput_5fdata_5ftype',['GwOutput_data_type',['../GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636',1,'GwOutput_generic.h']]]
+  ['filtertype_5ft_788',['FilterType_t',['../Filter_8h.html#a0c87b1dd8bef5bbb8464d1652f929ff7',1,'Filter.h']]]
 ];
