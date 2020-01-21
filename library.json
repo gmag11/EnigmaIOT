@@ -42,9 +42,6 @@
         "name":"ESP Async WebServer"
       },
       {
-        "name":"CRC32"
-      },
-      {
         "name":"CayenneLPP"
       },
       {
