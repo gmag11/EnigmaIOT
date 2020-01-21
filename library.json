@@ -42,6 +42,9 @@
         "name":"ESP Async WebServer"
       },
       {
+        "name":"PubSubClient"
+      },
+      {
         "name":"CayenneLPP"
       },
       {
