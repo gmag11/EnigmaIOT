@@ -414,7 +414,6 @@ It is very important to configure user and password on you MQTT broker. Besides,
 
 ## External libraries
 
-- CRC32 -- https://github.com/bakercp/CRC32
 - ESPAsyncWebServer -- https://github.com/me-no-dev/ESPAsyncWebServer
 - ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager version > 0.22
   
