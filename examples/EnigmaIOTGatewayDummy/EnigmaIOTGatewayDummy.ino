@@ -240,10 +240,14 @@ void setup () {
 	EnigmaIOTGateway.onDataRx (processRxData);
 	EnigmaIOTGateway.begin (&Espnow_hal);
 
+#if CONNECT_TO_WIFI_AP == 1
 	WiFi.mode (WIFI_AP_STA);
 	WiFi.begin ();
-
 	EnigmaIOTGateway.configWiFiManager ();
+#else
+	//WiFi.mode (WIFI_AP);
+#endif // CONNECT_TO_WIFI_AP
+
 
 	WiFi.softAP (EnigmaIOTGateway.getNetworkName (), EnigmaIOTGateway.getNetworkKey());
 	stopConnectionFlash ();
@@ -253,7 +257,9 @@ void setup () {
 	DEBUG_INFO ("BSSID Address: %s", WiFi.BSSIDstr().c_str ());
 	   
 	DEBUG_INFO ("IP address: %s", WiFi.localIP ().toString ().c_str ());
+	DEBUG_INFO ("AP IP address: %s", WiFi.softAPIP ().toString ().c_str ());
 	DEBUG_INFO ("WiFi Channel: %d", WiFi.channel ());
+
 	DEBUG_INFO ("WiFi SSID: %s", WiFi.SSID ().c_str ());
 	DEBUG_INFO ("Network Name: %s", EnigmaIOTGateway.getNetworkName ());
 

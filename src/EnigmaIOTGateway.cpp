@@ -464,12 +464,20 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	}
 
 	wifiManager->setDebugOutput (true);
-	//wifiManager->setBreakAfterConfig (true);
+#if CONNECT_TO_WIFI_AP != 1
+	wifiManager->setBreakAfterConfig (true);
+#endif // CONNECT_TO_WIFI_AP
 	wifiManager->setTryConnectDuringConfigPortal (false);
 	wifiManager->setSaveConfigCallback (doSave);
 	wifiManager->setConfigPortalTimeout (150);
 
+#if CONNECT_TO_WIFI_AP == 1
 	boolean result = wifiManager->autoConnect ("EnigmaIoTGateway", NULL, 3, 2000);
+#else
+	boolean result = wifiManager->startConfigPortal ("EnigmaIoTGateway", NULL);
+	result = true; // Force true if this should not connect to a WiFi
+#endif // CONNECT_TO_WIFI_AP
+
 	DEBUG_INFO ("==== Config Portal result ====");
 	DEBUG_INFO ("Network Name: %s", netNameParam.getValue ());
 	DEBUG_INFO ("Network Key: %s", netKeyParam.getValue ());
@@ -634,6 +642,9 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	} else {
 		if (!SPIFFS.begin ()) {
 			DEBUG_ERROR ("Error mounting flash");
+			SPIFFS.format ();
+			DEBUG_ERROR ("Formatted");
+			ESP.restart ();
 			return;
 		}
 		if (!loadFlashData ()) { // Load from flash
