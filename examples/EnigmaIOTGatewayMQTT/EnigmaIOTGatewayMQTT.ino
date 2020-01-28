@@ -183,12 +183,12 @@ void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* dat
 	free (buffer);
 }
 
-void newNodeConnected (uint8_t * mac) {
+void newNodeConnected (uint8_t * mac, uint16_t node_id) {
 	char macstr[18];
 	mac2str (mac, macstr);
 	//Serial.printf ("New node connected: %s\n", macstr);
 
-	if (!GwOutput.newNodeSend (macstr)) {
+	if (!GwOutput.newNodeSend (macstr, node_id)) {
 		DEBUG_WARN ("Error sending new node %s", macstr);
 	} else {
 		DEBUG_DBG ("New node %s message sent", macstr);

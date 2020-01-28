@@ -600,7 +600,7 @@ bool GwOutput_MQTT::newNodeSend (char* address, uint16_t node_id) {
 	return result;
 }
 
-bool GwOutput_MQTT::nodeDisconnectedSend (char* address, gwInvalidateReason_t reason, uint16_t node_id) {
+bool GwOutput_MQTT::nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) {
 	const int TOPIC_SIZE = 64;
 	const int PAYLOAD_SIZE = 64;
 	char* topic = (char*)malloc (TOPIC_SIZE);

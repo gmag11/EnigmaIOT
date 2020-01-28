@@ -1139,7 +1139,7 @@ bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t rea
 	DEBUG_INFO (" -------> INVALIDATE_KEY");
 	if (notifyNodeDisconnection) {
 		uint8_t* mac = node->getMacAddress ();
-		notifyNodeDisconnection (mac, reason, node->getNodeId());
+		notifyNodeDisconnection (mac, reason);
 	}
 	return comm->send (node->getMacAddress (), (uint8_t*)& invalidateKey_msg, IKMSG_LEN) == 0;
 }
