@@ -23,6 +23,7 @@ static const unsigned int MAX_NODE_INACTIVITY = 86400000U; ///< @brief After thi
 static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mode all data messages are ignored
 static const size_t MAX_MQTT_QUEUE_SIZE = 5; ///< @brief Maximum number of MQTT messages to be sent
 static const int RATE_AVE_ORDER = 5; ///< @brief Message rate filter order
+static const int NUM_NODES = 4;
 
 // Node configuration
 static const int16_t RECONNECTION_PERIOD = 1500; ///< @brief Time to retry Gateway connection

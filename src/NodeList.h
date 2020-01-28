@@ -326,7 +326,7 @@ protected:
 
 // TODO Document NodeList
 class NodeList {
-#define NUM_NODES 20
+//#define NUM_NODES 20
 public:
 
     /**

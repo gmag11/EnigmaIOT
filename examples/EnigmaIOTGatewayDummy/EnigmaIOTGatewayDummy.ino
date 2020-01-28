@@ -148,7 +148,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 							EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
 							EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
 							EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
-	GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::status);
+	//GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::status);
 	//DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
 	free (payload);
 }
