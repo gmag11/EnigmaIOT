@@ -56,15 +56,15 @@ enum gwInvalidateReason_t {
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
 typedef std::function<void (uint8_t* mac, uint8_t* buf, uint8_t len, uint16_t lostMessages, bool control)> onGwDataRx_t;
-typedef std::function<void (uint8_t* mac)> onNewNode_t;
-typedef std::function<void (uint8_t* mac, gwInvalidateReason_t reason)> onNodeDisconnected_t;
-typedef std::function<void (boolean)> onWiFiManagerExit_t;
+typedef std::function<void (uint8_t* mac, uint16_t node_id)> onNewNode_t;
+typedef std::function<void (uint8_t* mac, gwInvalidateReason_t reason, uint16_t node_id)> onNodeDisconnected_t;
+typedef std::function<void (boolean status)> onWiFiManagerExit_t;
 typedef std::function<void (void)> onWiFiManagerStarted_t;
 #else
 typedef void (*onGwDataRx_t)(uint8_t* mac, uint8_t* data, uint8_t len, uint16_t lostMessages, bool control);
-typedef void (*onNewNode_t)(uint8_t*);
-typedef void (*onNodeDisconnected_t)(uint8_t*, gwInvalidateReason_t);
-typedef void (*onWiFiManagerExit_t)(boolean);
+typedef void (*onNewNode_t)(uint8_t* mac, uint16_t node_id);
+typedef void (*onNodeDisconnected_t)(uint8_t* mac, gwInvalidateReason_t reason, uint16_t node_id);
+typedef void (*onWiFiManagerExit_t)(boolean status);
 typedef void (*onWiFiManagerStarted_t)(void);
 #endif
 

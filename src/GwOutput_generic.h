@@ -84,17 +84,19 @@ public:
 	 /**
 	  * @brief Send new node notification
 	  * @param address Node Address
+	  * @param node_id Node Id
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	virtual bool newNodeSend (char* address) = 0;
+	virtual bool newNodeSend (char* address, uint16_t node_id) = 0;
 
 	 /**
 	  * @brief Send node disconnection notification
 	  * @param address Node Address
 	  * @param reason Disconnection reason code
+	  * @param node_id Node Id
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	virtual bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) = 0;
+	virtual bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason, uint16_t node_id) = 0;
 
 	 /**
 	  * @brief Send data from nodes

@@ -11,3 +11,10 @@ Libraries/
 **/config.json
 platformio.ini
 *.json
+.vs/
+*.sln
+*.vcxproj
+*.filters
+*.user
+**/__vm/
+**/Debug/

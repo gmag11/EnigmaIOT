@@ -197,17 +197,19 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	 /**
 	  * @brief Send new node notification
 	  * @param address Node Address
+	  * @param node_id Node Id
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	bool newNodeSend (char *address);
+	bool newNodeSend (char *address, uint16_t node_id);
 
 	 /**
 	  * @brief Send node disconnection notification
 	  * @param address Node Address
 	  * @param reason Disconnection reason code
+	  * @param node_id Node Id
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason);
+	bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason, uint16_t node_id);
 
 	 /**
 	  * @brief Send data from nodes

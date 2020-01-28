@@ -766,7 +766,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 					node->setLastMessageCounter (0);
 					node->setLastMessageTime ();
 					if (notifyNewNode) {
-						notifyNewNode (node->getMacAddress ());
+						notifyNewNode (node->getMacAddress (), node->getNodeId ());
 					}
 #if DEBUG_LEVEL >= INFO
 					nodelist.printToSerial (&DEBUG_ESP_PORT);
@@ -1139,7 +1139,7 @@ bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t rea
 	DEBUG_INFO (" -------> INVALIDATE_KEY");
 	if (notifyNodeDisconnection) {
 		uint8_t* mac = node->getMacAddress ();
-		notifyNodeDisconnection (mac, reason);
+		notifyNodeDisconnection (mac, reason, node->getNodeId());
 	}
 	return comm->send (node->getMacAddress (), (uint8_t*)& invalidateKey_msg, IKMSG_LEN) == 0;
 }
