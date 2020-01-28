@@ -24,6 +24,7 @@ static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mo
 static const size_t MAX_MQTT_QUEUE_SIZE = 5; ///< @brief Maximum number of MQTT messages to be sent
 static const int RATE_AVE_ORDER = 5; ///< @brief Message rate filter order
 static const int NUM_NODES = 4;
+#define CONNECT_TO_WIFI_AP 1 ///< @brief In projects where gateway should not be connected to WiFi (for instance a data logger to SD) it may be useful to disable WiFi setting this to 0. Set it to 1 otherwise
 
 // Node configuration
 static const int16_t RECONNECTION_PERIOD = 1500; ///< @brief Time to retry Gateway connection
