@@ -185,11 +185,11 @@ void newNodeConnected (uint8_t * mac, uint16_t node_id) {
 	}
 }
 
-void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason, uint16_t node_id) {
+void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
 	char macstr[18];
 	mac2str (mac, macstr);
 	//Serial.printf ("Node %s disconnected. Reason %u\n", macstr, reason);
-	if (!GwOutput.nodeDisconnectedSend (macstr, reason, node_id)) {
+	if (!GwOutput.nodeDisconnectedSend (macstr, reason)) {
 		DEBUG_WARN ("Error sending node disconnected %s reason %d", macstr, reason);
 	} else {
 		DEBUG_DBG ("Node %s disconnected message sent. Reason %d", macstr, reason);

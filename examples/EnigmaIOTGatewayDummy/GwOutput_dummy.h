@@ -89,7 +89,7 @@ public:
 	  * @param node_id Node Id
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason, uint16_t node_id);
+	bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason);
 
 	 /**
 	  * @brief Send data from nodes

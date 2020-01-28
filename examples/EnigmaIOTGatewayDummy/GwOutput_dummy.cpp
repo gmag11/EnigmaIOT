@@ -66,6 +66,6 @@ bool GatewayOutput_dummy::newNodeSend (char* address, uint16_t node_id) {
     DEBUG_WARN ("New node: %s NodeID: %d", address, node_id);
 }
 
-bool GatewayOutput_dummy::nodeDisconnectedSend (char* address, gwInvalidateReason_t reason, uint16_t node_id) {
-    DEBUG_WARN ("Node %s disconnected. NodeID: %d. Reason %d", address, node_id, reason);
+bool GatewayOutput_dummy::nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) {
+    DEBUG_WARN ("Node %s disconnected. Reason %d", address, reason);
 }
