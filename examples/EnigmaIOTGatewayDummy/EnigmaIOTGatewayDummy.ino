@@ -60,6 +60,10 @@ ETSTimer connectionLedTimer;
 const int connectionLed = BUILTIN_LED;
 boolean connectionLedFlashing = false;
 
+#if CONNECT_TO_WIFI_AP == 1
+#error Please configure CONNECT_TO_WIFI_AP to 0 on EnigmaIoTconfig.h
+#endif
+
 void flashConnectionLed (void* led) {
 	//digitalWrite (*(int*)led, !digitalRead (*(int*)led));
 	digitalWrite (BUILTIN_LED, !digitalRead (BUILTIN_LED));
