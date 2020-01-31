@@ -28,16 +28,6 @@
 
 GatewayOutput_dummy GwOutput;
 
-typedef struct {
-    char address[18];
-    int led;
-    time_t led_start = 0;
-} olr_controller_t;
-
-olr_controller_t controllers[NUM_NODES];
-
-int leds[NUM_NODES] = { 12,13,14,27 };
-
 void GatewayOutput_dummy::configManagerStart (EnigmaIOTGatewayClass* enigmaIotGw) {
 
 }
@@ -57,41 +47,15 @@ void GatewayOutput_dummy::configManagerExit (bool status) {
 
 bool GatewayOutput_dummy::begin () {
     DEBUG_INFO ("Begin");
-    for (int i = 0; i < NUM_NODES; i++) {
-        controllers[i].led = leds[i];
-        pinMode (leds[i], OUTPUT);
-        digitalWrite (leds[i], LOW);
-    }
-}
-
-int findLed (char* address) {
-    for (int i = 0; i < NUM_NODES; i++) {
-        if (!strcmp (address, controllers[i].address)) {
-            return i;
-        }
-    }
-    return -1;
 }
 
 
 void GatewayOutput_dummy::loop () {
-    const int LED_ON_TIME = 10;
-    for (int i = 0; i < NUM_NODES; i++) {
-        if (digitalRead (controllers[i].led)) {
-            if (millis () - controllers[i].led_start > LED_ON_TIME) {
-                digitalWrite (controllers[i].led, LOW);
-            }
-        }
-    }
 
 }
 
 bool GatewayOutput_dummy::outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type) {
-    int node_id = findLed (address);
-    DEBUG_INFO ("Output data send. Address %s. Data %.*s", address, length, data);
-    //DEBUG_WARN ("Node_id data: %d", node_id);
-    digitalWrite (controllers[node_id].led, HIGH);
-    controllers[node_id].led_start = millis ();
+    DEBUG_WARN ("Output data send. Address %s. Data %.*s", address, length, data);
 }
 
 bool GatewayOutput_dummy::outputControlSend (char* address, uint8_t* data, uint8_t length) {
@@ -100,11 +64,6 @@ bool GatewayOutput_dummy::outputControlSend (char* address, uint8_t* data, uint8
 
 bool GatewayOutput_dummy::newNodeSend (char* address, uint16_t node_id) {
     DEBUG_WARN ("New node: %s NodeID: %d", address, node_id);
-    if (node_id < NUM_NODES) {
-        strlcpy (controllers[node_id].address, address, 18);
-    }
-    //DEBUG_WARN ("Controller: %s, Node: %s", controllers[node_id].address, address);
-    //digitalWrite (controllers[node_id].led, HIGH);
 }
 
 bool GatewayOutput_dummy::nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) {

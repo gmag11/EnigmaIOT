@@ -31,10 +31,6 @@
 #endif
 
 #define BLUE_LED LED_BUILTIN
-#define OLR_BUTTON 14
-
-bool button_pushed = false;
-bool intr_set = true;
 
 ADC_MODE (ADC_VCC);
 
@@ -65,18 +61,10 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 
 }
 
-IRAM_ATTR void push_button () {
-	detachInterrupt (OLR_BUTTON);
-	button_pushed = true;
-	intr_set = false;
-}
-
 void setup () {
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
-	pinMode (OLR_BUTTON, INPUT_PULLUP);
-	attachInterrupt (OLR_BUTTON, push_button,FALLING);
-
+	
 	EnigmaIOTNode.setLed (BLUE_LED);
 	//pinMode (BLUE_LED, OUTPUT);
 	//digitalWrite (BLUE_LED, HIGH); // Turn on LED
@@ -88,50 +76,28 @@ void setup () {
 }
 
 void loop () {
-	static int last_button;
-	static int diff_button;
 
 	EnigmaIOTNode.handle ();
 
 	CayenneLPP msg (20);
-	//if (button_pushed) {
-	//	diff_button = millis () - last_button;
-	//	last_button = millis ();
-	//	Serial.printf ("%d button\n", diff_button);
-	//	msg.addUnixTime (0, last_button);
-	//	if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
-	//		Serial.println ("---- Error sending data");
-	//	} else {
-	//		Serial.println ("---- Data sent");
-	//	}
-	//	button_pushed = false;
-	//	//attachInterrupt (OLR_BUTTON, push_button, FALLING);
-	//}
-
-	//if (!intr_set) {
-	//	if (millis () - last_button > 80) {
-	//		attachInterrupt (OLR_BUTTON, push_button, FALLING);
-	//	}
-	//}
 
 	static time_t lastSensorData;
-	static const time_t SENSOR_PERIOD = 30;
+	static const time_t SENSOR_PERIOD = 10000;
 	if (millis () - lastSensorData > SENSOR_PERIOD) {
 		lastSensorData = millis ();
 		
 		// Read sensor data
-		msg.addUnixTime (0, lastSensorData);
-		//msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
-		//Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
-		//msg.addTemperature (1, 20.34);
+		msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
+		Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
+		msg.addTemperature (1, 20.34);
 		// Read sensor data
 		
 		Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
-		if (!EnigmaIOTNode.sendUnencryptedData (msg.getBuffer (), msg.getSize ())) {
+		if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
 			Serial.println ("---- Error sending data");
 		} else {
-			//Serial.println ("---- Data sent");
+			Serial.println ("---- Data sent");
 		}
 
 	}
