@@ -43,6 +43,15 @@ enum nodeMessageType {
     INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
 };
 
+enum nodePayload_type_t {
+    RAW = 0x00,
+    CAYENNE = 0x81,
+    PROT_BUF = 0x82,
+    MSG_PACK = 0x83,
+    BSON = 0x84
+};
+
+
 /**
   * @brief Key invalidation reason definition
   */

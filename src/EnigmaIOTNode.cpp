@@ -5,7 +5,6 @@
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
-#define ESP8266
 
 #ifdef ESP8266
 #include <Arduino.h>
@@ -1070,9 +1069,9 @@ void EnigmaIOTNodeClass::sleep () {
 
 bool EnigmaIOTNodeClass::unencryptedDataMessage (const uint8_t* data, size_t len, bool controlMessage) {
     /*
-    * ------------------------------------------------------
-    *| msgType (1) | NodeId (2) | Counter (2) | Data (....) |
-    * ------------------------------------------------------
+    * ------------------------------------------------------------------------
+    *| msgType (1) | NodeId (2) | Counter (2) | PayloadType (1) | Data (....) |
+    * ------------------------------------------------------------------------
     */
 
     uint8_t buf[MAX_MESSAGE_LENGTH];

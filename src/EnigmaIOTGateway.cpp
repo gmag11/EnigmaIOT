@@ -817,13 +817,21 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		}
 		break;
 	case SENSOR_DATA:
-		DEBUG_INFO (" <------- DATA");
+	case UNENCRYPTED_NODE_DATA:
+		bool encrypted;
+		if (buf[0] == SENSOR_DATA) {
+			DEBUG_INFO (" <------- ENCRYPTED DATA");
+			encrypted = true;
+		} else {
+			DEBUG_INFO (" <------- UNENCRYPTED DATA");
+			encrypted = false;
+		}
 		//if (!OTAongoing) {
 		if (node->getStatus () == REGISTERED) {
 			float packetsHour = (float)1 / ((millis () - node->getLastMessageTime ()) / (float)3600000);
 			node->updatePacketsRate (packetsHour);
 			//node->packetsHour = rateFilter->addValue (packetsHour);
-			if (processDataMessage (mac, buf, count, node)) {
+			if (processDataMessage (mac, buf, count, node, encrypted)) {
 				node->setLastMessageTime ();
 				DEBUG_INFO ("Data OK");
 				DEBUG_VERBOSE ("Key valid from %lu ms", millis () - node->getKeyValidFrom ());
@@ -916,18 +924,72 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], uint8_t
 	DEBUG_DBG ("Payload length: %d bytes\n", tag_idx - data_idx);
 
 	if (notifyData) {
-		notifyData (const_cast<uint8_t*>(mac), buf + data_idx, tag_idx - data_idx, 0, true);
+		notifyData (const_cast<uint8_t*>(mac), buf + data_idx, tag_idx - data_idx, 0, true, ENIGMAIOT);
 	}
 
 	return true;
 }
 
-bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node* node) {
+bool EnigmaIOTGatewayClass::processUnencryptedDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node* node) {
+	/*
+	* ------------------------------------------------------------------------
+	*| msgType (1) | NodeId (2) | Counter (2) | PayloadType (1) | Data (....) |
+	* ------------------------------------------------------------------------
+	*/
+
+	uint8_t nodeId_idx = 1;
+	uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
+	uint8_t payloadType_idx = counter_idx + sizeof (int16_t);
+	uint8_t data_idx = payloadType_idx + sizeof (int8_t);
+
+	uint16_t counter;
+	size_t lostMessages = 0;
+
+	uint8_t packetLen = count;
+
+	DEBUG_VERBOSE ("Unencrypted data message: %s", printHexBuffer (buf, count));
+
+	node->packetNumber++;
+
+	memcpy (&counter, &buf[counter_idx], sizeof (uint16_t));
+	if (useCounter) {
+		if (counter > node->getLastMessageCounter ()) {
+			lostMessages = counter - node->getLastMessageCounter () - 1;
+			node->packetErrors += lostMessages;
+			node->setLastMessageCounter (counter);
+		} else {
+			return false;
+		}
+	}
+
+	if (notifyData) {
+		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), count - data_idx, lostMessages, false, RAW);
+	}
+
+	if (node->getSleepy ()) {
+		if (node->qMessagePending) {
+			DEBUG_INFO (" -------> DOWNLINK QUEUED DATA");
+			flashTx = true;
+			node->qMessagePending = false;
+			return comm->send (node->getMacAddress (), node->queuedMessage, node->qMessageLength) == 0;
+		}
+	}
+
+	return true;
+
+}
+
+
+bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node* node, bool encrypted) {
 	/*
 	* ----------------------------------------------------------------------------------------
 	*| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | Tag (16) |
 	* ----------------------------------------------------------------------------------------
 	*/
+
+	if (!encrypted) {
+		return processUnencryptedDataMessage (mac, buf, count, node);
+	}
 
 	//uint8_t msgType_idx = 0;
 	uint8_t iv_idx = 1;
@@ -974,7 +1036,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* b
 	}
 
 	if (notifyData) {
-		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false);
+		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, CAYENNE);
 	}
 
 	if (node->getSleepy ()) {
