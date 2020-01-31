@@ -157,7 +157,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 	if (lostMessages > 0) {
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "%u", lostMessages);
 		GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::lostmessages);
-		//DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
+		DEBUG_VERBOSE ("Published MQTT from %s: %*.s", mac_str, pld_size, payload);
 	}
 	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}",
 							EnigmaIOTGateway.getPER ((uint8_t*)mac),
@@ -254,7 +254,7 @@ void setup () {
 	EnigmaIOTGateway.onWiFiManagerStarted (wifiManagerStarted);
 	EnigmaIOTGateway.onWiFiManagerExit (wifiManagerExit);
 	EnigmaIOTGateway.onDataRx (processRxData);
-	EnigmaIOTGateway.begin (&Espnow_hal);
+	EnigmaIOTGateway.begin (&Espnow_hal,NULL,false); // Disable counter check for performance
 
 #if CONNECT_TO_WIFI_AP == 1
 	WiFi.mode (WIFI_AP_STA);

@@ -958,6 +958,7 @@ bool EnigmaIOTGatewayClass::processUnencryptedDataMessage (const uint8_t mac[6],
 			node->packetErrors += lostMessages;
 			node->setLastMessageCounter (counter);
 		} else {
+			DEBUG_WARN ("Data counter error %d : %d", counter, node->getLastMessageCounter ());
 			return false;
 		}
 	}

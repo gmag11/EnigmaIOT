@@ -115,7 +115,7 @@ void loop () {
 	//}
 
 	static time_t lastSensorData;
-	static const time_t SENSOR_PERIOD = 120;
+	static const time_t SENSOR_PERIOD = 30;
 	if (millis () - lastSensorData > SENSOR_PERIOD) {
 		lastSensorData = millis ();
 		
@@ -128,7 +128,7 @@ void loop () {
 		
 		Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
-		if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
+		if (!EnigmaIOTNode.sendUnencryptedData (msg.getBuffer (), msg.getSize ())) {
 			Serial.println ("---- Error sending data");
 		} else {
 			//Serial.println ("---- Data sent");

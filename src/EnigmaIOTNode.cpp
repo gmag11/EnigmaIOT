@@ -1115,6 +1115,7 @@ bool EnigmaIOTNodeClass::unencryptedDataMessage (const uint8_t* data, size_t len
     memcpy (buf + data_idx, data, len);
 
     DEBUG_INFO (" -------> UNENCRYPTED DATA");
+    DEBUG_VERBOSE ("Unencrypted data message: %s", printHexBuffer (buf, packet_length));
 
 #if DEBUG_LEVEL >= VERBOSE
     char macStr[18];
