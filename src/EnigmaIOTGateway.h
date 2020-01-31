@@ -28,6 +28,7 @@
   */
 enum gatewayMessageType_t {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
+    UNENCRYPTED_NODE_DATA = 0x11, /**< Data message from sensor node. Unencrypted */
     DOWNSTREAM_DATA_SET = 0x02, /**< Data message from gateway. Downstream data for user commands */
     DOWNSTREAM_DATA_GET = 0x12, /**< Data message from gateway. Downstream data for user commands */
 	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway. Used for OTA, settings configuration, etc */
@@ -39,6 +40,15 @@ enum gatewayMessageType_t {
     //KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
     //CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
     INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
+};
+
+enum gatewayPayload_type_t {
+    RAW = 0x00,
+    CAYENNE = 0x81,
+    PROT_BUF = 0x82,
+    MSG_PACK = 0x83,
+    BSON = 0x84,
+    ENIGMAIOT = 0xFF
 };
 
 /**
@@ -55,13 +65,13 @@ enum gwInvalidateReason_t {
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (uint8_t* mac, uint8_t* buf, uint8_t len, uint16_t lostMessages, bool control)> onGwDataRx_t;
+typedef std::function<void (uint8_t* mac, uint8_t* buf, uint8_t len, uint16_t lostMessages, bool control, gatewayPayload_type_t payload_type)> onGwDataRx_t;
 typedef std::function<void (uint8_t* mac, uint16_t node_id)> onNewNode_t;
 typedef std::function<void (uint8_t* mac, gwInvalidateReason_t reason)> onNodeDisconnected_t;
 typedef std::function<void (boolean status)> onWiFiManagerExit_t;
 typedef std::function<void (void)> onWiFiManagerStarted_t;
 #else
-typedef void (*onGwDataRx_t)(uint8_t* mac, uint8_t* data, uint8_t len, uint16_t lostMessages, bool control);
+typedef void (*onGwDataRx_t)(uint8_t* mac, uint8_t* data, uint8_t len, uint16_t lostMessages, bool control, gatewayPayload_type_t payload_type);
 typedef void (*onNewNode_t)(uint8_t* mac, uint16_t node_id);
 typedef void (*onNodeDisconnected_t)(uint8_t* mac, gwInvalidateReason_t reason);
 typedef void (*onWiFiManagerExit_t)(boolean status);
@@ -158,11 +168,22 @@ class EnigmaIOTGatewayClass
       * @param buf Buffer that stores received message
       * @param count Length of received data
       * @param node Node where data message comes from
+      * @param encrypted `true` if received message is encrypted
       * @return Returns `true` if message could be correcly decoded
       */
-     bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node *node);
+     bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node *node, bool encrypted = true);
 
-	 /**
+     /**
+      * @brief Processes data message from node
+      * @param mac Node address
+      * @param buf Buffer that stores received message
+      * @param count Length of received data
+      * @param node Node where data message comes from
+      * @return Returns `true` if message could be correcly decoded
+      */
+     bool processUnencryptedDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node* node);
+     
+     /**
       * @brief Builds, encrypts and sends a **DownstreamData** message.
       * @param node Node that downstream data message is going to
       * @param data Buffer to store payload to be sent
