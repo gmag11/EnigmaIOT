@@ -28,6 +28,7 @@
   */
 enum gatewayMessageType_t {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
+    UNENCRYPTED_NODE_DATA = 0x11, /**< Data message from sensor node. Unencrypted */
     DOWNSTREAM_DATA_SET = 0x02, /**< Data message from gateway. Downstream data for user commands */
     DOWNSTREAM_DATA_GET = 0x12, /**< Data message from gateway. Downstream data for user commands */
 	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway. Used for OTA, settings configuration, etc */

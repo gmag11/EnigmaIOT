@@ -5,6 +5,7 @@
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
+#define ESP8266
 
 #ifdef ESP8266
 #include <Arduino.h>
@@ -1034,19 +1035,20 @@ bool EnigmaIOTNodeClass::processServerHello (const uint8_t* mac, const uint8_t* 
     return true;
 }
 
-bool EnigmaIOTNodeClass::sendData (const uint8_t* data, size_t len, bool controlMessage) {
+bool EnigmaIOTNodeClass::sendData (const uint8_t* data, size_t len, bool controlMessage, bool encrypt) {
     memcpy (dataMessageSent, data, len);
     dataMessageSentLength = len;
+    dataMessageEncrypt = encrypt;
     node.setLastMessageTime (); // Mark message time to start RX window start
 
     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
         if (controlMessage) {
             DEBUG_VERBOSE ("Control message sent: %s", printHexBuffer (data, len));
         } else {
-            DEBUG_VERBOSE ("Data sent: %s", printHexBuffer (data, len));
+            DEBUG_VERBOSE ("%s data sent: %s", encrypt?"Encrypted":"Unencrypted", printHexBuffer (data, len));
         }
         flashBlue = true;
-		if (dataMessage (data, len, controlMessage)) {
+		if (dataMessage (data, len, controlMessage, encrypt)) {
 			dataMessageSentLength = 0;
 			return true;
 		} else
@@ -1066,12 +1068,80 @@ void EnigmaIOTNodeClass::sleep () {
     }
 }
 
-bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool controlMessage) {
+bool EnigmaIOTNodeClass::unencryptedDataMessage (const uint8_t* data, size_t len, bool controlMessage) {
+    /*
+    * ------------------------------------------------------
+    *| msgType (1) | NodeId (2) | Counter (2) | Data (....) |
+    * ------------------------------------------------------
+    */
+
+    uint8_t buf[MAX_MESSAGE_LENGTH];
+    uint16_t counter;
+    uint16_t nodeId = node.getNodeId ();
+    uint8_t payloadType = 0;
+
+    uint8_t nodeId_idx = 1;
+    uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
+    uint8_t payloadType_idx = counter_idx + sizeof (int16_t);
+    uint8_t data_idx = payloadType_idx + sizeof (int8_t);
+
+    uint8_t packet_length = data_idx + len;
+
+    if (!data) {
+        return false;
+    }
+
+    if (controlMessage) {
+        return false; // Unencrypted control data not implemented
+    } else {
+        buf[0] = (uint8_t)UNENCRYPTED_NODE_DATA;
+    }
+
+    memcpy (buf + nodeId_idx, &nodeId, sizeof (uint16_t));
+
+    if (!controlMessage) { // Control messages do not use counter
+        if (useCounter) {
+            counter = node.getLastMessageCounter () + 1;
+            node.setLastMessageCounter (counter);
+            rtcmem_data.lastMessageCounter = counter;
+        } else {
+            counter = (uint16_t)(Crypto.random ());
+        }
+
+        memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
+    }
+
+    memcpy (buf + payloadType_idx, &payloadType, sizeof (uint8_t));
+
+    memcpy (buf + data_idx, data, len);
+
+    DEBUG_INFO (" -------> UNENCRYPTED DATA");
+
+#if DEBUG_LEVEL >= VERBOSE
+    char macStr[18];
+    DEBUG_DBG ("Destination address: %s", mac2str (rtcmem_data.gateway, macStr));
+#endif
+
+    if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
+        if (!saveRTCData ()) {
+            DEBUG_ERROR ("Error saving data on RTC");
+        }
+    }
+
+    return (comm->send (rtcmem_data.gateway, buf, packet_length) == 0);
+}
+
+
+bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool controlMessage, bool encrypt) {
     /*
     * ----------------------------------------------------------------------------------------
     *| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | tag (16) |
     * ----------------------------------------------------------------------------------------
     */
+
+    if (!encrypt) {
+        return unencryptedDataMessage (data, len, controlMessage);
+    }
 
     uint8_t buf[MAX_MESSAGE_LENGTH];
     uint8_t tag[TAG_LENGTH];

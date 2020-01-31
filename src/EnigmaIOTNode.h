@@ -31,6 +31,7 @@
   */
 enum nodeMessageType {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
+    UNENCRYPTED_NODE_DATA = 0x11, /**< Data message from sensor node. Unencrypted */
     DOWNSTREAM_DATA_GET = 0x02, /**< Data message from gateway. Downstream data for commands */
     DOWNSTREAM_DATA_SET = 0x12, /**< Data message from gateway. Downstream data for commands */
 	CONTROL_DATA = 0x03, /**< Internal control message from node to gateway. Used for OTA, settings configuration, etc */
@@ -109,6 +110,7 @@ protected:
     uint64_t sleepTime; ///< @brief Time in microseconds that this node will be slept between measurements
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed
     uint8_t dataMessageSentLength = 0; ///< @brief Message length stored for use in case of message retransmission is needed
+    bool dataMessageEncrypt = true; ///< @brief Message encryption enabled. Stored for use in case of message retransmission is needed
     nodeInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
 	bool otaRunning = false; ///< @brief True if OTA update has started
 	bool otaError = false; ///< @brief True if OTA update has failed. This normally produces a restart
@@ -225,7 +227,9 @@ protected:
 	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
       * @return Returns `true` if message could be correcly sent
       */
-    bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false);
+    bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false, bool encrypt = true);
+
+    bool unencryptedDataMessage (const uint8_t* data, size_t len, bool controlMessage = false);
 
 	/**
 	  * @brief Processes a single OTA update command or data
@@ -338,9 +342,10 @@ protected:
 	  * @param data Buffer to store payload to be sent
 	  * @param len Length of payload data
 	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
-	  * @return Returns `true` if message could be correcly sent
+	  * @param encrypt `true` if data should be encrypted. Default is `true`
+      * @return Returns `true` if message could be correcly sent
 	  */
-	bool sendData (const uint8_t* data, size_t len, bool controlMessage);
+	bool sendData (const uint8_t* data, size_t len, bool controlMessage, bool encrypt = true);
 
 	/**
 	 * @brief Starts searching for a gateway that it using configured Network Name as WiFi AP. Stores this info for subsequent use
@@ -462,6 +467,15 @@ public:
 	bool sendData (const uint8_t* data, size_t len) {
 		return sendData (data, len, false);
 	}
+
+    /**
+      * @brief Starts a data message transmission
+      * @param data Payload buffer
+      * @param len Payload length
+      */
+    bool sendUnencryptedData (const uint8_t* data, size_t len) {
+        return sendData (data, len, false, false);
+    }
 
     /**
       * @brief Defines a function callback that will be called on every downlink data message that is received from gateway
