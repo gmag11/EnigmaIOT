@@ -604,6 +604,11 @@ public:
 		return rtcmem_data.rssi;
 	}
 
+    /**
+     * @brief Deletes configuration file stored on SPIFFS. It makes neccessary to configure it again using WiFi Portal
+     */
+    void resetConfig ();
+
 };
 
 extern EnigmaIOTNodeClass EnigmaIOTNode;

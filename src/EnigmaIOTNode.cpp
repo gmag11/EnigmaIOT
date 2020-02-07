@@ -20,6 +20,16 @@ const char CONFIG_FILE[] = "/config.json";
 
 ETSTimer ledTimer;
 
+void EnigmaIOTNodeClass::resetConfig () {
+    SPIFFS.begin ();
+    SPIFFS.remove (CONFIG_FILE);
+    SPIFFS.end ();
+    DEBUG_WARN ("Config file %s deleted. Restarting");
+
+    clearRTC ();
+    ESP.restart ();
+}
+
 void EnigmaIOTNodeClass::setLed (uint8_t led, time_t onTime) {
     this->led = led;
     ledOnTime = onTime;
@@ -283,7 +293,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	wifiManager.setTryConnectDuringConfigPortal (false);
     String apname = "EnigmaIoTNode" + String (ESP.getChipId (), 16);
 
-    boolean result = wifiManager.startConfigPortal (apname.c_str ());
+    boolean result = wifiManager.startConfigPortal (apname.c_str (), NULL);
     if (true /*result*/) {
         DEBUG_DBG ("==== Config Portal result ====");
 
@@ -444,11 +454,13 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 				}
             } else { // Configuration empty. Enter config AP mode
                 DEBUG_DBG ("No flash data present. Starting Configuration AP");
-                if (configWiFiManager (&rtcmem_data)) {// AP config data OK
-                    DEBUG_DBG ("Got configuration. Storing");
+                configWiFiManager (&rtcmem_data);
+                if (true) {// AP not needed. Assume always valid
+                    DEBUG_DBG ("Got configuration. Searching for Gateway");
                     if (!searchForGateway (&rtcmem_data),true) {
+                        DEBUG_DBG ("Found EnigmaIOT Gateway. Storing configuration");
 						if (!saveFlashData (true)) {
-							DEBUG_ERROR ("Error saving data on flash. Restarting");
+							DEBUG_ERROR ("Error saving data on flash");
 						}
 						SPIFFS.end ();
 						ESP.restart ();
@@ -1533,7 +1545,7 @@ void EnigmaIOTNodeClass::restart (bool reboot) {
 	if (!saveRTCData ()) {
 		DEBUG_ERROR ("Error saving data on RTC");
 	}
-	DEBUG_DBG ("Reset configuration data in RTC memory");
+	DEBUG_WARN ("Reset configuration data in RTC memory");
     if (reboot)
         ESP.restart (); // Reboot to recover normal status
 }
