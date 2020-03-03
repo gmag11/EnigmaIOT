@@ -54,12 +54,12 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 
-#ifndef BUILTIN_LED
-#define BUILTIN_LED 5
+#ifndef LED_BUILTIN
+#define LED_BUILTIN 5
 #endif // BUILTIN_LED
 
-#define BLUE_LED BUILTIN_LED
-#define RED_LED BUILTIN_LED
+#define BLUE_LED LED_BUILTIN
+#define RED_LED LED_BUILTIN
 
 #ifdef ESP32
 TimerHandle_t connectionLedTimer;
@@ -67,12 +67,12 @@ TimerHandle_t connectionLedTimer;
 ETSTimer connectionLedTimer;
 #endif // ESP32
 
-const int connectionLed = BUILTIN_LED;
+const int connectionLed = LED_BUILTIN;
 boolean connectionLedFlashing = false;
 
 void flashConnectionLed (void* led) {
 	//digitalWrite (*(int*)led, !digitalRead (*(int*)led));
-	digitalWrite (BUILTIN_LED, !digitalRead (BUILTIN_LED));
+	digitalWrite (LED_BUILTIN, !digitalRead (LED_BUILTIN));
 }
 
 void startConnectionFlash (int period) {
@@ -244,8 +244,8 @@ void setup () {
 #elif defined ESP32
 	
 #endif
-	pinMode (BUILTIN_LED, OUTPUT);
-	digitalWrite (BUILTIN_LED, HIGH);
+	pinMode (LED_BUILTIN, OUTPUT);
+	digitalWrite (LED_BUILTIN, HIGH);
 	startConnectionFlash (100);
 
 
