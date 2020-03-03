@@ -86,7 +86,6 @@ public:
 	  * @brief Send node disconnection notification
 	  * @param address Node Address
 	  * @param reason Disconnection reason code
-	  * @param node_id Node Id
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
 	bool nodeDisconnectedSend (char* address, gwInvalidateReason_t reason);

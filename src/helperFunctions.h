@@ -42,6 +42,12 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len);
   */
 char* mac2str (const uint8_t* mac, char* buffer);
 
+/**
+  * @brief Debug helper function that creates MAC address byte array from text representation
+  * @param mac Pointer to the MAC address string
+  * @param values Buffer that will store byte array. It must be 6 bytes long at least
+  * @return Returns a pointer to `values` input buffer after writting MAC address
+  */
 uint8_t* str2mac (const char* mac, uint8_t* values);
 
 /**
@@ -52,6 +58,12 @@ uint8_t* str2mac (const char* mac, uint8_t* values);
   */
 void initWiFi (uint8_t channel = 3, uint8_t role = 0, String networkName = "EnigmaIOT");
 
+/**
+  * @brief Calculates CRC32 of a buffer
+  * @param data Input buffer
+  * @param length Input length
+  * @return CRC32 value
+  */
 uint32_t calculateCRC32 (const uint8_t* data, size_t length);
 
 #endif

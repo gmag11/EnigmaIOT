@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['wait_5ffor_5fdownlink_841',['WAIT_FOR_DOWNLINK',['../NodeList_8h.html#a8dd9280b6a6e53e65414115f47b0df6aad9a6dd624e6987b425f7cc371d0f458f',1,'NodeList.h']]],
-  ['wait_5ffor_5fserver_5fhello_842',['WAIT_FOR_SERVER_HELLO',['../NodeList_8h.html#a8dd9280b6a6e53e65414115f47b0df6aa54286ecc8277fb2878edbd8381deff6f',1,'NodeList.h']]],
-  ['wrong_5fclient_5fhello_843',['WRONG_CLIENT_HELLO',['../EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977ad6e9d0b3e3d479305eb2ce4233f4eca6',1,'EnigmaIOTGateway.h']]],
-  ['wrong_5fdata_844',['WRONG_DATA',['../EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977a4d7f512e433223ce2caa44e787a2ddff',1,'EnigmaIOTGateway.h']]]
+  ['sensor_5fdata',['SENSOR_DATA',['../EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613aa8ba55203a30122cc271cc66b2909b21',1,'EnigmaIOTGateway.h']]],
+  ['server_5fhello',['SERVER_HELLO',['../EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a28914d3bb26ec8c2bd2d5ad9781cbf8c',1,'EnigmaIOTGateway.h']]],
+  ['sleep',['SLEEP',['../NodeList_8h.html#a8dd9280b6a6e53e65414115f47b0df6aad6137abebe4fdc59e2f0f2c84bdbe3fa',1,'NodeList.h']]],
+  ['sleep_5fans',['SLEEP_ANS',['../NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a0b79c77071b6b916a7b7d085add225f6',1,'NodeList.h']]],
+  ['sleep_5fget',['SLEEP_GET',['../NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a9b7d7a8e645683d52bb2347e7d7273aa',1,'NodeList.h']]],
+  ['sleep_5fset',['SLEEP_SET',['../NodeList_8h.html#af7c3a73e42834705926eba633e55daa4ab0cab5d4c3d13577a1157e2929019a55',1,'NodeList.h']]],
+  ['status',['status',['../GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30',1,'GwOutput_generic.h']]]
 ];

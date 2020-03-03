@@ -238,6 +238,13 @@ protected:
       */
     bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false, bool encrypt = true);
 
+    /**
+      * @brief Builds and sends a **Data** message without encryption. Not recommended, use it only if you absolutely need more performance.
+      * @param data Buffer to store payload to be sent
+      * @param len Length of payload data
+	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
+      * @return Returns `true` if message could be correcly sent
+      */
     bool unencryptedDataMessage (const uint8_t* data, size_t len, bool controlMessage = false);
 
 	/**

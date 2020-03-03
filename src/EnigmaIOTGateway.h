@@ -174,7 +174,7 @@ class EnigmaIOTGatewayClass
      bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node *node, bool encrypted = true);
 
      /**
-      * @brief Processes data message from node
+      * @brief Processes unencrypted data message from node
       * @param mac Node address
       * @param buf Buffer that stores received message
       * @param count Length of received data
