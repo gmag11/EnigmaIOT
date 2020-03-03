@@ -169,6 +169,12 @@ $(function() {
 </div>
 <p>Sensor data is always encrypted using shared key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.</p>
 <p>Total message length (without tag) is included on a 2 byte field.</p>
+<h3>Unencrypted Sensor Data message</h3>
+<div class="image">
+<img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/UnencryptedSensorData.png" alt="Node unencrypted payload message format"/>
+</div>
+<p>In case that extreme performance is needed there is the possibility to send unencrypted data so processor spends a few milliseconds less. It is not recommended to do so unless you want to investigate crypto software performance. Use at your own data risk :D</p>
+<p>This message also includes node ID and a counter used by gateway to check lost or repeated messages from that node.</p>
 <h3><a class="el" href="classNode.html" title="Class definition for a single sensor Node. ">Node</a> control message (downlink)</h3>
 <div class="image">
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorCommand-Downlink.png" alt="Node control message format"/>

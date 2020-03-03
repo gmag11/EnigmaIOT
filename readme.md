@@ -136,6 +136,14 @@ Sensor data is always encrypted using shared key and IV. Apart from payload this
 
 Total message length (without tag) is included on a 2 byte field.
 
+### Unencrypted Sensor Data message
+
+![Node unencrypted payload message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/UnencryptedSensorData.png)
+
+In case that extreme performance is needed there is the possibility to send unencrypted data so processor spends a few milliseconds less. It is not recommended to do so unless you want to investigate crypto software performance. Use at your own data risk :D
+
+This message also includes node ID and a counter used by gateway to check lost or repeated messages from that node.
+
 ### Node control message (downlink)
 
 ![Node control message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorCommand-Downlink.png)
