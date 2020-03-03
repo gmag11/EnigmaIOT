@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTNode.cpp
-  * @version 0.8.1
-  * @date 17/01/2020
+  * @version 0.8.2
+  * @date 03/03/2020
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
