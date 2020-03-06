@@ -34,11 +34,11 @@ enum nodeMessageType {
     UNENCRYPTED_NODE_DATA = 0x11, /**< Data message from sensor node. Unencrypted */
     DOWNSTREAM_DATA_GET = 0x02, /**< Data message from gateway. Downstream data for commands */
     DOWNSTREAM_DATA_SET = 0x12, /**< Data message from gateway. Downstream data for commands */
-	CONTROL_DATA = 0x03, /**< Internal control message from node to gateway. Used for OTA, settings configuration, etc */
-	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to node. Used for OTA, settings configuration, etc */
+    CONTROL_DATA = 0x03, /**< Internal control message from node to gateway. Used for OTA, settings configuration, etc */
+    DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to node. Used for OTA, settings configuration, etc */
     CLOCK_REQUEST = 0x05, /**< Clock request message from node */
     CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
-	CLIENT_HELLO = 0xFF, /**< ClientHello message from node */
+    CLIENT_HELLO = 0xFF, /**< ClientHello message from node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
 };
@@ -70,19 +70,19 @@ enum nodeInvalidateReason_t {
 struct rtcmem_data_t {
     uint32_t crc32; /**< CRC to check RTC data integrity */
     uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
-	uint16_t lastMessageCounter; /**< Node last message counter */
-	uint16_t nodeId; /**< Node identification */
-	uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
-	uint8_t gateway[6]; /**< Gateway address */
-	int8_t rssi; /**< Gateway signal strength */
-	uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
-	char networkName[NETWORK_NAME_LENGTH]; /**< Network name. Used to search gateway peer */
-	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
-	bool sleepy; /**< Sleepy node */
-	uint32_t sleepTime = 0; /**< Time to sleep between sensor data delivery */
-	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
-	uint8_t commErrors = 0; /**< number of non acknowledged packets. May mean that gateway is not available or its channel has changed.
-							This is used to retrigger Gateway scan*/
+    uint16_t lastMessageCounter; /**< Node last message counter */
+    uint16_t nodeId; /**< Node identification */
+    uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
+    uint8_t gateway[6]; /**< Gateway address */
+    int8_t rssi; /**< Gateway signal strength */
+    uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
+    char networkName[NETWORK_NAME_LENGTH]; /**< Network name. Used to search gateway peer */
+    status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
+    bool sleepy; /**< Sleepy node */
+    uint32_t sleepTime = 0; /**< Time to sleep between sensor data delivery */
+    bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
+    uint8_t commErrors = 0; /**< number of non acknowledged packets. May mean that gateway is not available or its channel has changed.
+                                This is used to retrigger Gateway scan*/
 };
 
 typedef nodeMessageType nodeMessageType_t;
@@ -121,19 +121,19 @@ protected:
     uint8_t dataMessageSentLength = 0; ///< @brief Message length stored for use in case of message retransmission is needed
     bool dataMessageEncrypt = true; ///< @brief Message encryption enabled. Stored for use in case of message retransmission is needed
     nodeInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
-	bool otaRunning = false; ///< @brief True if OTA update has started
-	bool otaError = false; ///< @brief True if OTA update has failed. This normally produces a restart
-	time_t lastOTAmsg; ///< @brief Time when last OTA update message has received. This is used to control timeout
-	boolean indentifying = false; ///< @brief True if node has its led flashing to be identified
-	time_t identifyStart; ///< @brief Time when identification started flashing. Used to control identification timeout
-	clock_t timeSyncPeriod = QUICK_SYNC_TIME; ///< @brief Clock synchronization period
-	bool clockSyncEnabled = false; ///< @brief If true clock is synchronized with Gateway
-	bool shouldRestart = false; ///< @brief Triggers a restart if true
-	bool gatewaySearchStarted = false; ///< @brief Avoids start a new gateway scan if it already started
-	bool requestSearchGateway = false; ///< @brief Flag to control updating gateway address, RSSI and channel
-	bool requestReportRSSI = false; ///< @brief Flag to control RSSI reporting
-	bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
-	int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
+    bool otaRunning = false; ///< @brief True if OTA update has started
+    bool otaError = false; ///< @brief True if OTA update has failed. This normally produces a restart
+    time_t lastOTAmsg; ///< @brief Time when last OTA update message has received. This is used to control timeout
+    boolean indentifying = false; ///< @brief True if node has its led flashing to be identified
+    time_t identifyStart; ///< @brief Time when identification started flashing. Used to control identification timeout
+    clock_t timeSyncPeriod = QUICK_SYNC_TIME; ///< @brief Clock synchronization period
+    bool clockSyncEnabled = false; ///< @brief If true clock is synchronized with Gateway
+    bool shouldRestart = false; ///< @brief Triggers a restart if true
+    bool gatewaySearchStarted = false; ///< @brief Avoids start a new gateway scan if it already started
+    bool requestSearchGateway = false; ///< @brief Flag to control updating gateway address, RSSI and channel
+    bool requestReportRSSI = false; ///< @brief Flag to control RSSI reporting
+    bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
+    int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
     char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
 
     /**
@@ -620,5 +620,5 @@ public:
 
 extern EnigmaIOTNodeClass EnigmaIOTNode;
 
-#endif
-#endif
+#endif // ESP8266
+#endif // _ENIGMAIOTNODE_h
