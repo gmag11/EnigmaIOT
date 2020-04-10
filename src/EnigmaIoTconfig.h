@@ -23,6 +23,7 @@ static const unsigned int MAX_NODE_INACTIVITY = 86400000U; ///< @brief After thi
 static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mode all data messages are ignored
 static const size_t MAX_MQTT_QUEUE_SIZE = 5; ///< @brief Maximum number of MQTT messages to be sent
 static const int RATE_AVE_ORDER = 5; ///< @brief Message rate filter order
+static const int MAX_INPUT_QUEUE_SIZE = 3; ///< @brief Input queue size for EnigmaIOT messages. Acts as a buffer to be able to handle messages during high load
 #ifndef NUM_NODES
 static const int NUM_NODES = 20;
 #endif //NUM_NODES

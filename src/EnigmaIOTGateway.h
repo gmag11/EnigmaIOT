@@ -21,6 +21,7 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 #include <DNSServer.h>
+#include <queue>
 
 
 /**
@@ -84,6 +85,12 @@ typedef struct {
 	char networkName[NETWORK_NAME_LENGTH];   /**< Network name, used to help nodes to find gateway*/
 } gateway_config_t;
 
+typedef struct {
+    uint8_t *addr; /**< Message address*/
+    uint8_t *data; /**< Message buffer*/
+    size_t len; /**< Message length*/
+} msg_queue_item_t;
+
 /**
   * @brief Main gateway class. Manages communication with nodes and sends data to upper layer
   *
@@ -107,6 +114,8 @@ class EnigmaIOTGatewayClass
      bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
 	 gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
      char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
+
+     std::queue<msg_queue_item_t*> input_queue; ///< @brief Input messages buffer. It acts as a FIFO queue
 
 	 AsyncWebServer* server; ///< @brief WebServer that holds configuration portal
 	 DNSServer* dns; ///< @brief DNS server used by configuration portal
@@ -456,6 +465,24 @@ class EnigmaIOTGatewayClass
          notifyNodeDisconnection = handler;
      }
 
+    /**
+      * @brief Add message to input queue
+      * @param addr Origin address
+      * @param msg EnigmaIoT message
+      * @param len Message length
+      */
+     bool addInputMsgQueue (const uint8_t* addr, const uint8_t* msg, size_t len);
+
+      /**
+      * @brief Gets next item in the queue
+      * @return Next message to be processed
+      */
+     msg_queue_item_t* getInputMsgQueue ();
+
+    /**
+      * @brief Deletes next item in the queue
+      */
+     void popInputMsgQueue ();
 
 };
 

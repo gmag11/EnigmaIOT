@@ -675,8 +675,57 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	}
 }
 
+bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t* msg, size_t len) {
+	msg_queue_item_t* message = new msg_queue_item_t;
+
+	if (input_queue.size () >= MAX_INPUT_QUEUE_SIZE) {
+		// delete oldest message before inserting new one if queue is full
+		popInputMsgQueue ();
+	}
+
+	message->len = len;
+	message->data = (uint8_t*)malloc (len);
+	memcpy (message->data, msg, len);
+	message->addr = (uint8_t*)malloc (comm->COMMS_HAL_ADDR_LEN);
+	memcpy (message->addr, addr, comm->COMMS_HAL_ADDR_LEN);
+
+	input_queue.push (message);
+	DEBUG_WARN ("%d EnigmaIOT messages queued %.*s", input_queue.size (),
+			   message->len, message->data);
+
+	return true;
+}
+
+msg_queue_item_t* EnigmaIOTGatewayClass::getInputMsgQueue () {
+	if (input_queue.size ()) {
+		DEBUG_DBG ("EnigmaIOT message got from queue");
+		return input_queue.front ();
+	}
+	return NULL;
+}
+
+void EnigmaIOTGatewayClass::popInputMsgQueue () {
+	msg_queue_item_t* message;
+
+	if (input_queue.size ()) {
+		message = input_queue.front ();
+		if (message) {
+			if (message->data) {
+				delete(message->data);
+			}
+			if (message->addr) {
+				delete(message->addr);
+			}
+			delete message;
+		}
+		input_queue.pop ();
+		DEBUG_WARN ("EnigmaIOT message pop. Size %d", input_queue.size ());
+	}
+}
+
 void EnigmaIOTGatewayClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
-	EnigmaIOTGateway.manageMessage (mac_addr, data, len);
+	// old --> EnigmaIOTGateway.manageMessage (mac_addr, data, len);
+	EnigmaIOTGateway.addInputMsgQueue (mac_addr, data, len);
 }
 
 void EnigmaIOTGatewayClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
@@ -742,6 +791,16 @@ void EnigmaIOTGatewayClass::handle () {
 			DEBUG_WARN ("OTA ongoing = false");
 			DEBUG_WARN ("millis() = %u, lastOTAmsg = %u, diff = %d", currentTime, lastOTAmsg, currentTime - lastOTAmsg);
 		}
+	}
+
+	// Check input EnigmaIOT message queue
+	msg_queue_item_t* message;
+
+   if (!input_queue.empty ()) {
+		message = getInputMsgQueue ();
+		manageMessage (message->addr, message->data, message->len);
+		DEBUG_DBG ("EnigmaIOT input message processed");
+		popInputMsgQueue ();
 	}
 }
 
