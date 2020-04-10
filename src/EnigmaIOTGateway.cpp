@@ -690,8 +690,7 @@ bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t
 	memcpy (message->addr, addr, comm->COMMS_HAL_ADDR_LEN);
 
 	input_queue.push (message);
-	DEBUG_WARN ("%d EnigmaIOT messages queued %.*s", input_queue.size (),
-			   message->len, message->data);
+	DEBUG_WARN ("%d EnigmaIOT messages queued", input_queue.size ());
 
 	return true;
 }
@@ -794,13 +793,22 @@ void EnigmaIOTGatewayClass::handle () {
 	}
 
 	// Check input EnigmaIOT message queue
-	msg_queue_item_t* message;
 
    if (!input_queue.empty ()) {
+        msg_queue_item_t* message;
 		message = getInputMsgQueue ();
-		manageMessage (message->addr, message->data, message->len);
-		DEBUG_DBG ("EnigmaIOT input message processed");
+
+		size_t len = message->len;
+		uint8_t* data = (uint8_t*)malloc (len);
+		memcpy (data, message->data, len);
+		DEBUG_DBG ("Reserved %d bytes for address", comm->COMMS_HAL_ADDR_LEN);
+		uint8_t* addr = (uint8_t*)malloc (comm->COMMS_HAL_ADDR_LEN);
+		memcpy (addr, message->addr, comm->COMMS_HAL_ADDR_LEN);
 		popInputMsgQueue ();
+		DEBUG_WARN ("EnigmaIOT input message from queue. MsgType: %X", data[0]);
+		manageMessage (addr, data, len);
+		delete (addr);
+		delete (data);
 	}
 }
 

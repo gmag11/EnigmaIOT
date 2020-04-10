@@ -33,7 +33,7 @@ static const int NUM_NODES = 20;
 
 // Node configuration
 static const int16_t RECONNECTION_PERIOD = 1500; ///< @brief Time to retry Gateway connection
-static const uint16_t DOWNLINK_WAIT_TIME = 400; ///< @brief Time to wait for downlink message before sleep. Setting less than 180 ms causes ESP-NOW errors due to lack of ACK processing
+static const uint16_t DOWNLINK_WAIT_TIME = 800; ///< @brief Time to wait for downlink message before sleep. Setting less than 180 ms causes ESP-NOW errors due to lack of ACK processing
 static const uint32_t DEFAULT_SLEEP_TIME = 10; ///< @brief Default sleep time if it was not set
 static const uint32_t OTA_TIMEOUT_TIME = 10000; ///< @brief Timeout between OTA messages. In milliseconds
 static const time_t IDENTIFY_TIMEOUT = 10000; ///< @brief How long LED will be flashing during identification
@@ -56,7 +56,7 @@ const uint8_t AAD_LENGTH = 8; ///< @brief Number of bytes from last part of key 
 //Debug
 #define DEBUG_ESP_PORT Serial ///< @brief Stream to output debug info. It will normally be `Serial`
 #ifndef DEBUG_LEVEL
-#define DEBUG_LEVEL WARN ///< @brief Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE
+#define DEBUG_LEVEL VERBOSE ///< @brief Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE
 #endif //DEBUG_LEVEL
 
 #endif
