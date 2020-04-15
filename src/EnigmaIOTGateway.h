@@ -91,6 +91,59 @@ typedef struct {
     size_t len; /**< Message length*/
 } msg_queue_item_t;
 
+template <typename Telement>
+class EnigmaIOTRingBuffer {
+protected:
+    int maxSize;
+    int size = 0;
+    int readIndex = 0;
+    int writeIndex = 0;
+    Telement* buffer;
+
+public:
+    EnigmaIOTRingBuffer <Telement>(int range) : maxSize (range) {
+        buffer = new Telement[maxSize];
+    }
+    int getSize () { return size; }
+    bool isFull () { return size == maxSize; }
+    bool isEmpty () { return size == 0; }
+    bool push (Telement *item) {
+        bool wasFull = isFull ();
+        memcpy (buffer[writeIndex], item, sizeof (Telement));
+        writeIndex++;
+        if (writeIndex >= maxSize) {
+            writeIndex %= maxSize;
+        }
+        if (wasFull) { // old value is no longer valid
+            readIndex++;
+            if (readIndex >= maxSize) {
+                readIndex %= maxSize;
+            }
+        } else {
+            size++;
+        }
+        return !wasFull;
+    }
+    bool pop () {
+        bool wasEmpty = isEmpty ();
+        if (!wasEmpty) {
+            readIndex++;
+            if (readIndex >= maxSize) {
+                readIndex %= maxSize;
+            }
+            size--;
+        }
+        return !wasEmpty;
+    }
+    Telement* front () {
+        if (!isEmpty ()) {
+            return buffer[readIndex];
+        } else {
+            return NULL;
+        }
+    }
+};
+
 /**
   * @brief Main gateway class. Manages communication with nodes and sends data to upper layer
   *
