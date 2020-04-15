@@ -11,6 +11,7 @@
 
 // Global configuration. Physical layer settings
 static const uint8_t MAX_MESSAGE_LENGTH = 250; ///< @brief Maximum payload size on ESP-NOW
+static const size_t ENIGMAIOT_ADDR_LEN = 6; ///< @brief Address size. Mac address = 6 bytes
 static const char ENIGMAIOT_PROT_VERS[] = "0.8.1"; ///< @brief EnitmaIoT Version
 static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on ESP-NOW
 static const uint32_t FLASH_LED_TIME = 50; ///< @brief Time that led keeps on during flash in ms
@@ -23,7 +24,7 @@ static const unsigned int MAX_NODE_INACTIVITY = 86400000U; ///< @brief After thi
 static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mode all data messages are ignored
 static const size_t MAX_MQTT_QUEUE_SIZE = 5; ///< @brief Maximum number of MQTT messages to be sent
 static const int RATE_AVE_ORDER = 5; ///< @brief Message rate filter order
-static const int MAX_INPUT_QUEUE_SIZE = 3; ///< @brief Input queue size for EnigmaIOT messages. Acts as a buffer to be able to handle messages during high load
+static const int MAX_INPUT_QUEUE_SIZE = 5; ///< @brief Input queue size for EnigmaIOT messages. Acts as a buffer to be able to handle messages during high load
 #ifndef NUM_NODES
 static const int NUM_NODES = 20;
 #endif //NUM_NODES
