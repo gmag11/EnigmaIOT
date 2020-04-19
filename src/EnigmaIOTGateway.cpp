@@ -633,6 +633,7 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 }
 
 void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bool useDataCounter) {
+	this->input_queue = new EnigmaIOTRingBuffer<msg_queue_item_t> (MAX_INPUT_QUEUE_SIZE);
 	this->comm = comm;
 	this->useCounter = useDataCounter;
 
@@ -676,51 +677,31 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 }
 
 bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t* msg, size_t len) {
-	msg_queue_item_t* message = new msg_queue_item_t;
+	msg_queue_item_t message;
 
-	if (input_queue.size () >= MAX_INPUT_QUEUE_SIZE) {
-		// delete oldest message before inserting new one if queue is full
-		popInputMsgQueue ();
-	}
+	message.len = len;
+	memcpy (message.data, msg, len);
+	memcpy (message.addr, addr, ENIGMAIOT_ADDR_LEN);
 
-	message->len = len;
-	message->data = (uint8_t*)malloc (len);
-	memcpy (message->data, msg, len);
-	message->addr = (uint8_t*)malloc (ENIGMAIOT_ADDR_LEN);
-	memcpy (message->addr, addr, ENIGMAIOT_ADDR_LEN);
-
-	input_queue.push (message);
+	input_queue->push (&message);
 	char macstr[ENIGMAIOT_ADDR_LEN * 3];
-	DEBUG_WARN ("Message 0x%02X added from %s. Size: %d", message->data[0], mac2str (message->addr, macstr), input_queue.size ());
+	DEBUG_WARN ("Message 0x%02X added from %s. Size: %d", message.data[0], mac2str (message.addr, macstr), input_queue->size ());
 	
-	//adding = false;
 	return true;
 }
 
 msg_queue_item_t* EnigmaIOTGatewayClass::getInputMsgQueue () {
-	if (input_queue.size ()) {
-		DEBUG_WARN ("EnigmaIOT message got from queue. Size: %d", input_queue.size ());
-		return input_queue.front ();
+	msg_queue_item_t* message;
+	message = input_queue->front ();
+	if (message) {
+		DEBUG_DBG ("EnigmaIOT message got from queue. Size: %d", input_queue->size ());
 	}
-	return NULL;
+	return message;
 }
 
 void EnigmaIOTGatewayClass::popInputMsgQueue () {
-	msg_queue_item_t* message;
-
-	if (input_queue.size ()) {
-		message = input_queue.front ();
-		if (message) {
-			if (message->data) {
-				delete(message->data);
-			}
-			if (message->addr) {
-				delete(message->addr);
-			}
-			delete message;
-		}
-		input_queue.pop ();
-		DEBUG_WARN ("EnigmaIOT message pop. Size %d", input_queue.size ());
+	if (input_queue->pop ()) {
+		DEBUG_WARN ("EnigmaIOT message pop. Size %d", input_queue->size ());
 	}
 }
 
@@ -796,11 +777,11 @@ void EnigmaIOTGatewayClass::handle () {
 
 	// Check input EnigmaIOT message queue
 
-   if (!input_queue.empty ()) {
+   if (!input_queue->empty ()) {
         msg_queue_item_t* message;
 		message = getInputMsgQueue ();
 
-		DEBUG_WARN ("EnigmaIOT input message from queue. MsgType: 0x%02X", message->data[0]);
+		DEBUG_DBG ("EnigmaIOT input message from queue. MsgType: 0x%02X", message->data[0]);
 		manageMessage (message->addr, message->data, message->len);
 		popInputMsgQueue ();
 	}
@@ -870,8 +851,10 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
                     invalidateKey (node, KEY_EXPIRED);
                 }
 			} else {
-				invalidateKey (node, WRONG_DATA);
-				DEBUG_INFO ("Control message not OK");
+				if (DISCONNECT_ON_DATA_ERROR) {
+					invalidateKey (node, WRONG_DATA);
+				}
+				DEBUG_WARN ("Control message not OK");
 			}
 		} else {
 			invalidateKey (node, UNREGISTERED_NODE);
@@ -900,8 +883,10 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 					invalidateKey (node, KEY_EXPIRED);
 				}
 			} else {
-				invalidateKey (node, WRONG_DATA);
-				DEBUG_INFO ("Data not OK");
+				if (DISCONNECT_ON_DATA_ERROR) {
+					invalidateKey (node, WRONG_DATA);
+				}
+				DEBUG_WARN ("Data not OK");
 			}
 		} else {
 			invalidateKey (node, UNREGISTERED_NODE);
@@ -921,7 +906,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
                 }
             } else {
                 invalidateKey (node, WRONG_DATA);
-                DEBUG_INFO ("Clock request not OK");
+                DEBUG_WARN ("Clock request not OK");
             }
 
         } else {

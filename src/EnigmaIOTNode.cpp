@@ -731,7 +731,7 @@ void EnigmaIOTNodeClass::handle () {
 	}
 
 	// In case of comm errors search for gateway again
-	if (rtcmem_data.commErrors >= COMM_ERRORS_BEFORE_SCAN) {
+	if (CHECK_COMM_ERRORS && (rtcmem_data.commErrors >= COMM_ERRORS_BEFORE_SCAN)) {
 		if (!gatewaySearchStarted) {
 			gatewaySearchStarted = true;
 			
@@ -1717,7 +1717,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		TimeManager.reset ();
 		timeSyncPeriod = QUICK_SYNC_TIME;
         if (notifyDisconnection) {
-            notifyDisconnection ();
+            notifyDisconnection (invalidateReason);
         }
         break;
     case DOWNSTREAM_DATA_SET:

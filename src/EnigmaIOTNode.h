@@ -91,11 +91,11 @@ typedef nodeMessageType nodeMessageType_t;
 #include <functional>
 typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command)> onNodeDataRx_t;
 typedef std::function<void ()> onConnected_t;
-typedef std::function<void ()> onDisconnected_t;
+typedef std::function<void (nodeInvalidateReason_t reason)> onDisconnected_t;
 #else
 typedef void (*onNodeDataRx_t)(const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command);
 typedef void (*onConnected_t)();
-typedef void (*onDisconnected_t)();
+typedef void (*onDisconnected_t)(nodeInvalidateReason_t reason);
 #endif
 
 /**

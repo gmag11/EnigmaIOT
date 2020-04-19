@@ -86,8 +86,8 @@ typedef struct {
 } gateway_config_t;
 
 typedef struct {
-    uint8_t *addr; /**< Message address*/
-    uint8_t *data; /**< Message buffer*/
+    uint8_t addr[ENIGMAIOT_ADDR_LEN]; /**< Message address*/
+    uint8_t data[MAX_MESSAGE_LENGTH]; /**< Message buffer*/
     size_t len; /**< Message length*/
 } msg_queue_item_t;
 
@@ -95,7 +95,7 @@ template <typename Telement>
 class EnigmaIOTRingBuffer {
 protected:
     int maxSize;
-    int size = 0;
+    int numElements = 0;
     int readIndex = 0;
     int writeIndex = 0;
     Telement* buffer;
@@ -104,12 +104,15 @@ public:
     EnigmaIOTRingBuffer <Telement>(int range) : maxSize (range) {
         buffer = new Telement[maxSize];
     }
-    int getSize () { return size; }
-    bool isFull () { return size == maxSize; }
-    bool isEmpty () { return size == 0; }
+    int size () { return numElements; }
+    bool isFull () { return numElements == maxSize; }
+    bool empty () { return (numElements == 0); }
     bool push (Telement *item) {
         bool wasFull = isFull ();
-        memcpy (buffer[writeIndex], item, sizeof (Telement));
+        Serial.printf ("Add element. Buffer was %s\n", wasFull ? "full" : "not full");
+        Serial.printf ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        memcpy (&(buffer[writeIndex]), item, sizeof (Telement));
+        Serial.printf ("Copied: %d bytes\n", sizeof (Telement));
         writeIndex++;
         if (writeIndex >= maxSize) {
             writeIndex %= maxSize;
@@ -120,24 +123,29 @@ public:
                 readIndex %= maxSize;
             }
         } else {
-            size++;
+            numElements++;
         }
+        Serial.printf ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
         return !wasFull;
     }
     bool pop () {
-        bool wasEmpty = isEmpty ();
+        bool wasEmpty = empty ();
+        Serial.printf ("Remove element. Buffer was %s\n", wasEmpty ? "empty" : "not empty");
+        Serial.printf ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
         if (!wasEmpty) {
             readIndex++;
             if (readIndex >= maxSize) {
                 readIndex %= maxSize;
             }
-            size--;
+            numElements--;
         }
+        Serial.printf ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
         return !wasEmpty;
     }
     Telement* front () {
-        if (!isEmpty ()) {
-            return buffer[readIndex];
+        Serial.printf ("Read element. ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        if (!empty ()) {
+            return &(buffer[readIndex]);
         } else {
             return NULL;
         }
@@ -168,7 +176,7 @@ class EnigmaIOTGatewayClass
 	 gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
      char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
 
-     std::queue<msg_queue_item_t*> input_queue; ///< @brief Input messages buffer. It acts as a FIFO queue
+     EnigmaIOTRingBuffer<msg_queue_item_t> *input_queue; ///< @brief Input messages buffer. It acts as a FIFO queue
 
 	 AsyncWebServer* server; ///< @brief WebServer that holds configuration portal
 	 DNSServer* dns; ///< @brief DNS server used by configuration portal
