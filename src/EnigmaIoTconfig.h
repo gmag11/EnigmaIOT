@@ -24,7 +24,7 @@ static const unsigned int MAX_NODE_INACTIVITY = 86400000U; ///< @brief After thi
 static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mode all data messages are ignored
 static const size_t MAX_MQTT_QUEUE_SIZE = 5; ///< @brief Maximum number of MQTT messages to be sent
 static const int RATE_AVE_ORDER = 5; ///< @brief Message rate filter order
-static const int MAX_INPUT_QUEUE_SIZE = 5; ///< @brief Input queue size for EnigmaIOT messages. Acts as a buffer to be able to handle messages during high load
+static const int MAX_INPUT_QUEUE_SIZE = 3; ///< @brief Input queue size for EnigmaIOT messages. Acts as a buffer to be able to handle messages during high load
 #ifndef NUM_NODES
 static const int NUM_NODES = 20; ///< @brief Maximum number of nodes that this gateway can handle
 #endif //NUM_NODES
@@ -63,7 +63,7 @@ const uint8_t AAD_LENGTH = 8; ///< @brief Number of bytes from last part of key 
 //Debug
 #define DEBUG_ESP_PORT Serial ///< @brief Stream to output debug info. It will normally be `Serial`
 #ifndef DEBUG_LEVEL
-#define DEBUG_LEVEL WANR ///< @brief Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE
+#define DEBUG_LEVEL WARN ///< @brief Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE
 #endif //DEBUG_LEVEL
 
 #endif

@@ -1134,7 +1134,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* b
 	}
 
 	if (notifyData) {
-		DEBUG_WARN ("Notify data");
+		//DEBUG_WARN ("Notify data %d", input_queue->size());
 		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, CAYENNE);
 	}
 	return true;
