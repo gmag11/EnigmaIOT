@@ -700,7 +700,7 @@ bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t
 //#endif
 			input_queue->push (&message);
 			char macstr[ENIGMAIOT_ADDR_LEN * 3];
-			DEBUG_WARN ("Message 0x%02X added from %s. Size: %d", message.data[0], mac2str (message.addr, macstr), input_queue->size ());
+			DEBUG_DBG ("Message 0x%02X added from %s. Size: %d", message.data[0], mac2str (message.addr, macstr), input_queue->size ());
 //#ifdef ESP32
 			portEXIT_CRITICAL (&myMutex);
 //#else
@@ -748,7 +748,7 @@ msg_queue_item_t* EnigmaIOTGatewayClass::getInputMsgQueue (msg_queue_item_t *buf
 
 void EnigmaIOTGatewayClass::popInputMsgQueue () {
 	if (input_queue->pop ()) {
-		DEBUG_WARN ("EnigmaIOT message pop. Size %d", input_queue->size ());
+		DEBUG_DBG ("EnigmaIOT message pop. Size %d", input_queue->size ());
 	}
 	//xSemaphoreGive (buffer_write_access_semaphore);
 }
@@ -1135,7 +1135,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* b
 
 	if (notifyData) {
 		DEBUG_WARN ("Notify data");
-		//notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, CAYENNE);
+		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, CAYENNE);
 	}
 	return true;
 

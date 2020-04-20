@@ -110,8 +110,8 @@ public:
     bool empty () { return (numElements == 0); }
     bool push (Telement *item) {
         bool wasFull = isFull ();
-        DEBUG_WARN ("Add element. Buffer was %s\n", wasFull ? "full" : "not full");
-        DEBUG_WARN ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        DEBUG_DBG ("Add element. Buffer was %s\n", wasFull ? "full" : "not full");
+        DEBUG_DBG ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
         memcpy (&(buffer[writeIndex]), item, sizeof (Telement));
         //Serial.printf ("Copied: %d bytes\n", sizeof (Telement));
         writeIndex++;
@@ -126,13 +126,13 @@ public:
         } else {
             numElements++;
         }
-        DEBUG_WARN ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        DEBUG_DBG ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
         return !wasFull;
     }
     bool pop () {
         bool wasEmpty = empty ();
-        DEBUG_WARN ("Remove element. Buffer was %s\n", wasEmpty ? "empty" : "not empty");
-        DEBUG_WARN ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        DEBUG_DBG ("Remove element. Buffer was %s\n", wasEmpty ? "empty" : "not empty");
+        DEBUG_DBG ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
         if (!wasEmpty) {
             readIndex++;
             if (readIndex >= maxSize) {
@@ -140,11 +140,11 @@ public:
             }
             numElements--;
         }
-        DEBUG_WARN ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        DEBUG_DBG ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
         return !wasEmpty;
     }
     Telement* front () {
-        DEBUG_WARN ("Read element. ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        DEBUG_DBG ("Read element. ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
         if (!empty ()) {
             return &(buffer[readIndex]);
         } else {
