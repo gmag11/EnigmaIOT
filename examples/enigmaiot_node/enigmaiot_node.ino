@@ -81,6 +81,9 @@ void setup () {
 
 	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
     msg.addTemperature (1, 20.34);
+	msg.addDigitalInput (2, 123);
+	msg.addBarometricPressure (3, 1007.25);
+	msg.addCurrent (4, 2.43);
 
 	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
 	// End of user code
