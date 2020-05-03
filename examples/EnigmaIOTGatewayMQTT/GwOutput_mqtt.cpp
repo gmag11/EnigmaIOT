@@ -510,7 +510,7 @@ bool GwOutput_MQTT::outputDataSend (char* address, char* data, size_t length, Gw
 	return result;
 }
 
-bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, uint8_t length) {
+bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t length) {
 	const int TOPIC_SIZE = 64;
 	const int PAYLOAD_SIZE = 512;
 	char* topic = (char*)malloc (TOPIC_SIZE);

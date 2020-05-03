@@ -192,7 +192,7 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	  * @param length Data buffer length
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	bool outputControlSend (char* address, uint8_t *data, uint8_t length);
+	bool outputControlSend (char* address, uint8_t *data, size_t length);
 
 	 /**
 	  * @brief Send new node notification

@@ -79,7 +79,7 @@ public:
 	  * @param length Data buffer length
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	virtual bool outputControlSend (char* address, uint8_t* data, uint8_t length) = 0;
+	virtual bool outputControlSend (char* address, uint8_t* data, size_t length) = 0;
 
 	 /**
 	  * @brief Send new node notification
