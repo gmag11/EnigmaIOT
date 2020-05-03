@@ -105,7 +105,7 @@ public:
 	  * @param type Type of message
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	virtual bool outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type = data) = 0;
+	virtual bool outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type = data) = 0;
 
 	 /**
 	  * @brief Should be called often for module management

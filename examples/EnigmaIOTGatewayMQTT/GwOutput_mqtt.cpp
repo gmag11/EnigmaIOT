@@ -486,7 +486,7 @@ void GwOutput_MQTT::popMQTTqueue () {
 	}
 }
 
-bool GwOutput_MQTT::outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type) {
+bool GwOutput_MQTT::outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type) {
 	const int TOPIC_SIZE = 64;
 	char* topic = (char*)malloc (TOPIC_SIZE);
 	bool result;

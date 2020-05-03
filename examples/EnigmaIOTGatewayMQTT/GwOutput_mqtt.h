@@ -218,7 +218,7 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	  * @param type Type of message
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	bool outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type = data);
+	bool outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type = data);
 
 	 /**
 	  * @brief Should be called regularly for module management
