@@ -159,7 +159,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 	}
 
 	GwOutput.outputDataSend (mac_str, payload, pld_size);
-	DEBUG_INFO ("Published data message from %s: %s", mac_str, payload);
+	DEBUG_INFO ("Published data message from %s, length %d: %s", mac_str, pld_size, payload);
 	if (lostMessages > 0) {
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "%u", lostMessages);
 		GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::lostmessages);

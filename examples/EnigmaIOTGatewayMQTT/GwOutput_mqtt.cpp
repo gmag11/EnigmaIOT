@@ -451,8 +451,10 @@ bool GwOutput_MQTT::addMQTTqueue (const char* topic, char* payload, size_t len, 
 	message->retain = retain;
 
 	mqtt_queue.push (message);
-	DEBUG_DBG ("%d MQTT messages queued %s %.*s", mqtt_queue.size(),
-			   message->topic, message->payload_len, message->payload);
+	DEBUG_DBG ("%d MQTT messages queued Len:%d %s %.*s", mqtt_queue.size(),
+			   len, 
+			   message->topic, 
+			   message->payload_len, message->payload);
 
 	return true;
 }
@@ -500,7 +502,7 @@ bool GwOutput_MQTT::outputDataSend (char* address, char* data, uint8_t length, G
 		break;
 	}
 	if ((result = addMQTTqueue (topic, data, length))) {
-		DEBUG_INFO ("MQTT queued %s", topic);
+		DEBUG_INFO ("MQTT queued %s. Length %d", topic, length);
 	} else {
 		DEBUG_WARN ("Error queuing MQTT %s", topic);
 	}
