@@ -1,13 +1,14 @@
 var searchData=
 [
-  ['packeterrors',['packetErrors',['../classNode.html#a4e2e4c6afb4bf93ca10e60d239fd87c5',1,'Node']]],
-  ['packetnumber',['packetNumber',['../classNode.html#aedfde4376c7c84dd8c88c2c530b3b102',1,'Node']]],
-  ['packetshour',['packetsHour',['../classNode.html#abc1ad898434142e44923f7220b6a2ae4',1,'Node']]],
-  ['payload',['payload',['../structmqtt__queue__item__t.html#a8883bfd38fdf3dd3c6e43235762ae570',1,'mqtt_queue_item_t']]],
-  ['payload_5flen',['payload_len',['../structmqtt__queue__item__t.html#a62c6546560a1c32ef4beee7366949b71',1,'mqtt_queue_item_t']]],
-  ['per',['per',['../classNode.html#a2f8f6419cc10c972285178991b2cec78',1,'Node']]],
-  ['post_5freg_5fdelay',['POST_REG_DELAY',['../EnigmaIoTconfig_8h.html#a198819f64ca0424df0b0fc930b85caed',1,'EnigmaIoTconfig.h']]],
-  ['pre_5freg_5fdelay',['PRE_REG_DELAY',['../EnigmaIoTconfig_8h.html#a122e04d1d7956015ed3e7d349fa34a6a',1,'EnigmaIoTconfig.h']]],
-  ['privatedhkey',['privateDHKey',['../classCryptModule.html#a34795afc7eeb1110a1672d496b3d55a3',1,'CryptModule']]],
-  ['publicdhkey',['publicDHKey',['../classCryptModule.html#ae55611b17617615a79de5325d2c3c02d',1,'CryptModule']]]
+  ['offset_786',['offset',['../classTimeManagerClass.html#a18dbda6ff57544a6b029cc55dda46d30',1,'TimeManagerClass']]],
+  ['ota_5ffinished_787',['OTA_FINISHED',['../namespaceEnigmaIoTUpdate.html#a56955d84eb178a78a16db3ed6e2a1c7e',1,'EnigmaIoTUpdate']]],
+  ['ota_5fgw_5ftimeout_788',['OTA_GW_TIMEOUT',['../EnigmaIoTconfig_8h.html#aad94db36f97a563732bfd0ca10b164f9',1,'EnigmaIoTconfig.h']]],
+  ['ota_5fout_5fof_5fsequence_789',['OTA_OUT_OF_SEQUENCE',['../namespaceEnigmaIoTUpdate.html#ad815631b097bdf448ecd824fc28bfec6',1,'EnigmaIoTUpdate']]],
+  ['ota_5ftimeout_5ftime_790',['OTA_TIMEOUT_TIME',['../EnigmaIoTconfig_8h.html#aeb4681294ade5149d1db83df99744f6e',1,'EnigmaIoTconfig.h']]],
+  ['otafinished_791',['otaFinished',['../namespaceEnigmaIoTUpdate.html#a1efdbd8359ee1708af1bcf3be3eff850',1,'EnigmaIoTUpdate']]],
+  ['otaok_792',['otaOK',['../namespaceEnigmaIoTUpdate.html#af461562efece05d0467c0e17edd2e58f',1,'EnigmaIoTUpdate']]],
+  ['otaongoing_793',['OTAongoing',['../EnigmaIOTGateway_8cpp.html#a96db16d874da26d9a7b199c904da0d5f',1,'EnigmaIOTGateway.cpp']]],
+  ['otaoutofsequenceerror_794',['otaOutOfSequenceError',['../namespaceEnigmaIoTUpdate.html#ade24b0154bfadccc5f69ee560a33de8b',1,'EnigmaIoTUpdate']]],
+  ['otaresulttopic_795',['otaResultTopic',['../namespaceEnigmaIoTUpdate.html#af04fd96058043d8861cd38175cb99e6c',1,'EnigmaIoTUpdate']]],
+  ['otasettopic_796',['otaSetTopic',['../namespaceEnigmaIoTUpdate.html#aefdb455c166193127480d7b5afe88a66',1,'EnigmaIoTUpdate']]]
 ];

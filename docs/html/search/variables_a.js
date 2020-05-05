@@ -1,22 +1,7 @@
 var searchData=
 [
-  ['mac',['mac',['../structnode__instance.html#a5ef197acf3ea44c1ae2b5e7f7fe04959',1,'node_instance::mac()'],['../classNode.html#a03db56f17c4186a74d4afdb44597475f',1,'Node::mac()']]],
-  ['max_5fdata_5fpayload_5fsize',['MAX_DATA_PAYLOAD_SIZE',['../EnigmaIoTconfig_8h.html#a8df0346a1f3e282d6875b04a9fe4ec8f',1,'EnigmaIoTconfig.h']]],
-  ['max_5fkey_5fvalidity',['MAX_KEY_VALIDITY',['../EnigmaIoTconfig_8h.html#aadcc5d2ec146be476018bdfc71d04f79',1,'EnigmaIoTconfig.h']]],
-  ['max_5fmessage_5flength',['MAX_MESSAGE_LENGTH',['../EnigmaIoTconfig_8h.html#a9dbccd523bb0ed9a3266bc8c448f4432',1,'EnigmaIoTconfig.h']]],
-  ['max_5fmqtt_5fqueue_5fsize',['MAX_MQTT_QUEUE_SIZE',['../EnigmaIoTconfig_8h.html#a78ee44942fc7c28441d0cd502d1d3d3d',1,'EnigmaIoTconfig.h']]],
-  ['max_5fnode_5finactivity',['MAX_NODE_INACTIVITY',['../EnigmaIoTconfig_8h.html#a718f713933a902050be33c5651800011',1,'EnigmaIoTconfig.h']]],
-  ['min_5fsync_5faccuracy',['MIN_SYNC_ACCURACY',['../EnigmaIoTconfig_8h.html#a6be31758c99161d257bf66a6a809047d',1,'EnigmaIoTconfig.h']]],
-  ['mqtt_5fclient',['mqtt_client',['../classGwOutput__MQTT.html#ac177228269fbe285eb3b1a1d31764327',1,'GwOutput_MQTT']]],
-  ['mqtt_5fpass',['mqtt_pass',['../structmqttgw__config__t.html#ab992a4e4c889751714b8f27fd11fff31',1,'mqttgw_config_t']]],
-  ['mqtt_5fport',['mqtt_port',['../structmqttgw__config__t.html#a5a61979dca0bcdab6b0ac8975ed002cd',1,'mqttgw_config_t']]],
-  ['mqtt_5fqueue',['mqtt_queue',['../classGwOutput__MQTT.html#a3d617e48568014fbfce66e5cdf34022a',1,'GwOutput_MQTT']]],
-  ['mqtt_5fserver',['mqtt_server',['../structmqttgw__config__t.html#a0991f261ed379635918b3e09ee6f9326',1,'mqttgw_config_t']]],
-  ['mqtt_5fuser',['mqtt_user',['../structmqttgw__config__t.html#a7739560775997dbbdb6ed76d37b6dbfe',1,'mqttgw_config_t']]],
-  ['mqttgw_5fconfig',['mqttgw_config',['../classGwOutput__MQTT.html#a13bd3d7f5d5a221627886a8b4ce29516',1,'GwOutput_MQTT']]],
-  ['mqttpassparam',['mqttPassParam',['../classGwOutput__MQTT.html#ad4d784744aeee89199092987f9ba5c53',1,'GwOutput_MQTT']]],
-  ['mqttportparam',['mqttPortParam',['../classGwOutput__MQTT.html#a7949ebf56b8a63b24553fe02d857373d',1,'GwOutput_MQTT']]],
-  ['mqttserverparam',['mqttServerParam',['../classGwOutput__MQTT.html#a6c30a4c67499253c238fc8646f3285ef',1,'GwOutput_MQTT']]],
-  ['mqttuserparam',['mqttUserParam',['../classGwOutput__MQTT.html#a24682127079586d71ac858f7e2f78f6f',1,'GwOutput_MQTT']]],
-  ['mypublickey',['myPublicKey',['../classEnigmaIOTGatewayClass.html#adefe71141a5aa6f9c46712487b6feb31',1,'EnigmaIOTGatewayClass']]]
+  ['lastmessagecounter_746',['lastMessageCounter',['../structnode__instance.html#a6988622d76bd1d76a0d040d97b8d2c91',1,'node_instance::lastMessageCounter()'],['../classNode.html#af2378f7b085ccdc06314b12263fd2d34',1,'Node::lastMessageCounter()']]],
+  ['lastmessagetime_747',['lastMessageTime',['../structnode__instance.html#a7eadabd847f82e2383dd440fd3cddc37',1,'node_instance::lastMessageTime()'],['../classNode.html#a2d56bbba3211927eff545e385ef5d162',1,'Node::lastMessageTime()']]],
+  ['lastotamsg_748',['lastOTAmsg',['../EnigmaIOTGateway_8cpp.html#a792b28373075cd82cdece3745a65b65a',1,'EnigmaIOTGateway.cpp']]],
+  ['len_749',['len',['../structmsg__queue__item__t.html#a62805793291f61bc8b07e2b432ec3e65',1,'msg_queue_item_t']]]
 ];

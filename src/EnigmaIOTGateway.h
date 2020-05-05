@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGateway.h
-  * @version 0.8.2
-  * @date 03/03/2020
+  * @version 0.8.3
+  * @date 05/05/2020
   * @author German Martin
   * @brief Library to build a gateway for EnigmaIoT system
   */
@@ -45,11 +45,11 @@ enum gatewayMessageType_t {
 };
 
 enum gatewayPayload_type_t {
-    RAW = 0x00,
-    CAYENNE = 0x81,
-    PROT_BUF = 0x82,
-    MSG_PACK = 0x83,
-    BSON = 0x84,
+    RAW = 0x00, /**< Raw data without specific format */
+    CAYENNE = 0x81, /**< CayenneLPP packed data */
+    PROT_BUF = 0x82, /**< Data packed using Protocol Buffers. NOT IMPLEMENTED */
+    MSG_PACK = 0x83, /**< Data packed using MessagePack. NOT IMPLEMENTED */
+    BSON = 0x84, /**< Data packed using BSON. NOT IMPLEMENTED */
     ENIGMAIOT = 0xFF
 };
 
@@ -92,22 +92,51 @@ typedef struct {
     size_t len; /**< Message length*/
 } msg_queue_item_t;
 
+/**
+  * @brief Ring buffer class. Used to implement message buffer
+  *
+  */
 template <typename Telement>
 class EnigmaIOTRingBuffer {
 protected:
-    int maxSize;
-    int numElements = 0;
-    int readIndex = 0;
-    int writeIndex = 0;
-    Telement* buffer;
+    int maxSize; ///< @brief Buffer size
+    int numElements = 0; ///< @brief Number of elements that buffer currently has
+    int readIndex = 0; ///< @brief Pointer to next item to be read
+    int writeIndex = 0; ///< @brief Pointer to next position to write onto
+    Telement* buffer; ///< @brief Actual buffer
 
 public:
+    /**
+      * @brief Creates a ring buffer to hold `Telement` objects
+      * @param range Buffer depth
+      */
     EnigmaIOTRingBuffer <Telement>(int range) : maxSize (range) {
         buffer = new Telement[maxSize];
     }
+
+    /**
+      * @brief Returns actual number of elements that buffer holds
+      * @return Returns Actual number of elements that buffer holds
+      */
     int size () { return numElements; }
+
+    /**
+      * @brief Checks if buffer is full
+      * @return Returns `true`if buffer is full, `false` otherwise
+      */
     bool isFull () { return numElements == maxSize; }
+
+    /**
+      * @brief Checks if buffer is empty
+      * @return Returns `true`if buffer has no elements stored, `false` otherwise
+      */
     bool empty () { return (numElements == 0); }
+
+    /**
+      * @brief Adds a new item to buffer, deleting older element if it is full
+      * @param item Element to add to buffer
+      * @return Returns `false` if buffer was full before inserting the new element, `true` otherwise
+      */
     bool push (Telement *item) {
         bool wasFull = isFull ();
         DEBUG_DBG ("Add element. Buffer was %s\n", wasFull ? "full" : "not full");
@@ -129,6 +158,11 @@ public:
         DEBUG_DBG ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
         return !wasFull;
     }
+    
+    /**
+      * @brief Deletes older item from buffer, if buffer is not empty
+      * @return Returns `false` if buffer was empty before trying to delete element, `true` otherwise
+      */
     bool pop () {
         bool wasEmpty = empty ();
         DEBUG_DBG ("Remove element. Buffer was %s\n", wasEmpty ? "empty" : "not empty");
@@ -143,7 +177,12 @@ public:
         DEBUG_DBG ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
         return !wasEmpty;
     }
-    Telement* front () {
+
+    /**
+      * @brief Gets a pointer to older item in buffer, if buffer is not empty
+      * @return Returns pointer to element. If buffer was empty before calling this method it returns `NULL`
+      */
+        Telement* front () {
         DEBUG_DBG ("Read element. ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
         if (!empty ()) {
             return &(buffer[readIndex]);
@@ -178,9 +217,9 @@ class EnigmaIOTGatewayClass
      char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
      //SemaphoreHandle_t buffer_write_access_semaphore = NULL;
 #ifdef ESP32
-     portMUX_TYPE myMutex = portMUX_INITIALIZER_UNLOCKED;
+     portMUX_TYPE myMutex = portMUX_INITIALIZER_UNLOCKED; ///< @brief Handle to control critical sections
 #endif
-     msg_queue_item_t tempBuffer;
+     msg_queue_item_t tempBuffer; ///< @brief Temporary storage for input message got from buffer
 
      EnigmaIOTRingBuffer<msg_queue_item_t> *input_queue; ///< @brief Input messages buffer. It acts as a FIFO queue
 

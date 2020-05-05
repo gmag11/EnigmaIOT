@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTNode.h
-  * @version 0.8.2
-  * @date 03/03/2020
+  * @version 0.8.3
+  * @date 05/05/2020
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
@@ -44,11 +44,11 @@ enum nodeMessageType {
 };
 
 enum nodePayload_type_t {
-    RAW = 0x00,
-    CAYENNE = 0x81,
-    PROT_BUF = 0x82,
-    MSG_PACK = 0x83,
-    BSON = 0x84
+    RAW = 0x00, /**< Raw data without specific format */
+    CAYENNE = 0x81, /**< CayenneLPP packed data */
+    PROT_BUF = 0x82, /**< Data packed using Protocol Buffers. NOT IMPLEMENTED */
+    MSG_PACK = 0x83, /**< Data packed using MessagePack. NOT IMPLEMENTED */
+    BSON = 0x84 /**< Data packed using BSON. NOT IMPLEMENTED */
 };
 
 

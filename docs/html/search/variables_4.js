@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['enigmaiot_5fprot_5fvers',['ENIGMAIOT_PROT_VERS',['../EnigmaIoTconfig_8h.html#ac00fc04374b3c61f75a7f0f2f4eb60f9',1,'EnigmaIoTconfig.h']]],
-  ['enigmaiotgateway',['enigmaIotGateway',['../classGatewayOutput__dummy.html#a454aa9432be36f3b61fda07a1910f1f1',1,'GatewayOutput_dummy::enigmaIotGateway()'],['../classGatewayOutput__generic.html#aa4855724d46b50a35735f9900494b889',1,'GatewayOutput_generic::enigmaIotGateway()'],['../EnigmaIOTGateway_8cpp.html#abcd4985de3ef6fbe1994af85093ca034',1,'EnigmaIOTGateway():&#160;EnigmaIOTGateway.cpp'],['../EnigmaIOTGateway_8h.html#abcd4985de3ef6fbe1994af85093ca034',1,'EnigmaIOTGateway():&#160;EnigmaIOTGateway.cpp']]],
-  ['espclient',['espClient',['../classGwOutput__MQTT.html#ae1bac550738c7f1a92deb3450c1e929a',1,'GwOutput_MQTT']]],
-  ['espnow_5fhal',['Espnow_hal',['../espnow__hal_8cpp.html#a3eef8679955ce5f4743338cbc6bf1e0e',1,'Espnow_hal():&#160;espnow_hal.cpp'],['../espnow__hal_8h.html#a3eef8679955ce5f4743338cbc6bf1e0e',1,'Espnow_hal():&#160;espnow_hal.cpp']]]
+  ['data_717',['data',['../structmsg__queue__item__t.html#a59b67289f8b6a8e69ae955f1bdfc459f',1,'msg_queue_item_t']]],
+  ['datarcvd_718',['dataRcvd',['../classComms__halClass.html#a5bbed119e5e361b9be85a33404cf2e83',1,'Comms_halClass::dataRcvd()'],['../classEspnow__halClass.html#abab5ac687881d32ddc3cf889cf32a85a',1,'Espnow_halClass::dataRcvd()']]],
+  ['default_5fchannel_719',['DEFAULT_CHANNEL',['../EnigmaIoTconfig_8h.html#af561a36a9d4be8596b2187252342ffdf',1,'EnigmaIoTconfig.h']]],
+  ['default_5fsleep_5ftime_720',['DEFAULT_SLEEP_TIME',['../EnigmaIoTconfig_8h.html#a4400d84e20bfd15aed72aa991dd87d4f',1,'EnigmaIoTconfig.h']]],
+  ['disconnect_5fon_5fdata_5ferror_721',['DISCONNECT_ON_DATA_ERROR',['../EnigmaIoTconfig_8h.html#a6aa9a1bf5b534f017d6c1c7bec100d1d',1,'EnigmaIoTconfig.h']]],
+  ['dns_722',['dns',['../classEnigmaIOTGatewayClass.html#aa057eae7440f60abe236ae5b121dbf7c',1,'EnigmaIOTGatewayClass']]],
+  ['downlink_5fwait_5ftime_723',['DOWNLINK_WAIT_TIME',['../EnigmaIoTconfig_8h.html#a52ec03c6ad068419f98e52f60718626e',1,'EnigmaIoTconfig.h']]],
+  ['downlinkcb_724',['downlinkCb',['../classGatewayOutput__dummy.html#acc3cddc82384c4a8d2f44a22664bf2b1',1,'GatewayOutput_dummy::downlinkCb()'],['../classGatewayOutput__generic.html#ada169ba682e6632f72d62724887f92de',1,'GatewayOutput_generic::downlinkCb()']]]
 ];

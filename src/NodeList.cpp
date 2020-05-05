@@ -1,7 +1,7 @@
 /**
   * @file NodeList.cpp
-  * @version 0.8.2
-  * @date 03/03/2020
+  * @version 0.8.3
+  * @date 05/05/2020
   * @author German Martin
   * @brief EnigmaIoT sensor node management structures
   */
