@@ -515,9 +515,9 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 		notifyWiFiManagerExit (result);
 	}
 
-	free (server);
-	free (dns);
-	free (wifiManager);
+	delete (server);
+	delete (dns);
+	delete (wifiManager);
 
 	return result;
 }
@@ -633,8 +633,17 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 }
 
 void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bool useDataCounter) {
+	this->input_queue = new EnigmaIOTRingBuffer<msg_queue_item_t> (MAX_INPUT_QUEUE_SIZE);
 	this->comm = comm;
 	this->useCounter = useDataCounter;
+	
+	//vSemaphoreCreateBinary (buffer_write_access_semaphore);
+	
+	//if (buffer_write_access_semaphore) {
+	//	DEBUG_DBG ("Semaphore created");
+	//} else {
+	//	DEBUG_ERROR ("Semaphore creation error");
+	//}
 
 	if (networkKey) {
 		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
@@ -675,8 +684,79 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	}
 }
 
+bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t* msg, size_t len) {
+	//if (buffer_write_access_semaphore) {
+	//	if (xSemaphoreTake (buffer_write_access_semaphore, 10 / portTICK_PERIOD_MS)) {
+			msg_queue_item_t message;
+
+			message.len = len;
+			memcpy (message.data, msg, len);
+			memcpy (message.addr, addr, ENIGMAIOT_ADDR_LEN);
+
+//#ifdef ESP32
+			portENTER_CRITICAL (&myMutex);
+//#else
+//			noInterrupts ();
+//#endif
+			input_queue->push (&message);
+			char macstr[ENIGMAIOT_ADDR_LEN * 3];
+			DEBUG_DBG ("Message 0x%02X added from %s. Size: %d", message.data[0], mac2str (message.addr, macstr), input_queue->size ());
+//#ifdef ESP32
+			portEXIT_CRITICAL (&myMutex);
+//#else
+//			interrupts ();
+//#endif
+			//xSemaphoreGive (buffer_write_access_semaphore);
+			return true;
+	//	}
+	//}
+	//return false;
+}
+
+msg_queue_item_t* EnigmaIOTGatewayClass::getInputMsgQueue (msg_queue_item_t *buffer) {
+	//if (buffer_write_access_semaphore) {
+	//	if (xSemaphoreTake (buffer_write_access_semaphore, 10 / portTICK_PERIOD_MS)) {
+			msg_queue_item_t* message;
+//#ifdef esp32
+			portENTER_CRITICAL (&myMutex);
+//#else
+//			noInterrupts ();
+//#endif
+			message = input_queue->front ();
+			if (message) {
+				DEBUG_DBG ("EnigmaIOT message got from queue. Size: %d", input_queue->size ());
+				memcpy (buffer->data, message->data, message->len);
+				memcpy (buffer->addr, message->addr, ENIGMAIOT_ADDR_LEN);
+				buffer->len = message->len;
+				popInputMsgQueue ();
+			}
+//#ifdef esp32
+			portEXIT_CRITICAL (&myMutex);
+//#else
+//			interrupts ();
+//#endif
+			//xSemaphoreGive (buffer_write_access_semaphore);
+			if (message) {
+				return buffer;
+			} else {
+				return NULL;
+			}
+	//	}
+	//}
+	//return NULL;
+}
+
+void EnigmaIOTGatewayClass::popInputMsgQueue () {
+	if (input_queue->pop ()) {
+		DEBUG_DBG ("EnigmaIOT message pop. Size %d", input_queue->size ());
+	}
+	//xSemaphoreGive (buffer_write_access_semaphore);
+}
+
 void EnigmaIOTGatewayClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
-	EnigmaIOTGateway.manageMessage (mac_addr, data, len);
+	// old --> EnigmaIOTGateway.manageMessage (mac_addr, data, len);
+	
+	EnigmaIOTGateway.addInputMsgQueue (mac_addr, data, len);
 }
 
 void EnigmaIOTGatewayClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
@@ -741,6 +821,20 @@ void EnigmaIOTGatewayClass::handle () {
 			OTAongoing = false;
 			DEBUG_WARN ("OTA ongoing = false");
 			DEBUG_WARN ("millis() = %u, lastOTAmsg = %u, diff = %d", currentTime, lastOTAmsg, currentTime - lastOTAmsg);
+		}
+	}
+
+	// Check input EnigmaIOT message queue
+
+   if (!input_queue->empty ()) {
+        msg_queue_item_t* message;
+		
+		message = getInputMsgQueue (&tempBuffer);
+		
+		if (message) {
+			DEBUG_DBG ("EnigmaIOT input message from queue. MsgType: 0x%02X", message->data[0]);
+			manageMessage (message->addr, message->data, message->len);
+			//popInputMsgQueue ();
 		}
 	}
 }
@@ -809,8 +903,10 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
                     invalidateKey (node, KEY_EXPIRED);
                 }
 			} else {
-				invalidateKey (node, WRONG_DATA);
-				DEBUG_INFO ("Control message not OK");
+				if (DISCONNECT_ON_DATA_ERROR) {
+					invalidateKey (node, WRONG_DATA);
+				}
+				DEBUG_WARN ("Control message not OK");
 			}
 		} else {
 			invalidateKey (node, UNREGISTERED_NODE);
@@ -839,8 +935,10 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 					invalidateKey (node, KEY_EXPIRED);
 				}
 			} else {
-				invalidateKey (node, WRONG_DATA);
-				DEBUG_INFO ("Data not OK");
+				if (DISCONNECT_ON_DATA_ERROR) {
+					invalidateKey (node, WRONG_DATA);
+				}
+				DEBUG_WARN ("Data not OK");
 			}
 		} else {
 			invalidateKey (node, UNREGISTERED_NODE);
@@ -860,7 +958,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
                 }
             } else {
                 invalidateKey (node, WRONG_DATA);
-                DEBUG_INFO ("Clock request not OK");
+                DEBUG_WARN ("Clock request not OK");
             }
 
         } else {
@@ -1020,12 +1118,11 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* b
         DEBUG_ERROR ("Error during decryption");
         return false;
     }
-
 	DEBUG_VERBOSE ("Decrypted data message: %s", printHexBuffer (buf, count - TAG_LENGTH));
 
 	node->packetNumber++;
 
-	memcpy (&counter, &buf[counter_idx], sizeof (uint16_t));
+	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));
 	if (useCounter) {
 		if (counter > node->getLastMessageCounter ()) {
 			lostMessages = counter - node->getLastMessageCounter () - 1;
@@ -1037,8 +1134,10 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* b
 	}
 
 	if (notifyData) {
+		//DEBUG_WARN ("Notify data %d", input_queue->size());
 		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, CAYENNE);
 	}
+	return true;
 
 	if (node->getSleepy ()) {
 		if (node->qMessagePending) {

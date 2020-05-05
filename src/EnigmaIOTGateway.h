@@ -21,7 +21,9 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 #include <DNSServer.h>
+#include <queue>
 
+#include "helperFunctions.h"
 
 /**
   * @brief Message code definition
@@ -84,6 +86,73 @@ typedef struct {
 	char networkName[NETWORK_NAME_LENGTH];   /**< Network name, used to help nodes to find gateway*/
 } gateway_config_t;
 
+typedef struct {
+    uint8_t addr[ENIGMAIOT_ADDR_LEN]; /**< Message address*/
+    uint8_t data[MAX_MESSAGE_LENGTH]; /**< Message buffer*/
+    size_t len; /**< Message length*/
+} msg_queue_item_t;
+
+template <typename Telement>
+class EnigmaIOTRingBuffer {
+protected:
+    int maxSize;
+    int numElements = 0;
+    int readIndex = 0;
+    int writeIndex = 0;
+    Telement* buffer;
+
+public:
+    EnigmaIOTRingBuffer <Telement>(int range) : maxSize (range) {
+        buffer = new Telement[maxSize];
+    }
+    int size () { return numElements; }
+    bool isFull () { return numElements == maxSize; }
+    bool empty () { return (numElements == 0); }
+    bool push (Telement *item) {
+        bool wasFull = isFull ();
+        DEBUG_DBG ("Add element. Buffer was %s\n", wasFull ? "full" : "not full");
+        DEBUG_DBG ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        memcpy (&(buffer[writeIndex]), item, sizeof (Telement));
+        //Serial.printf ("Copied: %d bytes\n", sizeof (Telement));
+        writeIndex++;
+        if (writeIndex >= maxSize) {
+            writeIndex %= maxSize;
+        }
+        if (wasFull) { // old value is no longer valid
+            readIndex++;
+            if (readIndex >= maxSize) {
+                readIndex %= maxSize;
+            }
+        } else {
+            numElements++;
+        }
+        DEBUG_DBG ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        return !wasFull;
+    }
+    bool pop () {
+        bool wasEmpty = empty ();
+        DEBUG_DBG ("Remove element. Buffer was %s\n", wasEmpty ? "empty" : "not empty");
+        DEBUG_DBG ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        if (!wasEmpty) {
+            readIndex++;
+            if (readIndex >= maxSize) {
+                readIndex %= maxSize;
+            }
+            numElements--;
+        }
+        DEBUG_DBG ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        return !wasEmpty;
+    }
+    Telement* front () {
+        DEBUG_DBG ("Read element. ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+        if (!empty ()) {
+            return &(buffer[readIndex]);
+        } else {
+            return NULL;
+        }
+    }
+};
+
 /**
   * @brief Main gateway class. Manages communication with nodes and sends data to upper layer
   *
@@ -107,6 +176,13 @@ class EnigmaIOTGatewayClass
      bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
 	 gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
      char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
+     //SemaphoreHandle_t buffer_write_access_semaphore = NULL;
+#ifdef ESP32
+     portMUX_TYPE myMutex = portMUX_INITIALIZER_UNLOCKED;
+#endif
+     msg_queue_item_t tempBuffer;
+
+     EnigmaIOTRingBuffer<msg_queue_item_t> *input_queue; ///< @brief Input messages buffer. It acts as a FIFO queue
 
 	 AsyncWebServer* server; ///< @brief WebServer that holds configuration portal
 	 DNSServer* dns; ///< @brief DNS server used by configuration portal
@@ -456,6 +532,24 @@ class EnigmaIOTGatewayClass
          notifyNodeDisconnection = handler;
      }
 
+    /**
+      * @brief Add message to input queue
+      * @param addr Origin address
+      * @param msg EnigmaIoT message
+      * @param len Message length
+      */
+     bool addInputMsgQueue (const uint8_t* addr, const uint8_t* msg, size_t len);
+
+      /**
+      * @brief Gets next item in the queue
+      * @return Next message to be processed
+      */
+     msg_queue_item_t* getInputMsgQueue (msg_queue_item_t* buffer);
+
+    /**
+      * @brief Deletes next item in the queue
+      */
+     void popInputMsgQueue ();
 
 };
 

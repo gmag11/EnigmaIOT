@@ -441,6 +441,7 @@ bool GwOutput_MQTT::addMQTTqueue (const char* topic, char* payload, size_t len, 
 	if (mqtt_queue.size() >= MAX_MQTT_QUEUE_SIZE) {
 		//return false;
 		mqtt_queue.pop ();
+		// TODO: Better do this --> popMQTTqueue ();
 	}
 
 	message->topic = (char*)malloc (strlen (topic)+1);

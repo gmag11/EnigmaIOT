@@ -141,11 +141,12 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 		DynamicJsonDocument jsonBuffer (capacity);
 		//StaticJsonDocument<capacity> jsonBuffer;
 		JsonArray root = jsonBuffer.createNestedArray ();
-		CayenneLPP* cayennelpp = new CayenneLPP (MAX_DATA_PAYLOAD_SIZE);
+		//CayenneLPP* cayennelpp = new CayenneLPP (MAX_DATA_PAYLOAD_SIZE);
+		CayenneLPP cayennelpp(MAX_DATA_PAYLOAD_SIZE);
 
-		cayennelpp->decode ((uint8_t*)buffer, length, root);
-		cayennelpp->CayenneLPP::~CayenneLPP ();
-		free (cayennelpp);
+		cayennelpp.decode ((uint8_t*)buffer, length, root);
+		//cayennelpp->CayenneLPP::~CayenneLPP ();
+		//free (cayennelpp);
 
 		pld_size = serializeJson (root, payload, PAYLOAD_SIZE);
 	} else if (payload_type == RAW) {
