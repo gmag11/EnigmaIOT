@@ -693,19 +693,19 @@ bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t
 			memcpy (message.data, msg, len);
 			memcpy (message.addr, addr, ENIGMAIOT_ADDR_LEN);
 
-//#ifdef ESP32
+#ifdef ESP32
 			portENTER_CRITICAL (&myMutex);
-//#else
-//			noInterrupts ();
-//#endif
+#else
+			noInterrupts ();
+#endif
 			input_queue->push (&message);
 			char macstr[ENIGMAIOT_ADDR_LEN * 3];
 			DEBUG_DBG ("Message 0x%02X added from %s. Size: %d", message.data[0], mac2str (message.addr, macstr), input_queue->size ());
-//#ifdef ESP32
+#ifdef ESP32
 			portEXIT_CRITICAL (&myMutex);
-//#else
-//			interrupts ();
-//#endif
+#else
+			interrupts ();
+#endif
 			//xSemaphoreGive (buffer_write_access_semaphore);
 			return true;
 	//	}
@@ -717,11 +717,11 @@ msg_queue_item_t* EnigmaIOTGatewayClass::getInputMsgQueue (msg_queue_item_t *buf
 	//if (buffer_write_access_semaphore) {
 	//	if (xSemaphoreTake (buffer_write_access_semaphore, 10 / portTICK_PERIOD_MS)) {
 			msg_queue_item_t* message;
-//#ifdef esp32
+#ifdef esp32
 			portENTER_CRITICAL (&myMutex);
-//#else
-//			noInterrupts ();
-//#endif
+#else
+			noInterrupts ();
+#endif
 			message = input_queue->front ();
 			if (message) {
 				DEBUG_DBG ("EnigmaIOT message got from queue. Size: %d", input_queue->size ());
@@ -730,11 +730,11 @@ msg_queue_item_t* EnigmaIOTGatewayClass::getInputMsgQueue (msg_queue_item_t *buf
 				buffer->len = message->len;
 				popInputMsgQueue ();
 			}
-//#ifdef esp32
+#ifdef esp32
 			portEXIT_CRITICAL (&myMutex);
-//#else
-//			interrupts ();
-//#endif
+#else
+			interrupts ();
+#endif
 			//xSemaphoreGive (buffer_write_access_semaphore);
 			if (message) {
 				return buffer;
