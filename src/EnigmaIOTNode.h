@@ -43,12 +43,14 @@ enum nodeMessageType {
     INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
 };
 
-enum nodePayload_type_t {
+enum nodePayloadEncoding_t {
     RAW = 0x00, /**< Raw data without specific format */
-    CAYENNE = 0x81, /**< CayenneLPP packed data */
+    CAYENNELPP = 0x81, /**< CayenneLPP packed data */
     PROT_BUF = 0x82, /**< Data packed using Protocol Buffers. NOT IMPLEMENTED */
     MSG_PACK = 0x83, /**< Data packed using MessagePack. NOT IMPLEMENTED */
-    BSON = 0x84 /**< Data packed using BSON. NOT IMPLEMENTED */
+    BSON = 0x84, /**< Data packed using BSON. NOT IMPLEMENTED */
+    CBOR = 0x85, /**< Data packed using CBOR. NOT IMPLEMENTED */
+    SMILE = 0x86 /**< Data packed using SMILE. NOT IMPLEMENTED */
 };
 
 
@@ -89,11 +91,11 @@ typedef nodeMessageType nodeMessageType_t;
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command)> onNodeDataRx_t;
+typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding)> onNodeDataRx_t;
 typedef std::function<void ()> onConnected_t;
 typedef std::function<void (nodeInvalidateReason_t reason)> onDisconnected_t;
 #else
-typedef void (*onNodeDataRx_t)(const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command);
+typedef void (*onNodeDataRx_t)(const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding);
 typedef void (*onConnected_t)();
 typedef void (*onDisconnected_t)(nodeInvalidateReason_t reason);
 #endif
@@ -234,9 +236,10 @@ protected:
       * @param data Buffer to store payload to be sent
       * @param len Length of payload data
 	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
+      * @param payloadEncoding Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
       * @return Returns `true` if message could be correcly sent
       */
-    bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false, bool encrypt = true);
+    bool dataMessage (const uint8_t *data, size_t len, bool controlMessage = false, bool encrypt = true, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);
 
     /**
       * @brief Builds and sends a **Data** message without encryption. Not recommended, use it only if you absolutely need more performance.
@@ -245,7 +248,7 @@ protected:
 	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
       * @return Returns `true` if message could be correcly sent
       */
-    bool unencryptedDataMessage (const uint8_t* data, size_t len, bool controlMessage = false);
+    bool unencryptedDataMessage (const uint8_t* data, size_t len, bool controlMessage = false, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);
 
 	/**
 	  * @brief Processes a single OTA update command or data
@@ -359,9 +362,10 @@ protected:
 	  * @param len Length of payload data
 	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
 	  * @param encrypt `true` if data should be encrypted. Default is `true`
+      * @param payloadEncoding Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
       * @return Returns `true` if message could be correcly sent
 	  */
-	bool sendData (const uint8_t* data, size_t len, bool controlMessage, bool encrypt = true);
+	bool sendData (const uint8_t* data, size_t len, bool controlMessage, bool encrypt = true, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);
 
 	/**
 	 * @brief Starts searching for a gateway that it using configured Network Name as WiFi AP. Stores this info for subsequent use
@@ -479,18 +483,20 @@ public:
       * @brief Starts a data message transmission
       * @param data Payload buffer
       * @param len Payload length
+      * @param payloadEncoding Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
       */
-	bool sendData (const uint8_t* data, size_t len) {
-		return sendData (data, len, false);
+	bool sendData (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding = CAYENNELPP) {
+		return sendData (data, len, false, true, payloadEncoding);
 	}
 
     /**
       * @brief Starts a data message transmission
       * @param data Payload buffer
       * @param len Payload length
+      * @param payloadEncoding Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
       */
-    bool sendUnencryptedData (const uint8_t* data, size_t len) {
-        return sendData (data, len, false, false);
+    bool sendUnencryptedData (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding = CAYENNELPP) {
+        return sendData (data, len, false, false, payloadEncoding);
     }
 
     /**

@@ -44,7 +44,7 @@ static const time_t IDENTIFY_TIMEOUT = 10000; ///< @brief How long LED will be f
 static const uint32_t TIME_SYNC_PERIOD = 30000; ///< @brief Period of clock synchronization request
 static const unsigned int QUICK_SYNC_TIME = 5000; ///< @brief Period of clock synchronization request in case of resync is needed 
 static const int MIN_SYNC_ACCURACY = 5; ///< @brief If calculated offset absolute value is higher than this value resync is done more often
-static const int MAX_DATA_PAYLOAD_SIZE = 215; ///< @brief Maximun payload size for data packets
+static const int MAX_DATA_PAYLOAD_SIZE = 214; ///< @brief Maximun payload size for data packets
 static const uint32_t PRE_REG_DELAY = 5000; ///< @brief Time to wait before registration so that other nodes have time to communicate. Real delay is a random lower than this value.
 static const uint32_t POST_REG_DELAY = 1500; ///< @brief Time to waif before sending data after registration so that other nodes have time to finish their registration. Real delay is a random lower than this value.
 #ifndef CHECK_COMM_ERRORS

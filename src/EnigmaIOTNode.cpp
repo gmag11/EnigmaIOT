@@ -6,6 +6,8 @@
   * @brief Library to build a node for EnigmaIoT system
   */
 
+//#define ESP8266
+
 #ifdef ESP8266
 #include <Arduino.h>
 #include "EnigmaIOTNode.h"
@@ -1046,7 +1048,7 @@ bool EnigmaIOTNodeClass::processServerHello (const uint8_t* mac, const uint8_t* 
     return true;
 }
 
-bool EnigmaIOTNodeClass::sendData (const uint8_t* data, size_t len, bool controlMessage, bool encrypt) {
+bool EnigmaIOTNodeClass::sendData (const uint8_t* data, size_t len, bool controlMessage, bool encrypt, nodePayloadEncoding_t payloadType) {
     memcpy (dataMessageSent, data, len);
     dataMessageSentLength = len;
     dataMessageEncrypt = encrypt;
@@ -1059,7 +1061,7 @@ bool EnigmaIOTNodeClass::sendData (const uint8_t* data, size_t len, bool control
             DEBUG_VERBOSE ("%s data sent: %s", encrypt?"Encrypted":"Unencrypted", printHexBuffer (data, len));
         }
         flashBlue = true;
-		if (dataMessage (data, len, controlMessage, encrypt)) {
+		if (dataMessage (data, len, controlMessage, encrypt, payloadType)) {
 			dataMessageSentLength = 0;
 			return true;
 		} else
@@ -1079,7 +1081,7 @@ void EnigmaIOTNodeClass::sleep () {
     }
 }
 
-bool EnigmaIOTNodeClass::unencryptedDataMessage (const uint8_t* data, size_t len, bool controlMessage) {
+bool EnigmaIOTNodeClass::unencryptedDataMessage (const uint8_t* data, size_t len, bool controlMessage, nodePayloadEncoding_t payloadEncoding) {
     /*
     * ------------------------------------------------------------------------
     *| msgType (1) | NodeId (2) | Counter (2) | PayloadType (1) | Data (....) |
@@ -1089,12 +1091,11 @@ bool EnigmaIOTNodeClass::unencryptedDataMessage (const uint8_t* data, size_t len
     uint8_t buf[MAX_MESSAGE_LENGTH];
     uint16_t counter;
     uint16_t nodeId = node.getNodeId ();
-    uint8_t payloadType = 0;
 
     uint8_t nodeId_idx = 1;
     uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
-    uint8_t payloadType_idx = counter_idx + sizeof (int16_t);
-    uint8_t data_idx = payloadType_idx + sizeof (int8_t);
+    uint8_t encoding_idx = counter_idx + sizeof (int16_t);
+    uint8_t data_idx = encoding_idx + sizeof (int8_t);
 
     uint8_t packet_length = data_idx + len;
 
@@ -1122,7 +1123,7 @@ bool EnigmaIOTNodeClass::unencryptedDataMessage (const uint8_t* data, size_t len
         memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
     }
 
-    memcpy (buf + payloadType_idx, &payloadType, sizeof (uint8_t));
+    buf[encoding_idx] = (uint8_t)payloadEncoding;
 
     memcpy (buf + data_idx, data, len);
 
@@ -1144,7 +1145,7 @@ bool EnigmaIOTNodeClass::unencryptedDataMessage (const uint8_t* data, size_t len
 }
 
 
-bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool controlMessage, bool encrypt) {
+bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool controlMessage, bool encrypt, nodePayloadEncoding_t payloadEncoding) {
     /*
     * ----------------------------------------------------------------------------------------
     *| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | tag (16) |
@@ -1152,7 +1153,7 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
     */
 
     if (!encrypt) {
-        return unencryptedDataMessage (data, len, controlMessage);
+        return unencryptedDataMessage (data, len, controlMessage, payloadEncoding);
     }
 
     uint8_t buf[MAX_MESSAGE_LENGTH];
@@ -1164,7 +1165,8 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
     uint8_t length_idx = iv_idx + IV_LENGTH;
     uint8_t nodeId_idx = length_idx + sizeof (int16_t);
     uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
-    uint8_t data_idx = counter_idx + sizeof (int16_t);
+    uint8_t encoding_idx = counter_idx + sizeof (int16_t);
+    uint8_t data_idx = encoding_idx + sizeof (int8_t);
     uint8_t tag_idx = data_idx + len;
 
 
@@ -1195,6 +1197,8 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
 
         memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
     }
+
+    buf[encoding_idx] = payloadEncoding;
 
     memcpy (buf + data_idx, data, len);
 
@@ -1588,7 +1592,8 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
     uint8_t iv_idx = 1;
     uint8_t length_idx = iv_idx + IV_LENGTH;
     uint8_t nodeId_idx = length_idx + sizeof (int16_t);
-    uint8_t data_idx = nodeId_idx + sizeof (int16_t);
+    uint8_t encoding_idx = nodeId_idx + sizeof (int16_t);
+    uint8_t data_idx = encoding_idx + sizeof (int8_t);
     uint8_t tag_idx = count - TAG_LENGTH;
 
     uint8_t addDataLen = 1 + IV_LENGTH;
@@ -1619,7 +1624,7 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 
     DEBUG_VERBOSE ("Sending data notification. Payload length: %d", tag_idx - data_idx);
     if (notifyData) {
-        notifyData (mac, &buf[data_idx], tag_idx - data_idx, (nodeMessageType_t)(buf[0]));
+        notifyData (mac, &buf[data_idx], tag_idx - data_idx, (nodeMessageType_t)(buf[0]), (nodePayloadEncoding_t)(buf[encoding_idx]));
     }
 
     return true;
