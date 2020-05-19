@@ -35,7 +35,7 @@ void connectEventHandler () {
 	Serial.println ("Registered");
 }
 
-void disconnectEventHandler () {
+void disconnectEventHandler (nodeInvalidateReason_t reason) {
 	Serial.println ("Unregistered");
 }
 
