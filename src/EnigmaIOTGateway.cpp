@@ -1120,7 +1120,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* b
         return false;
     }
 	DEBUG_VERBOSE ("Decrypted data message: %s", printHexBuffer (buf, count - TAG_LENGTH));
-
+	DEBUG_DBG ("Data payload encoding: 0x%02X", buf[encoding_idx]);
 	node->packetNumber++;
 
 	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));

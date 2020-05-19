@@ -137,6 +137,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 	}
 	//char* netName = EnigmaIOTGateway.getNetworkName ();
 	if (payload_type == CAYENNELPP) {
+		DEBUG_INFO ("CayenneLPP message");
 		const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);
 		DynamicJsonDocument jsonBuffer (capacity);
 		JsonArray root = jsonBuffer.createNestedArray ();
@@ -150,6 +151,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 		}
 		pld_size = serializeJson (root, payload, PAYLOAD_SIZE);
 	} else if (payload_type == MSG_PACK) {
+		DEBUG_INFO ("MsgPack message");
 		const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);
 		DynamicJsonDocument jsonBuffer (capacity);
 		DeserializationError error = deserializeMsgPack (jsonBuffer, buffer, length);
@@ -159,6 +161,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 		}
 		pld_size = serializeJson (jsonBuffer, payload, PAYLOAD_SIZE);
     } else if (payload_type == RAW) {
+		DEBUG_INFO ("RAW message");
 		if (length <= PAYLOAD_SIZE) {
 			memcpy (payload, buffer, length);
 			pld_size = length;
@@ -169,7 +172,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 	} 
 
 	GwOutput.outputDataSend (mac_str, payload, pld_size);
-	DEBUG_INFO ("Published data message from %s, length %d: %s", mac_str, pld_size, payload);
+	DEBUG_INFO ("Published data message from %s, length %d: %s, Encoding 0x%02X", mac_str, pld_size, payload, payload_type);
 	if (lostMessages > 0) {
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "%u", lostMessages);
 		GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::lostmessages);

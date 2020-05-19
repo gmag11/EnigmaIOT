@@ -95,21 +95,27 @@ void setup () {
 	EnigmaIOTNode.begin (&Espnow_hal);
 	
 	// Put here your code to read sensor and compose buffer
-    CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
+	const size_t capacity = JSON_OBJECT_SIZE (5);
+	DynamicJsonDocument json (capacity);
 
-	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
-    msg.addTemperature (1, 20.34);
-	msg.addDigitalInput (2, 123);
-	msg.addBarometricPressure (3, 1007.25);
-	msg.addCurrent (4, 2.43);
+	json["V"] = (float)(ESP.getVcc ()) / 1000;
+	json["tem"] = 203;
+	json["din"] = 123;
+	json["pres"] = 1007;
+	json["curr"] = 2.43;
+
+	int len = measureMsgPack (json);
+	uint8_t* buffer = (uint8_t*)malloc (len);
+	serializeMsgPack (json, (char *)buffer, len);
 
 	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
+	Serial.printf ("Message Len %d\n", len);
 	// End of user code
 
-	Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
+	Serial.printf ("Trying to send: %s\n", printHexBuffer (buffer, len));
 
     // Send buffer data
-	if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
+	if (!EnigmaIOTNode.sendData (buffer, len, MSG_PACK)) {
 		Serial.println ("---- Error sending data");
 	} else {
 		Serial.println ("---- Data sent");

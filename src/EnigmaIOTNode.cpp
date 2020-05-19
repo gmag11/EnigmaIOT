@@ -1207,6 +1207,7 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
     memcpy (buf + length_idx, &packet_length, sizeof (uint16_t));
 
     DEBUG_VERBOSE ("Data message: %s", printHexBuffer (buf, packet_length));
+    DEBUG_DBG ("Encoding: 0x%02X", payloadEncoding);
 
     uint8_t* crypt_buf = buf + length_idx;
 
