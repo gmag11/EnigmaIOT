@@ -54,11 +54,11 @@ void GatewayOutput_dummy::loop () {
 
 }
 
-bool GatewayOutput_dummy::outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type) {
+bool GatewayOutput_dummy::outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type) {
     DEBUG_WARN ("Output data send. Address %s. Data %.*s", address, length, data);
 }
 
-bool GatewayOutput_dummy::outputControlSend (char* address, uint8_t* data, uint8_t length) {
+bool GatewayOutput_dummy::outputControlSend (char* address, uint8_t* data, size_t length) {
     DEBUG_INFO ("Output control send. Address %s. Data %s", address, printHexBuffer(data, length));
 }
 

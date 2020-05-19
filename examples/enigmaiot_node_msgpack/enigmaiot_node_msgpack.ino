@@ -29,7 +29,7 @@
 #define BLUE_LED LED_BUILTIN
 constexpr auto RESET_PIN = 13;
 
-ADC_MODE (ADC_VCC);
+//ADC_MODE (ADC_VCC);
 
 void connectEventHandler () {
 	Serial.println ("Registered");

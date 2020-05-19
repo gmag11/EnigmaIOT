@@ -72,7 +72,7 @@ public:
 	  * @param length Data buffer length
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	bool outputControlSend (char* address, uint8_t* data, uint8_t length);
+	bool outputControlSend (char* address, uint8_t* data, size_t length);
 
 	 /**
 	  * @brief Send new node notification
@@ -98,7 +98,7 @@ public:
 	  * @param type Type of message
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	bool outputDataSend (char* address, char* data, uint8_t length, GwOutput_data_type_t type = data);
+	bool outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type = data);
 
 	 /**
 	  * @brief Should be called often for module management

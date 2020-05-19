@@ -111,7 +111,7 @@ void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 	}
 }
 
-void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayload_type_t payload_type) {
+void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type) {
 	//uint8_t *addr = mac;
 	char* payload;
 	size_t pld_size;
@@ -126,18 +126,28 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 		return;
 	}
 	//char* netName = EnigmaIOTGateway.getNetworkName ();
-	if (payload_type == CAYENNE) {
+	if (payload_type == CAYENNELPP) {
 		const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);
 		DynamicJsonDocument jsonBuffer (capacity);
-		//StaticJsonDocument<capacity> jsonBuffer;
 		JsonArray root = jsonBuffer.createNestedArray ();
-		CayenneLPP* cayennelpp = new CayenneLPP (MAX_DATA_PAYLOAD_SIZE);
+		CayenneLPP cayennelpp (MAX_DATA_PAYLOAD_SIZE);
 
-		cayennelpp->decode ((uint8_t*)buffer, length, root);
-		cayennelpp->CayenneLPP::~CayenneLPP ();
-		free (cayennelpp);
-
+		cayennelpp.decode ((uint8_t*)buffer, length, root);
+		uint8_t error = cayennelpp.getError ();
+		if (error != LPP_ERROR_OK) {
+			DEBUG_ERROR ("Error decoding CayenneLPP data: %d", error);
+			return;
+		}
 		pld_size = serializeJson (root, payload, PAYLOAD_SIZE);
+	} else if (payload_type == MSG_PACK) {
+		const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);
+		DynamicJsonDocument jsonBuffer (capacity);
+		DeserializationError error = deserializeMsgPack (jsonBuffer, buffer, length);
+		if (error != DeserializationError::Ok) {
+			DEBUG_ERROR ("Error decoding MSG Pack data: %s", error.c_str ());
+			return;
+		}
+		pld_size = serializeJson (jsonBuffer, payload, PAYLOAD_SIZE);
 	} else if (payload_type == RAW) {
 		if (length <= PAYLOAD_SIZE) {
 			memcpy (payload, buffer, length);

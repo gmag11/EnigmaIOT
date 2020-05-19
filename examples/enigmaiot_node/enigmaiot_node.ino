@@ -35,11 +35,11 @@ void connectEventHandler () {
 	Serial.println ("Registered");
 }
 
-void disconnectEventHandler () {
-	Serial.println ("Unregistered");
+void disconnectEventHandler (nodeInvalidateReason_t reason) {
+	Serial.printf ("Unregistered. Reason: %d\n", reason);
 }
 
-void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, nodeMessageType_t command) {
+void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding) {
 	char macstr[18];
 	String commandStr;
 
@@ -55,6 +55,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 
 	Serial.printf ("Command %s\n", commandStr.c_str ());
 	Serial.printf ("Data: %s\n", printHexBuffer (buffer, length));
+	Serial.printf ("Encoding: 0x%02X\n", payloadEncoding);
 
 	//for (int i = 0; i < length; i++) {
 	//	Serial.print ((char)buffer[i]);
