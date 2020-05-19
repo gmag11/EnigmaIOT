@@ -44,12 +44,14 @@ enum gatewayMessageType_t {
     INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
 };
 
-enum gatewayPayload_type_t {
+enum gatewayPayloadEncoding_t {
     RAW = 0x00, /**< Raw data without specific format */
-    CAYENNE = 0x81, /**< CayenneLPP packed data */
+    CAYENNELPP = 0x81, /**< CayenneLPP packed data */
     PROT_BUF = 0x82, /**< Data packed using Protocol Buffers. NOT IMPLEMENTED */
-    MSG_PACK = 0x83, /**< Data packed using MessagePack. NOT IMPLEMENTED */
+    MSG_PACK = 0x83, /**< Data packed using MessagePack */
     BSON = 0x84, /**< Data packed using BSON. NOT IMPLEMENTED */
+    CBOR = 0x85, /**< Data packed using CBOR. NOT IMPLEMENTED */
+    SMILE = 0x86, /**< Data packed using SMILE. NOT IMPLEMENTED */
     ENIGMAIOT = 0xFF
 };
 
@@ -67,13 +69,13 @@ enum gwInvalidateReason_t {
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
-typedef std::function<void (uint8_t* mac, uint8_t* buf, uint8_t len, uint16_t lostMessages, bool control, gatewayPayload_type_t payload_type)> onGwDataRx_t;
+typedef std::function<void (uint8_t* mac, uint8_t* buf, uint8_t len, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type)> onGwDataRx_t;
 typedef std::function<void (uint8_t* mac, uint16_t node_id)> onNewNode_t;
 typedef std::function<void (uint8_t* mac, gwInvalidateReason_t reason)> onNodeDisconnected_t;
 typedef std::function<void (boolean status)> onWiFiManagerExit_t;
 typedef std::function<void (void)> onWiFiManagerStarted_t;
 #else
-typedef void (*onGwDataRx_t)(uint8_t* mac, uint8_t* data, uint8_t len, uint16_t lostMessages, bool control, gatewayPayload_type_t payload_type);
+typedef void (*onGwDataRx_t)(uint8_t* mac, uint8_t* data, uint8_t len, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type);
 typedef void (*onNewNode_t)(uint8_t* mac, uint16_t node_id);
 typedef void (*onNodeDisconnected_t)(uint8_t* mac, gwInvalidateReason_t reason);
 typedef void (*onWiFiManagerExit_t)(boolean status);
@@ -306,7 +308,7 @@ class EnigmaIOTGatewayClass
 	  * @param controlData Content data type if control data
       * @return Returns `true` if message could be correcly sent or scheduled
       */
-	 bool downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData);
+	 bool downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding = ENIGMAIOT);
 
 	 /**
 	 * @brief Processes control message from node
@@ -511,7 +513,7 @@ class EnigmaIOTGatewayClass
       * @param controlData Indicates if data is control data and its class
       * @return Returns true if everything went ok
       */
-     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len, control_message_type_t controlData);
+     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t payload_type = RAW);
 
      /**
       * @brief Defines a function callback that will be called every time a node gets connected or reconnected

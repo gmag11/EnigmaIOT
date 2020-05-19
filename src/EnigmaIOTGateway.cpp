@@ -350,7 +350,7 @@ bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 	return true;
 }
 
-bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData) {
+bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding) {
 	Node* node = nodelist.getNodeFromMAC (mac);
 	uint8_t downstreamData[MAX_MESSAGE_LENGTH];
 
@@ -431,7 +431,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 			} else
 				return downstreamDataMessage (node, data, len, controlData);
 		} else
-			return downstreamDataMessage (node, data, len, controlData);
+			return downstreamDataMessage (node, data, len, controlData, encoding);
 	} else {
 		char addr[18];
 		DEBUG_ERROR ("Downlink destination %s not found", mac2str (mac, addr));
@@ -1095,7 +1095,8 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* b
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
 	uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
-	uint8_t data_idx = counter_idx + sizeof (int16_t);
+	uint8_t encoding_idx = counter_idx + sizeof (int16_t);
+	uint8_t data_idx = encoding_idx + sizeof (int8_t);
 	uint8_t tag_idx = count - TAG_LENGTH;
 
 	uint16_t counter;
@@ -1135,7 +1136,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* b
 
 	if (notifyData) {
 		//DEBUG_WARN ("Notify data %d", input_queue->size());
-		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, CAYENNE);
+		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, (gatewayPayloadEncoding_t)(buf[encoding_idx]));
 	}
 	return true;
 
@@ -1181,7 +1182,7 @@ double EnigmaIOTGatewayClass::getPacketsHour (uint8_t* address) {
 }
 
 
-bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData) {
+bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding) {
 	/*
 	* ---------------------------------------------------------------------------
 	*| msgType (1) | IV (12) | length (2) | NodeId (2)  | Data (....) | Tag (16) |
@@ -1201,7 +1202,15 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	uint8_t iv_idx = 1;
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
-	uint8_t data_idx = nodeId_idx + sizeof (int16_t);
+	uint8_t data_idx;
+	uint8_t encoding_idx; // Only for user data
+	if (controlData != DOWNSTREAM_CTRL_DATA) {
+		encoding_idx = nodeId_idx + sizeof (int16_t);
+		data_idx = encoding_idx + sizeof (int8_t);
+		buffer[encoding_idx] = encoding;
+	} else {
+		data_idx = nodeId_idx + sizeof (int16_t);
+	}
     uint8_t tag_idx = data_idx + len;
 
 	if (!data) {

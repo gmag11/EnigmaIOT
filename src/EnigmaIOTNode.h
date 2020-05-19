@@ -47,7 +47,7 @@ enum nodePayloadEncoding_t {
     RAW = 0x00, /**< Raw data without specific format */
     CAYENNELPP = 0x81, /**< CayenneLPP packed data */
     PROT_BUF = 0x82, /**< Data packed using Protocol Buffers. NOT IMPLEMENTED */
-    MSG_PACK = 0x83, /**< Data packed using MessagePack. NOT IMPLEMENTED */
+    MSG_PACK = 0x83, /**< Data packed using MessagePack */
     BSON = 0x84, /**< Data packed using BSON. NOT IMPLEMENTED */
     CBOR = 0x85, /**< Data packed using CBOR. NOT IMPLEMENTED */
     SMILE = 0x86 /**< Data packed using SMILE. NOT IMPLEMENTED */
