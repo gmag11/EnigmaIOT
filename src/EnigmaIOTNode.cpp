@@ -1593,8 +1593,14 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
     uint8_t iv_idx = 1;
     uint8_t length_idx = iv_idx + IV_LENGTH;
     uint8_t nodeId_idx = length_idx + sizeof (int16_t);
-    uint8_t encoding_idx = nodeId_idx + sizeof (int16_t);
-    uint8_t data_idx = encoding_idx + sizeof (int8_t);
+    uint8_t encoding_idx;
+    uint8_t data_idx;
+    if (!control) {
+        encoding_idx = nodeId_idx + sizeof (int16_t);
+        data_idx = encoding_idx + sizeof (int8_t);
+    } else {
+        data_idx = nodeId_idx + sizeof (int16_t);
+    }
     uint8_t tag_idx = count - TAG_LENGTH;
 
     uint8_t addDataLen = 1 + IV_LENGTH;

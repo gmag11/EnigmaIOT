@@ -258,7 +258,7 @@ So, node will always follow the channel that gateway is working in.
 
 A user may program their own output format modifying gateway example program. For my use case gateway outputs MQTT messages in this format:
 ```
-<configurable prefix>/<node address>/sensordata <json data>
+<configurable prefix>/<node address>/data <json data>
 ```
 A prefix is configured on gateway to allow several sensor networks to coexist in the same subnet. After that address and data are sent.
 

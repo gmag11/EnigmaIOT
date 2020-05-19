@@ -1138,7 +1138,7 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* b
 		//DEBUG_WARN ("Notify data %d", input_queue->size());
 		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, (gatewayPayloadEncoding_t)(buf[encoding_idx]));
 	}
-	return true;
+	//return true;
 
 	if (node->getSleepy ()) {
 		if (node->qMessagePending) {
@@ -1190,6 +1190,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	*/
 
 	uint8_t buffer[MAX_MESSAGE_LENGTH];
+	uint16_t packet_length;
 
 	if (!node->isRegistered ()) {
 		DEBUG_VERBOSE ("Error sending downstream. Node is not registered");
@@ -1204,12 +1205,14 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
 	uint8_t data_idx;
 	uint8_t encoding_idx; // Only for user data
-	if (controlData != DOWNSTREAM_CTRL_DATA) {
+	if (controlData == USERDATA_GET || controlData == USERDATA_SET) {
 		encoding_idx = nodeId_idx + sizeof (int16_t);
 		data_idx = encoding_idx + sizeof (int8_t);
 		buffer[encoding_idx] = encoding;
+		packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + 1 + len;
 	} else {
 		data_idx = nodeId_idx + sizeof (int16_t);
+		packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + len;
 	}
     uint8_t tag_idx = data_idx + len;
 
@@ -1249,8 +1252,6 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 	memcpy (buffer + data_idx, data, len);
 	DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer + data_idx, len));
-
-	uint16_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + len;
 
 	memcpy (buffer + length_idx, &packet_length, sizeof (uint16_t));
 
