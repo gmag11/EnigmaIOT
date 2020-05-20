@@ -45,6 +45,7 @@ void disconnectEventHandler (nodeInvalidateReason_t reason) {
 void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding) {
 	char macstr[18];
 	String commandStr;
+	uint8_t tempBuffer[MAX_MESSAGE_LENGTH];
 
 	mac2str (mac, macstr);
 	Serial.println ();
@@ -59,6 +60,23 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 	Serial.printf ("Command %s\n", commandStr.c_str ());
 	Serial.printf ("Data: %s\n", printHexBuffer (buffer, length));
 	Serial.printf ("Encoding: 0x%02X\n", payloadEncoding);
+
+	CayenneLPP lpp (MAX_DATA_PAYLOAD_SIZE);
+	DynamicJsonDocument doc (1000);
+	JsonArray root;
+	memcpy (tempBuffer, buffer, length);
+
+	switch (payloadEncoding) {
+	case CAYENNELPP:
+		root = doc.createNestedArray ();
+		lpp.decode (tempBuffer, length, root);
+		serializeJsonPretty (doc, Serial);
+		break;
+	case MSG_PACK:
+		deserializeMsgPack (doc, tempBuffer, length);
+		serializeJsonPretty (doc, Serial);
+		break;
+	}
 }
 
 void setup () {
