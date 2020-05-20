@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_node_nonsleepy.ino
-  * @version 0.8.3
-  * @date 05/05/2020
+  * @version 0.9.0
+  * @date 20/05/2020
   * @author German Martin
   * @brief Node based on EnigmaIoT over ESP-NOW, in non sleeping mode
   *

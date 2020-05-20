@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGateway.h
-  * @version 0.8.3
-  * @date 05/05/2020
+  * @version 0.9.0
+  * @date 20/05/2020
   * @author German Martin
   * @brief Library to build a gateway for EnigmaIoT system
   */
@@ -306,6 +306,7 @@ class EnigmaIOTGatewayClass
       * @param data Buffer to store payload to be sent
       * @param len Length of payload data
 	  * @param controlData Content data type if control data
+      * @param encoding Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
       * @return Returns `true` if message could be correcly sent or scheduled
       */
 	 bool downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding = ENIGMAIOT);
@@ -511,6 +512,7 @@ class EnigmaIOTGatewayClass
       * @param data Payload buffer
       * @param len Payload length
       * @param controlData Indicates if data is control data and its class
+      * @param payload_type Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
       * @return Returns true if everything went ok
       */
      bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t payload_type = RAW);

@@ -1,9 +1,9 @@
 /**
   * @file enigmaiot_node.ino
-  * @version 0.8.3
-  * @date 05/05/2020
+  * @version 0.9.0
+  * @date 20/05/2020
   * @author German Martin
-  * @brief Node based on EnigmaIoT over ESP-NOW
+  * @brief Node based on EnigmaIoT over ESP-NOW that uses MessagePack as payload encoding
   *
   * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
