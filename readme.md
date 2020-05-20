@@ -35,7 +35,7 @@ During this project conception I decided that it should fulfil this list of requ
 
 - [x] Encrypted communication using [**ChaCha20/Poly1305**](https://tools.ietf.org/html/rfc7539)
 - [x] Dynamic key, shared between one node and gateway. Keys are independent for each node
-- [x] Shared keys are expired after a certain (configurable) time
+- [x] Shared keys are expired after a certain (configurable) time.
 - [x] Number of nodes is only limited by memory on gateway (60 bytes per node)
 - [x] Key is never on air so it is cannot be captured
 - [x] Key expiration and renewal is managed transparently
@@ -208,13 +208,15 @@ Invalidate Key message is always sent unencrypted.
 
 A node is a ESP8266 board with a number of sensors. A node may sleep between sensor readings, status is stored so that it may send data without reconnection.
 
-Any ESP8266 board with at least 1 MB of flash is valid.
+Any ESP8266 board with at least 1 MB of flash may be used.
 
 There are several implementations in [examples](https://github.com/gmag11/EnigmaIOT/tree/master/examples):
 
-[EnigmaIOT Node](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node): Basic node with deep sleep function. Sensor data is mocked up in example, you only need to replace it with your sensor reading code. Expected duration with 2 AA type batteries is more than one year, but a low power booster/regulator should be used in a custom ESP8266 board.
+[EnigmaIOT Node](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node): Basic node with deep sleep function. Sensor data is mocked up in example and sent using CayenneLPP encoding, you only need to replace it with your sensor reading code. Expected duration with 2 AA type batteries is more than one year, but a low power booster/regulator should be used in a custom ESP8266 board.
 
-[EnigmaIOT Node NonSleepy](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_nonsleepy): Same functionality as previous example but this does not sleep. This may be useful for sensors or actuators which are connected to mains.
+[Enigmaiot Node MsgPack](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_msgpack): It has same functionality as the example above but uses JSON and MessagePack as Payload encoding.
+
+[EnigmaIOT Node NonSleepy](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_nonsleepy): Same functionality as previous examples but this does not sleep. This may be useful for sensors or actuators which are connected to mains, like light switches or smart plugs.
 
 [EnigmaIOT LED Flasher](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_led_flasher): On non sleepy nodes a common clock may be synchronized with gateway. This is an example of this. All nodes that include this firmware will flash their built in LED synchronously after successful registration. 
 
@@ -228,6 +230,8 @@ Since version 0.7.0 Gateway is a ESP32 or ESP8266 board with 4 MB of flash memor
 
 Thanks to modular design, other output modules may be easily developed by implementing `GwOutput_generic.h`. Examples of this may be LoRaWAN output gateway, COAP gateway or any other network protocol that is needed. Even an offline SD data logger could be done.
 
+I've included a [Gateway with dummy output module](https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOTGatewayDummy) to show simple OutputGw module development.
+
 ## Data format
 
 Although it is not mandatory at all, use of [CayenneLPP format](https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload) is recommended for sensor data compactness.
@@ -237,6 +241,10 @@ You may use [CayenneLPP library](https://github.com/ElectronicCats/CayenneLPP) f
 Example gateway code expands data message to JSON data, to be used easily as payload on a MQTT publish message to a broker. For JSON generation [ArduinoJSON](https://arduinojson.org) library is required.
 
 In any case you can use your own format or even raw unencoded data. Take care of maximum message length that communications layer uses. For ESP-NOW, maximum payload length it is 217 bytes.
+
+Since version 0.9 payload encoding is signalled on user data messages (both uplink and downlink) so new formats are possible. Currently  [CayenneLPP](https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload) and [MessagePack](https://msgpack.org) formats, in addition to RAW data, are possible. Check examples for usage instruction.
+
+This change may produce incompatibilities with older versions so make sure you update your gateway and all your nodes to latest library version.
 
 ## ESP-NOW channel selection
 
@@ -272,19 +280,25 @@ EnigmaIoT allows sending messages from gateway to nodes. In my implementation I 
 
 To make it simpler, downlink messages use the same structure than uplink.
 ```
-<network name>/<node address>/<get | set>/<command> <data>
+<network name>/<node address>/<get|set>/data <command data>
 ```
 Node address means destination node address. Configurable prefix is the same used for uplink communication.
 
-Commands are developed by user, but some are reserved for control commands. An uplink message could be like this
+Commands may be given in JSON format. In that case they are  sent to node in MessagePack format. That makes that mode gets the complete JSON object. This implies that no change is needed on Gateway to add new node types. Gateway is transparent to user data.
+
+This is an esample of MQTT message that triggers a downlink packet.
 
 ```
-enigmaiot/12:34:56:78:90:12/set/light ON
+enigmaiot/12:34:56:78:90:12/set/data {"light1": 1, "light2": 0}
 ```
+
+After sending that command node will receive a 'set' command with data `{"light1": 1, "light2": 0}`.
+
+Commands can be sent in any other format different that JSON, even binary. In that case they are sent without conversion to node.
 
 ### Control messages
 
-Control messages are intended to set node specific settings, like sleep time, channel, trigger OTA update, etc. They are not passed to the main sketch but gateway treat them as normal downlink messages.
+Control messages are intended to set node specific settings, like sleep time, channel, trigger OTA update, etc. They are not passed to the main node sketch but gateway treat them as normal downlink messages.
 
 Normally control commands trigger a response as an uplink message.
 
