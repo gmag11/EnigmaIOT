@@ -414,6 +414,12 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 		}
 		DEBUG_VERBOSE ("Get RSSI message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
+	case control_message_type::USERDATA_GET:
+		DEBUG_INFO ("Data message GET");
+		break;
+	case control_message_type::USERDATA_SET:
+		DEBUG_INFO ("Data message SET");
+		break;
 	default:
 		return false;
 	}
