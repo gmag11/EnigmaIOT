@@ -104,9 +104,9 @@ void setup () {
 	json["pres"] = 1007;
 	json["curr"] = 2.43;
 
-	int len = measureMsgPack (json);
+	int len = measureMsgPack (json) + 1;
 	uint8_t* buffer = (uint8_t*)malloc (len);
-	serializeMsgPack (json, (char *)buffer, len);
+	len = serializeMsgPack (json, (char *)buffer, len);
 
 	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
 	Serial.printf ("Message Len %d\n", len);
@@ -121,6 +121,8 @@ void setup () {
 		Serial.println ("---- Data sent");
 	}
 	Serial.printf ("Total time: %d ms\n", millis() - start);
+
+	free (buffer);
 
     // Go to sleep
 	EnigmaIOTNode.sleep ();

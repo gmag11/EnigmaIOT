@@ -200,15 +200,17 @@ void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* dat
 	//const int PAYLOAD_SIZE = 1024;
 	//payload = (char*)malloc (PAYLOAD_SIZE);
 	const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);
-	DynamicJsonDocument jsonBuffer (capacity);
-	DeserializationError error = deserializeJson (jsonBuffer, data, len);
-	if (error != DeserializationError::Ok) {
-		bufferLen = measureMsgPack (jsonBuffer);
+	DynamicJsonDocument json (capacity);
+	DeserializationError error = deserializeJson (json, data, len, DeserializationOption::NestingLimit (3));
+	if (error == DeserializationError::Ok) {
+		DEBUG_INFO ("JSON Message. Result %s",error.c_str());
+		bufferLen = measureMsgPack (json) + 1; // Add place for \0
 		buffer = (uint8_t*)malloc (bufferLen);
-		serializeMsgPack (jsonBuffer, (char*)buffer, bufferLen);
+		bufferLen = serializeMsgPack (json, (char*)buffer, bufferLen);
 		encoding = MSG_PACK;
 	} else {
-		bufferLen++;
+		DEBUG_INFO ("Not JSON Message. Error %s", error.c_str ());
+		bufferLen++; // Add place for \0
 		buffer = (uint8_t*)malloc (bufferLen);
 		sprintf ((char*)buffer, "%.*s", len, data);
 		encoding = RAW;
