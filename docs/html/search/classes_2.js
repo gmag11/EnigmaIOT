@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['filterclass_485',['FilterClass',['../classFilterClass.html',1,'']]]
+  ['filterclass',['FilterClass',['../classFilterClass.html',1,'']]]
 ];
