@@ -1165,8 +1165,14 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
     uint8_t length_idx = iv_idx + IV_LENGTH;
     uint8_t nodeId_idx = length_idx + sizeof (int16_t);
     uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
-    uint8_t encoding_idx = counter_idx + sizeof (int16_t);
-    uint8_t data_idx = encoding_idx + sizeof (int8_t);
+    uint8_t encoding_idx;
+    uint8_t data_idx;
+    if (!controlMessage) {
+        encoding_idx = counter_idx + sizeof (int16_t);
+        data_idx = encoding_idx + sizeof (int8_t);
+    } else {
+        data_idx = counter_idx + sizeof (int16_t);
+    }
     uint8_t tag_idx = data_idx + len;
 
 
