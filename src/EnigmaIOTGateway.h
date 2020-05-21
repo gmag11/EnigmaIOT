@@ -39,8 +39,6 @@ enum gatewayMessageType_t {
     CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
     CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
-    //KEY_EXCHANGE_FINISHED = 0xFD, /**< KeyExchangeFinished message from sensor node */
-    //CYPHER_FINISHED = 0xFC, /**< CypherFinished message from gateway */
     INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
 };
 

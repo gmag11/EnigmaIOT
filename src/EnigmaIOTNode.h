@@ -32,8 +32,8 @@
 enum nodeMessageType {
     SENSOR_DATA = 0x01, /**< Data message from sensor node */
     UNENCRYPTED_NODE_DATA = 0x11, /**< Data message from sensor node. Unencrypted */
-    DOWNSTREAM_DATA_GET = 0x02, /**< Data message from gateway. Downstream data for commands */
-    DOWNSTREAM_DATA_SET = 0x12, /**< Data message from gateway. Downstream data for commands */
+    DOWNSTREAM_DATA_SET = 0x02, /**< Data message from gateway. Downstream data for commands */
+    DOWNSTREAM_DATA_GET = 0x12, /**< Data message from gateway. Downstream data for commands */
     CONTROL_DATA = 0x03, /**< Internal control message from node to gateway. Used for OTA, settings configuration, etc */
     DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to node. Used for OTA, settings configuration, etc */
     CLOCK_REQUEST = 0x05, /**< Clock request message from node */
