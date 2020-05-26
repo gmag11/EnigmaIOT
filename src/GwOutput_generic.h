@@ -11,11 +11,10 @@
 #ifndef _GWOUT_GEN_h
 #define _GWOUT_GEN_h
 
-#include <Arduino.h>
 #include <EnigmaIOTGateway.h>
 
 #if defined(ARDUINO) && ARDUINO >= 100
-#include "arduino.h"
+#include "Arduino.h"
 #else
 #include "WProgram.h"
 #endif
