@@ -121,6 +121,8 @@ protected:
     uint64_t sleepTime; ///< @brief Time in microseconds that this node will be slept between measurements
     uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed
     uint8_t dataMessageSentLength = 0; ///< @brief Message length stored for use in case of message retransmission is needed
+    bool dataMessageSendPending = false; ///< @brief True in case of message retransmission is needed
+    nodePayloadEncoding_t dataMessageSendEncoding = RAW; ///< @brief Encoding of the message pending to be sent
     bool dataMessageEncrypt = true; ///< @brief Message encryption enabled. Stored for use in case of message retransmission is needed
     nodeInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
     bool otaRunning = false; ///< @brief True if OTA update has started

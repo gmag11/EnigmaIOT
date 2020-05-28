@@ -6,7 +6,7 @@
   * @brief Library to build a node for EnigmaIoT system
   */
 
-//#define ESP8266
+#define ESP8266
 
 #ifdef ESP8266
 #include <Arduino.h>
@@ -1049,9 +1049,13 @@ bool EnigmaIOTNodeClass::processServerHello (const uint8_t* mac, const uint8_t* 
 }
 
 bool EnigmaIOTNodeClass::sendData (const uint8_t* data, size_t len, bool controlMessage, bool encrypt, nodePayloadEncoding_t payloadType) {
-    memcpy (dataMessageSent, data, len);
-    dataMessageSentLength = len;
-    dataMessageEncrypt = encrypt;
+    if (!controlMessage) {
+        memcpy (dataMessageSent, data, len);
+        dataMessageSentLength = len;
+        dataMessageEncrypt = encrypt;
+        dataMessageSendPending = true;
+        dataMessageSendEncoding = payloadType;
+    }
     node.setLastMessageTime (); // Mark message time to start RX window start
 
     if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
@@ -1062,7 +1066,8 @@ bool EnigmaIOTNodeClass::sendData (const uint8_t* data, size_t len, bool control
         }
         flashBlue = true;
 		if (dataMessage (data, len, controlMessage, encrypt, payloadType)) {
-			dataMessageSentLength = 0;
+			//dataMessageSentLength = 0;
+            dataMessageSendPending = false; // Data sent. This setting can still be overriden by invalidateCommand
 			return true;
 		} else
 			return false;
@@ -1650,8 +1655,15 @@ nodeInvalidateReason_t EnigmaIOTNodeClass::processInvalidateKey (const uint8_t* 
     if (buf && count < IKMSG_LEN) {
         return UNKNOWN_ERROR;
     }
+
     DEBUG_WARN ("Invalidate key request. Reason: %u", buf[1]);
     uint8_t reason = buf[1];
+    if (reason < KEY_EXPIRED) {
+        if (dataMessageSentLength > 0)
+            dataMessageSendPending = true; // Start last data retransmission
+        // TODO: CHeck what happens in initial server hello. This should be enough
+    }
+
     return (nodeInvalidateReason_t)reason;
 }
 
@@ -1709,11 +1721,13 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 				// If key expired it was successfully sent before so retransmission is not needed 
 				if (invalidateReason < KEY_EXPIRED && dataMessageSentLength > 0) {
 					if (node.getStatus () == REGISTERED && node.isKeyValid ()) {
-						if (dataMessageSentLength > 0) {
+						if (dataMessageSendPending && dataMessageSentLength > 0) {
 							DEBUG_INFO ("Data pending to be sent. Length: %u", dataMessageSentLength);
 							DEBUG_VERBOSE ("Data sent: %s", printHexBuffer (dataMessageSent, dataMessageSentLength));
-							dataMessage ((uint8_t*)dataMessageSent, dataMessageSentLength);
-							dataMessageSentLength = 0;
+                            dataMessage ((uint8_t*)dataMessageSent, dataMessageSentLength, false, dataMessageEncrypt, dataMessageSendEncoding);
+                            //dataMessageSentLength = 0;
+                            dataMessageSendPending = false;
+                            
 							flashBlue = true;
 						}
 					}
