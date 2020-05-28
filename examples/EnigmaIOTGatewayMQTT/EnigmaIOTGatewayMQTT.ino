@@ -37,6 +37,8 @@
 #include <SPI.h>
 #endif // ESP32
 
+#include <ESPmDNS.h>
+#include <ArduinoOTA.h>
 
 #include <CayenneLPP.h>
 #include <FS.h>
@@ -105,6 +107,58 @@ void stopConnectionFlash () {
 		digitalWrite (connectionLed, HIGH);
 	}
 #endif // ESP32
+}
+
+void arduinoOTAConfigure () {
+	// Port defaults to 3232
+	// ArduinoOTA.setPort(3232);
+
+	// Hostname defaults to esp3232-[MAC]
+	ArduinoOTA.setHostname(EnigmaIOTGateway.getNetworkName ());
+
+	// No authentication by default
+	//ArduinoOTA.setPassword(EnigmaIOTGateway.getNetworkKey(true));
+
+	// Password can be set with it's md5 value as well
+	// MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
+	// ArduinoOTA.setPasswordHash("21232f297a57a5a743894a0e4a801fc3");
+
+	ArduinoOTA
+		.onStart ([]() {
+			String type;
+			if (ArduinoOTA.getCommand () == U_FLASH)
+				type = "sketch";
+			else // U_SPIFFS
+				type = "filesystem";
+
+			// NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+			Serial.println ("Start updating " + type);
+		})
+		.onEnd ([]() {
+			Serial.println ("\nEnd");
+		})
+		.onProgress ([](unsigned int progress, unsigned int total) {
+			static bool printed = false;
+			int percent = progress / (total / 100);
+			if (!(percent % 10) && !printed) {
+				Serial.printf (" %u%%\n", percent);
+				printed = true;
+			}
+			else if (percent % 10) {
+				//Serial.print ('.');
+				printed = false;
+			}
+		})
+		.onError ([](ota_error_t error) {
+			Serial.printf ("Error[%u]: ", error);
+			if (error == OTA_AUTH_ERROR) Serial.println ("Auth Failed");
+			else if (error == OTA_BEGIN_ERROR) Serial.println ("Begin Failed");
+			else if (error == OTA_CONNECT_ERROR) Serial.println ("Connect Failed");
+			else if (error == OTA_RECEIVE_ERROR) Serial.println ("Receive Failed");
+			else if (error == OTA_END_ERROR) Serial.println ("End Failed");
+		});
+
+	ArduinoOTA.begin ();
 }
 
 void wifiManagerExit (boolean status) {
@@ -313,6 +367,8 @@ void setup () {
 	GwOutput.setDlCallback (onDownlinkData);
 	GwOutput.begin ();
 
+	arduinoOTAConfigure ();
+
 #ifdef ESP32
 	//xTaskCreate (EnigmaIOTGateway_handle, "handle", 10000, NULL, 1, &xEnigmaIOTGateway_handle);
 	//xTaskCreatePinnedToCore (EnigmaIOTGateway_handle, "handle", 4096, NULL, 0, &xEnigmaIOTGateway_handle, 1);
@@ -324,5 +380,6 @@ void loop () {
 
 	GwOutput.loop ();
 	EnigmaIOTGateway.handle ();
+	ArduinoOTA.handle ();
 
 }

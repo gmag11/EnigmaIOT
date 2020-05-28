@@ -575,6 +575,7 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			DEBUG_DBG (		"Network name: %s", gwConfig.networkName);
 			DEBUG_DBG (		"WiFi channel: %u", gwConfig.channel);
 			DEBUG_VERBOSE (	"Network key: %s", gwConfig.networkKey);
+			strncpy (plainNetKey, (char*)gwConfig.networkKey, KEY_LENGTH);
 			CryptModule::getSHA256 (gwConfig.networkKey, KEY_LENGTH);
 			DEBUG_VERBOSE (	"Raw Network key: %s", printHexBuffer(gwConfig.networkKey,KEY_LENGTH));
 
@@ -653,6 +654,7 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 
 	if (networkKey) {
 		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
+		strncpy (plainNetKey, (char*)networkKey, KEY_LENGTH);
 		CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
 	} else {
 		if (!SPIFFS.begin ()) {
