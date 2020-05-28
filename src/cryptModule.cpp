@@ -1,7 +1,7 @@
 /**
   * @file cryptModule.cpp
-  * @version 0.9.0
-  * @date 20/05/2020
+  * @version 0.9.1
+  * @date 28/05/2020
   * @author German Martin
   * @brief Crypto library that implements EnigmaIoT encryption, decryption and key agreement fuctions
   *

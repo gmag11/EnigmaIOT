@@ -294,7 +294,7 @@ enigmaiot/12:34:56:78:90:12/set/data {"light1": 1, "light2": 0}
 
 After sending that command node will receive a 'set' command with data `{"light1": 1, "light2": 0}`.
 
-Commands can be sent in any other format different that JSON, even binary. In that case they are sent without conversion to node.
+Commands can be sent in any other format different that JSON, even binary. In that case they are sent without conversion to node using MessagePack encoding format to reduce transferred data bits.
 
 ### Control messages
 
@@ -436,9 +436,10 @@ It is very important to configure user and password on you MQTT broker. Besides,
 
 ## External libraries
 
+- ESPAsyncTCP -- https://github.com/me-no-dev/ESPAsyncTCP (Required only for ESP8266)
+- AsyncTCP -- https://github.com/me-no-dev/AsyncTCP (Required only for ESP32)
 - ESPAsyncWebServer -- https://github.com/me-no-dev/ESPAsyncWebServer
 - ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager version > 0.22
-  
 - Arduino Crypto Library -- https://github.com/gmag11/CryptoArduino forked and formatted from https://github.com/rweather
 - PubSubClient -- https://github.com/knolleary/pubsubclient
 - CayenneLPP -- https://github.com/sabas1080/CayenneLPP version > 1.0.2
