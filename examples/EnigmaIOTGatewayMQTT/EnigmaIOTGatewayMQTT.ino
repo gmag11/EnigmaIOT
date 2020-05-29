@@ -245,29 +245,33 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* data, unsigned int len){
 	uint8_t *buffer;
 	unsigned int bufferLen = len;
-	gatewayPayloadEncoding_t encoding;
+	gatewayPayloadEncoding_t encoding = ENIGMAIOT;
 
 
 	DEBUG_INFO ("DL Message for " MACSTR ". Type 0x%02X", MAC2STR (address), msgType);
 	DEBUG_DBG ("Data: %.*s", len, data);
 
-	//const int PAYLOAD_SIZE = 1024;
-	//payload = (char*)malloc (PAYLOAD_SIZE);
-	const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);
-	DynamicJsonDocument json (capacity);
-	DeserializationError error = deserializeJson (json, data, len, DeserializationOption::NestingLimit (3));
-	if (error == DeserializationError::Ok) {
-		DEBUG_INFO ("JSON Message. Result %s",error.c_str());
-		bufferLen = measureMsgPack (json) + 1; // Add place for \0
-		buffer = (uint8_t*)malloc (bufferLen);
-		bufferLen = serializeMsgPack (json, (char*)buffer, bufferLen);
-		encoding = MSG_PACK;
+	if (msgType == USERDATA_GET || msgType == USERDATA_SET) {
+		const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);
+		DynamicJsonDocument json (capacity);
+		DeserializationError error = deserializeJson (json, data, len, DeserializationOption::NestingLimit (3));
+		if (error == DeserializationError::Ok) {
+			DEBUG_INFO ("JSON Message. Result %s", error.c_str ());
+			bufferLen = measureMsgPack (json) + 1; // Add place for \0
+			buffer = (uint8_t*)malloc (bufferLen);
+			bufferLen = serializeMsgPack (json, (char*)buffer, bufferLen);
+			encoding = MSG_PACK;
+		} else {
+			DEBUG_INFO ("Not JSON Message. Error %s", error.c_str ());
+			bufferLen++; // Add place for \0
+			buffer = (uint8_t*)malloc (bufferLen);
+			sprintf ((char*)buffer, "%.*s", len, data);
+			encoding = RAW;
+		}
 	} else {
-		DEBUG_INFO ("Not JSON Message. Error %s", error.c_str ());
-		bufferLen++; // Add place for \0
-		buffer = (uint8_t*)malloc (bufferLen);
-		sprintf ((char*)buffer, "%.*s", len, data);
-		encoding = RAW;
+		bufferLen = len + 1; 
+		buffer = (uint8_t*)calloc (sizeof(uint8_t),bufferLen);
+		memcpy (buffer, data, len);
 	}
 
 
