@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['xof_2ecpp_2ed_558',['XOF.cpp.d',['../XOF_8cpp_8d.html',1,'']]],
-  ['xts_2ecpp_2ed_559',['XTS.cpp.d',['../XTS_8cpp_8d.html',1,'']]]
+  ['_7efilterclass_483',['~FilterClass',['../classFilterClass.html#a5706c0daaecd8f616630dc9aac4eb619',1,'FilterClass']]]
 ];
