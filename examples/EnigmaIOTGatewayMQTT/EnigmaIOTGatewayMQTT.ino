@@ -30,14 +30,15 @@
 #include "esp_system.h"
 #include "esp_event.h"
 #include "esp_tls.h"
+#include <ESPmDNS.h>
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 //#include <ESPAsyncTCP.h> // Comment to compile for ESP32
+#include <ESP8266mDNS.h>
 #include <Hash.h>
 #include <SPI.h>
 #endif // ESP32
 
-#include <ESPmDNS.h>
 #include <ArduinoOTA.h>
 
 #include <CayenneLPP.h>
@@ -117,46 +118,58 @@ void arduinoOTAConfigure () {
 	ArduinoOTA.setHostname(EnigmaIOTGateway.getNetworkName ());
 
 	// No authentication by default
-	//ArduinoOTA.setPassword(EnigmaIOTGateway.getNetworkKey(true));
+	ArduinoOTA.setPassword(EnigmaIOTGateway.getNetworkKey(true));
 
 	// Password can be set with it's md5 value as well
 	// MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
 	// ArduinoOTA.setPasswordHash("21232f297a57a5a743894a0e4a801fc3");
 
-	ArduinoOTA
-		.onStart ([]() {
-			String type;
-			if (ArduinoOTA.getCommand () == U_FLASH)
-				type = "sketch";
-			else // U_SPIFFS
-				type = "filesystem";
+	ArduinoOTA.onStart ([]() {
+		String type;
+		if (ArduinoOTA.getCommand () == U_FLASH)
+			type = "sketch";
+		else // U_SPIFFS
+			type = "filesystem";
 
-			// NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-			Serial.println ("Start updating " + type);
-		})
-		.onEnd ([]() {
-			Serial.println ("\nEnd");
-		})
-		.onProgress ([](unsigned int progress, unsigned int total) {
-			static bool printed = false;
-			int percent = progress / (total / 100);
-			if (!(percent % 10) && !printed) {
-				Serial.printf (" %u%%\n", percent);
-				printed = true;
-			}
-			else if (percent % 10) {
-				//Serial.print ('.');
-				printed = false;
-			}
-		})
-		.onError ([](ota_error_t error) {
-			Serial.printf ("Error[%u]: ", error);
-			if (error == OTA_AUTH_ERROR) Serial.println ("Auth Failed");
-			else if (error == OTA_BEGIN_ERROR) Serial.println ("Begin Failed");
-			else if (error == OTA_CONNECT_ERROR) Serial.println ("Connect Failed");
-			else if (error == OTA_RECEIVE_ERROR) Serial.println ("Receive Failed");
-			else if (error == OTA_END_ERROR) Serial.println ("End Failed");
-		});
+		// NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+		Serial.println ("Start updating " + type);
+	});
+	ArduinoOTA.onEnd ([]() {
+		Serial.println ("\nEnd");
+	});
+	ArduinoOTA.onProgress ([](unsigned int progress, unsigned int total) {
+		static bool printed = false;
+		unsigned int percent = progress / (total / 100);
+		if (!(percent % 1)) {
+			Serial.print ('.');
+		}
+		if (!(percent % 20) && !printed && percent != 0) {
+			Serial.printf (" %d%%\n", percent);
+			printed = true;
+		} else if (percent % 20) {
+			printed = false;
+		}
+		if (progress == total) {
+			Serial.println ("OTA transfer finished");
+		}
+		//static bool printed = false;
+		//int percent = progress / (total / 100);
+		//if (!(percent % 10) && !printed) {
+		//	Serial.printf (" %u%%\n", percent);
+		//	printed = true;
+		//} else if (percent % 10) {
+		//	//Serial.print ('.');
+		//	printed = false;
+		//}
+	});
+	ArduinoOTA.onError ([](ota_error_t error) {
+		Serial.printf ("Error[%u]: ", error);
+		if (error == OTA_AUTH_ERROR) Serial.println ("Auth Failed");
+		else if (error == OTA_BEGIN_ERROR) Serial.println ("Begin Failed");
+		else if (error == OTA_CONNECT_ERROR) Serial.println ("Connect Failed");
+		else if (error == OTA_RECEIVE_ERROR) Serial.println ("Receive Failed");
+		else if (error == OTA_END_ERROR) Serial.println ("End Failed");
+	});
 
 	ArduinoOTA.begin ();
 }
