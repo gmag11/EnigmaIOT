@@ -279,23 +279,27 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
     char sleepy[5] = "10";
 	char networkName[NETWORK_NAME_LENGTH] = "";
 
-    AsyncWiFiManager wifiManager (&server, &dns);
+    wifiManager = new AsyncWiFiManager (&server, &dns);
 
     AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
 	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
     AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
 
-    wifiManager.addParameter (&networkNameParam);
-    wifiManager.addParameter (&netKeyParam);
-    wifiManager.addParameter (&sleepyParam);
+    wifiManager->addParameter (&networkNameParam);
+    wifiManager->addParameter (&netKeyParam);
+    wifiManager->addParameter (&sleepyParam);
 
-    wifiManager.setDebugOutput (true);
-    wifiManager.setConnectTimeout (30);
-    wifiManager.setBreakAfterConfig (true);
-	wifiManager.setTryConnectDuringConfigPortal (false);
+    if (notifyWiFiManagerStarted) {
+        notifyWiFiManagerStarted ();
+    }
+
+    wifiManager->setDebugOutput (true);
+    wifiManager->setConnectTimeout (30);
+    wifiManager->setBreakAfterConfig (true);
+	wifiManager->setTryConnectDuringConfigPortal (false);
     String apname = "EnigmaIoTNode" + String (ESP.getChipId (), 16);
 
-    boolean result = wifiManager.startConfigPortal (apname.c_str (), NULL);
+    boolean result = wifiManager->startConfigPortal (apname.c_str (), NULL);
     if (true /*result*/) {
         DEBUG_DBG ("==== Config Portal result ====");
 
@@ -327,6 +331,11 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
         data->nodeKeyValid = false;
         data->crc32 = calculateCRC32 ((uint8_t*)(data->nodeKey), sizeof (rtcmem_data_t) - sizeof (uint32_t));
     }
+
+    if (notifyWiFiManagerExit) {
+        notifyWiFiManagerExit (true /*result*/);
+    }
+
     return result;
 }
 
