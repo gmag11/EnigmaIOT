@@ -191,10 +191,10 @@ void GwOutput_MQTT::configManagerExit (bool status) {
 		DEBUG_DBG ("Configuration does not need to be saved");
 	}
 
-	free (mqttServerParam);
-	free (mqttPortParam);
-	free (mqttUserParam);
-	free (mqttPassParam);
+	delete (mqttServerParam);
+	delete (mqttPortParam);
+	delete (mqttUserParam);
+	delete (mqttPassParam);
 }
 
 bool GwOutput_MQTT::begin () {
