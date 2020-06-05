@@ -608,6 +608,16 @@ public:
     }
 
     /**
+     * @brief Adds a parameter to configuration portal
+     * @param p Configuration parameter
+     */
+    void addWiFiManagerParameter (AsyncWiFiManagerParameter* p) {
+        if (wifiManager) {
+            wifiManager->addParameter (p);
+        }
+    }
+
+    /**
       * @brief Requests transition to sleep mode (low energy state)
       *
       * Sleep can be requested in any moment and will be triggered inmediatelly except if node is doing registration or is waiting for downlink
