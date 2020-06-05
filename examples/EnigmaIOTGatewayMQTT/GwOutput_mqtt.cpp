@@ -136,7 +136,7 @@ bool GwOutput_MQTT::loadConfig () {
 
 			configFile.close ();
 			if (json_correct) {
-				DEBUG_INFO ("Gateway configuration successfuly read");
+				DEBUG_INFO ("MQTT output module configuration successfuly read");
 			}
 			DEBUG_DBG (		"==== MQTT Configuration ====");
 			DEBUG_DBG (		"MQTT server: %s", mqttgw_config.mqtt_server);
