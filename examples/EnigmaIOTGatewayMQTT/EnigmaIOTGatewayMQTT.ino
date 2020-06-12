@@ -57,6 +57,20 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 
+#define MEAS_TEMP
+
+#ifdef MEAS_TEMP
+#include <DallasTemperature.h>
+#include <OneWire.h>
+const time_t statusPeriod = 30 * 1000;
+const int DS18B20_PIN = 17;
+const int DS18B20_PREC = 12;
+OneWire ow (DS18B20_PIN);
+DallasTemperature ds18b20 (&ow);
+DeviceAddress dsAddress;
+float temperature;
+#endif
+
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 5
 #endif // BUILTIN_LED
@@ -350,6 +364,19 @@ void setup () {
 	digitalWrite (LED_BUILTIN, HIGH);
 	startConnectionFlash (100);
 
+#ifdef MEAS_TEMP
+	ds18b20.begin ();
+	if (ds18b20.getDeviceCount () > 0) {
+		ds18b20.getAddress (dsAddress, 0);
+		DEBUG_INFO ("DS18B20 address: %02X %02X %02X %02X %02X %02X %02X %02X",
+					dsAddress[0], dsAddress[1], dsAddress[2], dsAddress[3],
+					dsAddress[4], dsAddress[5], dsAddress[6], dsAddress[7]);
+	} else {
+		DEBUG_WARN ("No DS18B20 found");
+	}
+	ds18b20.setWaitForConversion (false);
+	ds18b20.setResolution (DS18B20_PREC);
+#endif // MEAS_TEMP
 
 	if (!GwOutput.loadConfig ()) {
 		DEBUG_WARN ("Error reading config file");
@@ -393,10 +420,51 @@ void setup () {
 #endif
 	}
 
-void loop () {
+#ifdef MEAS_TEMP
+void sendTemperature (float temperature) {
+	const size_t capacity = JSON_OBJECT_SIZE (1) + JSON_OBJECT_SIZE (2) + 20;
+	size_t len;
+	char* payload;
 
+	DynamicJsonDocument doc (capacity);
+
+	JsonObject status = doc.createNestedObject ("status");
+	status["temp"] = temperature;
+	status["nodes"] = EnigmaIOTGateway.getActiveNodesNumber ();
+
+	len = measureJson (doc) + 1;
+	payload = (char*)malloc (len);
+	serializeJson (doc,(char*)payload,len);
+	char* addr = "00:00:00:00:00:00";
+	GwOutput.outputDataSend (addr, payload, len);
+	free (payload);
+}
+#endif // MEAS_TEMP
+
+void loop () {
 	GwOutput.loop ();
 	EnigmaIOTGateway.handle ();
 	ArduinoOTA.handle ();
+	
+#ifdef MEAS_TEMP
+	static bool tempRequested = false;
+	static time_t lastTempTime;
 
+	if (ds18b20.validAddress (dsAddress)) {
+		if (millis () - lastTempTime > statusPeriod && !tempRequested) {
+			ds18b20.requestTemperatures ();
+			DEBUG_WARN ("Temperature requested");
+			lastTempTime = millis ();
+			tempRequested = true;
+		}
+		if (tempRequested) {
+			if (ds18b20.isConversionComplete ()) {
+				temperature = ds18b20.getTempC (dsAddress);
+				sendTemperature (temperature);
+				DEBUG_WARN ("Temperature: %f", temperature);
+				tempRequested = false;
+			}
+		}
+	}
+#endif // MEAS_TEMP
 }
