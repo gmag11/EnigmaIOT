@@ -174,7 +174,7 @@ bool isHexChar (char c) {
 }
 
 bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
-	//char strNum[6];
+	//char strNum[ENIGMAIOT_ADDR_LEN];
 	char* payload;
 	size_t payloadLen;
 	//int strIndex;
@@ -439,7 +439,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 		} else
 			return downstreamDataMessage (node, data, len, controlData, encoding);
 	} else {
-		char addr[18];
+		char addr[ENIGMAIOT_ADDR_LEN * 3];
 		DEBUG_ERROR ("Downlink destination %s not found", mac2str (mac, addr));
 		return false;
 	}
@@ -772,9 +772,9 @@ void EnigmaIOTGatewayClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
 }
 
 void EnigmaIOTGatewayClass::getStatus (uint8_t* mac_addr, uint8_t status) {
-	char buffer[18];
+	char buffer[ENIGMAIOT_ADDR_LEN*3];
 #ifdef ESP8266
-	DEBUG_VERBOSE ("SENDStatus %s", status == 0 ? "OK" : "ERROR");
+	DEBUG_VERBOSE ("SENDStatus %s. Peer %s", status == 0 ? "OK" : "ERROR", mac2str (mac_addr, buffer));
 #elif defined ESP32
 	DEBUG_VERBOSE ("SENDStatus %d. Peer %s", status, mac2str(mac_addr,buffer));
 #endif
@@ -977,7 +977,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 	}
 }
 
-bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node* node) {
+bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node) {
 	/*
     * ----------------------------------------------------------------------------------------
     *| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | Tag (16) |
@@ -1036,7 +1036,7 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[6], uint8_t
 	return true;
 }
 
-bool EnigmaIOTGatewayClass::processUnencryptedDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node* node) {
+bool EnigmaIOTGatewayClass::processUnencryptedDataMessage (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node) {
 	/*
 	* ------------------------------------------------------------------------
 	*| msgType (1) | NodeId (2) | Counter (2) | PayloadType (1) | Data (....) |
@@ -1087,7 +1087,7 @@ bool EnigmaIOTGatewayClass::processUnencryptedDataMessage (const uint8_t mac[6],
 }
 
 
-bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node* node, bool encrypted) {
+bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node, bool encrypted) {
 	/*
 	* ----------------------------------------------------------------------------------------
 	*| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | Tag (16) |
@@ -1335,7 +1335,7 @@ bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t rea
 	return comm->send (node->getMacAddress (), (uint8_t*)& invalidateKey_msg, IKMSG_LEN) == 0;
 }
 
-bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
+bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[ENIGMAIOT_ADDR_LEN], const uint8_t* buf, size_t count, Node* node) {
 	/*
 	* -------------------------------------------------------
 	*| msgType (1) | random (12) | DH Kmaster (32) | Tag (16) |
@@ -1392,7 +1392,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 		DEBUG_DBG ("Node key: %s", printHexBuffer (node->getEncriptionKey (), KEY_LENGTH));
 	} else {
 		nodelist.unregisterNode (node);
-		char macstr[18];
+		char macstr[ENIGMAIOT_ADDR_LEN * 3];
 		mac2str ((uint8_t*)mac, macstr);
 		DEBUG_ERROR ("DH2 error with %s", macstr);
 		return false;
@@ -1407,7 +1407,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[6], const uint
 	return true;
 }
 
-bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node) {
+bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADDR_LEN], const uint8_t* buf, size_t count, Node* node) {
     struct __attribute__ ((packed, aligned (1))) {
         uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
@@ -1477,7 +1477,7 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 	DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
 
 #ifdef DEBUG_ESP_PORT
-    char mac[18];
+    char mac[ENIGMAIOT_ADDR_LEN * 3];
     mac2str (node->getMacAddress (), mac);
 #endif
 	DEBUG_DBG ("T1: %u", node->t1);
@@ -1577,7 +1577,7 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 	flashTx = true;
 
 #ifdef DEBUG_ESP_PORT
-	char mac[18];
+	char mac[ENIGMAIOT_ADDR_LEN * 3];
 	mac2str (node->getMacAddress (), mac);
 #endif
 	DEBUG_INFO (" -------> SERVER_HELLO");

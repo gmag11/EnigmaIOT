@@ -64,7 +64,7 @@ typedef enum ota_status {
   * @brief Struct that define node fields. Used for long term storage needs
   */
 struct node_instance {
-    uint8_t mac[6]; ///< @brief Node address
+    uint8_t mac[ENIGMAIOT_ADDR_LEN]; ///< @brief Node address
     uint16_t nodeId; ///< @brief Node identifier asigned by gateway
     uint8_t key[32]; ///< @brief Shared key
     uint16_t lastMessageCounter; ///< @brief Last message counter state for specific Node
@@ -310,7 +310,7 @@ protected:
     timer_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
     bool sleepyNode = true; ///< @brief Node sleepy definition
     bool initAsSleepy; ///< @brief Stores initial sleepy node. If this is false, this node does not accept sleep time changes
-    uint8_t mac[6]; ///< @brief Node address
+    uint8_t mac[ENIGMAIOT_ADDR_LEN]; ///< @brief Node address
     uint8_t key[KEY_LENGTH]; ///< @brief Shared key
     timer_t lastMessageTime; ///< @brief Node state
     FilterClass* rateFilter; ///< @brief Filter for message rate smoothing

@@ -32,7 +32,7 @@ void Node::printToSerial (Stream *port)
 {
     port->println ();
     port->printf ("Node: %d\n", nodeId);
-    char macstr[18];
+    char macstr[ENIGMAIOT_ADDR_LEN*3];
     mac2str (mac, macstr);
     port->printf ("\tMAC Address: %s\n", macstr);
     port->printf ("\tLast counter: %u\n", lastMessageCounter);

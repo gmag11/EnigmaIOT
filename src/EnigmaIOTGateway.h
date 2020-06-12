@@ -251,7 +251,7 @@ class EnigmaIOTGatewayClass
       * @param node Node entry that Client Hello message comes from
       * @return Returns `true` if message could be correcly processed
       */
-     bool processClientHello (const uint8_t mac[6], const uint8_t* buf, size_t count, Node *node);
+     bool processClientHello (const uint8_t mac[ENIGMAIOT_ADDR_LEN], const uint8_t* buf, size_t count, Node *node);
 
 	 /**
 	  * @brief Starts clock sync procedure from node to gateway
@@ -261,7 +261,7 @@ class EnigmaIOTGatewayClass
 	  * @param node Node entry that Client Hello message comes from
 	  * @return Returns `true` if message could be correcly processed
 	  */
-     bool processClockRequest (const uint8_t mac[6], const uint8_t* buf, size_t count, Node* node);
+     bool processClockRequest (const uint8_t mac[ENIGMAIOT_ADDR_LEN], const uint8_t* buf, size_t count, Node* node);
 	  
 	 /**
 	  * @brief Returns timestaps needed so that node can calculate time difference
@@ -287,7 +287,7 @@ class EnigmaIOTGatewayClass
       * @param encrypted `true` if received message is encrypted
       * @return Returns `true` if message could be correcly decoded
       */
-     bool processDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node *node, bool encrypted = true);
+     bool processDataMessage (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node *node, bool encrypted = true);
 
      /**
       * @brief Processes unencrypted data message from node
@@ -297,7 +297,7 @@ class EnigmaIOTGatewayClass
       * @param node Node where data message comes from
       * @return Returns `true` if message could be correcly decoded
       */
-     bool processUnencryptedDataMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node* node);
+     bool processUnencryptedDataMessage (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node);
      
      /**
       * @brief Builds, encrypts and sends a **DownstreamData** message.
@@ -318,7 +318,7 @@ class EnigmaIOTGatewayClass
 	 * @param node Node where data message comes from
 	 * @return Returns `true` if message could be correcly decoded
 	 */
-	 bool processControlMessage (const uint8_t mac[6], uint8_t* buf, size_t count, Node* node);
+	 bool processControlMessage (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node);
 
      /**
       * @brief Process every received message.

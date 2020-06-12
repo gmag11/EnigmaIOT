@@ -75,7 +75,7 @@ struct rtcmem_data_t {
     uint16_t lastMessageCounter; /**< Node last message counter */
     uint16_t nodeId; /**< Node identification */
     uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
-    uint8_t gateway[6]; /**< Gateway address */
+    uint8_t gateway[ENIGMAIOT_ADDR_LEN]; /**< Gateway address */
     int8_t rssi; /**< Gateway signal strength */
     uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
     char networkName[NETWORK_NAME_LENGTH]; /**< Network name. Used to search gateway peer */

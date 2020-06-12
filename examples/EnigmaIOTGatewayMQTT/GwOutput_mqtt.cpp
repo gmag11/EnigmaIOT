@@ -353,7 +353,7 @@ control_message_type_t getTopicType (char* topic, char* &userCommand) {
 
 
 void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
-	uint8_t addr[6];
+	uint8_t addr[ENIGMAIOT_ADDR_LEN];
 	char* addressStr;
 	control_message_type_t msgType;
 	char* userCommand;
