@@ -355,7 +355,7 @@ public:
     Node *findEmptyNode ();
     
      /**
-      * @brief Gets hte number of active nodes (registered or registeing)
+      * @brief Gets the number of active nodes (registered or registering)
       * @return Number of active nodes
       */
     uint16_t countActiveNodes ();

@@ -596,6 +596,22 @@ class EnigmaIOTGatewayClass
       */
      void popInputMsgQueue ();
 
+     /**
+      * @brief Gets number of active nodes
+      * @return Number of registered nodes
+      */
+     int getActiveNodesNumber () {
+         return nodelist.countActiveNodes ();
+     }
+
+     /**
+      * @brief Gets nodes data structure
+      * @return All nodes data structure
+      */
+     NodeList* getNodes () {
+         return &nodelist;
+     }
+
 };
 
 extern EnigmaIOTGatewayClass EnigmaIOTGateway;
