@@ -489,7 +489,7 @@ void GwOutput_MQTT::popMQTTqueue () {
 
 bool GwOutput_MQTT::outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type) {
 	const int TOPIC_SIZE = 64;
-	char* topic = (char*)malloc (TOPIC_SIZE);
+	char topic[TOPIC_SIZE];
 	bool result;
 	switch (type){
 	case GwOutput_data_type::data:
@@ -507,15 +507,14 @@ bool GwOutput_MQTT::outputDataSend (char* address, char* data, size_t length, Gw
 	} else {
 		DEBUG_WARN ("Error queuing MQTT %s", topic);
 	}
-	free (topic);
 	return result;
 }
 
 bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t length) {
 	const int TOPIC_SIZE = 64;
 	const int PAYLOAD_SIZE = 512;
-	char* topic = (char*)malloc (TOPIC_SIZE);
-	char* payload = (char*)malloc (PAYLOAD_SIZE);
+	char topic[TOPIC_SIZE];
+	char payload[PAYLOAD_SIZE];
 	size_t pld_size = 0;
 	bool result = false;
 
@@ -588,33 +587,31 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 		break;
 	}
 
-	free (topic);
-	free (payload);
 	return result;
 }
 
 bool GwOutput_MQTT::newNodeSend (char* address, uint16_t node_id) {
 	const int TOPIC_SIZE = 64;
-	char* topic = (char*)malloc (TOPIC_SIZE);
+
+	char topic[TOPIC_SIZE];
+
 	snprintf (topic, TOPIC_SIZE, "%s/%s/hello", netName.c_str(), address);
 	bool result = addMQTTqueue (topic, NULL, 0);
 	DEBUG_INFO ("Published MQTT %s", topic);
-	free (topic);
 	return result;
 }
 
 bool GwOutput_MQTT::nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) {
 	const int TOPIC_SIZE = 64;
 	const int PAYLOAD_SIZE = 64;
-	char* topic = (char*)malloc (TOPIC_SIZE);
-	char* payload = (char*)malloc (PAYLOAD_SIZE);
+
+	char topic[TOPIC_SIZE];
+	char payload[PAYLOAD_SIZE];
 	size_t pld_size;
 
 	snprintf (topic, TOPIC_SIZE, "%s/%s/bye", netName.c_str(), address);
 	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"reason\":%u}", reason);
 	bool result = addMQTTqueue (topic, payload, pld_size);
 	DEBUG_INFO ("Published MQTT %s result = %s", topic, result ? "OK" : "Fail");
-	free (topic);
-	free (payload);
 	return result;
 }
