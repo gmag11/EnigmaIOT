@@ -119,7 +119,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 
 	payload = (char*)malloc (PAYLOAD_SIZE);
 
-	char mac_str[18];
+	char mac_str[ENIGMAIOT_ADDR_LEN * 3];
 	mac2str (mac, mac_str);
 	if (control) {
 		processRxControlData (mac_str, buffer, length);
@@ -196,7 +196,7 @@ void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* dat
 }
 
 void newNodeConnected (uint8_t * mac, uint16_t node_id) {
-	char macstr[18];
+	char macstr[ENIGMAIOT_ADDR_LEN * 3];
 	mac2str (mac, macstr);
 	//Serial.printf ("New node connected: %s\n", macstr);
 
@@ -208,7 +208,7 @@ void newNodeConnected (uint8_t * mac, uint16_t node_id) {
 }
 
 void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
-	char macstr[18];
+	char macstr[ENIGMAIOT_ADDR_LEN * 3];
 	mac2str (mac, macstr);
 	//Serial.printf ("Node %s disconnected. Reason %u\n", macstr, reason);
 	if (!GwOutput.nodeDisconnectedSend (macstr, reason)) {

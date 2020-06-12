@@ -40,7 +40,7 @@ void disconnectEventHandler (nodeInvalidateReason_t reason) {
 }
 
 void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t encoding) {
-	char macstr[18];
+	char macstr[ENIGMAIOT_ADDR_LEN*3];
 	String commandStr;
 	//void* data;
 	uint8_t tempBuffer[MAX_MESSAGE_LENGTH];

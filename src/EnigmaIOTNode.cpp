@@ -65,7 +65,7 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
         Serial.printf (" -- Channel: %d\n", data->channel);
         Serial.printf (" -- RSSI: %d\n", data->rssi);
 		Serial.printf (" -- Network name: %s\n", data->networkName);
-		char gwAddress[18];
+		char gwAddress[ENIGMAIOT_ADDR_LEN*3];
         Serial.printf (" -- Gateway: %s\n", mac2str (data->gateway, gwAddress));
 		Serial.printf (" -- Comm errors: %d\n", data->commErrors);
         if (gateway)
@@ -158,8 +158,8 @@ bool EnigmaIOTNodeClass::loadFlashData () {
             DEBUG_DBG ("Network Key dump: %s", printHexBuffer (rtcmem_data.networkKey, KEY_LENGTH));
             strlcpy (networkKey, doc["networkKey"] | "", sizeof (networkKey));
 
-            uint8_t gwAddr[6];
-            char gwAddrStr[18];
+            uint8_t gwAddr[ENIGMAIOT_ADDR_LEN];
+            char gwAddrStr[ENIGMAIOT_ADDR_LEN * 3];
             if (doc.containsKey ("gateway")) {
                 strlcpy (gwAddrStr, doc["gateway"], sizeof (gwAddrStr));
                 str2mac (gwAddrStr, gwAddr);
@@ -210,7 +210,7 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 
     DynamicJsonDocument doc (512);
 
-    char gwAddrStr[18];
+    char gwAddrStr[ENIGMAIOT_ADDR_LEN * 3];
     mac2str (rtcmem_data.gateway, gwAddrStr);
 
     doc["networkName"] = rtcmem_data.networkName;
@@ -401,7 +401,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 	node.setSleepy (sleepy);
     DEBUG_DBG ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
 
-    uint8_t macAddress[6];
+    uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
 
     if (wifi_get_macaddr (STATION_IF, macAddress)) {
         node.setMacAddress (macAddress);
@@ -409,7 +409,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 
     if (loadRTCData () && rtcmem_data.commErrors < COMM_ERRORS_BEFORE_SCAN) { // If data present on RTC node has waked up or it is just configured, continue
 #if DEBUG_LEVEL >= DBG
-        char gwAddress[18];
+        char gwAddress[ENIGMAIOT_ADDR_LEN * 3];
         DEBUG_DBG ("RTC data loaded. Gateway: %s", mac2str (rtcmem_data.gateway, gwAddress));
 #endif
         DEBUG_DBG ("Own address: %s", mac2str (node.getMacAddress (), gwAddress));
@@ -447,7 +447,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
             if (loadFlashData ()) { // If data present on flash, read and continue
                 node.setStatus (UNREGISTERED);
                 DEBUG_DBG ("Flash data loaded");
-                uint8_t prevGwAddr[6];
+                uint8_t prevGwAddr[ENIGMAIOT_ADDR_LEN];
                 memcpy (prevGwAddr, rtcmem_data.gateway, 6);
 				if (searchForGateway (&rtcmem_data),true) {
 					//DEBUG_DBG ("Found gateway. Storing");
@@ -524,7 +524,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 #endif
 	}
     
-    uint8_t prevGwAddr[6];
+    uint8_t prevGwAddr[ENIGMAIOT_ADDR_LEN];
     memcpy (prevGwAddr, data->gateway, 6);
 
 	if (numWifi > 0) {
@@ -803,7 +803,7 @@ bool EnigmaIOTNodeClass::clientHello () {
     Crypto.getDH1 ();
     node.setStatus (INIT);
     rtcmem_data.nodeRegisterStatus = INIT;
-    uint8_t macAddress[6];
+    uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
     if (wifi_get_macaddr (STATION_IF, macAddress)) {
         node.setMacAddress (macAddress);
     }
@@ -1145,7 +1145,7 @@ bool EnigmaIOTNodeClass::unencryptedDataMessage (const uint8_t* data, size_t len
     DEBUG_VERBOSE ("Unencrypted data message: %s", printHexBuffer (buf, packet_length));
 
 #if DEBUG_LEVEL >= VERBOSE
-    char macStr[18];
+    char macStr[ENIGMAIOT_ADDR_LEN * 3];
     DEBUG_DBG ("Destination address: %s", mac2str (rtcmem_data.gateway, macStr));
 #endif
 
@@ -1257,7 +1257,7 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
         DEBUG_INFO (" -------> DATA");
     }
 #if DEBUG_LEVEL >= VERBOSE
-    char macStr[18];
+    char macStr[ENIGMAIOT_ADDR_LEN * 3];
     DEBUG_DBG ("Destination address: %s", mac2str (rtcmem_data.gateway, macStr));
 #endif
 
