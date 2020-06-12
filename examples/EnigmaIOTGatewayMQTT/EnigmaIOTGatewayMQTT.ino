@@ -190,11 +190,10 @@ void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 
 void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type) {
 	uint8_t* addr = mac;
-	char* payload;
 	size_t pld_size;
 	const int PAYLOAD_SIZE = 1024; // Max MQTT payload in PubSubClient library normal operation.
 
-	payload = (char*)malloc (PAYLOAD_SIZE);
+	char payload[PAYLOAD_SIZE];
 
 	char mac_str[ENIGMAIOT_ADDR_LEN*3];
 	mac2str (addr, mac_str);
@@ -252,7 +251,6 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 							EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
 	GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::status);
 	DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
-	free (payload);
 }
 
 void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* data, unsigned int len){
