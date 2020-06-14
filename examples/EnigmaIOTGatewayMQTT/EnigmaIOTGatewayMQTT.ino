@@ -63,7 +63,7 @@
 #include <DallasTemperature.h>
 #include <OneWire.h>
 const time_t statusPeriod = 30 * 1000;
-const int DS18B20_PIN = 17;
+const int DS18B20_PIN = 16;
 const int DS18B20_PREC = 12;
 OneWire ow (DS18B20_PIN);
 DallasTemperature ds18b20 (&ow);
