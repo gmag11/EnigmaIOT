@@ -435,7 +435,7 @@ void sendTemperature (float temperature) {
 	payload = (char*)malloc (len);
 	serializeJson (doc,(char*)payload,len);
 	char* addr = "00:00:00:00:00:00";
-	GwOutput.outputDataSend (addr, payload, len);
+	GwOutput.outputDataSend (addr, payload, len-1);
 	free (payload);
 }
 #endif // MEAS_TEMP
