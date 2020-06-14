@@ -140,6 +140,7 @@ void arduinoOTAConfigure () {
 	ArduinoOTA.onProgress ([](unsigned int progress, unsigned int total) {
 		static bool printed = false;
 		unsigned int percent = progress / (total / 100);
+		digitalWrite (BLUE_LED, !digitalRead (BLUE_LED));
 		if (!(percent % 1)) {
 			Serial.print ('.');
 		}
