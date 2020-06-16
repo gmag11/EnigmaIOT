@@ -57,12 +57,12 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 
-#define MEAS_TEMP
+#define MEAS_TEMP // Temperature measurement for Gateway monitoring
 
 #ifdef MEAS_TEMP
 #include <DallasTemperature.h>
 #include <OneWire.h>
-const time_t statusPeriod = 30 * 1000;
+const time_t statusPeriod = 300 * 1000;
 const int DS18B20_PIN = 16;
 const int DS18B20_PREC = 12;
 OneWire ow (DS18B20_PIN);
@@ -420,8 +420,8 @@ void setup () {
 	}
 
 #ifdef MEAS_TEMP
-void sendTemperature (float temperature) {
-	const size_t capacity = JSON_OBJECT_SIZE (1) + JSON_OBJECT_SIZE (2) + 20;
+void sendStatus (float temperature) {
+	const size_t capacity = JSON_OBJECT_SIZE (1) + JSON_OBJECT_SIZE (3) + 30;;
 	size_t len;
 	char* payload;
 
@@ -430,11 +430,12 @@ void sendTemperature (float temperature) {
 	JsonObject status = doc.createNestedObject ("status");
 	status["temp"] = temperature;
 	status["nodes"] = EnigmaIOTGateway.getActiveNodesNumber ();
+	status["mem"] = ESP.getFreeHeap ();
 
 	len = measureJson (doc) + 1;
 	payload = (char*)malloc (len);
 	serializeJson (doc,(char*)payload,len);
-	char* addr = "00:00:00:00:00:00";
+	char addr[] = "gateway";
 	GwOutput.outputDataSend (addr, payload, len-1);
 	free (payload);
 }
@@ -459,7 +460,7 @@ void loop () {
 		if (tempRequested) {
 			if (ds18b20.isConversionComplete ()) {
 				temperature = ds18b20.getTempC (dsAddress);
-				sendTemperature (temperature);
+				sendStatus (temperature);
 				DEBUG_WARN ("Temperature: %f", temperature);
 				tempRequested = false;
 			}
