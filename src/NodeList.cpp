@@ -126,6 +126,9 @@ NodeList::NodeList () {
 
 Node *NodeList::getNodeFromID (uint16_t nodeId)
 {
+    if (nodeID >= NUM_NODES)
+        return NULL;
+
     return &(nodes[nodeId]);
 }
 
@@ -135,6 +138,21 @@ Node *NodeList::getNodeFromMAC (const uint8_t * mac)
 
     while (index < NUM_NODES) {
         if (!memcmp (nodes[index].mac,mac,6)) {
+            if (nodes[index].status != UNREGISTERED) { // TODO: check status??
+                return &(nodes[index]);
+            }
+        }
+        index++;
+    }
+
+    return NULL;
+}
+
+Node* NodeList::getNodeFromName (const char* name) {
+    uint16_t index = 0;
+
+    while (index < NUM_NODES) {
+        if (!strncmp (nodes[index].nodeName, name, NODE_NAME_LENGTH)) {
             if (nodes[index].status != UNREGISTERED) { // TODO: check status??
                 return &(nodes[index]);
             }

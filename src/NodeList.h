@@ -120,6 +120,22 @@ public:
     }
 
     /**
+      * @brief Gets Node name
+      * @return Returns Node name
+      */
+    char* getNodeName () {
+        return nodeName;
+    }
+
+    /**
+      * @brief Sets Node name
+      * @param name Custom node name. This should be unique in the network
+      */
+    void setNodeName (const char* name) {
+        strncpy (nodeName, name, NODE_NAME_LENGTH);
+    }
+
+    /**
       * @brief Gets Node encryption key
       * @return Returns a pointer to Node encryption key
       */
@@ -314,6 +330,7 @@ protected:
     uint8_t key[KEY_LENGTH]; ///< @brief Shared key
     timer_t lastMessageTime; ///< @brief Node state
     FilterClass* rateFilter; ///< @brief Filter for message rate smoothing
+    char nodeName[NODE_NAME_LENGTH]; ///< @brief Node name. Use as a human friendly name to avoid use of numeric address*/
 
      /**
       * @brief Starts smoothing filter
@@ -347,6 +364,13 @@ public:
       * @return Node instance that has given address. NULL if it was not found
       */
     Node *getNodeFromMAC (const uint8_t* mac);
+
+     /**
+      * @brief Gets node that correspond with given node name
+      * @param name Node name to search for
+      * @return Node instance that has given name. NULL if it was not found
+      */
+    Node* getNodeFromName (const char* name);
     
     /**
       * @brief Searches for a free place for a new Node instance

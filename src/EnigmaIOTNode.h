@@ -60,7 +60,6 @@ enum nodePayloadEncoding_t {
 enum nodeInvalidateReason_t {
     UNKNOWN_ERROR = 0x00, /**< Unknown error. Not used by the moment */
     WRONG_CLIENT_HELLO = 0x01, /**< ClientHello message received was invalid */
-    //WRONG_EXCHANGE_FINISHED = 0x02, /**< KeyExchangeFinished message received was invalid. Probably this means an error on shared key */
     WRONG_DATA = 0x03, /**< Data message received could not be decrypted successfuly */
     UNREGISTERED_NODE = 0x04, /**< Data received from an unregistered node*/
     KEY_EXPIRED = 0x05 /**< Node key has reached maximum validity time */
