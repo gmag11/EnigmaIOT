@@ -420,6 +420,13 @@ protected:
 	  */
 	bool processGetRSSICommand (const uint8_t* mac, const uint8_t* data, uint8_t len);
 
+    /**
+      * @brief Informs Gateway about custom node name
+      * @param name Custom node name
+      * @return True if message was sent successfuly
+      */
+    bool sendNodeNameSet (const char* name);
+
 public:
     /**
       * @brief Initalizes communication basic data and starts node registration

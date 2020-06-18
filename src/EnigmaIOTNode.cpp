@@ -1301,6 +1301,32 @@ bool EnigmaIOTNodeClass::processGetSleepTimeCommand (const uint8_t* mac, const u
     }
 }
 
+bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
+    if (!name)
+        return false;
+
+    uint8_t nameLength = strlen (name);
+
+    if (!nameLength || nameLength > NODE_NAME_LENGTH)
+        return false;
+
+    uint8_t buffer[NODE_NAME_LENGTH + 1];
+    uint8_t bufLength = 1 + nameLength;
+
+    DEBUG_DBG ("Send set node name as %s", name);
+    buffer[0] = control_message_type::NODE_NAME_SET;
+
+    strncpy ((char*)(buffer + 1), name, nameLength);
+
+    if (sendData (buffer, bufLength, true)) {
+        DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+        return true;
+    } else {
+        DEBUG_WARN ("Error sending set node name message");
+        return false;
+    }
+}
+
 bool EnigmaIOTNodeClass::processSetIdentifyCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
     uint8_t buffer[MAX_MESSAGE_LENGTH];
     uint8_t bufLength;
@@ -1729,6 +1755,9 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 #if DEBUG_LEVEL >= INFO
 				node.printToSerial (&DEBUG_ESP_PORT);
 #endif
+                if (!sendNodeNameSet (rtcmem_data.nodeName)) {
+                    DEBUG_WARN ("Error sending set node name %s", rtcmem_data.nodeName);
+                }
 
 				// send notification to user code
 				if (notifyConnection) {

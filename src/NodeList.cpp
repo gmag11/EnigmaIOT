@@ -126,7 +126,7 @@ NodeList::NodeList () {
 
 Node *NodeList::getNodeFromID (uint16_t nodeId)
 {
-    if (nodeID >= NUM_NODES)
+    if (nodeId >= NUM_NODES)
         return NULL;
 
     return &(nodes[nodeId]);
