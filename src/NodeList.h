@@ -42,6 +42,8 @@ typedef enum control_message_type {
 	RESET_ANS = 0x85,
 	RSSI_GET = 0x06,
 	RSSI_ANS = 0x86,
+    NODE_NAME_RESULT = 0x07,
+    NODE_NAME_SET = 0x87,
 	OTA = 0xEF,
 	OTA_ANS = 0xFF,
 	USERDATA_GET = 0x00,
