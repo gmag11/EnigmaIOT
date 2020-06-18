@@ -278,16 +278,19 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
     char networkKey[33] = "";
     char sleepy[5] = "10";
 	char networkName[NETWORK_NAME_LENGTH] = "";
+    char nodeName[NODE_NAME_LENGTH] = "";
 
     wifiManager = new AsyncWiFiManager (&server, &dns);
 
     AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
 	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
     AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
+    AsyncWiFiManagerParameter nodeNameParam ("nodename", "Node Name", nodeName, NODE_NAME_LENGTH+1, "type=\"text\" maxlength=32");
 
     wifiManager->addParameter (&networkNameParam);
     wifiManager->addParameter (&netKeyParam);
     wifiManager->addParameter (&sleepyParam);
+    wifiManager->addParameter (&nodeNameParam);
 
     if (notifyWiFiManagerStarted) {
         notifyWiFiManagerStarted ();
@@ -306,6 +309,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
         DEBUG_DBG ("Network Name: %s", networkNameParam.getValue ());
         DEBUG_DBG ("Network Key: %s", netKeyParam.getValue ());
         DEBUG_DBG ("Sleppy time: %s", sleepyParam.getValue ());
+        DEBUG_DBG ("Node Name: %s", nodeNameParam.getValue ());
 
         data->lastMessageCounter = 0;
 
@@ -328,6 +332,10 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
             data->sleepy = true;
         }
         data->sleepTime = sleepyVal;
+
+        strncpy (data->nodeName, nodeNameParam.getValue (), NODE_NAME_LENGTH);
+        DEBUG_DBG ("Node name: %s", data->nodeName);
+
         data->nodeKeyValid = false;
         data->crc32 = calculateCRC32 ((uint8_t*)(data->nodeKey), sizeof (rtcmem_data_t) - sizeof (uint32_t));
     }

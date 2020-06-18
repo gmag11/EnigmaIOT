@@ -16,6 +16,7 @@ static const char ENIGMAIOT_PROT_VERS[] = "0.9.1"; ///< @brief EnitmaIoT Version
 static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on ESP-NOW
 static const uint32_t FLASH_LED_TIME = 50; ///< @brief Time that led keeps on during flash in ms
 static const uint8_t NETWORK_NAME_LENGTH = 21; ///< @brief Maximum number of characters of network name
+static const uint8_t NODE_NAME_LENGTH = 32; ///< @brief Maximum number of characters of node name
 static const int RESET_PIN_DURATION = 5000; ///< @brief Number of milliseconds that reset pin has to be grounded to produce a configuration reset
 
 // Gateway configuration
