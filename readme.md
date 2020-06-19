@@ -8,7 +8,7 @@
 
 A number of nodes with one or more sensors each one communicate in a **secure** way to a central gateway in a star network using EnigmaIoT protocol.
 
-This protocol has been designed with security on mind. All sensor data is encrypted with a random key that changes periodically. Key is unique for each node and dynamically negotiated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.
+This protocol has been designed with security on mind. All node data is encrypted with a random key that changes periodically. Key is unique for each node and dynamically negotiated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.
 
 I designed this because I was searching for a way to have a relatively high number of nodes at home. I thought about using WiFi but it would overload my home router. So I looked for an alternative. I evaluated  LoRa or cheap nRF24 modules but I wanted the simplest solution in terms of hardware.
 
@@ -57,7 +57,7 @@ Notice that network key used to implement this feature is stored on flash. ESP82
 - [x] Node configuration while in service using control downlink commands
 - [ ] OTA over WiFi
 - [x] OTA over MQTT/ESP-NOW
-- [x] Sensor identification by using a flashing LED. This is useful when you have a bunch of nodes together :D
+- [x] Node identification by using a flashing LED. This is useful when you have a bunch of nodes together :D
 - [ ] Broadcast messages that go to all nodes. Under study
 
 ## Design
@@ -128,15 +128,15 @@ After receiving and checking Client Hello message, gateway responds with a Serve
 
 Server Hello message is sent encrypted with network key.
 
-### Sensor Data message
+### Node Data message
 
 ![Node payload message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorData.png)
 
-Sensor data is always encrypted using shared key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.
+Node data is always encrypted using shared key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.
 
 Total message length (without tag) is included on a 2 byte field.
 
-### Unencrypted Sensor Data message
+### Unencrypted Node Data message
 
 ![Node unencrypted payload message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/UnencryptedSensorData.png)
 
@@ -166,6 +166,42 @@ Gateway  and node can exchange internal control commands. These are used to set 
 
 Some control messages, like OTA update messages, require that they are processed immediately. Hence, it is required that node is not in deep sleep mode. This can be controlled, for instance, using another control command to set sleep time to 0.
 
+### Clock synchronization
+
+##### Clock sync request
+
+![Clock sync request](https://github.com/gmag11/EnigmaIOT/raw/master/img/ClockSyncRequest.png)
+
+##### Clock sync response
+
+![Clock sync response](https://github.com/gmag11/EnigmaIOT/raw/master/img/ClockSyncResponse.png)
+
+In non sleepy nodes, it may be useful to send a message from time to time to let Gateway know that node is still active and let Node to check that is is still registered in Gateway.
+
+Clock syncronization may be a very good feature if you need to coordinate actions on different nodes.
+
+EnigmaIOT combines these two features into one request and response. Nodes may send clock sync request every some time to ping gateway and get common clock updated. Clock synchronization uses a mechanism similar to the one used by [SNTP protocol](https://en.wikipedia.org/wiki/Network_Time_Protocol#:~:text=Simple%20Network%20Time%20Protocol%20(SNTP,NTP%20capability%20is%20not%20required.).
+
+Notice that this is not world time sync but a numeric clock.
+
+This feature may be disabled if needed.
+
+### Address to node name translation
+
+##### Set node name
+
+![Set Node Name](https://github.com/gmag11/EnigmaIOT/raw/master/img/SetNodeName.png)
+
+##### Set node name result
+
+![Set Node Name result](https://github.com/gmag11/EnigmaIOT/raw/master/img/SetNodeNameResult.png)
+
+In order to make node messages more readable for humans, this implements a way to let Gateway to translate EnigmaIOT addresses to custom names (for instance, "RoomBlindControl"). This eases node replacement in case of failure.
+
+Node names can be up to 32 characters long and should avoid characters different of letters, numbers and spaces. **Characters #,+ and / are specially forbidden**.
+
+Node name is configured by user during first configuration in WiFi Web portal.
+
 ### Invalidate Key message
 
 ![Invalidate Key message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/InvalidateKey.png)
@@ -178,7 +214,7 @@ Invalidate Key message is always sent unencrypted.
 
 ## Protocol procedures
 
-### Normal node registration and sensor data exchange
+### Normal node registration and node data exchange
 
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/NodeRegistration.svg?sanitize=true" alt="Normal node registration message sequence" width="400"/>
 
