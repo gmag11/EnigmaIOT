@@ -38,6 +38,8 @@ enum nodeMessageType {
     DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to node. Used for OTA, settings configuration, etc */
     CLOCK_REQUEST = 0x05, /**< Clock request message from node */
     CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
+    NODE_NAME_SET = 0x07, /**< Message from node to signal its own custom node name */
+    NODE_NAME_RESULT = 0x17, /**< Message from gateway to get result after set node name */
     CLIENT_HELLO = 0xFF, /**< ClientHello message from node */
     SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
     INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
