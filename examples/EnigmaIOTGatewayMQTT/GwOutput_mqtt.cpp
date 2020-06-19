@@ -585,6 +585,8 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 			result = true;
 		}
 		break;
+	default:
+		DEBUG_WARN ("Unknown control message. Code: 0x%02X", data[0]);
 	}
 
 	return result;

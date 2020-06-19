@@ -60,6 +60,7 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
         Serial.printf (" -- Node Key: %s\n", printHexBuffer (data->nodeKey, KEY_LENGTH));
         Serial.printf (" -- Node key is %svalid\n", data->nodeKeyValid ? "" : "NOT ");
         Serial.printf (" -- Node status is %d: %s\n", data->nodeRegisterStatus, data->nodeRegisterStatus == REGISTERED ? "REGISTERED" : "NOT REGISTERED");
+        Serial.printf (" -- Node name: %s\n", data->nodeName);
         Serial.printf (" -- Last message counter: %d\n", data->lastMessageCounter);
 		Serial.printf (" -- NodeID: %d\n", data->nodeId);
         Serial.printf (" -- Channel: %d\n", data->channel);
@@ -102,6 +103,8 @@ bool EnigmaIOTNodeClass::loadRTCData () {
         //memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
         //memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
         node.setSleepy (rtcmem_data.sleepy);
+        memset (rtcmem_data.nodeName, 0, NODE_NAME_LENGTH);
+        node.setNodeName (rtcmem_data.nodeName);
         // set default sleep time if it was not set
         if (rtcmem_data.sleepy && rtcmem_data.sleepTime == 0) {
             rtcmem_data.sleepTime = DEFAULT_SLEEP_TIME;
@@ -157,6 +160,7 @@ bool EnigmaIOTNodeClass::loadFlashData () {
             strlcpy ((char*)rtcmem_data.networkKey, doc["networkKey"] | "", sizeof (rtcmem_data.networkKey));
             DEBUG_DBG ("Network Key dump: %s", printHexBuffer (rtcmem_data.networkKey, KEY_LENGTH));
             strlcpy (networkKey, doc["networkKey"] | "", sizeof (networkKey));
+            strlcpy ((char*)rtcmem_data.nodeName, doc["nodeName"] | "", NODE_NAME_LENGTH);
 
             uint8_t gwAddr[ENIGMAIOT_ADDR_LEN];
             char gwAddrStr[ENIGMAIOT_ADDR_LEN * 3];
@@ -175,6 +179,7 @@ bool EnigmaIOTNodeClass::loadFlashData () {
             DEBUG_DBG ("==== EnigmaIOT Node Configuration ====");
             DEBUG_DBG ("Network name: %s", rtcmem_data.networkName);
             DEBUG_DBG ("Sleep time: %u", rtcmem_data.sleepTime);
+            DEBUG_DBG ("Node name: %s", rtcmem_data.nodeName);
             DEBUG_DBG ("Gateway: %s", gwAddrStr);
             DEBUG_VERBOSE ("Network key: %s", rtcmem_data.networkKey);
             CryptModule::getSHA256 (rtcmem_data.networkKey, KEY_LENGTH);
@@ -218,6 +223,7 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
     DEBUG_INFO ("NetworkKey --> %s", networkKey);
     doc["sleepTime"] = rtcmem_data.sleepTime;
     doc["gateway"] = gwAddrStr;
+    doc["nodeName"] = rtcmem_data.nodeName;
 
     if (serializeJson (doc, configFile) == 0) {
         DEBUG_ERROR ("Failed to write to file");
@@ -285,7 +291,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
     AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
 	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
     AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
-    AsyncWiFiManagerParameter nodeNameParam ("nodename", "Node Name", nodeName, NODE_NAME_LENGTH+1, "type=\"text\" maxlength=32");
+    AsyncWiFiManagerParameter nodeNameParam ("nodename", "Node Name", nodeName, NODE_NAME_LENGTH, "type=\"text\" maxlength=32");
 
     wifiManager->addParameter (&networkNameParam);
     wifiManager->addParameter (&netKeyParam);

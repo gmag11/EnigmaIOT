@@ -81,7 +81,7 @@ struct rtcmem_data_t {
     status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
     bool sleepy; /**< Sleepy node */
     uint32_t sleepTime = 0; /**< Time to sleep between sensor data delivery */
-    char nodeName[NODE_NAME_LENGTH]; /**< Node name. Use as a human friendly name to avoid use of numeric address*/
+    char nodeName[NODE_NAME_LENGTH + 1]; /**< Node name. Use as a human friendly name to avoid use of numeric address*/
     bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
     uint8_t commErrors = 0; /**< number of non acknowledged packets. May mean that gateway is not available or its channel has changed.
                                 This is used to retrigger Gateway scan*/
