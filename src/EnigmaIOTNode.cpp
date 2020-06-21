@@ -926,6 +926,8 @@ bool EnigmaIOTNodeClass::clockRequest () {
 
 	node.setLastMessageTime ();
 
+    flashBlue = true;
+
 	return comm->send (rtcmem_data.gateway, (uint8_t*)& clockRequest_msg, CRMSG_LEN) == 0;
 
 }
@@ -1361,7 +1363,7 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
 
     DEBUG_VERBOSE ("Set node name message: %s", printHexBuffer (buf, packet_length));
     
-    uint8_t* crypt_buf = buf + length_idx;
+    uint8_t* crypt_buf = buf + nodeId_idx;
 
     size_t cryptLen = packet_length - 1 - IV_LENGTH;
 
@@ -1387,6 +1389,8 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
     char macStr[ENIGMAIOT_ADDR_LEN * 3];
     DEBUG_DBG ("Destination address: %s", mac2str (rtcmem_data.gateway, macStr));
 #endif
+
+    flashBlue = true;
 
     return (comm->send (rtcmem_data.gateway, buf, packet_length + TAG_LENGTH) == 0);
 
