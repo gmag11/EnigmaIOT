@@ -597,8 +597,12 @@ bool GwOutput_MQTT::newNodeSend (char* address, uint16_t node_id) {
 
 	char topic[TOPIC_SIZE];
 
+	uint8_t* nodeAddress = enigmaIotGateway->getNodes ()->getNodeFromID (node_id)->getMacAddress ();
+	char addrStr[ENIGMAIOT_ADDR_LEN * 3];
+	mac2str (nodeAddress, addrStr);
+
 	snprintf (topic, TOPIC_SIZE, "%s/%s/hello", netName.c_str(), address);
-	bool result = addMQTTqueue (topic, NULL, 0);
+	bool result = addMQTTqueue (topic, addrStr, ENIGMAIOT_ADDR_LEN * 3);
 	DEBUG_INFO ("Published MQTT %s", topic);
 	return result;
 }

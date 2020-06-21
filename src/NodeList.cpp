@@ -107,6 +107,7 @@ void Node::reset () {
     DEBUG_DBG ("Reset node");
     memset (mac, 0, 6);
     memset (key, 0, KEY_LENGTH);
+    memset (nodeName, 0, NODE_NAME_LENGTH);
     keyValid = false;
     lastMessageCounter = 0;
     keyValidFrom = 0;

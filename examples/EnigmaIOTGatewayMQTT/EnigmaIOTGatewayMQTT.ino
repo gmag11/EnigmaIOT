@@ -189,7 +189,7 @@ void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 	}
 }
 
-void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type) {
+void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type, char *nodeName = NULL) {
 	uint8_t* addr = mac;
 	size_t pld_size;
 	const int PAYLOAD_SIZE = 1024; // Max MQTT payload in PubSubClient library normal operation.
@@ -198,8 +198,9 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 
 	char mac_str[ENIGMAIOT_ADDR_LEN*3];
 	mac2str (addr, mac_str);
+	
 	if (control) {
-		processRxControlData (mac_str, buffer, length);
+		processRxControlData (nodeName ? nodeName : mac_str, buffer, length);
 		return;
 	}
 	//char* netName = EnigmaIOTGateway.getNetworkName ();
@@ -238,20 +239,20 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 		}
 	} 
 
-	GwOutput.outputDataSend (mac_str, payload, pld_size);
-	DEBUG_INFO ("Published data message from %s, length %d: %s, Encoding 0x%02X", mac_str, pld_size, payload, payload_type);
+	GwOutput.outputDataSend (nodeName ? nodeName : mac_str, payload, pld_size);
+	DEBUG_INFO ("Published data message from %s, length %d: %s, Encoding 0x%02X", nodeName ? nodeName : mac_str, pld_size, payload, payload_type);
 	if (lostMessages > 0) {
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "%u", lostMessages);
-		GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::lostmessages);
-		DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
+		GwOutput.outputDataSend (nodeName ? nodeName : mac_str, payload, pld_size, GwOutput_data_type::lostmessages);
+		DEBUG_INFO ("Published MQTT from %s: %s", nodeName ? nodeName : mac_str, payload);
 	}
 	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}",
 							EnigmaIOTGateway.getPER ((uint8_t*)mac),
 							EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
 							EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
 							EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
-	GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::status);
-	DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
+	GwOutput.outputDataSend (nodeName ? nodeName : mac_str, payload, pld_size, GwOutput_data_type::status);
+	DEBUG_INFO ("Published MQTT from %s: %s", nodeName ? nodeName : mac_str, payload);
 }
 
 void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* data, unsigned int len){
@@ -296,16 +297,26 @@ void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* dat
 	free (buffer);
 }
 
-void newNodeConnected (uint8_t * mac, uint16_t node_id) {
-	char macstr[ENIGMAIOT_ADDR_LEN*3];
-	mac2str (mac, macstr);
+void newNodeConnected (uint8_t * mac, uint16_t node_id, char* nodeName = NULL) {
+	
 	//Serial.printf ("New node connected: %s\n", macstr);
 
-	if (!GwOutput.newNodeSend (macstr, node_id)) {
-		DEBUG_WARN ("Error sending new node %s", macstr);
+	if (nodeName) {
+		if (!GwOutput.newNodeSend (nodeName, node_id)) {
+			DEBUG_WARN ("Error sending new node %s", nodeName);
+		} else {
+			DEBUG_DBG ("New node %s message sent", nodeName);
+		}
 	} else {
-		DEBUG_DBG ("New node %s message sent", macstr);
+		char macstr[ENIGMAIOT_ADDR_LEN * 3];
+		mac2str (mac, macstr);
+		if (!GwOutput.newNodeSend (macstr, node_id)) {
+			DEBUG_WARN ("Error sending new node %s", macstr);
+		} else {
+			DEBUG_DBG ("New node %s message sent", macstr);
+		}
 	}
+
 }
 
 void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {

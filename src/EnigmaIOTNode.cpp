@@ -103,7 +103,6 @@ bool EnigmaIOTNodeClass::loadRTCData () {
         //memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
         //memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
         node.setSleepy (rtcmem_data.sleepy);
-        memset (rtcmem_data.nodeName, 0, NODE_NAME_LENGTH);
         node.setNodeName (rtcmem_data.nodeName);
         // set default sleep time if it was not set
         if (rtcmem_data.sleepy && rtcmem_data.sleepTime == 0) {
@@ -1313,10 +1312,13 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
     if (!name)
         return false;
 
-    uint8_t nameLength = strlen (name);
+    size_t nameLength = strlen (name);
 
-    if (!nameLength || nameLength > NODE_NAME_LENGTH)
+    DEBUG_INFO ("Setting node name to %s. Size: %d", name, nameLength);
+
+    if (!nameLength || (nameLength > NODE_NAME_LENGTH)) {
         return false;
+    }
 
     //uint8_t buffer[NODE_NAME_LENGTH + 1];
     //uint8_t bufLength = 1 + nameLength;
@@ -1391,6 +1393,8 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
 #endif
 
     flashBlue = true;
+
+    DEBUG_INFO ("-------> NODE NAME SEND");
 
     return (comm->send (rtcmem_data.gateway, buf, packet_length + TAG_LENGTH) == 0);
 
@@ -1861,6 +1865,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
         invalidateReason = processInvalidateKey (mac, buf, count);
 		requestSearchGateway = true;
 		node.reset ();
+        node.setNodeName (rtcmem_data.nodeName);
 		TimeManager.reset ();
 		timeSyncPeriod = QUICK_SYNC_TIME;
         if (notifyDisconnection) {

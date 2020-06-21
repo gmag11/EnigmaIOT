@@ -132,6 +132,7 @@ public:
       * @param name Custom node name. This should be unique in the network
       */
     void setNodeName (const char* name) {
+        memset (nodeName, 0, NODE_NAME_LENGTH);
         strncpy (nodeName, name, NODE_NAME_LENGTH);
     }
 

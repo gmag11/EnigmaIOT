@@ -879,7 +879,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 					node->setLastMessageCounter (0);
 					node->setLastMessageTime ();
 					if (notifyNewNode) {
-						notifyNewNode (node->getMacAddress (), node->getNodeId ());
+						notifyNewNode (node->getMacAddress (), node->getNodeId (), NULL);
 					}
 #if DEBUG_LEVEL >= INFO
 					nodelist.printToSerial (&DEBUG_ESP_PORT);
@@ -975,10 +975,69 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
         break;
 	case NODE_NAME_SET:
 		DEBUG_INFO (" <------- NODE NAME REQUEST");
+		if (node->getStatus () == REGISTERED) {
+			if (processNodeNameSet (mac, buf, count, node)) {
+				DEBUG_INFO ("Node name for node %d set to %s", node->getNodeId(), node->getNodeName());
+				if (notifyNewNode) {
+					notifyNewNode (node->getMacAddress (), node->getNodeId (), node->getNodeName());
+				}
+			} else {
+				DEBUG_WARN ("Error setting node name for node %d", node->getNodeId ());
+			}
+		}
 		break;
 	default:
 		DEBUG_WARN ("Received unknown EnigmaIOT message 0x%02X");
 	}
+}
+
+bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node) {
+	/*
+	* ----------------------------------------------------------------------
+	*| msgType (1) | IV (12) | NodeID (2) | Node name (up to 32) | tag (16) |
+	* ----------------------------------------------------------------------
+	*/
+	char nodeName[NODE_NAME_LENGTH];
+	memset ((void*)nodeName, 0, NODE_NAME_LENGTH);
+
+	uint8_t iv_idx = 1;
+	uint8_t nodeId_idx = iv_idx + IV_LENGTH;
+	uint8_t nodeName_idx = nodeId_idx + sizeof (int16_t);
+	uint8_t tag_idx = count - TAG_LENGTH;
+
+	const uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
+
+	memcpy (aad, buf, addDataLen); // Copy message upto iv
+	// Copy 8 last bytes from NetworkKey
+	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+	uint8_t packetLen = count - TAG_LENGTH;
+
+	if (!CryptModule::decryptBuffer (buf + nodeId_idx, packetLen - 1 - IV_LENGTH, // Decrypt from nodeId
+									 buf + iv_idx, IV_LENGTH,
+									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during decryption");
+		return false;
+	}
+
+	DEBUG_VERBOSE ("Decripted node name set message: %s", printHexBuffer (buf, count - TAG_LENGTH));
+
+	size_t nodeNameLen = tag_idx - nodeName_idx;
+
+	DEBUG_DBG ("Node name length: %d bytes\n", nodeNameLen);
+
+	if (nodeNameLen >= NODE_NAME_LENGTH) {
+		nodeNameLen = NODE_NAME_LENGTH - 1;
+	}
+
+	memcpy ((void *)nodeName, (void *)(buf + nodeName_idx), nodeNameLen);
+
+	node->setNodeName (nodeName);
+
+	DEBUG_INFO ("Node name set to %s", node->getNodeName ());
+
 }
 
 bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node) {
@@ -1033,8 +1092,10 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_A
 
 	DEBUG_DBG ("Payload length: %d bytes\n", tag_idx - data_idx);
 
+	char* nodeName = node->getNodeName ();
+
 	if (notifyData) {
-		notifyData (const_cast<uint8_t*>(mac), buf + data_idx, tag_idx - data_idx, 0, true, ENIGMAIOT);
+		notifyData (const_cast<uint8_t*>(mac), buf + data_idx, tag_idx - data_idx, 0, true, ENIGMAIOT, nodeName?nodeName:NULL);
 	}
 
 	return true;
@@ -1073,8 +1134,10 @@ bool EnigmaIOTGatewayClass::processUnencryptedDataMessage (const uint8_t mac[ENI
 		}
 	}
 
+	char* nodeName = node->getNodeName ();
+
 	if (notifyData) {
-		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), count - data_idx, lostMessages, false, RAW);
+		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), count - data_idx, lostMessages, false, RAW, nodeName ? nodeName : NULL);
 	}
 
 	if (node->getSleepy ()) {
@@ -1146,11 +1209,12 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[ENIGMAIOT_ADDR
 		}
 	}
 
+	char* nodeName = node->getNodeName ();
+
 	if (notifyData) {
 		//DEBUG_WARN ("Notify data %d", input_queue->size());
-		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, (gatewayPayloadEncoding_t)(buf[encoding_idx]));
+		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, (gatewayPayloadEncoding_t)(buf[encoding_idx]), nodeName ? nodeName : NULL);
 	}
-	//return true;
 
 	if (node->getSleepy ()) {
 		if (node->qMessagePending) {
