@@ -1316,21 +1316,80 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
     if (!nameLength || nameLength > NODE_NAME_LENGTH)
         return false;
 
-    uint8_t buffer[NODE_NAME_LENGTH + 1];
-    uint8_t bufLength = 1 + nameLength;
+    //uint8_t buffer[NODE_NAME_LENGTH + 1];
+    //uint8_t bufLength = 1 + nameLength;
 
-    DEBUG_DBG ("Send set node name as %s", name);
-    buffer[0] = control_message_type::NODE_NAME_SET;
+    //DEBUG_DBG ("Send set node name as %s", name);
+    //buffer[0] = control_message_type::NODE_NAME_SET;
 
-    strncpy ((char*)(buffer + 1), name, nameLength);
+    //strncpy ((char*)(buffer + 1), name, nameLength);
 
-    if (sendData (buffer, bufLength, true)) {
-        DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
-        return true;
-    } else {
-        DEBUG_WARN ("Error sending set node name message");
+    //if (sendData (buffer, bufLength, true)) {
+    //    DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+    //    return true;
+    //} else {
+    //    DEBUG_WARN ("Error sending set node name message");
+    //    return false;
+    //}
+   /*
+    * ----------------------------------------------------------------------
+    *| msgType (1) | IV (12) | NodeID (2) | Node name (up to 32) | tag (16) |
+    * ----------------------------------------------------------------------
+    */
+
+    uint8_t buf[MAX_MESSAGE_LENGTH];
+    uint8_t tag[TAG_LENGTH];
+    uint16_t nodeId = node.getNodeId ();
+
+    uint8_t iv_idx = 1;
+    uint8_t nodeId_idx = iv_idx + IV_LENGTH;
+    uint8_t nodeName_idx = nodeId_idx + sizeof (int16_t);
+    uint8_t tag_idx = nodeName_idx + nameLength;
+
+    size_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + nameLength;
+
+
+    buf[0] = (uint8_t)NODE_NAME_SET;
+    
+    CryptModule::random (buf + iv_idx, IV_LENGTH);
+
+    DEBUG_VERBOSE ("IV: %s", printHexBuffer (buf + iv_idx, IV_LENGTH));
+
+    memcpy (buf + nodeId_idx, &nodeId, sizeof (uint16_t));
+
+    memcpy (buf + nodeName_idx, name, nameLength);
+
+    DEBUG_VERBOSE ("Set node name message: %s", printHexBuffer (buf, packet_length));
+    
+    uint8_t* crypt_buf = buf + length_idx;
+
+    size_t cryptLen = packet_length - 1 - IV_LENGTH;
+
+    uint8_t addDataLen = 1 + IV_LENGTH;
+    uint8_t aad[AAD_LENGTH + addDataLen];
+
+    memcpy (aad, buf, addDataLen); // Copy message upto iv
+
+    // Copy 8 last bytes from Node Key
+    memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+    if (!CryptModule::encryptBuffer (crypt_buf, cryptLen, // Encrypt from length
+                                     buf + iv_idx, IV_LENGTH,
+                                     node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of node key
+                                     aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
+        DEBUG_ERROR ("Error during encryption");
         return false;
     }
+
+    DEBUG_VERBOSE ("Encrypted set node name message: %s", printHexBuffer (buf, packet_length + TAG_LENGTH));
+
+#if DEBUG_LEVEL >= VERBOSE
+    char macStr[ENIGMAIOT_ADDR_LEN * 3];
+    DEBUG_DBG ("Destination address: %s", mac2str (rtcmem_data.gateway, macStr));
+#endif
+
+    return (comm->send (rtcmem_data.gateway, buf, packet_length + TAG_LENGTH) == 0);
+
 }
 
 bool EnigmaIOTNodeClass::processSetIdentifyCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
