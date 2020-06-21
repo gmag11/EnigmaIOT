@@ -973,7 +973,11 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
             invalidateKey (node, UNREGISTERED_NODE);
         }
         break;
-
+	case NODE_NAME_SET:
+		DEBUG_INFO (" <------- NODE NAME REQUEST");
+		break;
+	default:
+		DEBUG_WARN ("Received unknown EnigmaIOT message 0x%02X");
 	}
 }
 
