@@ -370,6 +370,7 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 		//DEBUG_INFO ("Len: %u", addressLen);
 		DEBUG_DBG ("Address %.*s", addressLen, addressStr);
 		if (!str2mac (addressStr, addr)) {
+			// TODO: treat it as a node name
 			DEBUG_DBG ("Not a mac address");
 			return;
 		}
@@ -439,9 +440,7 @@ bool GwOutput_MQTT::addMQTTqueue (const char* topic, char* payload, size_t len, 
 	mqtt_queue_item_t* message = new mqtt_queue_item_t;
 
 	if (mqtt_queue.size() >= MAX_MQTT_QUEUE_SIZE) {
-		//return false;
 		mqtt_queue.pop ();
-		// TODO: Better do this --> popMQTTqueue ();
 	}
 
 	message->topic = (char*)malloc (strlen (topic)+1);

@@ -351,18 +351,17 @@ bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 }
 
 bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding) {
+	// TODO: get node from node name
 	Node* node = nodelist.getNodeFromMAC (mac);
 	uint8_t downstreamData[MAX_MESSAGE_LENGTH];
 
 	if (len == 0 && (controlData == USERDATA_GET || controlData == USERDATA_SET))
 		return false;
-
+	// TODO: Accept node name
 	DEBUG_VERBOSE ("Downstream: %s", printHexBuffer (data, len));
 	DEBUG_DBG ("Downstream message type 0x%02X", controlData);
 
 	size_t dataLen = MAX_MESSAGE_LENGTH;
-
-	//bool result;
 
 	switch (controlData) {
 	case control_message_type::VERSION:

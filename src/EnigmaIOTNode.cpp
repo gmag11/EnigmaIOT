@@ -170,7 +170,6 @@ bool EnigmaIOTNodeClass::loadFlashData () {
             }
 
             configFile.close ();
-            // TODO: Check CRC
             if (json_correct) {
                 DEBUG_VERBOSE ("Configuration successfuly read");
             }
@@ -1473,7 +1472,6 @@ bool EnigmaIOTNodeClass::processSetSleepTimeCommand (const uint8_t* mac, const u
     memcpy (&sleepTime, data + 1, sizeof (uint32_t));
     DEBUG_DBG ("Sleep time requested: %d", sleepTime);
     setSleepTime (sleepTime);
-    // TODO Store config on flash if sleep time > 0
     sleepTime = getSleepTime ();
     if (sleepTime > 0) {
         if (result) {
@@ -1779,7 +1777,6 @@ nodeInvalidateReason_t EnigmaIOTNodeClass::processInvalidateKey (const uint8_t* 
     if (reason < KEY_EXPIRED) {
         if (dataMessageSentLength > 0)
             dataMessageSendPending = true; // Start last data retransmission
-        // TODO: CHeck what happens in initial server hello. This should be enough
     }
 
     return (nodeInvalidateReason_t)reason;

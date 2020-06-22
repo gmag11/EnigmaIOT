@@ -260,7 +260,7 @@ void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* dat
 	unsigned int bufferLen = len;
 	gatewayPayloadEncoding_t encoding = ENIGMAIOT;
 
-
+	// TODO: accept nodename
 	DEBUG_INFO ("DL Message for " MACSTR ". Type 0x%02X", MAC2STR (address), msgType);
 	DEBUG_DBG ("Data: %.*s", len, data);
 

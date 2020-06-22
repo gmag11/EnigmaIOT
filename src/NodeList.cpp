@@ -135,11 +135,12 @@ Node *NodeList::getNodeFromID (uint16_t nodeId)
 
 Node *NodeList::getNodeFromMAC (const uint8_t * mac)
 {
+    // TODO: Accept node name as address
     uint16_t index = 0;
 
     while (index < NUM_NODES) {
         if (!memcmp (nodes[index].mac,mac,6)) {
-            if (nodes[index].status != UNREGISTERED) { // TODO: check status??
+            if (nodes[index].status != UNREGISTERED) { 
                 return &(nodes[index]);
             }
         }
@@ -154,7 +155,7 @@ Node* NodeList::getNodeFromName (const char* name) {
 
     while (index < NUM_NODES) {
         if (!strncmp (nodes[index].nodeName, name, NODE_NAME_LENGTH)) {
-            if (nodes[index].status != UNREGISTERED) { // TODO: check status??
+            if (nodes[index].status != UNREGISTERED) {
                 return &(nodes[index]);
             }
         }
@@ -169,7 +170,7 @@ Node * NodeList::findEmptyNode ()
     uint16_t index = 0;
 
     while (index < NUM_NODES) {
-        if (nodes[index].status != UNREGISTERED) { // TODO: check status??
+        if (nodes[index].status != UNREGISTERED) {
             return &(nodes[index]);
         }
         index++;
