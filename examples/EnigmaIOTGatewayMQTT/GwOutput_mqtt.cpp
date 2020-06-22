@@ -370,7 +370,6 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 		//DEBUG_INFO ("Len: %u", addressLen);
 		DEBUG_DBG ("Address %.*s", addressLen, addressStr);
 		if (!str2mac (addressStr, addr)) {
-			// TODO: treat it as a node name
 			DEBUG_INFO ("Not a mac address. Treating it as a node name");
 			if (addressLen) {
 				nodeName = (char*)calloc (addressLen + 1, sizeof (char));

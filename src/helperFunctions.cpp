@@ -42,7 +42,8 @@ void initWiFi (uint8_t channel, uint8_t role, String networkName) {
 		DEBUG_DBG ("Mode set to STA. Channel %u", channel);
 	} else { // Gateway
 		WiFi.mode (WIFI_AP);
-		WiFi.softAP (networkName.c_str(), "2599657852368549566551", channel); // TODO: password should be true random
+		// TODO: password should be true random or use network key
+		WiFi.softAP (networkName.c_str(), "2599657852368549566551", channel);
 		DEBUG_DBG ("Mode set to AP in channel %u", channel);
 	}
 

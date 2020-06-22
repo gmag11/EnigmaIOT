@@ -260,7 +260,6 @@ void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t ms
 	unsigned int bufferLen = len;
 	gatewayPayloadEncoding_t encoding = ENIGMAIOT;
 
-	// TODO: accept nodename
 	if (nodeName) {
 		DEBUG_INFO ("DL Message for %s. Type 0x%02X", nodeName, msgType);
 	} else {
