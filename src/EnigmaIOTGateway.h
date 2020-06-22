@@ -529,7 +529,7 @@ class EnigmaIOTGatewayClass
       * @param payload_type Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
       * @return Returns true if everything went ok
       */
-     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t payload_type = RAW);
+     bool sendDownstream (uint8_t* mac, const uint8_t *data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t payload_type = RAW, char* nodeName = NULL);
 
      /**
       * @brief Defines a function callback that will be called every time a node gets connected or reconnected

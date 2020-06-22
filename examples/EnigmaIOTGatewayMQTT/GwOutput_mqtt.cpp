@@ -357,6 +357,7 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 	char* addressStr;
 	control_message_type_t msgType;
 	char* userCommand;
+	char* nodeName = NULL;
 
 
 	DEBUG_DBG ("Topic %s", topic);
@@ -364,17 +365,23 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 	unsigned int addressLen;
 
 	addressStr = getTopicAddress (topic, addressLen);
-	//DEBUG_DBG ("addressStr %p : %d", addressStr, addressLen);
 
 	if (addressStr) {
 		//DEBUG_INFO ("Len: %u", addressLen);
 		DEBUG_DBG ("Address %.*s", addressLen, addressStr);
 		if (!str2mac (addressStr, addr)) {
 			// TODO: treat it as a node name
-			DEBUG_DBG ("Not a mac address");
-			return;
+			DEBUG_INFO ("Not a mac address. Treating it as a node name");
+			if (addressLen) {
+				nodeName = (char*)calloc (addressLen + 1, sizeof (char));
+				memcpy (nodeName, addressStr, addressLen);
+			} else {
+				DEBUG_WARN ("Invalid address");
+				return;
+			}
+		} else {
+			DEBUG_DBG ("Hex Address = %s", printHexBuffer (addr, 6));
 		}
-		DEBUG_DBG ("Hex Address = %s", printHexBuffer (addr, 6));
 	} else
 		return;
 
@@ -386,9 +393,13 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 	DEBUG_DBG ("Data: %.*s\n", len, data);
 
 	if (msgType != control_message_type_t::INVALID)
-		GwOutput.downlinkCb (addr, msgType, (char*)data, len);
+		GwOutput.downlinkCb (addr, nodeName, msgType, (char*)data, len);
 	else
-		DEBUG_DBG ("Invalid message");
+		DEBUG_WARN ("Invalid message");
+
+	if (nodeName) {
+		free (nodeName);
+	}
 }
 
 void GwOutput_MQTT::loop () {
@@ -598,10 +609,13 @@ bool GwOutput_MQTT::newNodeSend (char* address, uint16_t node_id) {
 
 	uint8_t* nodeAddress = enigmaIotGateway->getNodes ()->getNodeFromID (node_id)->getMacAddress ();
 	char addrStr[ENIGMAIOT_ADDR_LEN * 3];
-	mac2str (nodeAddress, addrStr);
+	
+	char payload[ENIGMAIOT_ADDR_LEN * 3 + 14];
+
+	snprintf (payload, ENIGMAIOT_ADDR_LEN * 3 + 14, "{\"address\":\"%s\"}", mac2str (nodeAddress, addrStr));
 
 	snprintf (topic, TOPIC_SIZE, "%s/%s/hello", netName.c_str(), address);
-	bool result = addMQTTqueue (topic, addrStr, ENIGMAIOT_ADDR_LEN * 3);
+	bool result = addMQTTqueue (topic, payload, ENIGMAIOT_ADDR_LEN * 3 + 14);
 	DEBUG_INFO ("Published MQTT %s", topic);
 	return result;
 }

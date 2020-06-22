@@ -350,9 +350,20 @@ bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 	return true;
 }
 
-bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding) {
+bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding, char* nodeName) {
 	// TODO: get node from node name
-	Node* node = nodelist.getNodeFromMAC (mac);
+	Node* node;
+	if (nodeName) {
+		node = nodelist.getNodeFromName (nodeName);
+		if (node) {
+			uint8_t* addr = node->getMacAddress ();
+			DEBUG_DBG ("Message to node %s with address " MACSTR, nodeName, MAC2STR (addr));
+		}
+		//DEBUG_WARN ("Message to node %s with address %s", nodeName, mac2str (node->getMacAddress (), addrStr));
+	} else {
+		node = nodelist.getNodeFromMAC (mac);
+	}
+	
 	uint8_t downstreamData[MAX_MESSAGE_LENGTH];
 
 	if (len == 0 && (controlData == USERDATA_GET || controlData == USERDATA_SET))
@@ -439,7 +450,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 			return downstreamDataMessage (node, data, len, controlData, encoding);
 	} else {
 		char addr[ENIGMAIOT_ADDR_LEN * 3];
-		DEBUG_ERROR ("Downlink destination %s not found", mac2str (mac, addr));
+		DEBUG_ERROR ("Downlink destination %s not found", nodeName ? nodeName : mac2str (mac, addr));
 		return false;
 	}
 }

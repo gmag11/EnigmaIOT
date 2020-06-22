@@ -255,14 +255,18 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 	DEBUG_INFO ("Published MQTT from %s: %s", nodeName ? nodeName : mac_str, payload);
 }
 
-void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* data, unsigned int len){
+void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t msgType, char* data, unsigned int len){
 	uint8_t *buffer;
 	unsigned int bufferLen = len;
 	gatewayPayloadEncoding_t encoding = ENIGMAIOT;
 
 	// TODO: accept nodename
-	DEBUG_INFO ("DL Message for " MACSTR ". Type 0x%02X", MAC2STR (address), msgType);
-	DEBUG_DBG ("Data: %.*s", len, data);
+	if (nodeName) {
+		DEBUG_INFO ("DL Message for %s. Type 0x%02X", nodeName, msgType);
+	} else {
+		DEBUG_INFO ("DL Message for " MACSTR ". Type 0x%02X", MAC2STR (address), msgType);
+	}
+	DEBUG_WARN ("Data: %.*s", len, data);
 
 	if (msgType == USERDATA_GET || msgType == USERDATA_SET) {
 		const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);
@@ -288,8 +292,12 @@ void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* dat
 	}
 
 
-	if (!EnigmaIOTGateway.sendDownstream (address, (uint8_t*)buffer, bufferLen, msgType, encoding)) {
-		DEBUG_ERROR ("Error sending esp_now message to " MACSTR, MAC2STR (address));
+	if (!EnigmaIOTGateway.sendDownstream (address, (uint8_t*)buffer, bufferLen, msgType, encoding, nodeName)) {
+		if (nodeName) {
+			DEBUG_WARN ("Error sending esp_now message to %s", nodeName);
+		} else {
+			DEBUG_WARN ("Error sending esp_now message to " MACSTR, MAC2STR (address));
+		}
 	} else {
 		DEBUG_DBG ("Esp-now message sent or queued correctly");
 	}
