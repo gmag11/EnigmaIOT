@@ -292,6 +292,8 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
     AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
     AsyncWiFiManagerParameter nodeNameParam ("nodename", "Node Name", nodeName, NODE_NAME_LENGTH, "type=\"text\" maxlength=32");
 
+    // TODO: Check node name valid characters
+
     wifiManager->addParameter (&networkNameParam);
     wifiManager->addParameter (&netKeyParam);
     wifiManager->addParameter (&sleepyParam);
@@ -1865,7 +1867,6 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
         invalidateReason = processInvalidateKey (mac, buf, count);
 		requestSearchGateway = true;
 		node.reset ();
-        node.setNodeName (rtcmem_data.nodeName);
 		TimeManager.reset ();
 		timeSyncPeriod = QUICK_SYNC_TIME;
         if (notifyDisconnection) {

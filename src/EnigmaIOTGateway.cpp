@@ -1034,10 +1034,16 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 
 	memcpy ((void *)nodeName, (void *)(buf + nodeName_idx), nodeNameLen);
 
+	if (!strlen (nodeName)) {
+		DEBUG_WARN ("Empty node name");
+		return false;
+	}
+
 	node->setNodeName (nodeName);
 
 	DEBUG_INFO ("Node name set to %s", node->getNodeName ());
 
+	return true;
 }
 
 bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node) {

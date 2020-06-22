@@ -124,7 +124,11 @@ public:
       * @return Returns Node name
       */
     char* getNodeName () {
-        return nodeName;
+        if (strlen (nodeName)) {
+            return nodeName;
+        } else {
+            return NULL;
+        }
     }
 
     /**
