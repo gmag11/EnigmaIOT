@@ -111,7 +111,7 @@ void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 	}
 }
 
-void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type) {
+void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type, char* nodeName = NULL) {
 	//uint8_t *addr = mac;
 	char* payload;
 	size_t pld_size;
@@ -122,7 +122,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 	char mac_str[ENIGMAIOT_ADDR_LEN * 3];
 	mac2str (mac, mac_str);
 	if (control) {
-		processRxControlData (mac_str, buffer, length);
+		processRxControlData (nodeName ? nodeName : mac_str, buffer, length);
 		return;
 	}
 	//char* netName = EnigmaIOTGateway.getNetworkName ();
@@ -175,11 +175,15 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 	free (payload);
 }
 
-void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* data, unsigned int len){
+void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t msgType, char* data, unsigned int len){
 	char *buffer;
 	unsigned int bufferLen = len;
 
-	DEBUG_INFO ("DL Message for " MACSTR ". Type 0x%02X", MAC2STR (address), msgType);
+	if (nodeName) {
+		DEBUG_INFO ("DL Message for %s. Type 0x%02X", nodeName, msgType);
+	} else {
+		DEBUG_INFO ("DL Message for " MACSTR ". Type 0x%02X", MAC2STR (address), msgType);
+	}
 	DEBUG_DBG ("Data: %.*s", len, data);
 
 	buffer = (char*)malloc (len + 1);
@@ -195,16 +199,23 @@ void onDownlinkData (uint8_t* address, control_message_type_t msgType, char* dat
 	free (buffer);
 }
 
-void newNodeConnected (uint8_t * mac, uint16_t node_id) {
-	char macstr[ENIGMAIOT_ADDR_LEN * 3];
-	mac2str (mac, macstr);
-	//Serial.printf ("New node connected: %s\n", macstr);
-
-	if (!GwOutput.newNodeSend (macstr, node_id)) {
-		DEBUG_WARN ("Error sending new node %s", macstr);
+void newNodeConnected (uint8_t * mac, uint16_t node_id, char* nodeName = NULL) {
+	if (nodeName) {
+		if (!GwOutput.newNodeSend (nodeName, node_id)) {
+			DEBUG_WARN ("Error sending new node %s", nodeName);
+		} else {
+			DEBUG_DBG ("New node %s message sent", nodeName);
+		}
 	} else {
-		DEBUG_DBG ("New node %s message sent", macstr);
+		char macstr[ENIGMAIOT_ADDR_LEN * 3];
+		mac2str (mac, macstr);
+		if (!GwOutput.newNodeSend (macstr, node_id)) {
+			DEBUG_WARN ("Error sending new node %s", macstr);
+		} else {
+			DEBUG_DBG ("New node %s message sent", macstr);
+		}
 	}
+
 }
 
 void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {

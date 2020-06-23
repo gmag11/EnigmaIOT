@@ -19,9 +19,6 @@
 #include "WProgram.h"
 #endif
 
-#include <functional>
-typedef std::function<void (uint8_t* address, control_message_type_t msgType, char* data, unsigned int len)> onDlData_t;
-
 class GatewayOutput_dummy : public GatewayOutput_generic {
 protected:
 	EnigmaIOTGatewayClass* enigmaIotGateway; ///< @brief Pointer to EnigmaIOT gateway instance
