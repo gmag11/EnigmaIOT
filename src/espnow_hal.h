@@ -23,7 +23,6 @@
 #endif
 #include "Comms_hal.h"
 #include "helperFunctions.h"
-//#define MAX_MESSAGE_LENGTH 250 ///< @brief Maximum message length for ESP-NOW
 
 /**
   * @brief Definition for ESP-NOW hardware abstraction layer
