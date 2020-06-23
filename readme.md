@@ -198,7 +198,7 @@ This feature may be disabled if needed.
 
 In order to make node messages more readable for humans, this implements a way to let Gateway to translate EnigmaIOT addresses to custom names (for instance, "RoomBlindControl"). This eases node replacement in case of failure.
 
-Node names can be up to 32 characters long and should avoid characters different of letters, numbers and spaces. **Characters #,+ and / are specially forbidden**.
+Node names can be up to 32 characters long and should avoid characters different of letters and numbers. **Characters #,+ and / are specially forbidden**.
 
 Node name is configured by user during first configuration in WiFi Web portal.
 
@@ -302,13 +302,13 @@ So, node will always follow the channel that gateway is working in.
 
 A user may program their own output format modifying gateway example program. For my use case gateway outputs MQTT messages in this format:
 ```
-<configurable prefix>/<node address>/data <json data>
+<configurable prefix>/<node address | node name>/data <json data>
 ```
 A prefix is configured on gateway to allow several sensor networks to coexist in the same subnet. After that address and data are sent.
 
 After every received message, gateway detects if any packet has been lost before and reports it using MQTT message using this format:
 ```
-<configurable prefix>/<node address>/status {"per":<packet error rate>,"lostmessages":<Number of lost messages>,"totalmessages":<Total number of messages>,"packetshour":<Packet rate>}
+<configurable prefix>/<node address | node name>/status {"per":<packet error rate>,"lostmessages":<Number of lost messages>,"totalmessages":<Total number of messages>,"packetshour":<Packet rate>}
 ```
 ### Downlink messages
 
@@ -316,16 +316,22 @@ EnigmaIoT allows sending messages from gateway to nodes. In my implementation I 
 
 To make it simpler, downlink messages use the same structure than uplink.
 ```
-<network name>/<node address>/<get|set>/data <command data>
+<network name>/<node address | node name>/<get|set>/data <command data>
 ```
 Node address means destination node address. Configurable prefix is the same used for uplink communication.
 
 Commands may be given in JSON format. In that case they are  sent to node in MessagePack format. That makes that mode gets the complete JSON object. This implies that no change is needed on Gateway to add new node types. Gateway is transparent to user data.
 
-This is an esample of MQTT message that triggers a downlink packet.
+This is an example of MQTT message that triggers a downlink packet.
 
 ```
 enigmaiot/12:34:56:78:90:12/set/data {"light1": 1, "light2": 0}
+```
+
+If node uses a name, MQTT message may use of it.
+
+```
+enigmaiot/kitcken_light/set/data {"light1": 1, "light2": 0}
 ```
 
 After sending that command node will receive a 'set' command with data `{"light1": 1, "light2": 0}`.
@@ -355,40 +361,51 @@ This is the list of currently implemented control commands:
   </tr>
   <tr>
     <td>Get version</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/version</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/version {"version":"&lt;version&gt;"}</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address  | node name&gt;/get/version</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/version {"version":"&lt;version&gt;"}</code></td>
   </tr>
   <tr>
     <td>Get sleep duration</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/sleeptime</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime {"sleeptime":"&lt;sleep_time&gt;"}"</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/get/sleeptime</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/sleeptime {"sleeptime":"&lt;sleep_time&gt;"}"</code></td>
   </tr>
   <tr>
     <td>Set sleep duration</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/sleeptime &lt;sleep_time&gt;</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime {"sleeptime":"&lt;sleep_time&gt;"}</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/sleeptime &lt;sleep_time&gt;</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/sleeptime {"sleeptime":"&lt;sleep_time&gt;"}</code></td>
   </tr>
   <tr>
     <td>OTA message</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/ota &lt;ota message&gt;</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/ota {"result":"&lt;ota_result_text&gt;,"status":"&lt;ota_result_code&gt;"}</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/ota &lt;ota message&gt;</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/ota {"result":"&lt;ota_result_text&gt;,"status":"&lt;ota_result_code&gt;"}</code></td>
   </tr>
   <tr>
     <td>Identify node</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/identify</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/identify</code></td>
     <td>None</td>
   </tr>
   <tr>
     <td>Reset node configuration</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/reset</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/reset {}</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/reset</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/reset {}</code></td>
   </tr>
   <tr>
     <td>Request measure RSSI</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/rssi</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/rssi {"rssi":&lt;RSSI&gt;,"channel":&lt;WiFi channel&gt;}</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/get/rssi</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/rssi {"rssi":&lt;RSSI&gt;,"channel":&lt;WiFi channel&gt;}</code></td>
+  </tr>
+  <tr>
+    <td>Request node name</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/get/name</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/name {"address":&lt;node address&gt;,"name":&lt;Node name&gt;}</code></td>
+  </tr>
+  <tr>
+    <td>Set node name</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/name &lt;Node name&gt;</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/name {"address":&lt;node address&gt;,"name":&lt;Node name&gt;}</code></td>
   </tr>
 </table>
+
 
 For instance, publishing `enigmaiot/12:34:56:78:90:12/get/version` will produce `enigmaiot/12:34:56:78:90:12/result/version 0.2.0`.
 
@@ -408,6 +425,8 @@ Messages are encoded to reduce the amount of bytes to be sent over internal prot
 | Reset config confirmation | `0x85` | None |
 | Request measure RSSI | `0x06` | None |
 | Report measure RSSI | `0x86` | RSSI (signed integer - 8 bit), WiFi channel (unsigned integer - 8 bit) |
+| Get node name | `0x07` | None |
+| Set node name | `0x87` | Node name as string |
 
 ## OTA Update
 
@@ -433,7 +452,7 @@ Options:
   -f FILENAME, --file=FILENAME
                         File to program into device
   -d ADDRESS, --daddress=ADDRESS
-                        Device address
+                        Node address or name
   -t BASETOPIC, --topic=BASETOPIC
                         Base topic for MQTT messages
   -u MQTTUSER, --user=MQTTUSER
