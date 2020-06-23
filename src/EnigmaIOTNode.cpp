@@ -1309,6 +1309,68 @@ bool EnigmaIOTNodeClass::processGetSleepTimeCommand (const uint8_t* mac, const u
     }
 }
 
+bool EnigmaIOTNodeClass::processGetNameCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+    uint8_t buffer[MAX_MESSAGE_LENGTH];
+    uint8_t bufLength;
+
+    DEBUG_DBG ("Get Name command received");
+    DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
+
+    buffer[0] = control_message_type::NAME_ANS;
+    // TODO get real sleep time
+
+    uint8_t* nodeAddress = node.getMacAddress ();
+
+    char* name = node.getNodeName ();
+    size_t nameLen = strlen (name);
+    
+    memcpy (buffer + 1, nodeAddress, ENIGMAIOT_ADDR_LEN);
+    memcpy (buffer + 1 + ENIGMAIOT_ADDR_LEN, name, nameLen);
+    bufLength = 1 + ENIGMAIOT_ADDR_LEN + nameLen;
+
+    if (sendData (buffer, bufLength, true)) {
+        DEBUG_DBG ("Node name is %s", name);
+        DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+        return true;
+    } else {
+        DEBUG_WARN ("Error sending name response");
+        return false;
+    }
+}
+
+bool EnigmaIOTNodeClass::processSetNameCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+    uint8_t buffer[MAX_MESSAGE_LENGTH];
+    uint8_t bufLength;
+
+    DEBUG_DBG ("Set Name command received");
+    DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
+
+    buffer[0] = control_message_type::NAME_ANS;
+    // TODO get real sleep time
+
+    uint8_t* nodeAddress = node.getMacAddress ();
+
+    char newName[NODE_NAME_LENGTH];
+    memcpy (newName, data, len);
+    node.setNodeName (newName);
+
+    char* name = node.getNodeName ();
+    size_t nameLen = strlen (name);
+
+    memcpy (buffer + 1, nodeAddress, ENIGMAIOT_ADDR_LEN);
+    memcpy (buffer + 1 + ENIGMAIOT_ADDR_LEN, name, nameLen);
+    bufLength = 1 + ENIGMAIOT_ADDR_LEN + nameLen;
+
+    if (sendData (buffer, bufLength, true)) {
+        DEBUG_DBG ("Node name is %s", name);
+        DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+        return true;
+    } else {
+        DEBUG_WARN ("Error sending name response");
+        return false;
+    }
+}
+
 bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
     if (!name)
         return false;
@@ -1698,6 +1760,10 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
 		return processSetResetConfigCommand (mac, data, len);
 	case control_message_type::RSSI_GET:
 		return processGetRSSICommand (mac, data, len);
+    case control_message_type::NAME_GET:
+        return processGetNameCommand (mac, data, len);
+    case control_message_type::NAME_SET:
+        return processSetNameCommand (mac, data, len);
     case control_message_type::OTA:
         if (processOTACommand (mac, data, len)) {
             return true;

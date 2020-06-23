@@ -320,6 +320,12 @@ control_message_type_t checkMsgType (String data) {
 	} else if (data == GET_USER_DATA) {
 		DEBUG_INFO ("USER DATA %s", data.c_str ());
 		return control_message_type::USERDATA_GET;
+	} else if (data == GET_NAME) {
+		DEBUG_INFO ("GET NODE NAME AND ADDRESS");
+		return control_message_type::NAME_GET;
+	} else if (data == SET_NAME) {
+		DEBUG_INFO ("SET NODE NAME %", data.c_str());
+		return control_message_type::NAME_SET;
 	} else
 		return control_message_type::INVALID;
 }
@@ -557,6 +563,15 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 	case control_message_type::RSSI_ANS:
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, GET_RSSI_ANS);
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"rssi\":%d,\"channel\":%u}", (int8_t)data[1], data[2]);
+		if (addMQTTqueue (topic, payload, pld_size)) {
+			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+			result = true;
+		}
+		break;
+	case control_message_type::NAME_ANS:
+		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, GET_NAME_ANS);
+		char addrStr[ENIGMAIOT_ADDR_LEN];
+		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"name\":\"%.*s\",\"address\":\"%s\"}", length - ENIGMAIOT_ADDR_LEN - 1, (char*)(data + 1 + ENIGMAIOT_ADDR_LEN), mac2str(data + 1,addrStr));
 		if (addMQTTqueue (topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
 			result = true;

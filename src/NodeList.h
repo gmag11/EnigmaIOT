@@ -42,6 +42,9 @@ typedef enum control_message_type {
 	RESET_ANS = 0x85,
 	RSSI_GET = 0x06,
 	RSSI_ANS = 0x86,
+    NAME_GET = 0x07,
+    NAME_ANS = 0x08,
+    NAME_SET = 0x87,
 	OTA = 0xEF,
 	OTA_ANS = 0xFF,
 	USERDATA_GET = 0x00,
@@ -377,6 +380,14 @@ public:
       */
     Node* getNodeFromName (const char* name);
     
+    /**
+      * @brief Check Node name for duplicate
+      * @param name Custom node name
+      * @param address Address of node which is being tried to set name
+      * @return Error code to show name correctness. 0 = OK, -1 = Name already used, -2 = Name is too long, -3 = Name is empty
+      */
+    int checkNodeName (const char* name, const uint8_t* address);
+
     /**
       * @brief Searches for a free place for a new Node instance
       * @return Node instance to hold new instance

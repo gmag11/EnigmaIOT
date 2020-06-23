@@ -423,6 +423,24 @@ protected:
 	bool processGetRSSICommand (const uint8_t* mac, const uint8_t* data, uint8_t len);
 
     /**
+      * @brief Processes a request to get Node name and address
+      * @param mac Gateway address
+      * @param data Buffer to store received message
+      * @param len Length of payload data
+      * @return Returns `true` if message could be correcly decoded and processed
+      */
+    bool processGetNameCommand (const uint8_t* mac, const uint8_t* data, uint8_t len);
+
+    /**
+      * @brief Processes a request to set Node name
+      * @param mac Gateway address
+      * @param data Buffer to store received message
+      * @param len Length of payload data
+      * @return Returns `true` if message could be correcly decoded and processed
+      */
+    bool processSetNameCommand (const uint8_t* mac, const uint8_t* data, uint8_t len);
+
+    /**
       * @brief Informs Gateway about custom node name
       * @param name Custom node name
       * @return True if message was sent successfuly

@@ -97,12 +97,38 @@ bool buildSetIdentify (uint8_t* data, size_t& dataLen, const uint8_t* inputData,
 }
 
 bool buildGetRSSI (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
-	DEBUG_VERBOSE ("Build 'Set Identify' message from: %s", printHexBuffer (inputData, inputLen));
+	DEBUG_VERBOSE ("Build 'Get RSSI' message from: %s", printHexBuffer (inputData, inputLen));
 	if (dataLen < 1) {
 		return false;
 	}
 	data[0] = (uint8_t)control_message_type::RSSI_GET;
 	dataLen = 1;
+	return true;
+}
+
+bool buildGetName (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Get Node Name and Address' message from: %s", printHexBuffer (inputData, inputLen));
+	if (dataLen < 1) {
+		return false;
+	}
+	data[0] = (uint8_t)control_message_type::NAME_GET;
+	dataLen = 1;
+	return true;
+}
+
+bool buildSetName (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Set Node Name' message from: %s", printHexBuffer (inputData, inputLen));
+	if (dataLen < NODE_NAME_LENGTH + 1) {
+		DEBUG_ERROR ("Not enough space to build message");
+		return false;
+	}
+	if (inputLen < 2 || inputLen > NODE_NAME_LENGTH) {
+		DEBUG_ERROR ("Name too short");
+		return false;
+	}
+	data[0] = (uint8_t)control_message_type::NAME_GET;
+	memcpy (data + 1, inputData, inputLen);
+	dataLen = 1 + inputLen;
 	return true;
 }
 
@@ -422,6 +448,20 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 			return false;
 		}
 		DEBUG_VERBOSE ("Get RSSI message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
+	case control_message_type::NAME_GET:
+		if (!buildGetName (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building get name message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Get name message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
+	case control_message_type::NAME_SET:
+		if (!buildSetName (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building set name message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Set name message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
 	case control_message_type::USERDATA_GET:
 		DEBUG_INFO ("Data message GET");
@@ -1006,6 +1046,8 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 	*| msgType (1) | IV (12) | NodeID (2) | Node name (up to 32) | tag (16) |
 	* ----------------------------------------------------------------------
 	*/
+	int error = 0;
+
 	char nodeName[NODE_NAME_LENGTH];
 	memset ((void*)nodeName, 0, NODE_NAME_LENGTH);
 
@@ -1028,31 +1070,34 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
 									 aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
 		DEBUG_ERROR ("Error during decryption");
+		error = -4; // Message error
+	}
+	
+	if (error == 0) {
+		DEBUG_VERBOSE ("Decripted node name set message: %s", printHexBuffer (buf, count - TAG_LENGTH));
+
+		size_t nodeNameLen = tag_idx - nodeName_idx;
+
+		DEBUG_DBG ("Node name length: %d bytes\n", nodeNameLen);
+
+		if (nodeNameLen >= NODE_NAME_LENGTH) {
+			nodeNameLen = NODE_NAME_LENGTH - 1;
+		}
+
+		memcpy ((void*)nodeName, (void*)(buf + nodeName_idx), nodeNameLen);
+
+		error = nodelist.checkNodeName (nodeName, mac);
+	}
+	
+	// TODO: Send response error
+	
+	if (error) {
 		return false;
+	} else {
+		node->setNodeName (nodeName);
+		DEBUG_INFO ("Node name set to %s", node->getNodeName ());
+		return true;
 	}
-
-	DEBUG_VERBOSE ("Decripted node name set message: %s", printHexBuffer (buf, count - TAG_LENGTH));
-
-	size_t nodeNameLen = tag_idx - nodeName_idx;
-
-	DEBUG_DBG ("Node name length: %d bytes\n", nodeNameLen);
-
-	if (nodeNameLen >= NODE_NAME_LENGTH) {
-		nodeNameLen = NODE_NAME_LENGTH - 1;
-	}
-
-	memcpy ((void *)nodeName, (void *)(buf + nodeName_idx), nodeNameLen);
-
-	if (!strlen (nodeName)) {
-		DEBUG_WARN ("Empty node name");
-		return false;
-	}
-
-	node->setNodeName (nodeName);
-
-	DEBUG_INFO ("Node name set to %s", node->getNodeName ());
-
-	return true;
 }
 
 bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node) {
