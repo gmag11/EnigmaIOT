@@ -265,7 +265,7 @@ void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t ms
 	} else {
 		DEBUG_INFO ("DL Message for " MACSTR ". Type 0x%02X", MAC2STR (address), msgType);
 	}
-	DEBUG_WARN ("Data: %.*s", len, data);
+	DEBUG_WARN ("Data: %.*s Length: %d", len, data, len);
 
 	if (msgType == USERDATA_GET || msgType == USERDATA_SET) {
 		const int capacity = JSON_ARRAY_SIZE (25) + 25 * JSON_OBJECT_SIZE (4);

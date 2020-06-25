@@ -180,13 +180,18 @@ int NodeList::checkNodeName (const char* name, const uint8_t* address) {
 
     for (int i = 0; i < NUM_NODES; i++) {
         // if node is not registered and has this node name
-        if (nodes[i].status != UNREGISTERED && !strncmp (nodes[i].getNodeName (), name, NODE_NAME_LENGTH)) {
-            // if addresses addresses are different
-            char addrStr[ENIGMAIOT_ADDR_LEN * 3];
-            DEBUG_WARN ("Found node name %s in Node List with address %s", name, mac2str (address, addrStr));
-            if (memcmp (nodes[i].getMacAddress (), address, ENIGMAIOT_ADDR_LEN)) {
-                DEBUG_ERROR ("Duplicated name %s", name);
-                return -1; // Already used
+        DEBUG_DBG ("Node %d status is %d",i, nodes[i].status);
+        if (nodes[i].status != UNREGISTERED) {
+            char* currentNodeNamme = nodes[i].getNodeName();
+            DEBUG_DBG ("Node %d name is %s", i, currentNodeNamme ? currentNodeNamme : "NULL");
+            if (currentNodeNamme && !strncmp (currentNodeNamme, name, NODE_NAME_LENGTH)) {
+                // if addresses addresses are different
+                char addrStr[ENIGMAIOT_ADDR_LEN * 3];
+                DEBUG_WARN ("Found node name %s in Node List with address %s", name, mac2str (address, addrStr));
+                if (memcmp (nodes[i].getMacAddress (), address, ENIGMAIOT_ADDR_LEN)) {
+                    DEBUG_ERROR ("Duplicated name %s", name);
+                    return -1; // Already used
+                }
             }
         }
     }
