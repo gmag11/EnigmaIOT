@@ -343,7 +343,7 @@ control_message_type_t getTopicType (char* topic, char* &userCommand) {
 	else
 		return control_message_type::INVALID;
 	//DEBUG_INFO ("Second Start %p", start);
-	if ((int)start > 0x01) {
+	if ((int)start > 0x01) { // TODO: Why this condition ????
 		command = String(start);
 		userCommand = start;
 	} else {
@@ -404,6 +404,7 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 
 	if (nodeName) {
 		free (nodeName);
+		nodeName = NULL;
 	}
 }
 
@@ -570,7 +571,7 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 		break;
 	case control_message_type::NAME_ANS:
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, GET_NAME_ANS);
-		char addrStr[ENIGMAIOT_ADDR_LEN];
+		char addrStr[ENIGMAIOT_ADDR_LEN * 3];
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"name\":\"%.*s\",\"address\":\"%s\"}", length - ENIGMAIOT_ADDR_LEN - 1, (char*)(data + 1 + ENIGMAIOT_ADDR_LEN), mac2str(data + 1,addrStr));
 		if (addMQTTqueue (topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);

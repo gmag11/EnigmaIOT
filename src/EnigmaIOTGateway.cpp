@@ -126,7 +126,7 @@ bool buildSetName (uint8_t* data, size_t& dataLen, const uint8_t* inputData, siz
 		DEBUG_ERROR ("Name too short");
 		return false;
 	}
-	data[0] = (uint8_t)control_message_type::NAME_GET;
+	data[0] = (uint8_t)control_message_type::NAME_SET;
 	memcpy (data + 1, inputData, inputLen);
 	dataLen = 1 + inputLen;
 	return true;
