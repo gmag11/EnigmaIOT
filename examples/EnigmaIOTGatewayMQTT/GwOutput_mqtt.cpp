@@ -129,10 +129,10 @@ bool GwOutput_MQTT::loadConfig () {
 				json_correct = true;
 			}
 
-			strlcpy (mqttgw_config.mqtt_server, doc["mqtt_server"] | "", sizeof (mqttgw_config.mqtt_server));
+			strncpy (mqttgw_config.mqtt_server, doc["mqtt_server"] | "", sizeof (mqttgw_config.mqtt_server));
 			mqttgw_config.mqtt_port = doc["mqtt_port"].as<int> ();
-			strlcpy (mqttgw_config.mqtt_user, doc["mqtt_user"] | "", sizeof (mqttgw_config.mqtt_user));
-			strlcpy (mqttgw_config.mqtt_pass, doc["mqtt_pass"] | "", sizeof (mqttgw_config.mqtt_pass));
+			strncpy (mqttgw_config.mqtt_user, doc["mqtt_user"] | "", sizeof (mqttgw_config.mqtt_user));
+			strncpy (mqttgw_config.mqtt_pass, doc["mqtt_pass"] | "", sizeof (mqttgw_config.mqtt_pass));
 
 			configFile.close ();
 			if (json_correct) {

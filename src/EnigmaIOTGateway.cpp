@@ -610,8 +610,8 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			}
 
 			gwConfig.channel = doc["channel"].as<int> ();
-			strlcpy ((char*)gwConfig.networkKey, doc["networkKey"] | "", sizeof (gwConfig.networkKey));
-			strlcpy (gwConfig.networkName, doc["networkName"] | "", sizeof (gwConfig.networkName));
+			strncpy ((char*)gwConfig.networkKey, doc["networkKey"] | "", sizeof (gwConfig.networkKey));
+			strncpy (gwConfig.networkName, doc["networkName"] | "", sizeof (gwConfig.networkName));
 
 			
 			
