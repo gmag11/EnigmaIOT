@@ -30,10 +30,7 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 
 void initWiFi (uint8_t channel, uint8_t role, String networkName) {
 	DEBUG_DBG ("initWifi");
-	//DEBUG_DBG ("AP started");
 	if (role == 0) { // Node
-		//WiFi.softAP ("ESPNOW", "qpwoeirufjdhbfdjd", channel, true);
-		//DEBUG_DBG ("Mode set to AP in channel %u", channel);
 		WiFi.mode (WIFI_STA);
 		WiFi.disconnect ();
 #ifdef ESP8266

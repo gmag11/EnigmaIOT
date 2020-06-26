@@ -71,7 +71,8 @@ bool GwOutput_MQTT::saveConfig () {
 		DEBUG_DBG ("%s opened for writting", CONFIG_FILE);
 	}
 
-	DynamicJsonDocument doc (512);
+	const size_t capacity = JSON_OBJECT_SIZE (4) + 110;
+	DynamicJsonDocument doc (capacity);
 
 	doc["mqtt_server"] = mqttgw_config.mqtt_server;
 	doc["mqtt_port"] = mqttgw_config.mqtt_port;
@@ -81,7 +82,7 @@ bool GwOutput_MQTT::saveConfig () {
 	if (serializeJson (doc, configFile) == 0) {
 		DEBUG_ERROR ("Failed to write to file");
 		configFile.close ();
-		//SPIFFS.remove (CONFIG_FILE);
+		//SPIFFS.remove (CONFIG_FILE); // Testing only
 		return false;
 	}
 
@@ -93,7 +94,6 @@ bool GwOutput_MQTT::saveConfig () {
 	configFile.flush ();
 	size_t size = configFile.size ();
 
-	//configFile.write ((uint8_t*)(&mqttgw_config), sizeof (mqttgw_config));
 	configFile.close ();
 	DEBUG_DBG ("Gateway configuration saved to flash. %u bytes", size);
 	return true;
@@ -116,8 +116,12 @@ bool GwOutput_MQTT::loadConfig () {
 		if (configFile) {
 			size_t size = configFile.size ();
 			DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, size);
-			DynamicJsonDocument doc (512);
+			
+			const size_t capacity = JSON_OBJECT_SIZE (4) + 110;
+			DynamicJsonDocument doc (capacity);			
+			
 			DeserializationError error = deserializeJson (doc, configFile);
+			
 			if (error) {
 				DEBUG_ERROR ("Failed to parse file");
 			} else {
@@ -269,7 +273,6 @@ void GwOutput_MQTT::reconnect () {
 			delay (5000);
 #endif
 		}
-		//delay (0);
 	}
 }
 

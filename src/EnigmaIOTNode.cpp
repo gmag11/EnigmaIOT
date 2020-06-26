@@ -111,7 +111,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
         node.setStatus (rtcmem_data.nodeRegisterStatus);
         DEBUG_DBG ("Set %s mode", node.getSleepy () ? "sleepy" : "non sleepy");
 #if DEBUG_LEVEL >= VERBOSE
-        dumpRtcData (&rtcmem_data/*,gateway*/);
+        dumpRtcData (&rtcmem_data);
 #endif
 
     }
@@ -129,13 +129,6 @@ bool EnigmaIOTNodeClass::loadFlashData () {
         if (configFile) {
             DEBUG_DBG ("%s opened", CONFIG_FILE);
             size_t size = configFile.size ();
-            /*if (size != sizeof (rtcmem_data)) {
-                DEBUG_WARN ("Config file is corrupted. Deleting");
-                SPIFFS.remove (CONFIG_FILE);
-				if (SPIFFS.format ())
-					DEBUG_WARN ("File system formatted");
-                return false;
-            }*/
 
             const size_t capacity = JSON_ARRAY_SIZE (32) + JSON_OBJECT_SIZE (5) + 100;
             DynamicJsonDocument doc (capacity);
@@ -144,7 +137,6 @@ bool EnigmaIOTNodeClass::loadFlashData () {
                 DEBUG_ERROR ("Failed to parse file");
             } else {
                 DEBUG_DBG ("JSON file parsed");
-                //json_correct = true;
             }
 
             if (doc.containsKey ("networkName") && doc.containsKey ("networkKey")
@@ -165,10 +157,7 @@ bool EnigmaIOTNodeClass::loadFlashData () {
             for (int i = 0; i < KEY_LENGTH; i++) {
                 rtcmem_data.networkKey[i] = netKeyJson[i].as<int>();
             }
-            //strlcpy ((char*)rtcmem_data.networkKey, doc["networkKey"] | "", sizeof (rtcmem_data.networkKey));
             DEBUG_DBG ("Network Key dump: %s", printHexBuffer (rtcmem_data.networkKey, KEY_LENGTH));
-            //strlcpy (networkKey, doc["networkKey"] | "", sizeof (networkKey));
-            //DEBUG_DBG ("RAW NETWORK KEY --> %s", networkKey);
             strncpy ((char*)rtcmem_data.nodeName, doc["nodeName"] | "", NODE_NAME_LENGTH);
 
             uint8_t gwAddr[ENIGMAIOT_ADDR_LEN];
@@ -189,20 +178,15 @@ bool EnigmaIOTNodeClass::loadFlashData () {
             DEBUG_DBG ("Sleep time: %u", rtcmem_data.sleepTime);
             DEBUG_DBG ("Node name: %s", rtcmem_data.nodeName);
             DEBUG_DBG ("Gateway: %s", gwAddrStr);
-            //DEBUG_VERBOSE ("Network key: %s", rtcmem_data.networkKey);
-            //CryptModule::getSHA256 (rtcmem_data.networkKey, KEY_LENGTH);
             DEBUG_VERBOSE ("Network key: %s", printHexBuffer (rtcmem_data.networkKey, KEY_LENGTH));
 
             String output;
             serializeJsonPretty (doc, output);
 
             DEBUG_DBG ("JSON file %s", output.c_str ());
-
-            //return true;
         }
     } else {
         DEBUG_WARN ("%s do not exist", CONFIG_FILE);
-        //return false;
     }
 
     return json_correct;
@@ -239,7 +223,7 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
     if (serializeJson (doc, configFile) == 0) {
         DEBUG_ERROR ("Failed to write to file");
         configFile.close ();
-        //SPIFFS.remove (CONFIG_FILE);
+        //SPIFFS.remove (CONFIG_FILE); // Testing
         return false;
     }
 
@@ -269,7 +253,7 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 		DEBUG_DBG ("Write configuration data to RTC memory");
 #if DEBUG_LEVEL >= VERBOSE
 		DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
-		dumpRtcData (&rtcmem_data/*, this->gateway*/);
+		dumpRtcData (&rtcmem_data);
 #endif
 		return true;
 	}
@@ -335,22 +319,12 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
         memcpy (data->networkName, networkNameParam.getValue (), networkNameParam.getValueLength ());
 
         DEBUG_DBG ("Stored network name: %s", data->networkName);
-        //uint8_t keySize = netKeyParam.getValueLength ();
-        //if (netKeyParam.getValueLength () > KEY_LENGTH)
-        //    keySize = KEY_LENGTH;
-        //memset (this->networkKey, 0, KEY_LENGTH);
-        //memcpy (this->networkKey, netKeyParam.getValue (), keySize);
-        //memset (data->networkKey, 0, KEY_LENGTH); // Not needed
         strncpy ((char*)(data->networkKey), netKeyParam.getValue (), KEY_LENGTH);
         DEBUG_DBG ("Stored network key before hash: %.*s", KEY_LENGTH, (char*)(data->networkKey));
-        //memcpy (data->networkKey, netKeyParam.getValue (), keySize);
-        // TODO: Store network key in SHA
         // TODO: use WiFi Pass as Raw Network Key
-
 
         CryptModule::getSHA256 (data->networkKey, KEY_LENGTH);
         DEBUG_DBG ("Calculated network key: %s", printHexBuffer (data->networkKey, KEY_LENGTH));
-        //DEBUG_DBG ("RAW NETWORK KEY --> %.*s", KEY_LENGTH, this->networkKey);
         data->nodeRegisterStatus = UNREGISTERED;
         int sleepyVal = atoi (sleepyParam.getValue ());
         if (sleepyVal > 0) {
@@ -532,12 +506,8 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
     comm->begin (rtcmem_data.gateway, rtcmem_data.channel);
     comm->onDataRcvd (rx_cb);
     comm->onDataSent (tx_cb);
-	//if (!rtcmem_data.nodeKeyValid || (rtcmem_data.nodeRegisterStatus != REGISTERED))
-		//clientHello ();
-	//else if (!node.getSleepy () && node.isRegistered ()){
-		//clockRequest ();
-	//}
-	wifi_set_channel (rtcmem_data.channel);
+
+    wifi_set_channel (rtcmem_data.channel);
     DEBUG_DBG ("Comms started. Channel %u", rtcmem_data.channel);
 
 }
@@ -607,7 +577,7 @@ void EnigmaIOTNodeClass::setSleepTime (uint32_t sleepTime) {
 
         if (sleepTime == 0) {
             node.setSleepy (false);
-            //rtcmem_data.sleepy = false;
+            //rtcmem_data.sleepy = false; // This setting is temporary, do not store
         } else if (sleepTime < maxSleepTime) {
             node.setSleepy (true);
             rtcmem_data.sleepTime = sleepTime;
@@ -1110,7 +1080,6 @@ bool EnigmaIOTNodeClass::sendData (const uint8_t* data, size_t len, bool control
         }
         flashBlue = true;
 		if (dataMessage (data, len, controlMessage, encrypt, payloadType)) {
-			//dataMessageSentLength = 0;
             dataMessageSendPending = false; // Data sent. This setting can still be overriden by invalidateCommand
 			return true;
 		} else
@@ -1409,21 +1378,6 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
         return false;
     }
 
-    //uint8_t buffer[NODE_NAME_LENGTH + 1];
-    //uint8_t bufLength = 1 + nameLength;
-
-    //DEBUG_DBG ("Send set node name as %s", name);
-    //buffer[0] = control_message_type::NODE_NAME_SET;
-
-    //strncpy ((char*)(buffer + 1), name, nameLength);
-
-    //if (sendData (buffer, bufLength, true)) {
-    //    DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
-    //    return true;
-    //} else {
-    //    DEBUG_WARN ("Error sending set node name message");
-    //    return false;
-    //}
    /*
     * ----------------------------------------------------------------------
     *| msgType (1) | IV (12) | NodeID (2) | Node name (up to 32) | tag (16) |
@@ -1808,7 +1762,6 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
     * --------------------------------------------------------------------------
     */
 
-    //uint8_t msgType_idx = 0;
     uint8_t iv_idx = 1;
     uint8_t length_idx = iv_idx + IV_LENGTH;
     uint8_t nodeId_idx = length_idx + sizeof (int16_t);

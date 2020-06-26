@@ -218,7 +218,6 @@ class EnigmaIOTGatewayClass
 	 gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
      char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
      char plainNetKey[KEY_LENGTH];
-     //SemaphoreHandle_t buffer_write_access_semaphore = NULL;
 #ifdef ESP32
      portMUX_TYPE myMutex = portMUX_INITIALIZER_UNLOCKED; ///< @brief Handle to control critical sections
 #endif

@@ -179,9 +179,7 @@ int getNextNumber (char* &data, size_t &len/*, char* &position*/) {
 	} else {
 		DEBUG_WARN ("OTA message format warning. separator not found");
 	}
-	//if (tempLen >= 0) {
-		number = atoi (strNum);
-	//}
+	number = atoi (strNum);
 	data = tempData;
 	len = tempLen;
 	DEBUG_DBG ("Extracted number %d", number);
@@ -200,10 +198,8 @@ bool isHexChar (char c) {
 }
 
 bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
-	//char strNum[ENIGMAIOT_ADDR_LEN];
 	char* payload;
 	size_t payloadLen;
-	//int strIndex;
 	int number;
 	uint8_t *tempData = data;
 
@@ -235,29 +231,6 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 	} else {
 		OTAongoing = true;
 		lastOTAmsg = millis ();
-
-		// int8_t ASCIIHexToInt[] =
-		// {
-		// 	// ASCII
-		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1,
-		// 	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-
-		// 	// 0x80-FF (Omit this if you don't need to check for non-ASCII)
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// };
 
 		if (inputLen < 39) {
 			DEBUG_ERROR ("OTA message format error. Message #0 too short to be a MD5 string");
@@ -291,8 +264,6 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 		DEBUG_WARN ("OTA length = %u bytes", fileSize);
 		//DEBUG_INFO ("Payload data: %s", payload);
 
-		//uint8_t* md5hex = tempData;// data + 1 + sizeof (uint16_t) + sizeof (uint16_t);
-
 		if (payloadLen < 32) {
 			DEBUG_ERROR ("OTA message format error. MD5 is too short: %d", payloadLen);
 			return false;
@@ -308,31 +279,6 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 			decodedLen++;
 		}
 
-		//for (size_t i = 0; i < 32/*payloadLen*/; i += 2) {
-		//	int8_t number;
-		//	//DEBUG_VERBOSE ("Char1 %c", (char)payload[i]);
-		//	number = ASCIIHexToInt[payload[i]];
-		//	//DEBUG_VERBOSE ("Number1 %x", number);
-		//	if (number < 0) {
-		//		DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
-		//		return false;
-		//	}
-		//	number <<= 4;
-		//	//DEBUG_VERBOSE ("Char2 %c", (char)payload[i+1]);
-		//	int8_t number2 = ASCIIHexToInt[payload[i + 1]];
-		//	//DEBUG_VERBOSE ("Number2 %x", number2);
-		//	if (number2 < 0) {
-		//		DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
-		//		return false;
-		//	}
-		//	number = number + number2;
-		//	//DEBUG_VERBOSE ("Number %x", number);
-
-
-		//	md5hex[i / 2] = number;
-		//	decodedLen++;
-		//	//***************************
-		//}
 		DEBUG_VERBOSE ("Payload data: %s", printHexBuffer (data, decodedLen));
 	}
 
@@ -588,20 +534,15 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 		if (configFile) {
 			size_t size = configFile.size ();
 			DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, size);
-			/*if (size < sizeof (gateway_config_t)) {
-				DEBUG_WARN ("Config file is corrupted. Deleting and formatting");
-				SPIFFS.remove (CONFIG_FILE);
-				SPIFFS.format ();
-				WiFi.begin ("0", "0"); // Delete WiFi credentials
-				return false;
-			}*/
-			DynamicJsonDocument doc (512);
+
+			const size_t capacity = JSON_OBJECT_SIZE (3) + 50;
+			DynamicJsonDocument doc (capacity);
+
 			DeserializationError error = deserializeJson (doc, configFile);
 			if (error) {
 				DEBUG_ERROR ("Failed to parse file");
 			} else {
 				DEBUG_DBG ("JSON file parsed");
-				//json_correct = true;
 			}
 
 			if (doc.containsKey ("channel") && doc.containsKey ("networkKey")
@@ -613,9 +554,6 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			strncpy ((char*)gwConfig.networkKey, doc["networkKey"] | "", sizeof (gwConfig.networkKey));
 			strncpy (gwConfig.networkName, doc["networkName"] | "", sizeof (gwConfig.networkName));
 
-			
-			
-			//configFile.read ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
 			configFile.close ();
 			if (json_correct) {
 				DEBUG_VERBOSE ("Gateway configuration successfuly read");
@@ -633,13 +571,12 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 
 			DEBUG_DBG ("JSON file %s", output.c_str ());
 
-			//return json_correct;
 		} else {
 			DEBUG_WARN ("Error opening %s", CONFIG_FILE);
 		}
 	} else {
 		DEBUG_WARN ("%s do not exist", CONFIG_FILE);
-		//SPIFFS.format ();
+		//SPIFFS.format (); // Testing only
 		//WiFi.begin ("0", "0"); // Delete WiFi credentials
 		//DEBUG_WARN ("Dummy STA config loaded");
 		//return false;
@@ -659,7 +596,8 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 		return false;
 	}
 	
-	DynamicJsonDocument doc (512);
+	const size_t capacity = JSON_OBJECT_SIZE (3) + 50;
+	DynamicJsonDocument doc (capacity);
 
 	doc["channel"] = gwConfig.channel;
 	doc["networkKey"] = networkKey;
@@ -668,7 +606,7 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 	if (serializeJson (doc, configFile) == 0) {
 		DEBUG_ERROR ("Failed to write to file");
 		configFile.close ();
-		//SPIFFS.remove (CONFIG_FILE);
+		//SPIFFS.remove (CONFIG_FILE); // Testing only
 		return false;
 	}
 
@@ -693,14 +631,6 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	this->comm = comm;
 	this->useCounter = useDataCounter;
 	
-	//vSemaphoreCreateBinary (buffer_write_access_semaphore);
-	
-	//if (buffer_write_access_semaphore) {
-	//	DEBUG_DBG ("Semaphore created");
-	//} else {
-	//	DEBUG_ERROR ("Semaphore creation error");
-	//}
-
 	if (networkKey) {
 		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
 		strncpy (plainNetKey, (char*)networkKey, KEY_LENGTH);
@@ -742,8 +672,6 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 }
 
 bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t* msg, size_t len) {
-	//if (buffer_write_access_semaphore) {
-	//	if (xSemaphoreTake (buffer_write_access_semaphore, 10 / portTICK_PERIOD_MS)) {
 			msg_queue_item_t message;
 
 			message.len = len;
@@ -763,17 +691,12 @@ bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t
 #else
 			interrupts ();
 #endif
-			//xSemaphoreGive (buffer_write_access_semaphore);
 			return true;
-	//	}
-	//}
-	//return false;
 }
 
 msg_queue_item_t* EnigmaIOTGatewayClass::getInputMsgQueue (msg_queue_item_t *buffer) {
-	//if (buffer_write_access_semaphore) {
-	//	if (xSemaphoreTake (buffer_write_access_semaphore, 10 / portTICK_PERIOD_MS)) {
-			msg_queue_item_t* message;
+
+	msg_queue_item_t* message;
 #ifdef esp32
 			portENTER_CRITICAL (&myMutex);
 #else
@@ -792,26 +715,20 @@ msg_queue_item_t* EnigmaIOTGatewayClass::getInputMsgQueue (msg_queue_item_t *buf
 #else
 			interrupts ();
 #endif
-			//xSemaphoreGive (buffer_write_access_semaphore);
 			if (message) {
 				return buffer;
 			} else {
 				return NULL;
 			}
-	//	}
-	//}
-	//return NULL;
 }
 
 void EnigmaIOTGatewayClass::popInputMsgQueue () {
 	if (input_queue->pop ()) {
 		DEBUG_DBG ("EnigmaIOT message pop. Size %d", input_queue->size ());
 	}
-	//xSemaphoreGive (buffer_write_access_semaphore);
 }
 
 void EnigmaIOTGatewayClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
-	// old --> EnigmaIOTGateway.manageMessage (mac_addr, data, len);
 	
 	EnigmaIOTGateway.addInputMsgQueue (mac_addr, data, len);
 }
@@ -891,7 +808,6 @@ void EnigmaIOTGatewayClass::handle () {
 		if (message) {
 			DEBUG_DBG ("EnigmaIOT input message from queue. MsgType: 0x%02X", message->data[0]);
 			manageMessage (message->addr, message->data, message->len);
-			//popInputMsgQueue ();
 		}
 	}
 }
@@ -983,7 +899,6 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		if (node->getStatus () == REGISTERED) {
 			float packetsHour = (float)1 / ((millis () - node->getLastMessageTime ()) / (float)3600000);
 			node->updatePacketsRate (packetsHour);
-			//node->packetsHour = rateFilter->addValue (packetsHour);
 			if (processDataMessage (mac, buf, count, node, encrypted)) {
 				node->setLastMessageTime ();
 				DEBUG_INFO ("Data OK");
@@ -1107,7 +1022,6 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_A
     * ----------------------------------------------------------------------------------------
     */
 
-	//uint8_t msgType_idx = 0;
 	uint8_t iv_idx = 1;
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
@@ -1225,7 +1139,6 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[ENIGMAIOT_ADDR
 		return processUnencryptedDataMessage (mac, buf, count, node);
 	}
 
-	//uint8_t msgType_idx = 0;
 	uint8_t iv_idx = 1;
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
@@ -1335,7 +1248,6 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 	uint16_t nodeId = node->getNodeId ();
 
-	//uint8_t msgType_p = buffer;
 	uint8_t iv_idx = 1;
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
@@ -1445,7 +1357,6 @@ bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t rea
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t reason;
-		//uint32_t crc;
 	} invalidateKey_msg;
 
 #define IKMSG_LEN sizeof(invalidateKey_msg)
@@ -1718,16 +1629,6 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 		return false;
 	}
 }
-
-//bool EnigmaIOTGatewayClass::checkCRC (const uint8_t* buf, size_t count, const uint32_t* crc) {
-//	uint32_t recvdCRC;
-//
-//	memcpy (&recvdCRC, crc, sizeof (uint32_t)); // Use of memcpy is a must to ensure code does not try to read non memory aligned int
-//	uint32_t _crc = CRC32::calculate (buf, count);
-//	DEBUG_VERBOSE ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X %s", _crc, recvdCRC, (_crc == recvdCRC) ? "OK" : "FAIL");
-//	return (_crc == recvdCRC);
-//}
-
 
 EnigmaIOTGatewayClass EnigmaIOTGateway;
 

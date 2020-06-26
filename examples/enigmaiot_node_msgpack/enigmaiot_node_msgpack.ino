@@ -42,7 +42,6 @@ void disconnectEventHandler (nodeInvalidateReason_t reason) {
 void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t encoding) {
 	char macstr[ENIGMAIOT_ADDR_LEN*3];
 	String commandStr;
-	//void* data;
 	uint8_t tempBuffer[MAX_MESSAGE_LENGTH];
 
 	mac2str (mac, macstr);
@@ -59,11 +58,6 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 	Serial.printf ("Data: %s\n", printHexBuffer (buffer, length));
 	Serial.printf ("Encoding: 0x%02X\n", encoding);
 
-	//for (int i = 0; i < length; i++) {
-	//	Serial.print ((char)buffer[i]);
-	//}
-	//Serial.println ();
-	//Serial.println ();
 	CayenneLPP lpp(MAX_DATA_PAYLOAD_SIZE);
 	DynamicJsonDocument doc (1000);
 	JsonArray root;
