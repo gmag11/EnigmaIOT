@@ -137,7 +137,8 @@ bool EnigmaIOTNodeClass::loadFlashData () {
                 return false;
             }*/
 
-            DynamicJsonDocument doc (512);
+            const size_t capacity = JSON_ARRAY_SIZE (32) + JSON_OBJECT_SIZE (5) + 100;
+            DynamicJsonDocument doc (capacity);
             DeserializationError error = deserializeJson (doc, configFile);
             if (error) {
                 DEBUG_ERROR ("Failed to parse file");
@@ -156,15 +157,24 @@ bool EnigmaIOTNodeClass::loadFlashData () {
             rtcmem_data.sleepy = !(rtcmem_data.sleepTime == 0);
             
             memset (rtcmem_data.networkKey, 0, KEY_LENGTH);
-            strlcpy ((char*)rtcmem_data.networkKey, doc["networkKey"] | "", sizeof (rtcmem_data.networkKey));
+            JsonArray netKeyJson = doc["networkKey"];
+            if (netKeyJson.size () != KEY_LENGTH) {
+                DEBUG_WARN ("Error in stored network key. Expected length: %d, actual length %d", KEY_LENGTH, netKeyJson.size ());
+                return false;
+            }
+            for (int i = 0; i < KEY_LENGTH; i++) {
+                rtcmem_data.networkKey[i] = netKeyJson[i].as<int>();
+            }
+            //strlcpy ((char*)rtcmem_data.networkKey, doc["networkKey"] | "", sizeof (rtcmem_data.networkKey));
             DEBUG_DBG ("Network Key dump: %s", printHexBuffer (rtcmem_data.networkKey, KEY_LENGTH));
-            strlcpy (networkKey, doc["networkKey"] | "", sizeof (networkKey));
-            strlcpy ((char*)rtcmem_data.nodeName, doc["nodeName"] | "", NODE_NAME_LENGTH);
+            //strlcpy (networkKey, doc["networkKey"] | "", sizeof (networkKey));
+            //DEBUG_DBG ("RAW NETWORK KEY --> %s", networkKey);
+            strncpy ((char*)rtcmem_data.nodeName, doc["nodeName"] | "", NODE_NAME_LENGTH);
 
             uint8_t gwAddr[ENIGMAIOT_ADDR_LEN];
             char gwAddrStr[ENIGMAIOT_ADDR_LEN * 3];
             if (doc.containsKey ("gateway")) {
-                strlcpy (gwAddrStr, doc["gateway"], sizeof (gwAddrStr));
+                strncpy (gwAddrStr, doc["gateway"], sizeof (gwAddrStr));
                 str2mac (gwAddrStr, gwAddr);
                 memcpy (rtcmem_data.gateway, gwAddr, 6);
             }
@@ -179,9 +189,9 @@ bool EnigmaIOTNodeClass::loadFlashData () {
             DEBUG_DBG ("Sleep time: %u", rtcmem_data.sleepTime);
             DEBUG_DBG ("Node name: %s", rtcmem_data.nodeName);
             DEBUG_DBG ("Gateway: %s", gwAddrStr);
-            DEBUG_VERBOSE ("Network key: %s", rtcmem_data.networkKey);
-            CryptModule::getSHA256 (rtcmem_data.networkKey, KEY_LENGTH);
-            DEBUG_VERBOSE ("Raw Network key: %s", printHexBuffer (rtcmem_data.networkKey, KEY_LENGTH));
+            //DEBUG_VERBOSE ("Network key: %s", rtcmem_data.networkKey);
+            //CryptModule::getSHA256 (rtcmem_data.networkKey, KEY_LENGTH);
+            DEBUG_VERBOSE ("Network key: %s", printHexBuffer (rtcmem_data.networkKey, KEY_LENGTH));
 
             String output;
             serializeJsonPretty (doc, output);
@@ -211,14 +221,17 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
         return false;
     }
 
-    DynamicJsonDocument doc (512);
+    const size_t capacity = JSON_ARRAY_SIZE (32) + JSON_OBJECT_SIZE (5) + 100;
+    DynamicJsonDocument doc (capacity);
 
     char gwAddrStr[ENIGMAIOT_ADDR_LEN * 3];
     mac2str (rtcmem_data.gateway, gwAddrStr);
 
     doc["networkName"] = rtcmem_data.networkName;
-    doc["networkKey"] = networkKey;
-    DEBUG_INFO ("NetworkKey --> %s", networkKey);
+    JsonArray netKeyJson = doc.createNestedArray ("networkKey");
+    for (int i = 0; i < KEY_LENGTH; i++) {
+        netKeyJson.add (rtcmem_data.networkKey[i]);
+    }
     doc["sleepTime"] = rtcmem_data.sleepTime;
     doc["gateway"] = gwAddrStr;
     doc["nodeName"] = rtcmem_data.nodeName;
@@ -322,16 +335,22 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
         memcpy (data->networkName, networkNameParam.getValue (), networkNameParam.getValueLength ());
 
         DEBUG_DBG ("Stored network name: %s", data->networkName);
-        uint8_t keySize = netKeyParam.getValueLength ();
-        if (netKeyParam.getValueLength () > KEY_LENGTH)
-            keySize = KEY_LENGTH;
-        memset (this->networkKey, 0, KEY_LENGTH);
-        memcpy (this->networkKey, netKeyParam.getValue (), keySize);
-        memcpy (data->networkKey, netKeyParam.getValue (), keySize);
+        //uint8_t keySize = netKeyParam.getValueLength ();
+        //if (netKeyParam.getValueLength () > KEY_LENGTH)
+        //    keySize = KEY_LENGTH;
+        //memset (this->networkKey, 0, KEY_LENGTH);
+        //memcpy (this->networkKey, netKeyParam.getValue (), keySize);
+        //memset (data->networkKey, 0, KEY_LENGTH); // Not needed
+        strncpy ((char*)(data->networkKey), netKeyParam.getValue (), KEY_LENGTH);
+        DEBUG_DBG ("Stored network key before hash: %.*s", KEY_LENGTH, (char*)(data->networkKey));
+        //memcpy (data->networkKey, netKeyParam.getValue (), keySize);
+        // TODO: Store network key in SHA
+        // TODO: use WiFi Pass as Raw Network Key
+
 
         CryptModule::getSHA256 (data->networkKey, KEY_LENGTH);
         DEBUG_DBG ("Calculated network key: %s", printHexBuffer (data->networkKey, KEY_LENGTH));
-        DEBUG_DBG ("User network key: %s", this->networkKey, KEY_LENGTH);
+        //DEBUG_DBG ("RAW NETWORK KEY --> %.*s", KEY_LENGTH, this->networkKey);
         data->nodeRegisterStatus = UNREGISTERED;
         int sleepyVal = atoi (sleepyParam.getValue ());
         if (sleepyVal > 0) {
@@ -909,7 +928,7 @@ bool EnigmaIOTNodeClass::clockRequest () {
 
 	memcpy (aad, (uint8_t*)& clockRequest_msg, addDataLen); // Copy message upto iv
 
-	// Copy 8 last bytes from NetworkKey
+	// Copy 8 last bytes from Node Key
 	memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
 	if (!CryptModule::encryptBuffer ((uint8_t*)&(clockRequest_msg.t1), sizeof (clock_t), // Encrypt only from public key
@@ -950,7 +969,7 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 
 	memcpy (aad, buf, addDataLen); // Copy message upto iv
 
-	// Copy 8 last bytes from NetworkKey
+	// Copy 8 last bytes from Node Key
 	memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
 	uint8_t packetLen = count - TAG_LENGTH;
@@ -1350,19 +1369,26 @@ bool EnigmaIOTNodeClass::processSetNameCommand (const uint8_t* mac, const uint8_
 
     uint8_t* nodeAddress = node.getMacAddress ();
 
-    char newName[NODE_NAME_LENGTH];
-    memcpy (newName, data, len);
-    node.setNodeName (newName);
+    //char newName[NODE_NAME_LENGTH];
+    memcpy (rtcmem_data.nodeName, data + 1 , len - 1);
+    node.setNodeName (rtcmem_data.nodeName);
+    
+    saveRTCData ();
+    saveFlashData ();
 
-    char* name = node.getNodeName ();
-    size_t nameLen = strlen (name);
+    if (!sendNodeNameSet (rtcmem_data.nodeName)) {
+        DEBUG_WARN ("Error sending set node name %s", rtcmem_data.nodeName);
+    }
+
+    //char* name = node.getNodeName ();
+    size_t nameLen = strlen (rtcmem_data.nodeName);
 
     memcpy (buffer + 1, nodeAddress, ENIGMAIOT_ADDR_LEN);
-    memcpy (buffer + 1 + ENIGMAIOT_ADDR_LEN, name, nameLen);
+    memcpy (buffer + 1 + ENIGMAIOT_ADDR_LEN, rtcmem_data.nodeName, nameLen);
     bufLength = 1 + ENIGMAIOT_ADDR_LEN + nameLen;
 
     if (sendData (buffer, bufLength, true)) {
-        DEBUG_DBG ("Node name is %s", name);
+        DEBUG_DBG ("Node name is %s", rtcmem_data.nodeName);
         DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
         return true;
     } else {
@@ -1801,7 +1827,7 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 
     memcpy (aad, buf, addDataLen); // Copy message upto iv
 
-    // Copy 8 last bytes from NetworkKey
+    // Copy 8 last bytes from Node Key
     memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
     uint8_t packetLen = count - TAG_LENGTH;

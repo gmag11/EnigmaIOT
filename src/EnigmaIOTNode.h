@@ -144,7 +144,7 @@ protected:
     bool requestReportRSSI = false; ///< @brief Flag to control RSSI reporting
     bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
     int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
-    char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
+    //char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
     AsyncWiFiManager* wifiManager; ///< @brief Wifi configuration portal
     onWiFiManagerExit_t notifyWiFiManagerExit; ///< @brief Function called when configuration portal exits
     onWiFiManagerStarted_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
