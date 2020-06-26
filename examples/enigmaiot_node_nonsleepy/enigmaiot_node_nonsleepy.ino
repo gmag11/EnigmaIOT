@@ -82,7 +82,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 void setup () {
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
-	
+
 	EnigmaIOTNode.setLed (BLUE_LED);
 	//pinMode (BLUE_LED, OUTPUT);
 	//digitalWrite (BLUE_LED, HIGH); // Turn on LED
@@ -103,13 +103,13 @@ void loop () {
 	static const time_t SENSOR_PERIOD = 10000;
 	if (millis () - lastSensorData > SENSOR_PERIOD) {
 		lastSensorData = millis ();
-		
+
 		// Read sensor data
 		msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
 		Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
 		msg.addTemperature (1, 20.34);
 		// Read sensor data
-		
+
 		Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
 		if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {

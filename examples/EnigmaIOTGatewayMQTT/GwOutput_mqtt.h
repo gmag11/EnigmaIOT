@@ -12,9 +12,9 @@
 #define _GWOUTPUT_MQTT_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
+#include "Arduino.h"
 #else
-	#include "WProgram.h"
+#include "WProgram.h"
 #endif
 
 #include <GwOutput_generic.h>
@@ -74,38 +74,38 @@ typedef struct {
 } mqtt_queue_item_t;
 
 
-class GwOutput_MQTT: public GatewayOutput_generic {
- protected:
-	 AsyncWiFiManagerParameter* mqttServerParam; ///< @brief Configuration field for MQTT server address
-	 AsyncWiFiManagerParameter* mqttPortParam; ///< @brief Configuration field for MQTT server port
-	 AsyncWiFiManagerParameter* mqttUserParam; ///< @brief Configuration field for MQTT server user name
-	 AsyncWiFiManagerParameter* mqttPassParam; ///< @brief Configuration field for MQTT server password
+class GwOutput_MQTT : public GatewayOutput_generic {
+protected:
+	AsyncWiFiManagerParameter* mqttServerParam; ///< @brief Configuration field for MQTT server address
+	AsyncWiFiManagerParameter* mqttPortParam; ///< @brief Configuration field for MQTT server port
+	AsyncWiFiManagerParameter* mqttUserParam; ///< @brief Configuration field for MQTT server user name
+	AsyncWiFiManagerParameter* mqttPassParam; ///< @brief Configuration field for MQTT server password
 
-	 std::queue<mqtt_queue_item_t*> mqtt_queue; ///< @brief Output MQTT messages queue. It acts as a FIFO queue
+	std::queue<mqtt_queue_item_t*> mqtt_queue; ///< @brief Output MQTT messages queue. It acts as a FIFO queue
 
-	 mqttgw_config_t mqttgw_config; ///< @brief MQTT server configuration data
-	 bool shouldSaveConfig = false; ///< @brief Flag to indicate if configuration should be saved
+	mqttgw_config_t mqttgw_config; ///< @brief MQTT server configuration data
+	bool shouldSaveConfig = false; ///< @brief Flag to indicate if configuration should be saved
 
 #ifdef SECURE_MQTT
-	 WiFiClientSecure espClient; ///< @brief TLS client
+	WiFiClientSecure espClient; ///< @brief TLS client
 #ifdef ESP8266
-	 BearSSL::X509List certificate; ///< @brief CA certificate for TLS
+	BearSSL::X509List certificate; ///< @brief CA certificate for TLS
 #endif // ESP8266
 #else
-	 WiFiClient espClient; ///< @brief TCP client
+	WiFiClient espClient; ///< @brief TCP client
 #endif // SECURE_MQTT
-	 PubSubClient mqtt_client; ///< @brief MQTT client
+	PubSubClient mqtt_client; ///< @brief MQTT client
 
-	/**
-	  * @brief Saves output module configuration
-	  * @return Returns `true` if save was successful. `false` otherwise
-	  */
-	 bool saveConfig ();
+   /**
+	 * @brief Saves output module configuration
+	 * @return Returns `true` if save was successful. `false` otherwise
+	 */
+	bool saveConfig ();
 #ifdef SECURE_MQTT
 	/**
 	  * @brief Synchronizes time over NTP to check certifitate expiration time
 	  */
-	 void setClock ();
+	void setClock ();
 #endif // SECURE_MQTT
 	/**
 	  * @brief This is called anytime MQTT client is disconnected.
@@ -114,55 +114,54 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	  * to network topics.
 	  * It waits for connection and times out after 5 seconds
 	  */
-	 void reconnect ();
+	void reconnect ();
+
+   /**
+	 * @brief Add MQTT message to queue
+	 * @param topic MQTT message topic
+	 * @param payload MQTT message payload
+	 * @param len MQTT payload length
+	 * @param retain Message retain flag
+	 */
+	bool addMQTTqueue (const char* topic, char* payload, size_t len, bool retain = false);
+
+   /**
+	 * @brief Gets next item in the queue
+	 * @return Next MQTT message to be sent
+	 */
+	mqtt_queue_item_t* getMQTTqueue ();
+
+   /**
+	 * @brief Deletes next item in the queue
+	 */
+	void popMQTTqueue ();
 
 	/**
-	  * @brief Add MQTT message to queue
-	  * @param topic MQTT message topic
-	  * @param payload MQTT message payload
-	  * @param len MQTT payload length
-	  * @param retain Message retain flag
-	  */
-	 bool addMQTTqueue (const char* topic, char* payload, size_t len, bool retain = false);
+	 * @brief Publishes data over MQTT
+	 * @param topic Topic that indicates message type
+	 * @param payload Message payload data
+	 * @param len Payload length
+	 * @param retain `true` if message should be retained
+	 */
+	bool publishMQTT (const char* topic, char* payload, size_t len, bool retain = false);
 
-	/**
-	  * @brief Gets next item in the queue
-	  * @return Next MQTT message to be sent
-	  */
-	 mqtt_queue_item_t *getMQTTqueue ();
+   /**
+	 * @brief Function that processes downlink data from network to node
+	 * @param topic Topic that indicates message type
+	 * @param data Message payload
+	 * @param len Payload length
+	 */
+	static void onDlData (char* topic, uint8_t* data, unsigned int len);
 
-	/**
-	  * @brief Deletes next item in the queue
-	  */
-	 void popMQTTqueue ();
-
-	 /**
-	  * @brief Publishes data over MQTT
-	  * @param topic Topic that indicates message type
-	  * @param payload Message payload data
-	  * @param len Payload length
-	  * @param retain `true` if message should be retained
-	  */
-	 bool publishMQTT (const char* topic, char* payload, size_t len, bool retain = false);
-
-	/**
-	  * @brief Function that processes downlink data from network to node
-	  * @param topic Topic that indicates message type
-	  * @param data Message payload
-	  * @param len Payload length
-	  */
-	 static void onDlData (char* topic, uint8_t* data, unsigned int len);
-
- public:
-	/**
-	  * @brief Constructor to initialize MQTT client
-	  */
-	 GwOutput_MQTT () :
+public:
+   /**
+	 * @brief Constructor to initialize MQTT client
+	 */
+	GwOutput_MQTT () :
 #if defined ESP8266 && defined SECURE_MQTT
 		certificate (DSTroot_CA),
 #endif // ESP8266 && SECURE_MQTT
-		mqtt_client (espClient)
-	 {}
+		mqtt_client (espClient) {}
 
 	/**
 	  * @brief Called when wifi manager starts config portal
@@ -195,7 +194,7 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	  * @param length Data buffer length
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	bool outputControlSend (char* address, uint8_t *data, size_t length);
+	bool outputControlSend (char* address, uint8_t* data, size_t length);
 
 	 /**
 	  * @brief Send new node notification
@@ -203,7 +202,7 @@ class GwOutput_MQTT: public GatewayOutput_generic {
 	  * @param node_id Node Id
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	bool newNodeSend (char *address, uint16_t node_id);
+	bool newNodeSend (char* address, uint16_t node_id);
 
 	 /**
 	  * @brief Send node disconnection notification

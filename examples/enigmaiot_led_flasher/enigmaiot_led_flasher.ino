@@ -79,7 +79,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 void setup () {
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
-	
+
 	//EnigmaIOTNode.setLed (BLUE_LED);
 	pinMode (BLUE_LED, OUTPUT);
 	digitalWrite (BLUE_LED, HIGH); // Turn on LED
@@ -101,27 +101,27 @@ void loop () {
 
 	clock = EnigmaIOTNode.clock () % PERIOD;
 
-	if (EnigmaIOTNode.hasClockSync () && EnigmaIOTNode.isRegistered()) {
+	if (EnigmaIOTNode.hasClockSync () && EnigmaIOTNode.isRegistered ()) {
 		if (clock >= 0 && clock < FLASH_DURATION) {
 			digitalWrite (BLUE_LED, LOW); // Turn on LED
 		} else {
 			digitalWrite (BLUE_LED, HIGH); // Turn on LED
 		}
 	}
-	
+
 	CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
 
 	static time_t lastSensorData;
 	static const time_t SENSOR_PERIOD = 10000;
 	if (millis () - lastSensorData > SENSOR_PERIOD) {
 		lastSensorData = millis ();
-		
+
 		// Read sensor data
 		msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
 		Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
 		msg.addTemperature (1, 20.34);
 		// Read sensor data
-		
+
 		Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
 		if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {

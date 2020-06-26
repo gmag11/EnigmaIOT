@@ -40,7 +40,7 @@ void disconnectEventHandler (nodeInvalidateReason_t reason) {
 }
 
 void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t encoding) {
-	char macstr[ENIGMAIOT_ADDR_LEN*3];
+	char macstr[ENIGMAIOT_ADDR_LEN * 3];
 	String commandStr;
 	uint8_t tempBuffer[MAX_MESSAGE_LENGTH];
 
@@ -58,7 +58,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 	Serial.printf ("Data: %s\n", printHexBuffer (buffer, length));
 	Serial.printf ("Encoding: 0x%02X\n", encoding);
 
-	CayenneLPP lpp(MAX_DATA_PAYLOAD_SIZE);
+	CayenneLPP lpp (MAX_DATA_PAYLOAD_SIZE);
 	DynamicJsonDocument doc (1000);
 	JsonArray root;
 	memcpy (tempBuffer, buffer, length);
@@ -80,7 +80,7 @@ void setup () {
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
 	time_t start = millis ();
-	
+
 	EnigmaIOTNode.setLed (BLUE_LED);
 	EnigmaIOTNode.setResetPin (RESET_PIN);
 	EnigmaIOTNode.onConnected (connectEventHandler);
@@ -88,7 +88,7 @@ void setup () {
 	EnigmaIOTNode.onDataRx (processRxData);
 
 	EnigmaIOTNode.begin (&Espnow_hal);
-	
+
 	// Put here your code to read sensor and compose buffer
 	const size_t capacity = JSON_OBJECT_SIZE (5);
 	DynamicJsonDocument json (capacity);
@@ -101,7 +101,7 @@ void setup () {
 
 	int len = measureMsgPack (json) + 1;
 	uint8_t* buffer = (uint8_t*)malloc (len);
-	len = serializeMsgPack (json, (char *)buffer, len);
+	len = serializeMsgPack (json, (char*)buffer, len);
 
 	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
 	Serial.printf ("Message Len %d\n", len);
@@ -109,17 +109,17 @@ void setup () {
 
 	Serial.printf ("Trying to send: %s\n", printHexBuffer (buffer, len));
 
-    // Send buffer data
+	// Send buffer data
 	if (!EnigmaIOTNode.sendData (buffer, len, MSG_PACK)) {
 		Serial.println ("---- Error sending data");
 	} else {
 		Serial.println ("---- Data sent");
 	}
-	Serial.printf ("Total time: %d ms\n", millis() - start);
+	Serial.printf ("Total time: %d ms\n", millis () - start);
 
 	free (buffer);
 
-    // Go to sleep
+	// Go to sleep
 	EnigmaIOTNode.sleep ();
 }
 

@@ -17,7 +17,7 @@
 char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 	static char tempStr[MAX_STR_LEN];
 	int charIndex = 0;
-	
+
 	memset (tempStr, 0, MAX_STR_LEN);
 
 	for (int i = 0; i < len; i++) {
@@ -40,7 +40,7 @@ void initWiFi (uint8_t channel, uint8_t role, String networkName) {
 	} else { // Gateway
 		WiFi.mode (WIFI_AP);
 		// TODO: password should be true random or use network key
-		WiFi.softAP (networkName.c_str(), "2599657852368549566551", channel);
+		WiFi.softAP (networkName.c_str (), "2599657852368549566551", channel);
 		DEBUG_DBG ("Mode set to AP in channel %u", channel);
 	}
 
@@ -80,19 +80,17 @@ char* mac2str (const uint8_t* mac, char* buffer) {
 	return NULL;
 }
 
-uint8_t* str2mac (const char* macAddrString, uint8_t* macBytes)
-{
+uint8_t* str2mac (const char* macAddrString, uint8_t* macBytes) {
 	const char cSep = ':';
 
-	for (int i = 0; i < 6; ++i)	{
+	for (int i = 0; i < 6; ++i) {
 		unsigned int iNumber = 0;
 		char ch;
 
 		//Convert letter into lower case.
 		ch = tolower (*macAddrString++);
 
-		if ((ch < '0' || ch > '9') && (ch < 'a' || ch > 'f'))
-		{
+		if ((ch < '0' || ch > '9') && (ch < 'a' || ch > 'f')) {
 			return NULL;
 		}
 
@@ -104,12 +102,10 @@ uint8_t* str2mac (const char* macAddrString, uint8_t* macBytes)
 		ch = tolower (*macAddrString);
 
 		if ((i < 5 && ch != cSep) ||
-			(i == 5 && ch != '\0' && !isspace (ch)))
-		{
+			(i == 5 && ch != '\0' && !isspace (ch))) {
 			++macAddrString;
 
-			if ((ch < '0' || ch > '9') && (ch < 'a' || ch > 'f'))
-			{
+			if ((ch < '0' || ch > '9') && (ch < 'a' || ch > 'f')) {
 				return NULL;
 			}
 
@@ -117,8 +113,7 @@ uint8_t* str2mac (const char* macAddrString, uint8_t* macBytes)
 			iNumber += isdigit (ch) ? (ch - '0') : (ch - 'a' + 10);
 			ch = *macAddrString;
 
-			if (i < 5 && ch != cSep)
-			{
+			if (i < 5 && ch != cSep) {
 				return NULL;
 			}
 		}

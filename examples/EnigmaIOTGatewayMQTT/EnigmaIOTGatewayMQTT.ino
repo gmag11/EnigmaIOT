@@ -115,10 +115,10 @@ void arduinoOTAConfigure () {
 	// ArduinoOTA.setPort(3232);
 
 	// Hostname defaults to esp3232-[MAC]
-	ArduinoOTA.setHostname(EnigmaIOTGateway.getNetworkName ());
+	ArduinoOTA.setHostname (EnigmaIOTGateway.getNetworkName ());
 
 	// No authentication by default
-	ArduinoOTA.setPassword(EnigmaIOTGateway.getNetworkKey(true));
+	ArduinoOTA.setPassword (EnigmaIOTGateway.getNetworkKey (true));
 
 	// Password can be set with it's md5 value as well
 	// MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
@@ -133,10 +133,10 @@ void arduinoOTAConfigure () {
 
 		// NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
 		Serial.println ("Start updating " + type);
-	});
+						});
 	ArduinoOTA.onEnd ([]() {
 		Serial.println ("\nEnd");
-	});
+					  });
 	ArduinoOTA.onProgress ([](unsigned int progress, unsigned int total) {
 		static bool printed = false;
 		unsigned int percent = progress / (total / 100);
@@ -162,7 +162,7 @@ void arduinoOTAConfigure () {
 		//	//Serial.print ('.');
 		//	printed = false;
 		//}
-	});
+						   });
 	ArduinoOTA.onError ([](ota_error_t error) {
 		Serial.printf ("Error[%u]: ", error);
 		if (error == OTA_AUTH_ERROR) Serial.println ("Auth Failed");
@@ -170,7 +170,7 @@ void arduinoOTAConfigure () {
 		else if (error == OTA_CONNECT_ERROR) Serial.println ("Connect Failed");
 		else if (error == OTA_RECEIVE_ERROR) Serial.println ("Receive Failed");
 		else if (error == OTA_END_ERROR) Serial.println ("End Failed");
-	});
+						});
 
 	ArduinoOTA.begin ();
 }
@@ -189,16 +189,16 @@ void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 	}
 }
 
-void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type, char *nodeName = NULL) {
+void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type, char* nodeName = NULL) {
 	uint8_t* addr = mac;
 	size_t pld_size;
 	const int PAYLOAD_SIZE = 1024; // Max MQTT payload in PubSubClient library normal operation.
 
 	char payload[PAYLOAD_SIZE];
 
-	char mac_str[ENIGMAIOT_ADDR_LEN*3];
+	char mac_str[ENIGMAIOT_ADDR_LEN * 3];
 	mac2str (addr, mac_str);
-	
+
 	if (control) {
 		processRxControlData (nodeName ? nodeName : mac_str, buffer, length);
 		return;
@@ -228,7 +228,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 			return;
 		}
 		pld_size = serializeJson (jsonBuffer, payload, PAYLOAD_SIZE);
-    } else if (payload_type == RAW) {
+	} else if (payload_type == RAW) {
 		DEBUG_INFO ("RAW message");
 		if (length <= PAYLOAD_SIZE) {
 			memcpy (payload, buffer, length);
@@ -237,7 +237,7 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 			memcpy (payload, buffer, PAYLOAD_SIZE);
 			pld_size = PAYLOAD_SIZE;
 		}
-	} 
+	}
 
 	GwOutput.outputDataSend (nodeName ? nodeName : mac_str, payload, pld_size);
 	DEBUG_INFO ("Published data message from %s, length %d: %s, Encoding 0x%02X", nodeName ? nodeName : mac_str, pld_size, payload, payload_type);
@@ -247,16 +247,16 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 		DEBUG_INFO ("Published MQTT from %s: %s", nodeName ? nodeName : mac_str, payload);
 	}
 	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}",
-							EnigmaIOTGateway.getPER ((uint8_t*)mac),
-							EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
-							EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
-							EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
+						 EnigmaIOTGateway.getPER ((uint8_t*)mac),
+						 EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
+						 EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
+						 EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
 	GwOutput.outputDataSend (nodeName ? nodeName : mac_str, payload, pld_size, GwOutput_data_type::status);
 	DEBUG_INFO ("Published MQTT from %s: %s", nodeName ? nodeName : mac_str, payload);
 }
 
-void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t msgType, char* data, unsigned int len){
-	uint8_t *buffer;
+void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t msgType, char* data, unsigned int len) {
+	uint8_t* buffer;
 	unsigned int bufferLen = len;
 	gatewayPayloadEncoding_t encoding = ENIGMAIOT;
 
@@ -285,8 +285,8 @@ void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t ms
 			encoding = RAW;
 		}
 	} else {
-		bufferLen = len + 1; 
-		buffer = (uint8_t*)calloc (sizeof(uint8_t),bufferLen);
+		bufferLen = len + 1;
+		buffer = (uint8_t*)calloc (sizeof (uint8_t), bufferLen);
 		memcpy (buffer, data, len);
 	}
 
@@ -304,8 +304,8 @@ void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t ms
 	free (buffer);
 }
 
-void newNodeConnected (uint8_t * mac, uint16_t node_id, char* nodeName = NULL) {
-	
+void newNodeConnected (uint8_t* mac, uint16_t node_id, char* nodeName = NULL) {
+
 	//Serial.printf ("New node connected: %s\n", macstr);
 
 	if (nodeName) {
@@ -326,7 +326,7 @@ void newNodeConnected (uint8_t * mac, uint16_t node_id, char* nodeName = NULL) {
 
 }
 
-void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
+void nodeDisconnected (uint8_t* mac, gwInvalidateReason_t reason) {
 	char macstr[ENIGMAIOT_ADDR_LEN * 3];
 	mac2str (mac, macstr);
 	//Serial.printf ("Node %s disconnected. Reason %u\n", macstr, reason);
@@ -361,7 +361,7 @@ void setup () {
 #ifdef ESP8266
 	ets_timer_setfn (&connectionLedTimer, flashConnectionLed, (void*)&connectionLed);
 #elif defined ESP32
-	
+
 #endif
 	pinMode (LED_BUILTIN, OUTPUT);
 	digitalWrite (LED_BUILTIN, HIGH);
@@ -386,13 +386,13 @@ void setup () {
 
 	EnigmaIOTGateway.configWiFiManager ();
 
-	WiFi.softAP (EnigmaIOTGateway.getNetworkName (), EnigmaIOTGateway.getNetworkKey());
+	WiFi.softAP (EnigmaIOTGateway.getNetworkName (), EnigmaIOTGateway.getNetworkKey ());
 	stopConnectionFlash ();
 
-	DEBUG_INFO ("STA MAC Address: %s", WiFi.macAddress ().c_str());
-	DEBUG_INFO ("AP MAC Address: %s", WiFi.softAPmacAddress().c_str ());
-	DEBUG_INFO ("BSSID Address: %s", WiFi.BSSIDstr().c_str ());
-	   
+	DEBUG_INFO ("STA MAC Address: %s", WiFi.macAddress ().c_str ());
+	DEBUG_INFO ("AP MAC Address: %s", WiFi.softAPmacAddress ().c_str ());
+	DEBUG_INFO ("BSSID Address: %s", WiFi.BSSIDstr ().c_str ());
+
 	DEBUG_INFO ("IP address: %s", WiFi.localIP ().toString ().c_str ());
 	DEBUG_INFO ("WiFi Channel: %d", WiFi.channel ());
 	DEBUG_INFO ("WiFi SSID: %s", WiFi.SSID ().c_str ());
@@ -408,7 +408,7 @@ void setup () {
 	//xTaskCreatePinnedToCore (EnigmaIOTGateway_handle, "handle", 4096, NULL, 0, &xEnigmaIOTGateway_handle, 1);
 	//xTaskCreatePinnedToCore (GwOutput_handle, "gwoutput", 10000, NULL, 2, &gwoutput_handle, 1);
 #endif
-	}
+}
 
 void loop () {
 
