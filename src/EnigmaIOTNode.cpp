@@ -980,6 +980,8 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 	DEBUG_DBG ("T3: %u", node.t3);
 	DEBUG_DBG ("T4: %u", node.t4);
 	DEBUG_DBG ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay ());
+
+	return true;
 }
 
 time_t EnigmaIOTNodeClass::clock () {
@@ -1452,11 +1454,15 @@ bool EnigmaIOTNodeClass::processSetIdentifyCommand (const uint8_t* mac, const ui
 
 	DEBUG_WARN ("IDENTIFY");
 	startIdentifying (1000);
+
+	return true;
 }
 
 bool EnigmaIOTNodeClass::processGetRSSICommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
 	requestSearchGateway = true;
 	requestReportRSSI = true;
+
+	return true;
 }
 
 bool EnigmaIOTNodeClass::processSetResetConfigCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
@@ -1471,7 +1477,9 @@ bool EnigmaIOTNodeClass::processSetResetConfigCommand (const uint8_t* mac, const
 
 	configCleared = true; // Disable any possible saving to flash or RTC memory
 
-	if (sendData (buffer, bufLength, true)) {
+	bool result;
+
+	if ((result = sendData (buffer, bufLength, true))) {
 		DEBUG_DBG ("Reset Config about to be executed", sleepTime);
 		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
 	} else {
@@ -1482,6 +1490,8 @@ bool EnigmaIOTNodeClass::processSetResetConfigCommand (const uint8_t* mac, const
 	clearFlash ();
 
 	ESP.restart ();
+
+	return result;
 }
 
 void EnigmaIOTNodeClass::clearRTC () {

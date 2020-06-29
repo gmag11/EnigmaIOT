@@ -303,7 +303,7 @@ bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 		return false;
 	}
 
-	for (int i = 0; i < (inputLen - 1); i++) { // Check if all digits are number
+	for (unsigned int i = 0; i < (inputLen - 1); i++) { // Check if all digits are number
 		if (inputData[i] < 30 || inputData[i] > '9') {
 			DEBUG_ERROR ("Set sleep time value is not a number on position %d: %d", i, inputData[i]);
 			return false;
