@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTNode.h
-  * @version 0.9.1
-  * @date 28/05/2020
+  * @version 0.9.2
+  * @date 01/07/2020
   * @author German Martin
   * @brief Library to build a node for EnigmaIoT system
   */
