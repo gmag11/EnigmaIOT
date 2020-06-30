@@ -955,6 +955,62 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 	}
 }
 
+bool EnigmaIOTGatewayClass::nodeNameSetRespose (Node* node, int8_t error) {
+	/*
+	 * ---------------------------------------------------
+	 *| msgType (1) | IV (12) | Result code (1) | tag (16) |
+	 * ---------------------------------------------------
+	 */
+	struct __attribute__ ((packed, aligned (1))) {
+		uint8_t msgType;
+		uint8_t iv[IV_LENGTH];
+		int8_t errorCode;
+		uint8_t tag[TAG_LENGTH];
+	} nodeNameSetResponse_msg;
+
+	const unsigned int NNSRMSG_LEN = sizeof (nodeNameSetResponse_msg);
+
+	nodeNameSetResponse_msg.msgType = NODE_NAME_RESULT;
+	
+	DEBUG_DBG ("Set node name Response. Error code: %d", error);
+
+	CryptModule::random (nodeNameSetResponse_msg.iv, IV_LENGTH);
+
+	DEBUG_VERBOSE ("IV: %s", printHexBuffer (nodeNameSetResponse_msg.iv, IV_LENGTH));
+	
+	nodeNameSetResponse_msg.errorCode = error;
+
+	const uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
+
+	memcpy (aad, (uint8_t*)&nodeNameSetResponse_msg, addDataLen); // Copy message upto iv
+
+	// Copy 8 last bytes from node key
+	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+	if (!CryptModule::encryptBuffer ((uint8_t*)&(nodeNameSetResponse_msg.errorCode), sizeof (int8_t), // Encrypt error code only, 1 byte
+									 nodeNameSetResponse_msg.iv, IV_LENGTH,
+									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), nodeNameSetResponse_msg.tag, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during encryption");
+		return false;
+	}
+
+	DEBUG_VERBOSE ("Encrypted set node name response message: %s", printHexBuffer ((uint8_t*)&nodeNameSetResponse_msg, NNSRMSG_LEN));
+
+	DEBUG_INFO (" -------> SET NODE NAME RESPONSE");
+	uint8_t* addr = node->getMacAddress ();
+	char addrStr[ENIGMAIOT_ADDR_LEN * 3];
+	if (comm->send (addr, (uint8_t*)&nodeNameSetResponse_msg, NNSRMSG_LEN) == 0) {
+		DEBUG_INFO ("Set Node Name Response message sent to %s", mac2str(addr,addrStr));
+		return true;
+	} else {
+		nodelist.unregisterNode (node);
+		DEBUG_ERROR ("Error sending Set Node Name Response message to %s", mac2str (addr, addrStr));
+		return false;
+	}
+}
+
 bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node) {
 	/*
 	* ----------------------------------------------------------------------

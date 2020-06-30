@@ -331,6 +331,14 @@ protected:
 	bool processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node);
 
 	/**
+	 * @brief Send back set name response
+	 * @param node Pointer to data that corresponds to originating node
+	 * @param error Result code of name set procedure (0: OK, -1: Already used, -2: Too long, -3: Empty name, -4: Message error)
+	 * @return Returns `true` if message could be correcly processed
+	 */
+	bool nodeNameSetRespose (Node* node, int8_t error);
+
+	/**
 	 * @brief Process every received message.
 	 *
 	 * It starts clasiffying message usint the first byte. After that it passes it to the corresponding method for decoding
