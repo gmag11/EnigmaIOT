@@ -961,7 +961,7 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 	*| msgType (1) | IV (12) | NodeID (2) | Node name (up to 32) | tag (16) |
 	* ----------------------------------------------------------------------
 	*/
-	int error = 0;
+	int8_t error = 0;
 
 	char nodeName[NODE_NAME_LENGTH];
 	memset ((void*)nodeName, 0, NODE_NAME_LENGTH);
@@ -988,7 +988,7 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 		error = -4; // Message error
 	}
 
-	if (error == 0) {
+	if (!error) {
 		DEBUG_VERBOSE ("Decripted node name set message: %s", printHexBuffer (buf, count - TAG_LENGTH));
 
 		size_t nodeNameLen = tag_idx - nodeName_idx;
@@ -1005,6 +1005,7 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 	}
 
 	// TODO: Send response error
+	nodeNameSetRespose (node, error);
 
 	if (error) {
 		return false;
@@ -1460,6 +1461,10 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 		DEBUG_WARN ("Message too short");
 		return false;
 	}
+
+	CryptModule::random (clockRequest_msg.iv, IV_LENGTH);
+
+	DEBUG_VERBOSE ("IV: %s", printHexBuffer (clockRequest_msg.iv, IV_LENGTH));
 
 	memcpy (&clockRequest_msg, buf, count);
 

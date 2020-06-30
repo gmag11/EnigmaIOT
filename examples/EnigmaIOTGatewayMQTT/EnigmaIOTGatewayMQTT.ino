@@ -153,16 +153,7 @@ void arduinoOTAConfigure () {
 		if (progress == total) {
 			Serial.println ("OTA transfer finished");
 		}
-		//static bool printed = false;
-		//int percent = progress / (total / 100);
-		//if (!(percent % 10) && !printed) {
-		//	Serial.printf (" %u%%\n", percent);
-		//	printed = true;
-		//} else if (percent % 10) {
-		//	//Serial.print ('.');
-		//	printed = false;
-		//}
-						   });
+	});
 	ArduinoOTA.onError ([](ota_error_t error) {
 		Serial.printf ("Error[%u]: ", error);
 		if (error == OTA_AUTH_ERROR) Serial.println ("Auth Failed");
@@ -191,7 +182,7 @@ void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 
 void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type, char* nodeName = NULL) {
 	uint8_t* addr = mac;
-	size_t pld_size;
+	size_t pld_size = 0;
 	const int PAYLOAD_SIZE = 1024; // Max MQTT payload in PubSubClient library normal operation.
 
 	char payload[PAYLOAD_SIZE];

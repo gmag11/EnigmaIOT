@@ -349,9 +349,7 @@ protected:
 };
 
 
-// TODO Document NodeList
 class NodeList {
-//#define NUM_NODES 20
 public:
 
     /**
@@ -386,7 +384,7 @@ public:
       * @param address Address of node which is being tried to set name
       * @return Error code to show name correctness. 0 = OK, -1 = Name already used, -2 = Name is too long, -3 = Name is empty
       */
-    int checkNodeName (const char* name, const uint8_t* address);
+    int8_t checkNodeName (const char* name, const uint8_t* address);
 
     /**
       * @brief Searches for a free place for a new Node instance

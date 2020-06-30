@@ -428,12 +428,13 @@ void GwOutput_MQTT::loop () {
 	}
 }
 
-bool GwOutput_MQTT::publishMQTT (const char* topic, char* payload, size_t len, bool retain) {
+bool GwOutput_MQTT::publishMQTT (const char* topic, const char* payload, size_t len, bool retain) {
 	DEBUG_INFO ("Publish MQTT. %s : %.*s", topic, len, payload);
 	if (mqtt_client.connected ()) {
 		return mqtt_client.publish (topic, (uint8_t*)payload, len, retain);
 	} else {
 		DEBUG_WARN ("MQTT client not connected");
+		return false;
 	}
 }
 

@@ -143,7 +143,7 @@ protected:
 	 * @param len Payload length
 	 * @param retain `true` if message should be retained
 	 */
-	bool publishMQTT (const char* topic, char* payload, size_t len, bool retain = false);
+	bool publishMQTT (const char* topic, const char* payload, size_t len, bool retain = false);
 
    /**
 	 * @brief Function that processes downlink data from network to node

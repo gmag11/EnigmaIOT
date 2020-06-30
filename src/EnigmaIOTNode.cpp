@@ -1307,7 +1307,6 @@ bool EnigmaIOTNodeClass::processGetNameCommand (const uint8_t* mac, const uint8_
 	DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
 
 	buffer[0] = control_message_type::NAME_ANS;
-	// TODO get real sleep time
 
 	uint8_t* nodeAddress = node.getMacAddress ();
 
@@ -1336,11 +1335,9 @@ bool EnigmaIOTNodeClass::processSetNameCommand (const uint8_t* mac, const uint8_
 	DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
 
 	buffer[0] = control_message_type::NAME_ANS;
-	// TODO get real sleep time
 
 	uint8_t* nodeAddress = node.getMacAddress ();
 
-	//char newName[NODE_NAME_LENGTH];
 	memcpy (rtcmem_data.nodeName, data + 1, len - 1);
 	node.setNodeName (rtcmem_data.nodeName);
 
@@ -1351,7 +1348,6 @@ bool EnigmaIOTNodeClass::processSetNameCommand (const uint8_t* mac, const uint8_
 		DEBUG_WARN ("Error sending set node name %s", rtcmem_data.nodeName);
 	}
 
-	//char* name = node.getNodeName ();
 	size_t nameLen = strlen (rtcmem_data.nodeName);
 
 	memcpy (buffer + 1, nodeAddress, ENIGMAIOT_ADDR_LEN);

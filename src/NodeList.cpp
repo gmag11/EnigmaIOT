@@ -161,7 +161,7 @@ Node* NodeList::getNodeFromName (const char* name) {
 	return NULL;
 }
 
-int NodeList::checkNodeName (const char* name, const uint8_t* address) {
+int8_t NodeList::checkNodeName (const char* name, const uint8_t* address) {
 	bool found = false;
 
 	if (strlen (name) > NODE_NAME_LENGTH - 1) {

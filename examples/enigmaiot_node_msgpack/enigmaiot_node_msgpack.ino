@@ -73,6 +73,8 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 		deserializeMsgPack (doc, tempBuffer, length);
 		serializeJsonPretty (doc, Serial);
 		break;
+	default:
+		DEBUG_WARN("Non supported encoding; %d", encoding);
 	}
 }
 
@@ -115,7 +117,7 @@ void setup () {
 	} else {
 		Serial.println ("---- Data sent");
 	}
-	Serial.printf ("Total time: %d ms\n", millis () - start);
+	Serial.printf ("Total time: %lu ms\n", millis () - start);
 
 	free (buffer);
 
