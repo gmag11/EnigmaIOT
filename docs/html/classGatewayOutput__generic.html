@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.1</span>
+   &#160;<span id="projectnumber">0.9.2</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -116,7 +116,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a12bceac925f871d3f95d06c4f4332343"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGatewayOutput__generic.html#a12bceac925f871d3f95d06c4f4332343">loop</a> ()=0</td></tr>
 <tr class="memdesc:a12bceac925f871d3f95d06c4f4332343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should be called often for module management.  <a href="classGatewayOutput__generic.html#a12bceac925f871d3f95d06c4f4332343">More...</a><br /></td></tr>
 <tr class="separator:a12bceac925f871d3f95d06c4f4332343"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93d8b7a91fb2d99aef4a441713da0f86"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGatewayOutput__generic.html#a93d8b7a91fb2d99aef4a441713da0f86">setDlCallback</a> (<a class="el" href="GwOutput__dummy_8h.html#a090547ef7c952291e1bde993006610b8">onDlData_t</a> cb)</td></tr>
+<tr class="memitem:a93d8b7a91fb2d99aef4a441713da0f86"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGatewayOutput__generic.html#a93d8b7a91fb2d99aef4a441713da0f86">setDlCallback</a> (<a class="el" href="GwOutput__generic_8h.html#aeb1f7d47a18ad54ebbd74df743ff825b">onDlData_t</a> cb)</td></tr>
 <tr class="memdesc:a93d8b7a91fb2d99aef4a441713da0f86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data processing function.  <a href="classGatewayOutput__generic.html#a93d8b7a91fb2d99aef4a441713da0f86">More...</a><br /></td></tr>
 <tr class="separator:a93d8b7a91fb2d99aef4a441713da0f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -143,7 +143,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:aa4855724d46b50a35735f9900494b889"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEnigmaIOTGatewayClass.html">EnigmaIOTGatewayClass</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGatewayOutput__generic.html#aa4855724d46b50a35735f9900494b889">enigmaIotGateway</a></td></tr>
 <tr class="memdesc:aa4855724d46b50a35735f9900494b889"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to EnigmaIOT gateway instance.  <a href="classGatewayOutput__generic.html#aa4855724d46b50a35735f9900494b889">More...</a><br /></td></tr>
 <tr class="separator:aa4855724d46b50a35735f9900494b889"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada169ba682e6632f72d62724887f92de"><td class="memItemLeft" align="right" valign="top"><a class="el" href="GwOutput__dummy_8h.html#a090547ef7c952291e1bde993006610b8">onDlData_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGatewayOutput__generic.html#ada169ba682e6632f72d62724887f92de">downlinkCb</a></td></tr>
+<tr class="memitem:ada169ba682e6632f72d62724887f92de"><td class="memItemLeft" align="right" valign="top"><a class="el" href="GwOutput__generic_8h.html#aeb1f7d47a18ad54ebbd74df743ff825b">onDlData_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGatewayOutput__generic.html#ada169ba682e6632f72d62724887f92de">downlinkCb</a></td></tr>
 <tr class="memdesc:ada169ba682e6632f72d62724887f92de"><td class="mdescLeft">&#160;</td><td class="mdescRight">downlink processing function handle  <a href="classGatewayOutput__generic.html#ada169ba682e6632f72d62724887f92de">More...</a><br /></td></tr>
 <tr class="separator:ada169ba682e6632f72d62724887f92de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -567,7 +567,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">void GatewayOutput_generic::setDlCallback </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="GwOutput__dummy_8h.html#a090547ef7c952291e1bde993006610b8">onDlData_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="GwOutput__generic_8h.html#aeb1f7d47a18ad54ebbd74df743ff825b">onDlData_t</a>&#160;</td>
           <td class="paramname"><em>cb</em></td><td>)</td>
           <td></td>
         </tr>
@@ -620,7 +620,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="GwOutput__dummy_8h.html#a090547ef7c952291e1bde993006610b8">onDlData_t</a> GatewayOutput_generic::downlinkCb</td>
+          <td class="memname"><a class="el" href="GwOutput__generic_8h.html#aeb1f7d47a18ad54ebbd74df743ff825b">onDlData_t</a> GatewayOutput_generic::downlinkCb</td>
         </tr>
       </table>
   </td>

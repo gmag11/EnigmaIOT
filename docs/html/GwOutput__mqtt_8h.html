@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.1</span>
+   &#160;<span id="projectnumber">0.9.2</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -125,6 +125,12 @@ Macros</h2></td></tr>
 <tr class="separator:ae274ed0194e5685c280ab9148dbcba69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44bf9b184af7520ec127c6b705991c8f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GwOutput__mqtt_8h.html#a44bf9b184af7520ec127c6b705991c8f">GET_RSSI_ANS</a>&#160;&#160;&#160;&quot;result/rssi&quot;</td></tr>
 <tr class="separator:a44bf9b184af7520ec127c6b705991c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8bca12527bac4b474e2ccb5acd8691e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GwOutput__mqtt_8h.html#af8bca12527bac4b474e2ccb5acd8691e">GET_NAME</a>&#160;&#160;&#160;&quot;get/name&quot;</td></tr>
+<tr class="separator:af8bca12527bac4b474e2ccb5acd8691e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a947ddc46cf5393a05a60422574c68dd0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GwOutput__mqtt_8h.html#a947ddc46cf5393a05a60422574c68dd0">SET_NAME</a>&#160;&#160;&#160;&quot;set/name&quot;</td></tr>
+<tr class="separator:a947ddc46cf5393a05a60422574c68dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a043021359c728f4265337a8c21edfcdb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GwOutput__mqtt_8h.html#a043021359c728f4265337a8c21edfcdb">GET_NAME_ANS</a>&#160;&#160;&#160;&quot;result/name&quot;</td></tr>
+<tr class="separator:a043021359c728f4265337a8c21edfcdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7c2efab8087395f360a163faecc66eb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GwOutput__mqtt_8h.html#ad7c2efab8087395f360a163faecc66eb">SET_USER_DATA</a>&#160;&#160;&#160;&quot;set/<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>&quot;</td></tr>
 <tr class="separator:ad7c2efab8087395f360a163faecc66eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6dad41b3de63cebfef84fc4677cded8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GwOutput__mqtt_8h.html#ac6dad41b3de63cebfef84fc4677cded8">GET_USER_DATA</a>&#160;&#160;&#160;&quot;get/<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>&quot;</td></tr>
@@ -148,12 +154,44 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>MQTT Gateway output module. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.1 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>28/05/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.2 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>01/07/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin Module to send and receive EnigmaIOT information from MQTT broker </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="af8bca12527bac4b474e2ccb5acd8691e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8bca12527bac4b474e2ccb5acd8691e">&#9670;&nbsp;</a></span>GET_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GET_NAME&#160;&#160;&#160;&quot;get/name&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00047">47</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+
+</div>
+</div>
+<a id="a043021359c728f4265337a8c21edfcdb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a043021359c728f4265337a8c21edfcdb">&#9670;&nbsp;</a></span>GET_NAME_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GET_NAME_ANS&#160;&#160;&#160;&quot;result/name&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00049">49</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+
+</div>
+</div>
 <a id="ae274ed0194e5685c280ab9148dbcba69"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae274ed0194e5685c280ab9148dbcba69">&#9670;&nbsp;</a></span>GET_RSSI</h2>
 
@@ -230,7 +268,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00048">48</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00051">51</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -278,7 +316,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00052">52</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00055">55</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -294,7 +332,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00050">50</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00053">53</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -310,7 +348,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00049">49</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00052">52</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -326,7 +364,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00051">51</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00054">54</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -343,6 +381,22 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00042">42</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+
+</div>
+</div>
+<a id="a947ddc46cf5393a05a60422574c68dd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a947ddc46cf5393a05a60422574c68dd0">&#9670;&nbsp;</a></span>SET_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SET_NAME&#160;&#160;&#160;&quot;set/name&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00048">48</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -438,7 +492,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00047">47</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00050">50</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -465,7 +519,7 @@ Variables</h2></td></tr>
 
 <p>MQTT outout configuration file name. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00053">53</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00056">56</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>

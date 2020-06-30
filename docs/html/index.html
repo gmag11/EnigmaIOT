@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.1</span>
+   &#160;<span id="projectnumber">0.9.2</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -72,7 +72,7 @@ $(function() {
 <h1>Introduction</h1>
 <p><b>EnigmaIoT</b> is an open source solution for wireless multi sensor systems. It has two main components, multiple <b>nodes</b> and one <b>gateway</b>.</p>
 <p>A number of nodes with one or more sensors each one communicate in a <b>secure</b> way to a central gateway in a star network using EnigmaIoT protocol.</p>
-<p>This protocol has been designed with security on mind. All sensor data is encrypted with a random key that changes periodically. Key is unique for each node and dynamically negotiated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.</p>
+<p>This protocol has been designed with security on mind. All node data is encrypted with a random key that changes periodically. Key is unique for each node and dynamically negotiated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.</p>
 <p>I designed this because I was searching for a way to have a relatively high number of nodes at home. I thought about using WiFi but it would overload my home router. So I looked for an alternative. I evaluated LoRa or cheap nRF24 modules but I wanted the simplest solution in terms of hardware.</p>
 <p>ESP8266 microcontroller implements a protocol known as ESP-NOW. It is a point to point protocol, based on vendor specific <a href="https://mrncciew.com/2014/09/29/cwap-802-11-mgmt-frame-types/">WiFi management action frames</a>, that works in a connectionless way and every packet is a few milliseconds long. Because of this it eases to have a battery powered node so that it enables designing totally wireless sensors.</p>
 <p>But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So I thought that I could implement encryption on payload but I found many problems I should solve to grade this as "secure enough".</p>
@@ -115,7 +115,7 @@ $(function() {
 <li>[x] <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> configuration while in service using control downlink commands</li>
 <li>[ ] OTA over WiFi</li>
 <li>[x] OTA over MQTT/ESP-NOW</li>
-<li>[x] Sensor identification by using a flashing LED. This is useful when you have a bunch of nodes together :D</li>
+<li>[x] <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> identification by using a flashing LED. This is useful when you have a bunch of nodes together :D</li>
 <li>[ ] Broadcast messages that go to all nodes. Under study</li>
 </ul>
 <h1>Design</h1>
@@ -154,11 +154,11 @@ $(function() {
 <p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/ServerHello.png" alt="Server Hello message format" class="inline"/></p>
 <p>After receiving and checking Client Hello message, gateway responds with a Server Hello message. It carries gateway's public key to let node calculate key using ECDH. There is a random 4 byte field reserved for future use. Gateway assigns node a NodeID. It is signaled as a 2 byte field.</p>
 <p>Server Hello message is sent encrypted with network key.</p>
-<h2>Sensor Data message</h2>
+<h2><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> Data message</h2>
 <p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorData.png" alt="Node payload message format" class="inline"/></p>
-<p>Sensor data is always encrypted using shared key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.</p>
+<p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> data is always encrypted using shared key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.</p>
 <p>Total message length (without tag) is included on a 2 byte field.</p>
-<h2>Unencrypted Sensor Data message</h2>
+<h2>Unencrypted <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> Data message</h2>
 <p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/UnencryptedSensorData.png" alt="Node unencrypted payload message format" class="inline"/></p>
 <p>In case that extreme performance is needed there is the possibility to send unencrypted data so processor spends a few milliseconds less. It is not recommended to do so unless you want to investigate crypto software performance. Use at your own data risk :D</p>
 <p>This message also includes node ID and a counter used by gateway to check lost or repeated messages from that node.</p>
@@ -173,13 +173,32 @@ $(function() {
 <p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/ControlComand-Uplink.png" alt="UL Control Command message format" class="inline"/></p>
 <p>Gateway and node can exchange internal control commands. These are used to set internal protocol parameters like sleep time. This type of messages are processed like normal downlink messages, but are not passed to higher level (user code) in <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a>.</p>
 <p>Some control messages, like OTA update messages, require that they are processed immediately. Hence, it is required that node is not in deep sleep mode. This can be controlled, for instance, using another control command to set sleep time to 0.</p>
+<h2>Clock synchronization</h2>
+<h4>Clock sync request</h4>
+<p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/ClockSyncRequest.png" alt="Clock sync request" class="inline"/></p>
+<h4>Clock sync response</h4>
+<p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/ClockSyncResponse.png" alt="Clock sync response" class="inline"/></p>
+<p>In non sleepy nodes, it may be useful to send a message from time to time to let Gateway know that node is still active and let <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> to check that is is still registered in Gateway.</p>
+<p>Clock syncronization may be a very good feature if you need to coordinate actions on different nodes.</p>
+<p>EnigmaIOT combines these two features into one request and response. Nodes may send clock sync request every some time to ping gateway and get common clock updated. Clock synchronization uses a mechanism similar to the one used by [SNTP protocol](<a href="https://en.wikipedia.org/wiki/Network_Time_Protocol#:~:text=Simple%20Network%20Time%20Protocol%20(SNTP,NTP%20capability%20is%20not%20required.)">https://en.wikipedia.org/wiki/Network_Time_Protocol#:~:text=Simple%20Network%20Time%20Protocol%20(SNTP,NTP%20capability%20is%20not%20required.)</a>.</p>
+<p><strike>Notice that this is not world time sync but a numeric clock.</strike></p>
+<p>Since version 0.9.2, if Gateway has its internal time synchronized using NTP it sends non sleepy nodes <b>current real date and time</b> in millisecond Unix format .</p>
+<p>This feature may be disabled if needed.</p>
+<h2>Address to node name translation</h2>
+<h4>Set node name</h4>
+<p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/SetNodeName.png" alt="Set Node Name" class="inline"/></p>
+<h4>Set node name result</h4>
+<p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/SetNodeNameResult.png" alt="Set Node Name result" class="inline"/></p>
+<p>In order to make node messages more readable for humans, this implements a way to let Gateway to translate EnigmaIOT addresses to custom names (for instance, "RoomBlindControl"). This eases node replacement in case of failure.</p>
+<p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> names can be up to 32 characters long and should avoid characters different of letters and numbers. <b>Characters #,+ and / are specially forbidden</b>.</p>
+<p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> name is configured by user during first configuration in WiFi Web portal.</p>
 <h2>Invalidate Key message</h2>
 <p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/InvalidateKey.png" alt="Invalidate Key message format" class="inline"/></p>
 <p>After every data message from nodes, gateway evaluates key integrity and validity. In case of any error decoding the packet gateways ignores data and reply with this message indicating the reason that caused error. <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> must start a new registration procedure in order to send data again. After this new registration node resends the last data message.</p>
 <p>A gateway defines a key validity period after that a node key is marked as expired. In a message is received after that is processed normally but an Invalidate Key message indicating key expiration as reason. <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> then starts a registration procedure but does not retry communication.</p>
 <p>Invalidate Key message is always sent unencrypted.</p>
 <h1>Protocol procedures</h1>
-<h2>Normal node registration and sensor data exchange</h2>
+<h2>Normal node registration and node data exchange</h2>
 <p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/NodeRegistration.svg?sanitize=true" alt="Normal node registration message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
 <h2>Incomplete Registration</h2>
 <p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/RegistrationIncomplete.svg?sanitize=true" alt="Incomplete Registration message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
@@ -222,16 +241,18 @@ $(function() {
 <p>So, node will always follow the channel that gateway is working in.</p>
 <h1>Output data from gateway</h1>
 <h2>Uplink messages</h2>
-<p>A user may program their own output format modifying gateway example program. For my use case gateway outputs MQTT messages in this format: </p><div class="fragment"><div class="line">&lt;configurable prefix&gt;/&lt;node address&gt;/data &lt;json data&gt;</div>
+<p>A user may program their own output format modifying gateway example program. For my use case gateway outputs MQTT messages in this format: </p><div class="fragment"><div class="line">&lt;configurable prefix&gt;/&lt;node address | node name&gt;/data &lt;json data&gt;</div>
 </div><!-- fragment --><p>A prefix is configured on gateway to allow several sensor networks to coexist in the same subnet. After that address and data are sent.</p>
-<p>After every received message, gateway detects if any packet has been lost before and reports it using MQTT message using this format: </p><div class="fragment"><div class="line">&lt;configurable prefix&gt;/&lt;node address&gt;/status {&quot;per&quot;:&lt;packet error rate&gt;,&quot;lostmessages&quot;:&lt;Number of lost messages&gt;,&quot;totalmessages&quot;:&lt;Total number of messages&gt;,&quot;packetshour&quot;:&lt;Packet rate&gt;}</div>
+<p>After every received message, gateway detects if any packet has been lost before and reports it using MQTT message using this format: </p><div class="fragment"><div class="line">&lt;configurable prefix&gt;/&lt;node address | node name&gt;/status {&quot;per&quot;:&lt;packet error rate&gt;,&quot;lostmessages&quot;:&lt;Number of lost messages&gt;,&quot;totalmessages&quot;:&lt;Total number of messages&gt;,&quot;packetshour&quot;:&lt;Packet rate&gt;}</div>
 </div><!-- fragment --><h2>Downlink messages</h2>
 <p>EnigmaIoT allows sending messages from gateway to nodes. In my implementation I use MQTT to trigger downlink messages too.</p>
-<p>To make it simpler, downlink messages use the same structure than uplink. </p><div class="fragment"><div class="line">&lt;network name&gt;/&lt;node address&gt;/&lt;get|set&gt;/data &lt;command data&gt;</div>
+<p>To make it simpler, downlink messages use the same structure than uplink. </p><div class="fragment"><div class="line">&lt;network name&gt;/&lt;node address | node name&gt;/&lt;get|set&gt;/data &lt;command data&gt;</div>
 </div><!-- fragment --><p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> address means destination node address. Configurable prefix is the same used for uplink communication.</p>
 <p>Commands may be given in JSON format. In that case they are sent to node in MessagePack format. That makes that mode gets the complete JSON object. This implies that no change is needed on Gateway to add new node types. Gateway is transparent to user data.</p>
-<p>This is an esample of MQTT message that triggers a downlink packet.</p>
+<p>This is an example of MQTT message that triggers a downlink packet.</p>
 <div class="fragment"><div class="line">enigmaiot/12:34:56:78:90:12/set/data {&quot;light1&quot;: 1, &quot;light2&quot;: 0}</div>
+</div><!-- fragment --><p>If node uses a name, MQTT message may use of it.</p>
+<div class="fragment"><div class="line">enigmaiot/kitcken_light/set/data {&quot;light1&quot;: 1, &quot;light2&quot;: 0}</div>
 </div><!-- fragment --><p>After sending that command node will receive a 'set' command with data <code>{"light1": 1, "light2": 0}</code>.</p>
 <p>Commands can be sent in any other format different that JSON, even binary. In that case they are sent without conversion to node using MessagePack encoding format to reduce transferred data bits.</p>
 <h2>Control messages</h2>
@@ -251,19 +272,23 @@ $(function() {
 <tr>
 <th colspan="2">Command </th><th>Response  </th></tr>
 <tr>
-<td>Get version </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/version</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/version {"version":"&amp;lt;version&amp;gt;"}</code>  </td></tr>
+<td>Get version </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/get/version</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/version {"version":"&amp;lt;version&amp;gt;"}</code>  </td></tr>
 <tr>
-<td>Get sleep duration </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/sleeptime</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime {"sleeptime":"&amp;lt;sleep_time&amp;gt;"}"</code>  </td></tr>
+<td>Get sleep duration </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/get/sleeptime</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/sleeptime {"sleeptime":"&amp;lt;sleep_time&amp;gt;"}"</code>  </td></tr>
 <tr>
-<td>Set sleep duration </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/sleeptime &lt;sleep_time&gt;</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime {"sleeptime":"&amp;lt;sleep_time&amp;gt;"}</code>  </td></tr>
+<td>Set sleep duration </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/sleeptime &lt;sleep_time&gt;</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/sleeptime {"sleeptime":"&amp;lt;sleep_time&amp;gt;"}</code>  </td></tr>
 <tr>
-<td>OTA message </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/ota &lt;ota message&gt;</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/ota {"result":"&amp;lt;ota_result_text&amp;gt;,"status":"&lt;ota_result_code&gt;"}</code>  </td></tr>
+<td>OTA message </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/ota &lt;ota message&gt;</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/ota {"result":"&amp;lt;ota_result_text&amp;gt;,"status":"&lt;ota_result_code&gt;"}</code>  </td></tr>
 <tr>
-<td>Identify node </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/identify</code> </td><td>None  </td></tr>
+<td>Identify node </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/identify</code> </td><td>None  </td></tr>
 <tr>
-<td>Reset node configuration </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/reset</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/reset {}</code>  </td></tr>
+<td>Reset node configuration </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/reset</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/reset {}</code>  </td></tr>
 <tr>
-<td>Request measure RSSI </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/rssi</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/rssi {"rssi":&lt;RSSI&gt;,"channel":&lt;WiFi channel&gt;}</code>  </td></tr>
+<td>Request measure RSSI </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/get/rssi</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/rssi {"rssi":&lt;RSSI&gt;,"channel":&lt;WiFi channel&gt;}</code>  </td></tr>
+<tr>
+<td>Request node name </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/get/name</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/name {"address":&lt;node address&gt;,"name":&lt;<a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> name&gt;}</code>  </td></tr>
+<tr>
+<td>Set node name </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/name &lt;<a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> name&gt;</code> </td><td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/name {"address":&lt;node address&gt;,"name":&lt;<a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> name&gt;}</code>  </td></tr>
 </table>
 <p>For instance, publishing <code>enigmaiot/12:34:56:78:90:12/get/version</code> will produce <code>enigmaiot/12:34:56:78:90:12/result/version 0.2.0</code>.</p>
 <p>Messages are encoded to reduce the amount of bytes to be sent over internal protocol, so that the air time is as short as possible.</p>
@@ -294,6 +319,10 @@ $(function() {
 <td class="markdownTableBodyNone">Request measure RSSI </td><td class="markdownTableBodyNone"><code>0x06</code> </td><td class="markdownTableBodyNone">None  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Report measure RSSI </td><td class="markdownTableBodyNone"><code>0x86</code> </td><td class="markdownTableBodyNone">RSSI (signed integer - 8 bit), WiFi channel (unsigned integer - 8 bit)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Get node name </td><td class="markdownTableBodyNone"><code>0x07</code> </td><td class="markdownTableBodyNone">None  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Set node name </td><td class="markdownTableBodyNone"><code>0x87</code> </td><td class="markdownTableBodyNone"><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> name as string  </td></tr>
 </table>
 <h1>OTA Update</h1>
 <p>MQTT Gateway example includes plain Arduino OTA mechanism. OTA is protected using network key selected during initial configuration.</p>
@@ -311,7 +340,7 @@ $(function() {
 <div class="line">  -f FILENAME, --file=FILENAME</div>
 <div class="line">                        File to program into device</div>
 <div class="line">  -d ADDRESS, --daddress=ADDRESS</div>
-<div class="line">                        Device address</div>
+<div class="line">                        Node address or name</div>
 <div class="line">  -t BASETOPIC, --topic=BASETOPIC</div>
 <div class="line">                        Base topic for MQTT messages</div>
 <div class="line">  -u MQTTUSER, --user=MQTTUSER</div>

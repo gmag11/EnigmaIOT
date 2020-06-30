@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.1</span>
+   &#160;<span id="projectnumber">0.9.2</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -108,10 +108,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a2c235937f97c512692dc77a396f79517"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#a2c235937f97c512692dc77a396f79517">onGwDataRx_t</a>) (uint8_t *mac, uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, uint8_t len, uint16_t lostMessages, bool control, <a class="el" href="EnigmaIOTGateway_8h.html#a404510882576d212315fd2ed67280d8d">gatewayPayloadEncoding_t</a> payload_type)</td></tr>
-<tr class="separator:a2c235937f97c512692dc77a396f79517"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f5e59428183698a36262241dcec12eb"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#a4f5e59428183698a36262241dcec12eb">onNewNode_t</a>) (uint8_t *mac, uint16_t node_id)</td></tr>
-<tr class="separator:a4f5e59428183698a36262241dcec12eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee09b06c0f38b77b6cf19f8d89750a1b"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#aee09b06c0f38b77b6cf19f8d89750a1b">onGwDataRx_t</a>) (uint8_t *mac, uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, uint8_t len, uint16_t lostMessages, bool control, <a class="el" href="EnigmaIOTGateway_8h.html#a404510882576d212315fd2ed67280d8d">gatewayPayloadEncoding_t</a> payload_type, char *nodeName)</td></tr>
+<tr class="separator:aee09b06c0f38b77b6cf19f8d89750a1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad49ee5d953f324e799a0434ff3b044c7"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#ad49ee5d953f324e799a0434ff3b044c7">onNewNode_t</a>) (uint8_t *mac, uint16_t node_id, char *nodeName)</td></tr>
+<tr class="separator:ad49ee5d953f324e799a0434ff3b044c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17b8c1861e099264b904a9f20ee69666"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#a17b8c1861e099264b904a9f20ee69666">onNodeDisconnected_t</a>) (uint8_t *mac, <a class="el" href="EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977">gwInvalidateReason_t</a> reason)</td></tr>
 <tr class="separator:a17b8c1861e099264b904a9f20ee69666"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a059cb90513e14cc8dc7befecc75bc891"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#a059cb90513e14cc8dc7befecc75bc891">onWiFiManagerExit_t</a>) (boolean <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
@@ -132,9 +132,12 @@ Enumerations</h2></td></tr>
 <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a50ab02cc83b80322e63edd2e2779a735">CLOCK_REQUEST</a> = 0x05, 
 <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a597b515e2c48496c513e6d502a7528c0">CLOCK_RESPONSE</a> = 0x06, 
 <br />
-&#160;&#160;<a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a0c8da6c451065bed79ea70684e6f3fca">CLIENT_HELLO</a> = 0xFF, 
+&#160;&#160;<a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a766d5c890baa0b6a0e7e1e3f5cb0b224">NODE_NAME_SET</a> = 0x07, 
+<a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613ae69668f8ce604a1b3d09c3314cdba5bf">NODE_NAME_RESULT</a> = 0x17, 
+<a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a0c8da6c451065bed79ea70684e6f3fca">CLIENT_HELLO</a> = 0xFF, 
 <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a28914d3bb26ec8c2bd2d5ad9781cbf8c">SERVER_HELLO</a> = 0xFE, 
-<a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a32637f9c9b67f884990ed21097ebc543">INVALIDATE_KEY</a> = 0xFB
+<br />
+&#160;&#160;<a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a32637f9c9b67f884990ed21097ebc543">INVALIDATE_KEY</a> = 0xFB
 <br />
  }</td></tr>
 <tr class="memdesc:a7493ad6706df484ac2749d7613266613"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message code definition.  <a href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613">More...</a><br /></td></tr>
@@ -171,41 +174,41 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Library to build a gateway for EnigmaIoT system. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.1 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>28/05/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.2 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>01/07/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 </div><h2 class="groupheader">Typedef Documentation</h2>
-<a id="a2c235937f97c512692dc77a396f79517"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c235937f97c512692dc77a396f79517">&#9670;&nbsp;</a></span>onGwDataRx_t</h2>
+<a id="aee09b06c0f38b77b6cf19f8d89750a1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee09b06c0f38b77b6cf19f8d89750a1b">&#9670;&nbsp;</a></span>onGwDataRx_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* onGwDataRx_t) (uint8_t *mac, uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, uint8_t len, uint16_t lostMessages, bool control, <a class="el" href="EnigmaIOTGateway_8h.html#a404510882576d212315fd2ed67280d8d">gatewayPayloadEncoding_t</a> payload_type)</td>
+          <td class="memname">typedef void(* onGwDataRx_t) (uint8_t *mac, uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, uint8_t len, uint16_t lostMessages, bool control, <a class="el" href="EnigmaIOTGateway_8h.html#a404510882576d212315fd2ed67280d8d">gatewayPayloadEncoding_t</a> payload_type, char *nodeName)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00076">76</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00078">78</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
-<a id="a4f5e59428183698a36262241dcec12eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f5e59428183698a36262241dcec12eb">&#9670;&nbsp;</a></span>onNewNode_t</h2>
+<a id="ad49ee5d953f324e799a0434ff3b044c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad49ee5d953f324e799a0434ff3b044c7">&#9670;&nbsp;</a></span>onNewNode_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* onNewNode_t) (uint8_t *mac, uint16_t node_id)</td>
+          <td class="memname">typedef void(* onNewNode_t) (uint8_t *mac, uint16_t node_id, char *nodeName)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00077">77</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00079">79</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -221,7 +224,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00078">78</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00080">80</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -237,7 +240,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00079">79</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00081">81</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -253,7 +256,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00080">80</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00082">82</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -287,6 +290,10 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="a7493ad6706df484ac2749d7613266613a50ab02cc83b80322e63edd2e2779a735"></a>CLOCK_REQUEST&#160;</td><td class="fielddoc"><p>Clock request message from node </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a7493ad6706df484ac2749d7613266613a597b515e2c48496c513e6d502a7528c0"></a>CLOCK_RESPONSE&#160;</td><td class="fielddoc"><p>Clock response message from gateway </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a7493ad6706df484ac2749d7613266613a766d5c890baa0b6a0e7e1e3f5cb0b224"></a>NODE_NAME_SET&#160;</td><td class="fielddoc"><p>Message from node to signal its own custom node name </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a7493ad6706df484ac2749d7613266613ae69668f8ce604a1b3d09c3314cdba5bf"></a>NODE_NAME_RESULT&#160;</td><td class="fielddoc"><p>Message from gateway to get result after set node name </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a7493ad6706df484ac2749d7613266613a0c8da6c451065bed79ea70684e6f3fca"></a>CLIENT_HELLO&#160;</td><td class="fielddoc"><p>ClientHello message from sensor node </p>
 </td></tr>
@@ -329,7 +336,7 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="a404510882576d212315fd2ed67280d8da8659eeed31ac2f38d8a14ee36175d175"></a>ENIGMAIOT&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00045">45</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00047">47</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -359,7 +366,7 @@ Variables</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00059">59</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00061">61</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -376,7 +383,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01604">1604</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01710">1710</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>

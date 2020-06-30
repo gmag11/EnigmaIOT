@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.1</span>
+   &#160;<span id="projectnumber">0.9.2</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -77,9 +77,9 @@ $(function() {
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#define _CRYPTMODULE_h</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#if defined(ARDUINO) &amp;&amp; ARDUINO &gt;= 100</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">    #include &quot;Arduino.h&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;Arduino.h&quot;</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">    #include &quot;WProgram.h&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;WProgram.h&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="EnigmaIoTconfig_8h.html">EnigmaIoTconfig.h</a>&quot;</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
@@ -110,13 +110,13 @@ $(function() {
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">return</span> _min + (<a class="code" href="classCryptModule.html#a96b21ebe23b1914e09408bd3e41b34b0">random</a> () % (_max - _min));</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">static</span> uint8_t *<a class="code" href="classCryptModule.html#a96b21ebe23b1914e09408bd3e41b34b0">random</a> (<span class="keyword">const</span> uint8_t *buf, <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">static</span> uint8_t* <a class="code" href="classCryptModule.html#a96b21ebe23b1914e09408bd3e41b34b0">random</a> (<span class="keyword">const</span> uint8_t* buf, <span class="keywordtype">size_t</span> len);</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classCryptModule.html#a55883c161c22f5182fc40f97a84a5da6">decryptBuffer</a> (<span class="keyword">const</span> uint8_t* <a class="code" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, <span class="keywordtype">size_t</span> length,</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                               <span class="keyword">const</span> uint8_t* iv, uint8_t ivlen, <span class="keyword">const</span> uint8_t* key, uint8_t keylen,</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                               <span class="keyword">const</span> uint8_t* aad, uint8_t aadLen, <span class="keyword">const</span> uint8_t* tag, uint8_t tagLen);</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">static</span> uint8_t *<a class="code" href="classCryptModule.html#a0bc27edb1340a28f92b43dd4f91e9a16">getSHA256</a> (uint8_t* buffer, uint8_t length);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">static</span> uint8_t* <a class="code" href="classCryptModule.html#a0bc27edb1340a28f92b43dd4f91e9a16">getSHA256</a> (uint8_t* buffer, uint8_t length);</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classCryptModule.html#ae90dfe037c5e9b1a6804f0292c28bddc">encryptBuffer</a> (<span class="keyword">const</span> uint8_t* <a class="code" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, <span class="keywordtype">size_t</span> length,</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                               <span class="keyword">const</span> uint8_t* iv, uint8_t ivlen, <span class="keyword">const</span> uint8_t* key, uint8_t keylen,</div>
@@ -161,7 +161,7 @@ $(function() {
 <div class="ttc" id="aclassCryptModule_html_a1cd41eabb8dc153f74d42f263d168fee"><div class="ttname"><a href="classCryptModule.html#a1cd41eabb8dc153f74d42f263d168fee">CryptModule::getDH2</a></div><div class="ttdeci">bool getDH2(const uint8_t *remotePubKey)</div><div class="ttdoc">Starts second stage of Diffie Hellman key agreement algorithm and calculate shares key.</div><div class="ttdef"><b>Definition:</b> <a href="cryptModule_8cpp_source.html#l00148">cryptModule.cpp:148</a></div></div>
 <div class="ttc" id="acryptModule_8h_html_ab705865bb866bc5f070bbde9650eaa2a"><div class="ttname"><a href="cryptModule_8h.html#ab705865bb866bc5f070bbde9650eaa2a">CRC_LENGTH</a></div><div class="ttdeci">const uint8_t CRC_LENGTH</div><div class="ttdoc">Length of CRC.</div><div class="ttdef"><b>Definition:</b> <a href="cryptModule_8h_source.html#l00028">cryptModule.h:28</a></div></div>
 <div class="ttc" id="aclassCryptModule_html_ae55611b17617615a79de5325d2c3c02d"><div class="ttname"><a href="classCryptModule.html#ae55611b17617615a79de5325d2c3c02d">CryptModule::publicDHKey</a></div><div class="ttdeci">uint8_t publicDHKey[KEY_LENGTH]</div><div class="ttdoc">Temporary public key store used during key agreement.</div><div class="ttdef"><b>Definition:</b> <a href="cryptModule_8h_source.html#l00139">cryptModule.h:139</a></div></div>
-<div class="ttc" id="aEnigmaIoTconfig_8h_html_a863ca9be67da8cdc5fb9447378021e07"><div class="ttname"><a href="EnigmaIoTconfig_8h.html#a863ca9be67da8cdc5fb9447378021e07">KEY_LENGTH</a></div><div class="ttdeci">const uint8_t KEY_LENGTH</div><div class="ttdoc">Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know...</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIoTconfig_8h_source.html#l00057">EnigmaIoTconfig.h:57</a></div></div>
+<div class="ttc" id="aEnigmaIoTconfig_8h_html_a863ca9be67da8cdc5fb9447378021e07"><div class="ttname"><a href="EnigmaIoTconfig_8h.html#a863ca9be67da8cdc5fb9447378021e07">KEY_LENGTH</a></div><div class="ttdeci">const uint8_t KEY_LENGTH</div><div class="ttdoc">Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know...</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIoTconfig_8h_source.html#l00058">EnigmaIoTconfig.h:58</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
