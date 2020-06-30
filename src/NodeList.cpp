@@ -166,12 +166,12 @@ int8_t NodeList::checkNodeName (const char* name, const uint8_t* address) {
 
 	if (strlen (name) > NODE_NAME_LENGTH - 1) {
 		DEBUG_ERROR ("Name too long %s", name);
-		return -3; // Enmpty name
+		return TOO_LONG; // Enmpty name
 	}
 
 	if (!strlen (name)) {
 		DEBUG_ERROR ("Empty name", name);
-		return -2; // Too long name
+		return EMPTY_NAME; // Too long name
 	}
 
 	for (int i = 0; i < NUM_NODES; i++) {
@@ -186,12 +186,12 @@ int8_t NodeList::checkNodeName (const char* name, const uint8_t* address) {
 				DEBUG_WARN ("Found node name %s in Node List with address %s", name, mac2str (address, addrStr));
 				if (memcmp (nodes[i].getMacAddress (), address, ENIGMAIOT_ADDR_LEN)) {
 					DEBUG_ERROR ("Duplicated name %s", name);
-					return -1; // Already used
+					return ALREADY_USED; // Already used
 				}
 			}
 		}
 	}
-	return 0; // Name was not used
+	return NAME_OK; // Name was not used
 }
 
 Node* NodeList::findEmptyNode () {

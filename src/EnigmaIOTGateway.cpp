@@ -998,7 +998,7 @@ bool EnigmaIOTGatewayClass::nodeNameSetRespose (Node* node, int8_t error) {
 
 	DEBUG_VERBOSE ("Encrypted set node name response message: %s", printHexBuffer ((uint8_t*)&nodeNameSetResponse_msg, NNSRMSG_LEN));
 
-	DEBUG_INFO (" -------> SET NODE NAME RESPONSE");
+	DEBUG_INFO (" -------> SEND SET NODE NAME RESPONSE");
 	uint8_t* addr = node->getMacAddress ();
 	char addrStr[ENIGMAIOT_ADDR_LEN * 3];
 	if (comm->send (addr, (uint8_t*)&nodeNameSetResponse_msg, NNSRMSG_LEN) == 0) {

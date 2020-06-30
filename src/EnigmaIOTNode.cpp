@@ -1335,6 +1335,54 @@ bool EnigmaIOTNodeClass::processGetNameCommand (const uint8_t* mac, const uint8_
 	}
 }
 
+bool EnigmaIOTNodeClass::processSetNameResponse (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	/*
+	 * ---------------------------------------------------
+	 *| msgType (1) | IV (12) | Result code (1) | tag (16) |
+	 * ---------------------------------------------------
+	 */
+	struct __attribute__ ((packed, aligned (1))) {
+		uint8_t msgType;
+		uint8_t iv[IV_LENGTH];
+		int8_t errorCode;
+		uint8_t tag[TAG_LENGTH];
+	} nodeNameSetResponse_msg;
+
+	const unsigned int NNSRMSG_LEN = sizeof (nodeNameSetResponse_msg);
+
+	if (len < NNSRMSG_LEN) {
+		DEBUG_WARN ("Message too short");
+		return false;
+	}
+	memcpy (&nodeNameSetResponse_msg, data, len);
+
+	const uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
+
+	memcpy (aad, (uint8_t*)&nodeNameSetResponse_msg, addDataLen); // Copy message upto iv
+
+	// Copy 8 last bytes from NetworkKey
+	memcpy (aad + addDataLen, node.getEncriptionKey() + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+	if (!CryptModule::decryptBuffer ((uint8_t*)&(nodeNameSetResponse_msg.errorCode), sizeof(uint8_t),
+									 nodeNameSetResponse_msg.iv, IV_LENGTH,
+									 node.getEncriptionKey(), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), nodeNameSetResponse_msg.tag, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during decryption");
+		return false;
+	}
+
+	DEBUG_VERBOSE ("Decrypted Node Name Set response message: %s", printHexBuffer ((uint8_t*)&serverHello_msg, SHMSG_LEN - TAG_LENGTH));
+
+	if (nodeNameSetResponse_msg.errorCode != NAME_OK) {
+		DEBUG_WARN ("Name error: %d", nodeNameSetResponse_msg.errorCode);
+	} else {
+		DEBUG_WARN ("Name set correctly");
+	}
+
+	return true;
+}
+
 bool EnigmaIOTNodeClass::processSetNameCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
 	uint8_t buffer[MAX_MESSAGE_LENGTH];
 	uint8_t bufLength;
@@ -1955,6 +2003,11 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 			}
 		}
 		break;
+	case NODE_NAME_RESULT:
+		DEBUG_WARN (" <------- SET NODE NAME RESULT");
+		if (processSetNameResponse (mac, buf, count)) {
+			DEBUG_WARN ("Set Node Name OK");
+		}
 	}
 }
 

@@ -430,6 +430,15 @@ protected:
 	bool processGetNameCommand (const uint8_t* mac, const uint8_t* data, uint8_t len);
 
 	/**
+	  * @brief Processes a response to set Node name
+	  * @param mac Gateway address
+	  * @param data Buffer to store received message
+	  * @param len Length of payload data
+	  * @return Returns `true` if message could be correcly decoded and processed
+	  */
+	bool processSetNameResponse (const uint8_t* mac, const uint8_t* data, uint8_t len);
+
+	/**
 	  * @brief Processes a request to set Node name
 	  * @param mac Gateway address
 	  * @param data Buffer to store received message

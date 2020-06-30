@@ -29,6 +29,13 @@ enum node_status {
     SLEEP /**< Node is in sleep mode */
 };
 
+typedef enum {
+    NAME_OK = 0,
+    ALREADY_USED = -1,
+    EMPTY_NAME = -2,
+    TOO_LONG = -3
+}nodeNameStatus_t;
+
 typedef enum node_status status_t; ///< @brief Node state
 
 typedef enum control_message_type {
