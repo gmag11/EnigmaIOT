@@ -1,7 +1,7 @@
 /**
   * @file NodeList.h
-  * @version 0.9.1
-  * @date 28/05/2020
+  * @version 0.9.2
+  * @date 01/07/2020
   * @author German Martin
   * @brief EnigmaIoT sensor node management structures
   */
@@ -29,6 +29,13 @@ enum node_status {
     SLEEP /**< Node is in sleep mode */
 };
 
+typedef enum {
+    NAME_OK = 0,
+    ALREADY_USED = -1,
+    EMPTY_NAME = -2,
+    TOO_LONG = -3
+}nodeNameStatus_t;
+
 typedef enum node_status status_t; ///< @brief Node state
 
 typedef enum control_message_type {
@@ -42,6 +49,9 @@ typedef enum control_message_type {
 	RESET_ANS = 0x85,
 	RSSI_GET = 0x06,
 	RSSI_ANS = 0x86,
+    NAME_GET = 0x07,
+    NAME_ANS = 0x08,
+    NAME_SET = 0x87,
 	OTA = 0xEF,
 	OTA_ANS = 0xFF,
 	USERDATA_GET = 0x00,
@@ -117,6 +127,27 @@ public:
       */
     void setNodeId (uint16_t nodeId) {
         this->nodeId = nodeId;
+    }
+
+    /**
+      * @brief Gets Node name
+      * @return Returns Node name
+      */
+    char* getNodeName () {
+        if (strlen (nodeName)) {
+            return nodeName;
+        } else {
+            return NULL;
+        }
+    }
+
+    /**
+      * @brief Sets Node name
+      * @param name Custom node name. This should be unique in the network
+      */
+    void setNodeName (const char* name) {
+        memset (nodeName, 0, NODE_NAME_LENGTH);
+        strncpy (nodeName, name, NODE_NAME_LENGTH);
     }
 
     /**
@@ -299,7 +330,7 @@ public:
     uint32_t packetErrors = 0; ///< @brief Number of errored packets
     double per = 0;  ///< @brief Current packet error rate of a specific node
     double packetsHour = 0; ///< @brief Packet rate ffor a specific nope
-	clock_t t1, t2, t3, t4;  ///< @brief Timestaps to calculate clock offset
+    int64_t t1, t2, t3, t4;  ///< @brief Timestaps to calculate clock offset
 
 protected:
 //#define KEYLENGTH 32
@@ -314,6 +345,7 @@ protected:
     uint8_t key[KEY_LENGTH]; ///< @brief Shared key
     timer_t lastMessageTime; ///< @brief Node state
     FilterClass* rateFilter; ///< @brief Filter for message rate smoothing
+    char nodeName[NODE_NAME_LENGTH]; ///< @brief Node name. Use as a human friendly name to avoid use of numeric address*/
 
      /**
       * @brief Starts smoothing filter
@@ -324,9 +356,7 @@ protected:
 };
 
 
-// TODO Document NodeList
 class NodeList {
-//#define NUM_NODES 20
 public:
 
     /**
@@ -347,7 +377,22 @@ public:
       * @return Node instance that has given address. NULL if it was not found
       */
     Node *getNodeFromMAC (const uint8_t* mac);
+
+     /**
+      * @brief Gets node that correspond with given node name
+      * @param name Node name to search for
+      * @return Node instance that has given name. NULL if it was not found
+      */
+    Node* getNodeFromName (const char* name);
     
+    /**
+      * @brief Check Node name for duplicate
+      * @param name Custom node name
+      * @param address Address of node which is being tried to set name
+      * @return Error code to show name correctness. 0 = OK, -1 = Name already used, -2 = Name is too long, -3 = Name is empty
+      */
+    int8_t checkNodeName (const char* name, const uint8_t* address);
+
     /**
       * @brief Searches for a free place for a new Node instance
       * @return Node instance to hold new instance

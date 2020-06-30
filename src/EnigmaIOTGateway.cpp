@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGateway.cpp
-  * @version 0.9.1
-  * @date 28/05/2020
+  * @version 0.9.2
+  * @date 01/07/2020
   * @author German Martin
   * @brief Library to build a gateway for EnigmaIoT system
   */
@@ -97,12 +97,38 @@ bool buildSetIdentify (uint8_t* data, size_t& dataLen, const uint8_t* inputData,
 }
 
 bool buildGetRSSI (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
-	DEBUG_VERBOSE ("Build 'Set Identify' message from: %s", printHexBuffer (inputData, inputLen));
+	DEBUG_VERBOSE ("Build 'Get RSSI' message from: %s", printHexBuffer (inputData, inputLen));
 	if (dataLen < 1) {
 		return false;
 	}
 	data[0] = (uint8_t)control_message_type::RSSI_GET;
 	dataLen = 1;
+	return true;
+}
+
+bool buildGetName (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Get Node Name and Address' message from: %s", printHexBuffer (inputData, inputLen));
+	if (dataLen < 1) {
+		return false;
+	}
+	data[0] = (uint8_t)control_message_type::NAME_GET;
+	dataLen = 1;
+	return true;
+}
+
+bool buildSetName (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Set Node Name' message from: %s", printHexBuffer (inputData, inputLen));
+	if (dataLen < NODE_NAME_LENGTH + 1) {
+		DEBUG_ERROR ("Not enough space to build message");
+		return false;
+	}
+	if (inputLen < 2 || inputLen > NODE_NAME_LENGTH) {
+		DEBUG_ERROR ("Name too short");
+		return false;
+	}
+	data[0] = (uint8_t)control_message_type::NAME_SET;
+	memcpy (data + 1, inputData, inputLen);
+	dataLen = 1 + inputLen;
 	return true;
 }
 
@@ -116,7 +142,7 @@ bool buildSetResetConfig (uint8_t* data, size_t& dataLen, const uint8_t* inputDa
 	return true;
 }
 
-int getNextNumber (char* &data, size_t &len/*, char* &position*/) {
+int getNextNumber (char*& data, size_t& len/*, char* &position*/) {
 	char strNum[10];
 	int number;
 	char* tempData = data;
@@ -153,9 +179,7 @@ int getNextNumber (char* &data, size_t &len/*, char* &position*/) {
 	} else {
 		DEBUG_WARN ("OTA message format warning. separator not found");
 	}
-	//if (tempLen >= 0) {
-		number = atoi (strNum);
-	//}
+	number = atoi (strNum);
 	data = tempData;
 	len = tempLen;
 	DEBUG_DBG ("Extracted number %d", number);
@@ -174,16 +198,14 @@ bool isHexChar (char c) {
 }
 
 bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
-	//char strNum[ENIGMAIOT_ADDR_LEN];
 	char* payload;
 	size_t payloadLen;
-	//int strIndex;
 	int number;
-	uint8_t *tempData = data;
+	uint8_t* tempData = data;
 
 	DEBUG_VERBOSE ("Build 'OTA' message from: %s", inputData);
 
-	payload = (char *)inputData;
+	payload = (char*)inputData;
 	payloadLen = inputLen;
 
 	// Get message number
@@ -209,29 +231,6 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 	} else {
 		OTAongoing = true;
 		lastOTAmsg = millis ();
-
-		// int8_t ASCIIHexToInt[] =
-		// {
-		// 	// ASCII
-		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1,
-		// 	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-
-		// 	// 0x80-FF (Omit this if you don't need to check for non-ASCII)
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-		// };
 
 		if (inputLen < 39) {
 			DEBUG_ERROR ("OTA message format error. Message #0 too short to be a MD5 string");
@@ -265,8 +264,6 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 		DEBUG_WARN ("OTA length = %u bytes", fileSize);
 		//DEBUG_INFO ("Payload data: %s", payload);
 
-		//uint8_t* md5hex = tempData;// data + 1 + sizeof (uint16_t) + sizeof (uint16_t);
-
 		if (payloadLen < 32) {
 			DEBUG_ERROR ("OTA message format error. MD5 is too short: %d", payloadLen);
 			return false;
@@ -282,31 +279,6 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 			decodedLen++;
 		}
 
-		//for (size_t i = 0; i < 32/*payloadLen*/; i += 2) {
-		//	int8_t number;
-		//	//DEBUG_VERBOSE ("Char1 %c", (char)payload[i]);
-		//	number = ASCIIHexToInt[payload[i]];
-		//	//DEBUG_VERBOSE ("Number1 %x", number);
-		//	if (number < 0) {
-		//		DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
-		//		return false;
-		//	}
-		//	number <<= 4;
-		//	//DEBUG_VERBOSE ("Char2 %c", (char)payload[i+1]);
-		//	int8_t number2 = ASCIIHexToInt[payload[i + 1]];
-		//	//DEBUG_VERBOSE ("Number2 %x", number2);
-		//	if (number2 < 0) {
-		//		DEBUG_ERROR ("OTA message format error. MD5 string has no valid format");
-		//		return false;
-		//	}
-		//	number = number + number2;
-		//	//DEBUG_VERBOSE ("Number %x", number);
-
-
-		//	md5hex[i / 2] = number;
-		//	decodedLen++;
-		//	//***************************
-		//}
 		DEBUG_VERBOSE ("Payload data: %s", printHexBuffer (data, decodedLen));
 	}
 
@@ -331,7 +303,7 @@ bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 		return false;
 	}
 
-	for (int i = 0; i < (inputLen - 1); i++) { // Check if all digits are number
+	for (unsigned int i = 0; i < (inputLen - 1); i++) { // Check if all digits are number
 		if (inputData[i] < 30 || inputData[i] > '9') {
 			DEBUG_ERROR ("Set sleep time value is not a number on position %d: %d", i, inputData[i]);
 			return false;
@@ -350,8 +322,19 @@ bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 	return true;
 }
 
-bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding) {
-	Node* node = nodelist.getNodeFromMAC (mac);
+bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding, char* nodeName) {
+	Node* node;
+	if (nodeName) {
+		node = nodelist.getNodeFromName (nodeName);
+		if (node) {
+			uint8_t* addr = node->getMacAddress ();
+			DEBUG_DBG ("Message to node %s with address " MACSTR, nodeName, MAC2STR (addr));
+		}
+		//DEBUG_WARN ("Message to node %s with address %s", nodeName, mac2str (node->getMacAddress (), addrStr));
+	} else {
+		node = nodelist.getNodeFromMAC (mac);
+	}
+
 	uint8_t downstreamData[MAX_MESSAGE_LENGTH];
 
 	if (len == 0 && (controlData == USERDATA_GET || controlData == USERDATA_SET))
@@ -361,8 +344,6 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 	DEBUG_DBG ("Downstream message type 0x%02X", controlData);
 
 	size_t dataLen = MAX_MESSAGE_LENGTH;
-
-	//bool result;
 
 	switch (controlData) {
 	case control_message_type::VERSION:
@@ -414,6 +395,20 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 		}
 		DEBUG_VERBOSE ("Get RSSI message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
+	case control_message_type::NAME_GET:
+		if (!buildGetName (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building get name message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Get name message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
+	case control_message_type::NAME_SET:
+		if (!buildSetName (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building set name message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Set name message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
 	case control_message_type::USERDATA_GET:
 		DEBUG_INFO ("Data message GET");
 		break;
@@ -440,7 +435,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 			return downstreamDataMessage (node, data, len, controlData, encoding);
 	} else {
 		char addr[ENIGMAIOT_ADDR_LEN * 3];
-		DEBUG_ERROR ("Downlink destination %s not found", mac2str (mac, addr));
+		DEBUG_ERROR ("Downlink destination %s not found", nodeName ? nodeName : mac2str (mac, addr));
 		return false;
 	}
 }
@@ -456,7 +451,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	String (gwConfig.channel).toCharArray (channel, 4);
 
 	//AsyncWiFiManager wifiManager (&server, &dns);
-	AsyncWiFiManagerParameter netNameParam ("netname", "Network Name", gwConfig.networkName, (int)NETWORK_NAME_LENGTH-1, "required type=\"text\" maxlength=20");
+	AsyncWiFiManagerParameter netNameParam ("netname", "Network Name", gwConfig.networkName, (int)NETWORK_NAME_LENGTH - 1, "required type=\"text\" maxlength=20");
 	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
 	AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
 
@@ -539,20 +534,15 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 		if (configFile) {
 			size_t size = configFile.size ();
 			DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, size);
-			/*if (size < sizeof (gateway_config_t)) {
-				DEBUG_WARN ("Config file is corrupted. Deleting and formatting");
-				SPIFFS.remove (CONFIG_FILE);
-				SPIFFS.format ();
-				WiFi.begin ("0", "0"); // Delete WiFi credentials
-				return false;
-			}*/
-			DynamicJsonDocument doc (512);
+
+			const size_t capacity = JSON_OBJECT_SIZE (3) + 50;
+			DynamicJsonDocument doc (capacity);
+
 			DeserializationError error = deserializeJson (doc, configFile);
 			if (error) {
 				DEBUG_ERROR ("Failed to parse file");
 			} else {
 				DEBUG_DBG ("JSON file parsed");
-				//json_correct = true;
 			}
 
 			if (doc.containsKey ("channel") && doc.containsKey ("networkKey")
@@ -561,36 +551,32 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			}
 
 			gwConfig.channel = doc["channel"].as<int> ();
-			strlcpy ((char*)gwConfig.networkKey, doc["networkKey"] | "", sizeof (gwConfig.networkKey));
-			strlcpy (gwConfig.networkName, doc["networkName"] | "", sizeof (gwConfig.networkName));
+			strncpy ((char*)gwConfig.networkKey, doc["networkKey"] | "", sizeof (gwConfig.networkKey));
+			strncpy (gwConfig.networkName, doc["networkName"] | "", sizeof (gwConfig.networkName));
 
-			
-			
-			//configFile.read ((uint8_t*)(&gwConfig), sizeof (gateway_config_t));
 			configFile.close ();
 			if (json_correct) {
 				DEBUG_VERBOSE ("Gateway configuration successfuly read");
 			}
-			DEBUG_DBG (		"==== EnigmaIOT Gateway Configuration ====");
-			DEBUG_DBG (		"Network name: %s", gwConfig.networkName);
-			DEBUG_DBG (		"WiFi channel: %u", gwConfig.channel);
-			DEBUG_VERBOSE (	"Network key: %s", gwConfig.networkKey);
+			DEBUG_DBG ("==== EnigmaIOT Gateway Configuration ====");
+			DEBUG_DBG ("Network name: %s", gwConfig.networkName);
+			DEBUG_DBG ("WiFi channel: %u", gwConfig.channel);
+			DEBUG_VERBOSE ("Network key: %s", gwConfig.networkKey);
 			strncpy (plainNetKey, (char*)gwConfig.networkKey, KEY_LENGTH);
 			CryptModule::getSHA256 (gwConfig.networkKey, KEY_LENGTH);
-			DEBUG_VERBOSE (	"Raw Network key: %s", printHexBuffer(gwConfig.networkKey,KEY_LENGTH));
+			DEBUG_VERBOSE ("Raw Network key: %s", printHexBuffer (gwConfig.networkKey, KEY_LENGTH));
 
 			String output;
 			serializeJsonPretty (doc, output);
 
 			DEBUG_DBG ("JSON file %s", output.c_str ());
 
-			//return json_correct;
 		} else {
 			DEBUG_WARN ("Error opening %s", CONFIG_FILE);
 		}
 	} else {
 		DEBUG_WARN ("%s do not exist", CONFIG_FILE);
-		//SPIFFS.format ();
+		//SPIFFS.format (); // Testing only
 		//WiFi.begin ("0", "0"); // Delete WiFi credentials
 		//DEBUG_WARN ("Dummy STA config loaded");
 		//return false;
@@ -609,8 +595,9 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 		DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
 		return false;
 	}
-	
-	DynamicJsonDocument doc (512);
+
+	const size_t capacity = JSON_OBJECT_SIZE (3) + 50;
+	DynamicJsonDocument doc (capacity);
 
 	doc["channel"] = gwConfig.channel;
 	doc["networkKey"] = networkKey;
@@ -619,7 +606,7 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 	if (serializeJson (doc, configFile) == 0) {
 		DEBUG_ERROR ("Failed to write to file");
 		configFile.close ();
-		//SPIFFS.remove (CONFIG_FILE);
+		//SPIFFS.remove (CONFIG_FILE); // Testing only
 		return false;
 	}
 
@@ -643,14 +630,6 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	this->input_queue = new EnigmaIOTRingBuffer<msg_queue_item_t> (MAX_INPUT_QUEUE_SIZE);
 	this->comm = comm;
 	this->useCounter = useDataCounter;
-	
-	//vSemaphoreCreateBinary (buffer_write_access_semaphore);
-	
-	//if (buffer_write_access_semaphore) {
-	//	DEBUG_DBG ("Semaphore created");
-	//} else {
-	//	DEBUG_ERROR ("Semaphore creation error");
-	//}
 
 	if (networkKey) {
 		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
@@ -693,77 +672,64 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 }
 
 bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t* msg, size_t len) {
-	//if (buffer_write_access_semaphore) {
-	//	if (xSemaphoreTake (buffer_write_access_semaphore, 10 / portTICK_PERIOD_MS)) {
-			msg_queue_item_t message;
+	msg_queue_item_t message;
 
-			message.len = len;
-			memcpy (message.data, msg, len);
-			memcpy (message.addr, addr, ENIGMAIOT_ADDR_LEN);
+	message.len = len;
+	memcpy (message.data, msg, len);
+	memcpy (message.addr, addr, ENIGMAIOT_ADDR_LEN);
 
 #ifdef ESP32
-			portENTER_CRITICAL (&myMutex);
+	portENTER_CRITICAL (&myMutex);
 #else
-			noInterrupts ();
+	noInterrupts ();
 #endif
-			input_queue->push (&message);
-			char macstr[ENIGMAIOT_ADDR_LEN * 3];
-			DEBUG_DBG ("Message 0x%02X added from %s. Size: %d", message.data[0], mac2str (message.addr, macstr), input_queue->size ());
+	input_queue->push (&message);
+	char macstr[ENIGMAIOT_ADDR_LEN * 3];
+	DEBUG_DBG ("Message 0x%02X added from %s. Size: %d", message.data[0], mac2str (message.addr, macstr), input_queue->size ());
 #ifdef ESP32
-			portEXIT_CRITICAL (&myMutex);
+	portEXIT_CRITICAL (&myMutex);
 #else
-			interrupts ();
+	interrupts ();
 #endif
-			//xSemaphoreGive (buffer_write_access_semaphore);
-			return true;
-	//	}
-	//}
-	//return false;
+	return true;
 }
 
-msg_queue_item_t* EnigmaIOTGatewayClass::getInputMsgQueue (msg_queue_item_t *buffer) {
-	//if (buffer_write_access_semaphore) {
-	//	if (xSemaphoreTake (buffer_write_access_semaphore, 10 / portTICK_PERIOD_MS)) {
-			msg_queue_item_t* message;
+msg_queue_item_t* EnigmaIOTGatewayClass::getInputMsgQueue (msg_queue_item_t* buffer) {
+
+	msg_queue_item_t* message;
 #ifdef esp32
-			portENTER_CRITICAL (&myMutex);
+	portENTER_CRITICAL (&myMutex);
 #else
-			noInterrupts ();
+	noInterrupts ();
 #endif
-			message = input_queue->front ();
-			if (message) {
-				DEBUG_DBG ("EnigmaIOT message got from queue. Size: %d", input_queue->size ());
-				memcpy (buffer->data, message->data, message->len);
-				memcpy (buffer->addr, message->addr, ENIGMAIOT_ADDR_LEN);
-				buffer->len = message->len;
-				popInputMsgQueue ();
-			}
+	message = input_queue->front ();
+	if (message) {
+		DEBUG_DBG ("EnigmaIOT message got from queue. Size: %d", input_queue->size ());
+		memcpy (buffer->data, message->data, message->len);
+		memcpy (buffer->addr, message->addr, ENIGMAIOT_ADDR_LEN);
+		buffer->len = message->len;
+		popInputMsgQueue ();
+	}
 #ifdef esp32
-			portEXIT_CRITICAL (&myMutex);
+	portEXIT_CRITICAL (&myMutex);
 #else
-			interrupts ();
+	interrupts ();
 #endif
-			//xSemaphoreGive (buffer_write_access_semaphore);
-			if (message) {
-				return buffer;
-			} else {
-				return NULL;
-			}
-	//	}
-	//}
-	//return NULL;
+	if (message) {
+		return buffer;
+	} else {
+		return NULL;
+	}
 }
 
 void EnigmaIOTGatewayClass::popInputMsgQueue () {
 	if (input_queue->pop ()) {
 		DEBUG_DBG ("EnigmaIOT message pop. Size %d", input_queue->size ());
 	}
-	//xSemaphoreGive (buffer_write_access_semaphore);
 }
 
 void EnigmaIOTGatewayClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
-	// old --> EnigmaIOTGateway.manageMessage (mac_addr, data, len);
-	
+
 	EnigmaIOTGateway.addInputMsgQueue (mac_addr, data, len);
 }
 
@@ -772,11 +738,11 @@ void EnigmaIOTGatewayClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
 }
 
 void EnigmaIOTGatewayClass::getStatus (uint8_t* mac_addr, uint8_t status) {
-	char buffer[ENIGMAIOT_ADDR_LEN*3];
+	char buffer[ENIGMAIOT_ADDR_LEN * 3];
 #ifdef ESP8266
 	DEBUG_VERBOSE ("SENDStatus %s. Peer %s", status == 0 ? "OK" : "ERROR", mac2str (mac_addr, buffer));
 #elif defined ESP32
-	DEBUG_VERBOSE ("SENDStatus %d. Peer %s", status, mac2str(mac_addr,buffer));
+	DEBUG_VERBOSE ("SENDStatus %d. Peer %s", status, mac2str (mac_addr, buffer));
 #endif
 }
 
@@ -788,20 +754,20 @@ void EnigmaIOTGatewayClass::handle () {
 	if (flashRx) {
 		DEBUG_DBG ("EnigmaIOTGatewayClass::flashrx");
 
-        if (rxled == txled){
-            flashTx = true;
-        } else {
-		    rxOntime = millis ();
-		    digitalWrite (rxled, LOW);
-        }
+		if (rxled == txled) {
+			flashTx = true;
+		} else {
+			rxOntime = millis ();
+			digitalWrite (rxled, LOW);
+		}
 		flashRx = false;
 	}
 
-    if (rxled != txled) {
-	    if (!digitalRead (rxled) && millis () - rxOntime > rxLedOnTime) {
-		    digitalWrite (rxled, HIGH);
-	    }
-    }
+	if (rxled != txled) {
+		if (!digitalRead (rxled) && millis () - rxOntime > rxLedOnTime) {
+			digitalWrite (rxled, HIGH);
+		}
+	}
 
 	if (flashTx) {
 		txOntime = millis ();
@@ -834,15 +800,14 @@ void EnigmaIOTGatewayClass::handle () {
 
 	// Check input EnigmaIOT message queue
 
-   if (!input_queue->empty ()) {
-        msg_queue_item_t* message;
-		
+	if (!input_queue->empty ()) {
+		msg_queue_item_t* message;
+
 		message = getInputMsgQueue (&tempBuffer);
-		
+
 		if (message) {
 			DEBUG_DBG ("EnigmaIOT input message from queue. MsgType: 0x%02X", message->data[0]);
 			manageMessage (message->addr, message->data, message->len);
-			//popInputMsgQueue ();
 		}
 	}
 }
@@ -879,7 +844,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 					node->setLastMessageCounter (0);
 					node->setLastMessageTime ();
 					if (notifyNewNode) {
-						notifyNewNode (node->getMacAddress (), node->getNodeId ());
+						notifyNewNode (node->getMacAddress (), node->getNodeId (), NULL);
 					}
 #if DEBUG_LEVEL >= INFO
 					nodelist.printToSerial (&DEBUG_ESP_PORT);
@@ -907,9 +872,9 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		if (node->getStatus () == REGISTERED) {
 			if (processControlMessage (mac, buf, count, node)) {
 				DEBUG_INFO ("Control message OK");
-                if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
-                    invalidateKey (node, KEY_EXPIRED);
-                }
+				if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
+					invalidateKey (node, KEY_EXPIRED);
+				}
 			} else {
 				if (DISCONNECT_ON_DATA_ERROR) {
 					invalidateKey (node, WRONG_DATA);
@@ -934,7 +899,6 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		if (node->getStatus () == REGISTERED) {
 			float packetsHour = (float)1 / ((millis () - node->getLastMessageTime ()) / (float)3600000);
 			node->updatePacketsRate (packetsHour);
-			//node->packetsHour = rateFilter->addValue (packetsHour);
 			if (processDataMessage (mac, buf, count, node, encrypted)) {
 				node->setLastMessageTime ();
 				DEBUG_INFO ("Data OK");
@@ -955,60 +919,190 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		//} else {
 		//	DEBUG_WARN ("Data ignored. OTA ongoing");
 		//}
-        break;
-    case CLOCK_REQUEST:
-        DEBUG_INFO (" <------- CLOCK REQUEST");
-        if (node->getStatus () == REGISTERED) {
-            if (processClockRequest (mac, buf, count, node)) {
-                DEBUG_INFO ("Clock request OK");
-                if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
-                    invalidateKey (node, KEY_EXPIRED);
-                }
-            } else {
-                invalidateKey (node, WRONG_DATA);
-                DEBUG_WARN ("Clock request not OK");
-            }
+		break;
+	case CLOCK_REQUEST:
+		DEBUG_INFO (" <------- CLOCK REQUEST");
+		if (node->getStatus () == REGISTERED) {
+			if (processClockRequest (mac, buf, count, node)) {
+				DEBUG_INFO ("Clock request OK");
+				if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
+					invalidateKey (node, KEY_EXPIRED);
+				}
+			} else {
+				invalidateKey (node, WRONG_DATA);
+				DEBUG_WARN ("Clock request not OK");
+			}
 
-        } else {
-            invalidateKey (node, UNREGISTERED_NODE);
-        }
-        break;
+		} else {
+			invalidateKey (node, UNREGISTERED_NODE);
+		}
+		break;
+	case NODE_NAME_SET:
+		DEBUG_INFO (" <------- NODE NAME REQUEST");
+		if (node->getStatus () == REGISTERED) {
+			if (processNodeNameSet (mac, buf, count, node)) {
+				DEBUG_INFO ("Node name for node %d set to %s", node->getNodeId (), node->getNodeName ());
+				if (notifyNewNode) {
+					notifyNewNode (node->getMacAddress (), node->getNodeId (), node->getNodeName ());
+				}
+			} else {
+				DEBUG_WARN ("Error setting node name for node %d", node->getNodeId ());
+			}
+		}
+		break;
+	default:
+		DEBUG_WARN ("Received unknown EnigmaIOT message 0x%02X");
+	}
+}
 
+bool EnigmaIOTGatewayClass::nodeNameSetRespose (Node* node, int8_t error) {
+	/*
+	 * ---------------------------------------------------
+	 *| msgType (1) | IV (12) | Result code (1) | tag (16) |
+	 * ---------------------------------------------------
+	 */
+	struct __attribute__ ((packed, aligned (1))) {
+		uint8_t msgType;
+		uint8_t iv[IV_LENGTH];
+		int8_t errorCode;
+		uint8_t tag[TAG_LENGTH];
+	} nodeNameSetResponse_msg;
+
+	const unsigned int NNSRMSG_LEN = sizeof (nodeNameSetResponse_msg);
+
+	nodeNameSetResponse_msg.msgType = NODE_NAME_RESULT;
+	
+	DEBUG_DBG ("Set node name Response. Error code: %d", error);
+
+	CryptModule::random (nodeNameSetResponse_msg.iv, IV_LENGTH);
+
+	DEBUG_VERBOSE ("IV: %s", printHexBuffer (nodeNameSetResponse_msg.iv, IV_LENGTH));
+	
+	nodeNameSetResponse_msg.errorCode = error;
+
+	const uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
+
+	memcpy (aad, (uint8_t*)&nodeNameSetResponse_msg, addDataLen); // Copy message upto iv
+
+	// Copy 8 last bytes from node key
+	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+	if (!CryptModule::encryptBuffer ((uint8_t*)&(nodeNameSetResponse_msg.errorCode), sizeof (int8_t), // Encrypt error code only, 1 byte
+									 nodeNameSetResponse_msg.iv, IV_LENGTH,
+									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), nodeNameSetResponse_msg.tag, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during encryption");
+		return false;
+	}
+
+	DEBUG_VERBOSE ("Encrypted set node name response message: %s", printHexBuffer ((uint8_t*)&nodeNameSetResponse_msg, NNSRMSG_LEN));
+
+	DEBUG_INFO (" -------> SEND SET NODE NAME RESPONSE");
+	uint8_t* addr = node->getMacAddress ();
+	char addrStr[ENIGMAIOT_ADDR_LEN * 3];
+	if (comm->send (addr, (uint8_t*)&nodeNameSetResponse_msg, NNSRMSG_LEN) == 0) {
+		DEBUG_INFO ("Set Node Name Response message sent to %s", mac2str(addr,addrStr));
+		return true;
+	} else {
+		nodelist.unregisterNode (node);
+		DEBUG_ERROR ("Error sending Set Node Name Response message to %s", mac2str (addr, addrStr));
+		return false;
+	}
+}
+
+bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node) {
+	/*
+	* ----------------------------------------------------------------------
+	*| msgType (1) | IV (12) | NodeID (2) | Node name (up to 32) | tag (16) |
+	* ----------------------------------------------------------------------
+	*/
+	int8_t error = 0;
+
+	char nodeName[NODE_NAME_LENGTH];
+	memset ((void*)nodeName, 0, NODE_NAME_LENGTH);
+
+	uint8_t iv_idx = 1;
+	uint8_t nodeId_idx = iv_idx + IV_LENGTH;
+	uint8_t nodeName_idx = nodeId_idx + sizeof (int16_t);
+	uint8_t tag_idx = count - TAG_LENGTH;
+
+	const uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
+
+	memcpy (aad, buf, addDataLen); // Copy message upto iv
+	// Copy 8 last bytes from NetworkKey
+	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+	uint8_t packetLen = count - TAG_LENGTH;
+
+	if (!CryptModule::decryptBuffer (buf + nodeId_idx, packetLen - 1 - IV_LENGTH, // Decrypt from nodeId
+									 buf + iv_idx, IV_LENGTH,
+									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during decryption");
+		error = -4; // Message error
+	}
+
+	if (!error) {
+		DEBUG_VERBOSE ("Decripted node name set message: %s", printHexBuffer (buf, count - TAG_LENGTH));
+
+		size_t nodeNameLen = tag_idx - nodeName_idx;
+
+		DEBUG_DBG ("Node name length: %d bytes\n", nodeNameLen);
+
+		if (nodeNameLen >= NODE_NAME_LENGTH) {
+			nodeNameLen = NODE_NAME_LENGTH - 1;
+		}
+
+		memcpy ((void*)nodeName, (void*)(buf + nodeName_idx), nodeNameLen);
+
+		error = nodelist.checkNodeName (nodeName, mac);
+	}
+
+	// TODO: Send response error
+	nodeNameSetRespose (node, error);
+
+	if (error) {
+		return false;
+	} else {
+		node->setNodeName (nodeName);
+		DEBUG_INFO ("Node name set to %s", node->getNodeName ());
+		return true;
 	}
 }
 
 bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node) {
 	/*
-    * ----------------------------------------------------------------------------------------
-    *| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | Tag (16) |
-    * ----------------------------------------------------------------------------------------
-    */
+	* ----------------------------------------------------------------------------------------
+	*| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | Tag (16) |
+	* ----------------------------------------------------------------------------------------
+	*/
 
-	//uint8_t msgType_idx = 0;
 	uint8_t iv_idx = 1;
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
-    uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
+	uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
 	uint8_t data_idx = counter_idx + sizeof (int16_t);
 	uint8_t tag_idx = count - TAG_LENGTH;
 
-    const uint8_t addDataLen = 1 + IV_LENGTH;
-    uint8_t aad[AAD_LENGTH + addDataLen];
+	const uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, buf, addDataLen); // Copy message upto iv
+	memcpy (aad, buf, addDataLen); // Copy message upto iv
 
-    // Copy 8 last bytes from NetworkKey
-    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+	// Copy 8 last bytes from NetworkKey
+	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    uint8_t packetLen = count - TAG_LENGTH;
+	uint8_t packetLen = count - TAG_LENGTH;
 
-    if (!CryptModule::decryptBuffer (buf + length_idx, packetLen - 1 - IV_LENGTH, // Decrypt from nodeId
-                                     buf + iv_idx, IV_LENGTH,
-                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
-                                     aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
-        DEBUG_ERROR ("Error during decryption");
-        return false;
-    }
+	if (!CryptModule::decryptBuffer (buf + length_idx, packetLen - 1 - IV_LENGTH, // Decrypt from nodeId
+									 buf + iv_idx, IV_LENGTH,
+									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during decryption");
+		return false;
+	}
 
 	DEBUG_VERBOSE ("Decripted control message: %s", printHexBuffer (buf, count - TAG_LENGTH));
 
@@ -1029,8 +1123,10 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_A
 
 	DEBUG_DBG ("Payload length: %d bytes\n", tag_idx - data_idx);
 
+	char* nodeName = node->getNodeName ();
+
 	if (notifyData) {
-		notifyData (const_cast<uint8_t*>(mac), buf + data_idx, tag_idx - data_idx, 0, true, ENIGMAIOT);
+		notifyData (const_cast<uint8_t*>(mac), buf + data_idx, tag_idx - data_idx, 0, true, ENIGMAIOT, nodeName ? nodeName : NULL);
 	}
 
 	return true;
@@ -1069,8 +1165,10 @@ bool EnigmaIOTGatewayClass::processUnencryptedDataMessage (const uint8_t mac[ENI
 		}
 	}
 
+	char* nodeName = node->getNodeName ();
+
 	if (notifyData) {
-		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), count - data_idx, lostMessages, false, RAW);
+		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), count - data_idx, lostMessages, false, RAW, nodeName ? nodeName : NULL);
 	}
 
 	if (node->getSleepy ()) {
@@ -1098,7 +1196,6 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[ENIGMAIOT_ADDR
 		return processUnencryptedDataMessage (mac, buf, count, node);
 	}
 
-	//uint8_t msgType_idx = 0;
 	uint8_t iv_idx = 1;
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
@@ -1110,23 +1207,23 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[ENIGMAIOT_ADDR
 	uint16_t counter;
 	size_t lostMessages = 0;
 
-    const uint8_t addDataLen = 1 + IV_LENGTH;
-    uint8_t aad[AAD_LENGTH + addDataLen];
+	const uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, buf, addDataLen); // Copy message upto iv
+	memcpy (aad, buf, addDataLen); // Copy message upto iv
 
-    // Copy 8 last bytes from NetworkKey
-    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+	// Copy 8 last bytes from NetworkKey
+	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    uint8_t packetLen = count - TAG_LENGTH;
+	uint8_t packetLen = count - TAG_LENGTH;
 
-    if (!CryptModule::decryptBuffer (buf + length_idx, packetLen - 1 - IV_LENGTH, // Decrypt from nodeId
-                                     buf + iv_idx, IV_LENGTH,
-                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
-                                     aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
-        DEBUG_ERROR ("Error during decryption");
-        return false;
-    }
+	if (!CryptModule::decryptBuffer (buf + length_idx, packetLen - 1 - IV_LENGTH, // Decrypt from nodeId
+									 buf + iv_idx, IV_LENGTH,
+									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during decryption");
+		return false;
+	}
 	DEBUG_VERBOSE ("Decrypted data message: %s", printHexBuffer (buf, count - TAG_LENGTH));
 	DEBUG_DBG ("Data payload encoding: 0x%02X", buf[encoding_idx]);
 	node->packetNumber++;
@@ -1142,11 +1239,12 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[ENIGMAIOT_ADDR
 		}
 	}
 
+	char* nodeName = node->getNodeName ();
+
 	if (notifyData) {
 		//DEBUG_WARN ("Notify data %d", input_queue->size());
-		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, (gatewayPayloadEncoding_t)(buf[encoding_idx]));
+		notifyData (const_cast<uint8_t*>(mac), &(buf[data_idx]), tag_idx - data_idx, lostMessages, false, (gatewayPayloadEncoding_t)(buf[encoding_idx]), nodeName ? nodeName : NULL);
 	}
-	//return true;
 
 	if (node->getSleepy ()) {
 		if (node->qMessagePending) {
@@ -1174,7 +1272,7 @@ double EnigmaIOTGatewayClass::getPER (uint8_t* address) {
 uint32_t EnigmaIOTGatewayClass::getTotalPackets (uint8_t* address) {
 	Node* node = nodelist.getNewNode (address);
 
-	return node->packetNumber+getErrorPackets(address);
+	return node->packetNumber + getErrorPackets (address);
 }
 
 uint32_t EnigmaIOTGatewayClass::getErrorPackets (uint8_t* address) {
@@ -1207,7 +1305,6 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 	uint16_t nodeId = node->getNodeId ();
 
-	//uint8_t msgType_p = buffer;
 	uint8_t iv_idx = 1;
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
@@ -1222,7 +1319,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 		data_idx = nodeId_idx + sizeof (int16_t);
 		packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + len;
 	}
-    uint8_t tag_idx = data_idx + len;
+	uint8_t tag_idx = data_idx + len;
 
 	if (!data) {
 		DEBUG_ERROR ("Downlink message buffer empty");
@@ -1238,7 +1335,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	} else if (controlData == control_message_type::USERDATA_SET) {
 		buffer[0] = (uint8_t)DOWNSTREAM_DATA_SET;
 	} else {
-        buffer[0] = (uint8_t)DOWNSTREAM_CTRL_DATA;
+		buffer[0] = (uint8_t)DOWNSTREAM_CTRL_DATA;
 	}
 
 	CryptModule::random (buffer + iv_idx, IV_LENGTH);
@@ -1270,21 +1367,21 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 	//size_t cryptLen = packet_length - length_idx;
 
-    const uint8_t addDataLen = 1 + IV_LENGTH;
-    uint8_t aad[AAD_LENGTH + addDataLen];
+	const uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, buffer, addDataLen); // Copy message upto iv
+	memcpy (aad, buffer, addDataLen); // Copy message upto iv
 
-    // Copy 8 last bytes from Node Key
-    memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+	// Copy 8 last bytes from Node Key
+	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    if (!CryptModule::encryptBuffer (buffer + length_idx, packet_length - addDataLen, // Encrypt from length
-                                     buffer + iv_idx, IV_LENGTH,
-                                     node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of node key
-                                     aad, sizeof (aad), buffer + tag_idx, TAG_LENGTH)) {
-        DEBUG_ERROR ("Error during encryption");
-        return false;
-    }
+	if (!CryptModule::encryptBuffer (buffer + length_idx, packet_length - addDataLen, // Encrypt from length
+									 buffer + iv_idx, IV_LENGTH,
+									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of node key
+									 aad, sizeof (aad), buffer + tag_idx, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during encryption");
+		return false;
+	}
 
 	DEBUG_VERBOSE ("Encrypted downlink message: %s", printHexBuffer (buffer, packet_length + TAG_LENGTH));
 
@@ -1317,7 +1414,6 @@ bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t rea
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t reason;
-		//uint32_t crc;
 	} invalidateKey_msg;
 
 #define IKMSG_LEN sizeof(invalidateKey_msg)
@@ -1326,13 +1422,13 @@ bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t rea
 
 	invalidateKey_msg.reason = reason;
 
-	DEBUG_VERBOSE ("Invalidate Key message: %s", printHexBuffer ((uint8_t*)& invalidateKey_msg, IKMSG_LEN));
+	DEBUG_VERBOSE ("Invalidate Key message: %s", printHexBuffer ((uint8_t*)&invalidateKey_msg, IKMSG_LEN));
 	DEBUG_INFO (" -------> INVALIDATE_KEY");
 	if (notifyNodeDisconnection) {
 		uint8_t* mac = node->getMacAddress ();
 		notifyNodeDisconnection (mac, reason);
 	}
-	return comm->send (node->getMacAddress (), (uint8_t*)& invalidateKey_msg, IKMSG_LEN) == 0;
+	return comm->send (node->getMacAddress (), (uint8_t*)&invalidateKey_msg, IKMSG_LEN) == 0;
 }
 
 bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[ENIGMAIOT_ADDR_LEN], const uint8_t* buf, size_t count, Node* node) {
@@ -1361,23 +1457,23 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[ENIGMAIOT_ADDR
 
 	memcpy (&clientHello_msg, buf, count);
 
-    const uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - KEY_LENGTH;
-    uint8_t aad[AAD_LENGTH + addDataLen];
+	const uint8_t addDataLen = CHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - KEY_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, (uint8_t*)&clientHello_msg, addDataLen); // Copy message upto iv
+	memcpy (aad, (uint8_t*)&clientHello_msg, addDataLen); // Copy message upto iv
 
-    // Copy 8 last bytes from NetworkKey
-    memcpy (aad + addDataLen, gwConfig.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+	// Copy 8 last bytes from NetworkKey
+	memcpy (aad + addDataLen, gwConfig.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    if (!CryptModule::decryptBuffer (clientHello_msg.publicKey, KEY_LENGTH + sizeof (uint32_t),
-                                    clientHello_msg.iv, IV_LENGTH,
-                                     gwConfig.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
-                                    aad, sizeof (aad), clientHello_msg.tag, TAG_LENGTH)) {
-        DEBUG_ERROR ("Error during decryption");
-        return false;
-    }
+	if (!CryptModule::decryptBuffer (clientHello_msg.publicKey, KEY_LENGTH + sizeof (uint32_t),
+									 clientHello_msg.iv, IV_LENGTH,
+									 gwConfig.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), clientHello_msg.tag, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during decryption");
+		return false;
+	}
 
-	DEBUG_VERBOSE ("Decrypted Client Hello message: %s", printHexBuffer ((uint8_t*)& clientHello_msg, CHMSG_LEN - TAG_LENGTH));
+	DEBUG_VERBOSE ("Decrypted Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN - TAG_LENGTH));
 
 	node->setEncryptionKey (clientHello_msg.publicKey);
 
@@ -1408,19 +1504,26 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[ENIGMAIOT_ADDR
 }
 
 bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADDR_LEN], const uint8_t* buf, size_t count, Node* node) {
-    struct __attribute__ ((packed, aligned (1))) {
-        uint8_t msgType;
+	struct timeval tv;
+	struct timezone tz;
+	
+	struct __attribute__ ((packed, aligned (1))) {
+		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
-		clock_t t1;
-        uint8_t tag[TAG_LENGTH];
-    } clockRequest_msg;
+		int64_t t1;
+		uint8_t tag[TAG_LENGTH];
+	} clockRequest_msg;
 
 #define CRMSG_LEN sizeof(clockRequest_msg)
 
-    if (count < CRMSG_LEN) {
-        DEBUG_WARN ("Message too short");
-        return false;
-    }
+	if (count < CRMSG_LEN) {
+		DEBUG_WARN ("Message too short");
+		return false;
+	}
+
+	CryptModule::random (clockRequest_msg.iv, IV_LENGTH);
+
+	DEBUG_VERBOSE ("IV: %s", printHexBuffer (clockRequest_msg.iv, IV_LENGTH));
 
 	memcpy (&clockRequest_msg, buf, count);
 
@@ -1434,7 +1537,7 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 
 	uint8_t packetLen = count - TAG_LENGTH;
 
-	if (!CryptModule::decryptBuffer ((uint8_t*) & (clockRequest_msg.t1), sizeof (clock_t), // Decrypt from t2, 8 bytes
+	if (!CryptModule::decryptBuffer ((uint8_t*)&(clockRequest_msg.t1), sizeof (clock_t), // Decrypt from t2, 8 bytes
 									 clockRequest_msg.iv, IV_LENGTH,
 									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
 									 aad, sizeof (aad), clockRequest_msg.tag, TAG_LENGTH)) {
@@ -1442,57 +1545,70 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 		return false;
 	}
 
-	DEBUG_VERBOSE ("Decripted Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, packetLen));
-	
-	node->t1 = clockRequest_msg.t1;
-    node->t2 = millis();
+	DEBUG_VERBOSE ("Decripted Clock Request message: %s", printHexBuffer ((uint8_t*)&clockRequest_msg, packetLen));
 
-	DEBUG_DBG ("T1: %u", node->t1);
-	DEBUG_DBG ("T2: %u", node->t2);
-	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)& clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
-	
-    return clockResponse (node);
+	node->t1 = clockRequest_msg.t1;
+
+	// Get current time. If Gateway is synchronized to NTP server it sends real world time.
+	gettimeofday (&tv, &tz);
+	int64_t time_ms = tv.tv_sec;
+	time_ms *= 1000;
+	time_ms += tv.tv_usec / 1000;
+	node->t2 = time_ms;
+
+	DEBUG_DBG ("T1: %llu", node->t1);
+	DEBUG_DBG ("T2: %llu", node->t2);
+	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)&clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
+
+	return clockResponse (node);
 }
 
 bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
+	struct timeval tv;
+	struct timezone tz;
 
-    struct __attribute__ ((packed, aligned (1))) {
-        uint8_t msgType;
+	struct __attribute__ ((packed, aligned (1))) {
+		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
-        clock_t t2;
-        clock_t t3;
-        uint8_t tag[TAG_LENGTH];
-    } clockResponse_msg;
+		int64_t t2;
+		int64_t t3;
+		uint8_t tag[TAG_LENGTH];
+	} clockResponse_msg;
 
 	const unsigned int CRSMSG_LEN = sizeof (clockResponse_msg);
 
-    clockResponse_msg.msgType = CLOCK_RESPONSE;
+	clockResponse_msg.msgType = CLOCK_RESPONSE;
 
-    memcpy (&(clockResponse_msg.t2),&(node->t2),sizeof(clock_t));
+	memcpy (&(clockResponse_msg.t2), &(node->t2), sizeof (int64_t));
 
-    node->t3 = millis();
+	// Get current time. If Gateway is synchronized to NTP server it sends real world time.
+	gettimeofday (&tv, &tz);
+	int64_t time_ms = tv.tv_sec;
+	time_ms *= 1000;
+	time_ms += tv.tv_usec / 1000;
+	node->t3 = time_ms;
 
-    memcpy (&(clockResponse_msg.t3), &(node->t3), sizeof (clock_t));
+	memcpy (&(clockResponse_msg.t3), &(node->t3), sizeof (int64_t));
 
-	DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
+	DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)&clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
 
 #ifdef DEBUG_ESP_PORT
-    char mac[ENIGMAIOT_ADDR_LEN * 3];
-    mac2str (node->getMacAddress (), mac);
+	char mac[ENIGMAIOT_ADDR_LEN * 3];
+	mac2str (node->getMacAddress (), mac);
 #endif
-	DEBUG_DBG ("T1: %u", node->t1);
-	DEBUG_DBG ("T2: %u", node->t2);
-	DEBUG_DBG ("T3: %u", node->t3);
+	DEBUG_DBG ("T1: %llu", node->t1);
+	DEBUG_DBG ("T2: %llu", node->t2);
+	DEBUG_DBG ("T3: %llu", node->t3);
 
-	const uint8_t addDataLen = 1 + IV_LENGTH ;
+	const uint8_t addDataLen = 1 + IV_LENGTH;
 	uint8_t aad[AAD_LENGTH + addDataLen];
 
-	memcpy (aad, (uint8_t*)& clockResponse_msg, addDataLen); // Copy message upto iv
+	memcpy (aad, (uint8_t*)&clockResponse_msg, addDataLen); // Copy message upto iv
 
 	// Copy 8 last bytes from NetworkKey
 	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-	if (!CryptModule::encryptBuffer ((uint8_t *)&(clockResponse_msg.t2), sizeof (clock_t) << 1, // Encrypt only from t2, 8 bytes
+	if (!CryptModule::encryptBuffer ((uint8_t*)&(clockResponse_msg.t2), sizeof (int64_t) << 1, // Encrypt only from t2, 16 bytes
 									 clockResponse_msg.iv, IV_LENGTH,
 									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
 									 aad, sizeof (aad), clockResponse_msg.tag, TAG_LENGTH)) {
@@ -1500,17 +1616,17 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 		return false;
 	}
 
-	DEBUG_VERBOSE ("Encrypted Clock Response message: %s", printHexBuffer ((uint8_t*)& clockResponse_msg, CRSMSG_LEN));
+	DEBUG_VERBOSE ("Encrypted Clock Response message: %s", printHexBuffer ((uint8_t*)&clockResponse_msg, CRSMSG_LEN));
 
 	DEBUG_INFO (" -------> CLOCK RESPONSE");
-    if (comm->send (node->getMacAddress (), (uint8_t*)& clockResponse_msg, CRSMSG_LEN) == 0) {
+	if (comm->send (node->getMacAddress (), (uint8_t*)&clockResponse_msg, CRSMSG_LEN) == 0) {
 		DEBUG_INFO ("Clock Response message sent to %s", mac);
 		return true;
-    } else {
-        nodelist.unregisterNode (node);
-        DEBUG_ERROR ("Error sending Clock Response message to %s", mac);
-        return false;
-    }
+	} else {
+		nodelist.unregisterNode (node);
+		DEBUG_ERROR ("Error sending Clock Response message to %s", mac);
+		return false;
+	}
 }
 
 bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
@@ -1554,25 +1670,25 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 	random = Crypto.random ();
 	memcpy (&(serverHello_msg.random), &random, RANDOM_LENGTH);
 
-	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN - TAG_LENGTH));
+	DEBUG_VERBOSE ("Server Hello message: %s", printHexBuffer ((uint8_t*)&serverHello_msg, SHMSG_LEN - TAG_LENGTH));
 
-    const uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t) - KEY_LENGTH;
-    uint8_t aad[AAD_LENGTH + addDataLen];
+	const uint8_t addDataLen = SHMSG_LEN - TAG_LENGTH - sizeof (uint32_t) - sizeof (uint16_t) - KEY_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
 
-    memcpy (aad, (uint8_t*)&serverHello_msg, addDataLen); // Copy message upto iv
+	memcpy (aad, (uint8_t*)&serverHello_msg, addDataLen); // Copy message upto iv
 
-    // Copy 8 last bytes from NetworkKey
-    memcpy (aad + addDataLen, gwConfig.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+	// Copy 8 last bytes from NetworkKey
+	memcpy (aad + addDataLen, gwConfig.networkKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-    if (!CryptModule::encryptBuffer (serverHello_msg.publicKey, KEY_LENGTH + sizeof (uint16_t) + sizeof (uint32_t), // Encrypt from public key
-                                     serverHello_msg.iv, IV_LENGTH,
-                                     gwConfig.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
-                                     aad, sizeof (aad), serverHello_msg.tag, TAG_LENGTH)) {
-        DEBUG_ERROR ("Error during encryption");
-        return false;
-    }
+	if (!CryptModule::encryptBuffer (serverHello_msg.publicKey, KEY_LENGTH + sizeof (uint16_t) + sizeof (uint32_t), // Encrypt from public key
+									 serverHello_msg.iv, IV_LENGTH,
+									 gwConfig.networkKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), serverHello_msg.tag, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during encryption");
+		return false;
+	}
 
-	DEBUG_VERBOSE ("Encrypted Server Hello message: %s", printHexBuffer ((uint8_t*)& serverHello_msg, SHMSG_LEN));
+	DEBUG_VERBOSE ("Encrypted Server Hello message: %s", printHexBuffer ((uint8_t*)&serverHello_msg, SHMSG_LEN));
 
 	flashTx = true;
 
@@ -1581,7 +1697,7 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 	mac2str (node->getMacAddress (), mac);
 #endif
 	DEBUG_INFO (" -------> SERVER_HELLO");
-	if (comm->send (node->getMacAddress (), (uint8_t*)& serverHello_msg, SHMSG_LEN) == 0) {
+	if (comm->send (node->getMacAddress (), (uint8_t*)&serverHello_msg, SHMSG_LEN) == 0) {
 		DEBUG_INFO ("Server Hello message sent to %s", mac);
 		return true;
 	} else {
@@ -1590,16 +1706,6 @@ bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 		return false;
 	}
 }
-
-//bool EnigmaIOTGatewayClass::checkCRC (const uint8_t* buf, size_t count, const uint32_t* crc) {
-//	uint32_t recvdCRC;
-//
-//	memcpy (&recvdCRC, crc, sizeof (uint32_t)); // Use of memcpy is a must to ensure code does not try to read non memory aligned int
-//	uint32_t _crc = CRC32::calculate (buf, count);
-//	DEBUG_VERBOSE ("CRC32 =  Calc: 0x%08X Recvd: 0x%08X %s", _crc, recvdCRC, (_crc == recvdCRC) ? "OK" : "FAIL");
-//	return (_crc == recvdCRC);
-//}
-
 
 EnigmaIOTGatewayClass EnigmaIOTGateway;
 

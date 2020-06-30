@@ -1,7 +1,7 @@
 /**
   * @file GwOutput_mqtt.cpp
-  * @version 0.9.1
-  * @date 28/05/2020
+  * @version 0.9.2
+  * @date 01/07/2020
   * @author German Martin
   * @brief MQTT Gateway output module
   *
@@ -71,7 +71,8 @@ bool GwOutput_MQTT::saveConfig () {
 		DEBUG_DBG ("%s opened for writting", CONFIG_FILE);
 	}
 
-	DynamicJsonDocument doc (512);
+	const size_t capacity = JSON_OBJECT_SIZE (4) + 110;
+	DynamicJsonDocument doc (capacity);
 
 	doc["mqtt_server"] = mqttgw_config.mqtt_server;
 	doc["mqtt_port"] = mqttgw_config.mqtt_port;
@@ -81,7 +82,7 @@ bool GwOutput_MQTT::saveConfig () {
 	if (serializeJson (doc, configFile) == 0) {
 		DEBUG_ERROR ("Failed to write to file");
 		configFile.close ();
-		//SPIFFS.remove (CONFIG_FILE);
+		//SPIFFS.remove (CONFIG_FILE); // Testing only
 		return false;
 	}
 
@@ -93,7 +94,6 @@ bool GwOutput_MQTT::saveConfig () {
 	configFile.flush ();
 	size_t size = configFile.size ();
 
-	//configFile.write ((uint8_t*)(&mqttgw_config), sizeof (mqttgw_config));
 	configFile.close ();
 	DEBUG_DBG ("Gateway configuration saved to flash. %u bytes", size);
 	return true;
@@ -116,8 +116,12 @@ bool GwOutput_MQTT::loadConfig () {
 		if (configFile) {
 			size_t size = configFile.size ();
 			DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, size);
-			DynamicJsonDocument doc (512);
+
+			const size_t capacity = JSON_OBJECT_SIZE (4) + 110;
+			DynamicJsonDocument doc (capacity);
+
 			DeserializationError error = deserializeJson (doc, configFile);
+
 			if (error) {
 				DEBUG_ERROR ("Failed to parse file");
 			} else {
@@ -129,20 +133,20 @@ bool GwOutput_MQTT::loadConfig () {
 				json_correct = true;
 			}
 
-			strlcpy (mqttgw_config.mqtt_server, doc["mqtt_server"] | "", sizeof (mqttgw_config.mqtt_server));
+			strncpy (mqttgw_config.mqtt_server, doc["mqtt_server"] | "", sizeof (mqttgw_config.mqtt_server));
 			mqttgw_config.mqtt_port = doc["mqtt_port"].as<int> ();
-			strlcpy (mqttgw_config.mqtt_user, doc["mqtt_user"] | "", sizeof (mqttgw_config.mqtt_user));
-			strlcpy (mqttgw_config.mqtt_pass, doc["mqtt_pass"] | "", sizeof (mqttgw_config.mqtt_pass));
+			strncpy (mqttgw_config.mqtt_user, doc["mqtt_user"] | "", sizeof (mqttgw_config.mqtt_user));
+			strncpy (mqttgw_config.mqtt_pass, doc["mqtt_pass"] | "", sizeof (mqttgw_config.mqtt_pass));
 
 			configFile.close ();
 			if (json_correct) {
 				DEBUG_INFO ("MQTT output module configuration successfuly read");
 			}
-			DEBUG_DBG (		"==== MQTT Configuration ====");
-			DEBUG_DBG (		"MQTT server: %s", mqttgw_config.mqtt_server);
-			DEBUG_DBG (		"MQTT port: %d", mqttgw_config.mqtt_port);
-			DEBUG_DBG (		"MQTT user: %s", mqttgw_config.mqtt_user);
-			DEBUG_VERBOSE (	"MQTT password: %s", mqttgw_config.mqtt_pass);
+			DEBUG_DBG ("==== MQTT Configuration ====");
+			DEBUG_DBG ("MQTT server: %s", mqttgw_config.mqtt_server);
+			DEBUG_DBG ("MQTT port: %d", mqttgw_config.mqtt_port);
+			DEBUG_DBG ("MQTT user: %s", mqttgw_config.mqtt_user);
+			DEBUG_VERBOSE ("MQTT password: %s", mqttgw_config.mqtt_pass);
 
 			String output;
 			serializeJsonPretty (doc, output);
@@ -237,7 +241,7 @@ void GwOutput_MQTT::reconnect () {
 		DEBUG_DBG ("Clock set.");
 		DEBUG_DBG ("Connect to MQTT server: user %s, pass %s, topic %s",
 				   mqttgw_config.mqtt_user, mqttgw_config.mqtt_pass, gwTopic.c_str ());
-	    //client.setServer (mqttgw_config.mqtt_server, mqttgw_config.mqtt_port);
+		//client.setServer (mqttgw_config.mqtt_server, mqttgw_config.mqtt_port);
 		if (mqtt_client.connect (clientId.c_str (), mqttgw_config.mqtt_user, mqttgw_config.mqtt_pass, gwTopic.c_str (), 0, true, "0", true)) {
 			DEBUG_WARN ("MQTT connected");
 			// Once connected, publish an announcement...
@@ -269,17 +273,16 @@ void GwOutput_MQTT::reconnect () {
 			delay (5000);
 #endif
 		}
-		//delay (0);
 	}
 }
 
-char* getTopicAddress (char* topic, unsigned int &len){
-	if (!topic) 
+char* getTopicAddress (char* topic, unsigned int& len) {
+	if (!topic)
 		return NULL;
 
 	char* start = strchr (topic, '/') + 1;
 	char* end;
-	
+
 	if (start) {
 		end = strchr (start, '/');
 	} else {
@@ -297,7 +300,7 @@ char* getTopicAddress (char* topic, unsigned int &len){
 }
 
 control_message_type_t checkMsgType (String data) {
-	if        (data == GET_VERSION) {
+	if (data == GET_VERSION) {
 		return control_message_type::VERSION;
 	} else if (data == GET_SLEEP) {
 		return control_message_type::SLEEP_GET;
@@ -320,16 +323,22 @@ control_message_type_t checkMsgType (String data) {
 	} else if (data == GET_USER_DATA) {
 		DEBUG_INFO ("USER DATA %s", data.c_str ());
 		return control_message_type::USERDATA_GET;
+	} else if (data == GET_NAME) {
+		DEBUG_INFO ("GET NODE NAME AND ADDRESS");
+		return control_message_type::NAME_GET;
+	} else if (data == SET_NAME) {
+		DEBUG_INFO ("SET NODE NAME %", data.c_str ());
+		return control_message_type::NAME_SET;
 	} else
 		return control_message_type::INVALID;
 }
 
-control_message_type_t getTopicType (char* topic, char* &userCommand) {
+control_message_type_t getTopicType (char* topic, char*& userCommand) {
 	if (!topic)
 		return control_message_type::INVALID;
 
 	String command;
-	
+
 	//Discard address
 	char* start = strchr (topic, '/') + 1;
 	if (start)
@@ -337,8 +346,8 @@ control_message_type_t getTopicType (char* topic, char* &userCommand) {
 	else
 		return control_message_type::INVALID;
 	//DEBUG_INFO ("Second Start %p", start);
-	if ((int)start > 0x01) {
-		command = String(start);
+	if ((int)start > 0x01) { // TODO: Why this condition ????
+		command = String (start);
 		userCommand = start;
 	} else {
 		return control_message_type::INVALID;
@@ -357,6 +366,7 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 	char* addressStr;
 	control_message_type_t msgType;
 	char* userCommand;
+	char* nodeName = NULL;
 
 
 	DEBUG_DBG ("Topic %s", topic);
@@ -364,16 +374,22 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 	unsigned int addressLen;
 
 	addressStr = getTopicAddress (topic, addressLen);
-	//DEBUG_DBG ("addressStr %p : %d", addressStr, addressLen);
 
 	if (addressStr) {
 		//DEBUG_INFO ("Len: %u", addressLen);
 		DEBUG_DBG ("Address %.*s", addressLen, addressStr);
 		if (!str2mac (addressStr, addr)) {
-			DEBUG_DBG ("Not a mac address");
-			return;
+			DEBUG_INFO ("Not a mac address. Treating it as a node name");
+			if (addressLen) {
+				nodeName = (char*)calloc (addressLen + 1, sizeof (char));
+				memcpy (nodeName, addressStr, addressLen);
+			} else {
+				DEBUG_WARN ("Invalid address");
+				return;
+			}
+		} else {
+			DEBUG_DBG ("Hex Address = %s", printHexBuffer (addr, 6));
 		}
-		DEBUG_DBG ("Hex Address = %s", printHexBuffer (addr, 6));
 	} else
 		return;
 
@@ -385,9 +401,14 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 	DEBUG_DBG ("Data: %.*s\n", len, data);
 
 	if (msgType != control_message_type_t::INVALID)
-		GwOutput.downlinkCb (addr, msgType, (char*)data, len);
+		GwOutput.downlinkCb (addr, nodeName, msgType, (char*)data, len);
 	else
-		DEBUG_DBG ("Invalid message");
+		DEBUG_WARN ("Invalid message");
+
+	if (nodeName) {
+		free (nodeName);
+		nodeName = NULL;
+	}
 }
 
 void GwOutput_MQTT::loop () {
@@ -407,12 +428,13 @@ void GwOutput_MQTT::loop () {
 	}
 }
 
-bool GwOutput_MQTT::publishMQTT (const char* topic, char* payload, size_t len, bool retain) {
+bool GwOutput_MQTT::publishMQTT (const char* topic, const char* payload, size_t len, bool retain) {
 	DEBUG_INFO ("Publish MQTT. %s : %.*s", topic, len, payload);
-	if (mqtt_client.connected()) {
+	if (mqtt_client.connected ()) {
 		return mqtt_client.publish (topic, (uint8_t*)payload, len, retain);
 	} else {
 		DEBUG_WARN ("MQTT client not connected");
+		return false;
 	}
 }
 
@@ -438,13 +460,11 @@ void GwOutput_MQTT::setClock () {
 bool GwOutput_MQTT::addMQTTqueue (const char* topic, char* payload, size_t len, bool retain) {
 	mqtt_queue_item_t* message = new mqtt_queue_item_t;
 
-	if (mqtt_queue.size() >= MAX_MQTT_QUEUE_SIZE) {
-		//return false;
+	if (mqtt_queue.size () >= MAX_MQTT_QUEUE_SIZE) {
 		mqtt_queue.pop ();
-		// TODO: Better do this --> popMQTTqueue ();
 	}
 
-	message->topic = (char*)malloc (strlen (topic)+1);
+	message->topic = (char*)malloc (strlen (topic) + 1);
 	strcpy (message->topic, topic);
 	message->payload_len = len;
 	message->payload = (char*)malloc (len);
@@ -452,15 +472,15 @@ bool GwOutput_MQTT::addMQTTqueue (const char* topic, char* payload, size_t len, 
 	message->retain = retain;
 
 	mqtt_queue.push (message);
-	DEBUG_DBG ("%d MQTT messages queued Len:%d %s %.*s", mqtt_queue.size(),
-			   len, 
-			   message->topic, 
+	DEBUG_DBG ("%d MQTT messages queued Len:%d %s %.*s", mqtt_queue.size (),
+			   len,
+			   message->topic,
 			   message->payload_len, message->payload);
 
 	return true;
 }
 
-mqtt_queue_item_t *GwOutput_MQTT::getMQTTqueue () {
+mqtt_queue_item_t* GwOutput_MQTT::getMQTTqueue () {
 	if (mqtt_queue.size ()) {
 		DEBUG_DBG ("MQTT message got from queue");
 		return mqtt_queue.front ();
@@ -491,7 +511,7 @@ bool GwOutput_MQTT::outputDataSend (char* address, char* data, size_t length, Gw
 	const int TOPIC_SIZE = 64;
 	char topic[TOPIC_SIZE];
 	bool result;
-	switch (type){
+	switch (type) {
 	case GwOutput_data_type::data:
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, NODE_DATA);
 		break;
@@ -553,8 +573,17 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 			result = true;
 		}
 		break;
+	case control_message_type::NAME_ANS:
+		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, GET_NAME_ANS);
+		char addrStr[ENIGMAIOT_ADDR_LEN * 3];
+		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"name\":\"%.*s\",\"address\":\"%s\"}", length - ENIGMAIOT_ADDR_LEN - 1, (char*)(data + 1 + ENIGMAIOT_ADDR_LEN), mac2str (data + 1, addrStr));
+		if (addMQTTqueue (topic, payload, pld_size)) {
+			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
+			result = true;
+		}
+		break;
 	case control_message_type::OTA_ANS:
-		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str(), address, SET_OTA_ANS);
+		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, SET_OTA_ANS);
 		switch (data[1]) {
 		case ota_status::OTA_STARTED:
 			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA Started\",\"status\":%u}\n", data[1]);
@@ -585,6 +614,8 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 			result = true;
 		}
 		break;
+	default:
+		DEBUG_WARN ("Unknown control message. Code: 0x%02X", data[0]);
 	}
 
 	return result;
@@ -595,8 +626,15 @@ bool GwOutput_MQTT::newNodeSend (char* address, uint16_t node_id) {
 
 	char topic[TOPIC_SIZE];
 
-	snprintf (topic, TOPIC_SIZE, "%s/%s/hello", netName.c_str(), address);
-	bool result = addMQTTqueue (topic, NULL, 0);
+	uint8_t* nodeAddress = enigmaIotGateway->getNodes ()->getNodeFromID (node_id)->getMacAddress ();
+	char addrStr[ENIGMAIOT_ADDR_LEN * 3];
+
+	char payload[ENIGMAIOT_ADDR_LEN * 3 + 14];
+
+	snprintf (payload, ENIGMAIOT_ADDR_LEN * 3 + 14, "{\"address\":\"%s\"}", mac2str (nodeAddress, addrStr));
+
+	snprintf (topic, TOPIC_SIZE, "%s/%s/hello", netName.c_str (), address);
+	bool result = addMQTTqueue (topic, payload, ENIGMAIOT_ADDR_LEN * 3 + 14);
 	DEBUG_INFO ("Published MQTT %s", topic);
 	return result;
 }
@@ -609,7 +647,7 @@ bool GwOutput_MQTT::nodeDisconnectedSend (char* address, gwInvalidateReason_t re
 	char payload[PAYLOAD_SIZE];
 	size_t pld_size;
 
-	snprintf (topic, TOPIC_SIZE, "%s/%s/bye", netName.c_str(), address);
+	snprintf (topic, TOPIC_SIZE, "%s/%s/bye", netName.c_str (), address);
 	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"reason\":%u}", reason);
 	bool result = addMQTTqueue (topic, payload, pld_size);
 	DEBUG_INFO ("Published MQTT %s result = %s", topic, result ? "OK" : "Fail");

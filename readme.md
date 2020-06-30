@@ -8,7 +8,7 @@
 
 A number of nodes with one or more sensors each one communicate in a **secure** way to a central gateway in a star network using EnigmaIoT protocol.
 
-This protocol has been designed with security on mind. All sensor data is encrypted with a random key that changes periodically. Key is unique for each node and dynamically negotiated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.
+This protocol has been designed with security on mind. All node data is encrypted with a random key that changes periodically. Key is unique for each node and dynamically negotiated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.
 
 I designed this because I was searching for a way to have a relatively high number of nodes at home. I thought about using WiFi but it would overload my home router. So I looked for an alternative. I evaluated  LoRa or cheap nRF24 modules but I wanted the simplest solution in terms of hardware.
 
@@ -57,7 +57,7 @@ Notice that network key used to implement this feature is stored on flash. ESP82
 - [x] Node configuration while in service using control downlink commands
 - [ ] OTA over WiFi
 - [x] OTA over MQTT/ESP-NOW
-- [x] Sensor identification by using a flashing LED. This is useful when you have a bunch of nodes together :D
+- [x] Node identification by using a flashing LED. This is useful when you have a bunch of nodes together :D
 - [ ] Broadcast messages that go to all nodes. Under study
 
 ## Design
@@ -128,15 +128,15 @@ After receiving and checking Client Hello message, gateway responds with a Serve
 
 Server Hello message is sent encrypted with network key.
 
-### Sensor Data message
+### Node Data message
 
 ![Node payload message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/SensorData.png)
 
-Sensor data is always encrypted using shared key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.
+Node data is always encrypted using shared key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.
 
 Total message length (without tag) is included on a 2 byte field.
 
-### Unencrypted Sensor Data message
+### Unencrypted Node Data message
 
 ![Node unencrypted payload message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/UnencryptedSensorData.png)
 
@@ -166,6 +166,44 @@ Gateway  and node can exchange internal control commands. These are used to set 
 
 Some control messages, like OTA update messages, require that they are processed immediately. Hence, it is required that node is not in deep sleep mode. This can be controlled, for instance, using another control command to set sleep time to 0.
 
+### Clock synchronization
+
+##### Clock sync request
+
+![Clock sync request](https://github.com/gmag11/EnigmaIOT/raw/master/img/ClockSyncRequest.png)
+
+##### Clock sync response
+
+![Clock sync response](https://github.com/gmag11/EnigmaIOT/raw/master/img/ClockSyncResponse.png)
+
+In non sleepy nodes, it may be useful to send a message from time to time to let Gateway know that node is still active and let Node to check that is is still registered in Gateway.
+
+Clock syncronization may be a very good feature if you need to coordinate actions on different nodes.
+
+EnigmaIOT combines these two features into one request and response. Nodes may send clock sync request every some time to ping gateway and get common clock updated. Clock synchronization uses a mechanism similar to the one used by [SNTP protocol](https://en.wikipedia.org/wiki/Network_Time_Protocol#:~:text=Simple%20Network%20Time%20Protocol%20(SNTP,NTP%20capability%20is%20not%20required.).
+
+~~Notice that this is not world time sync but a numeric clock.~~
+
+Since version 0.9.2, if Gateway has its internal time synchronized using NTP it sends non sleepy nodes **current real date and time** in millisecond Unix format .
+
+This feature may be disabled if needed.
+
+### Address to node name translation
+
+##### Set node name
+
+![Set Node Name](https://github.com/gmag11/EnigmaIOT/raw/master/img/SetNodeName.png)
+
+##### Set node name result
+
+![Set Node Name result](https://github.com/gmag11/EnigmaIOT/raw/master/img/SetNodeNameResult.png)
+
+In order to make node messages more readable for humans, this implements a way to let Gateway to translate EnigmaIOT addresses to custom names (for instance, "RoomBlindControl"). This eases node replacement in case of failure.
+
+Node names can be up to 32 characters long and should avoid characters different of letters and numbers. **Characters #,+ and / are specially forbidden**.
+
+Node name is configured by user during first configuration in WiFi Web portal.
+
 ### Invalidate Key message
 
 ![Invalidate Key message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/InvalidateKey.png)
@@ -178,7 +216,7 @@ Invalidate Key message is always sent unencrypted.
 
 ## Protocol procedures
 
-### Normal node registration and sensor data exchange
+### Normal node registration and node data exchange
 
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/NodeRegistration.svg?sanitize=true" alt="Normal node registration message sequence" width="400"/>
 
@@ -266,13 +304,13 @@ So, node will always follow the channel that gateway is working in.
 
 A user may program their own output format modifying gateway example program. For my use case gateway outputs MQTT messages in this format:
 ```
-<configurable prefix>/<node address>/data <json data>
+<configurable prefix>/<node address | node name>/data <json data>
 ```
 A prefix is configured on gateway to allow several sensor networks to coexist in the same subnet. After that address and data are sent.
 
 After every received message, gateway detects if any packet has been lost before and reports it using MQTT message using this format:
 ```
-<configurable prefix>/<node address>/status {"per":<packet error rate>,"lostmessages":<Number of lost messages>,"totalmessages":<Total number of messages>,"packetshour":<Packet rate>}
+<configurable prefix>/<node address | node name>/status {"per":<packet error rate>,"lostmessages":<Number of lost messages>,"totalmessages":<Total number of messages>,"packetshour":<Packet rate>}
 ```
 ### Downlink messages
 
@@ -280,16 +318,22 @@ EnigmaIoT allows sending messages from gateway to nodes. In my implementation I 
 
 To make it simpler, downlink messages use the same structure than uplink.
 ```
-<network name>/<node address>/<get|set>/data <command data>
+<network name>/<node address | node name>/<get|set>/data <command data>
 ```
 Node address means destination node address. Configurable prefix is the same used for uplink communication.
 
 Commands may be given in JSON format. In that case they are  sent to node in MessagePack format. That makes that mode gets the complete JSON object. This implies that no change is needed on Gateway to add new node types. Gateway is transparent to user data.
 
-This is an esample of MQTT message that triggers a downlink packet.
+This is an example of MQTT message that triggers a downlink packet.
 
 ```
 enigmaiot/12:34:56:78:90:12/set/data {"light1": 1, "light2": 0}
+```
+
+If node uses a name, MQTT message may use of it.
+
+```
+enigmaiot/kitcken_light/set/data {"light1": 1, "light2": 0}
 ```
 
 After sending that command node will receive a 'set' command with data `{"light1": 1, "light2": 0}`.
@@ -319,40 +363,51 @@ This is the list of currently implemented control commands:
   </tr>
   <tr>
     <td>Get version</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/version</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/version {"version":"&lt;version&gt;"}</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address  | node name&gt;/get/version</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/version {"version":"&lt;version&gt;"}</code></td>
   </tr>
   <tr>
     <td>Get sleep duration</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/sleeptime</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime {"sleeptime":"&lt;sleep_time&gt;"}"</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/get/sleeptime</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/sleeptime {"sleeptime":"&lt;sleep_time&gt;"}"</code></td>
   </tr>
   <tr>
     <td>Set sleep duration</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/sleeptime &lt;sleep_time&gt;</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/sleeptime {"sleeptime":"&lt;sleep_time&gt;"}</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/sleeptime &lt;sleep_time&gt;</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/sleeptime {"sleeptime":"&lt;sleep_time&gt;"}</code></td>
   </tr>
   <tr>
     <td>OTA message</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/ota &lt;ota message&gt;</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/ota {"result":"&lt;ota_result_text&gt;,"status":"&lt;ota_result_code&gt;"}</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/ota &lt;ota message&gt;</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/ota {"result":"&lt;ota_result_text&gt;,"status":"&lt;ota_result_code&gt;"}</code></td>
   </tr>
   <tr>
     <td>Identify node</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/identify</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/identify</code></td>
     <td>None</td>
   </tr>
   <tr>
     <td>Reset node configuration</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/set/reset</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/reset {}</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/reset</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/reset {}</code></td>
   </tr>
   <tr>
     <td>Request measure RSSI</td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/get/rssi</code></td>
-    <td><code>&lt;configurable prefix&gt;/&lt;node address&gt;/result/rssi {"rssi":&lt;RSSI&gt;,"channel":&lt;WiFi channel&gt;}</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/get/rssi</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/rssi {"rssi":&lt;RSSI&gt;,"channel":&lt;WiFi channel&gt;}</code></td>
+  </tr>
+  <tr>
+    <td>Request node name</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/get/name</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/name {"address":&lt;node address&gt;,"name":&lt;Node name&gt;}</code></td>
+  </tr>
+  <tr>
+    <td>Set node name</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/name &lt;Node name&gt;</code></td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/name {"address":&lt;node address&gt;,"name":&lt;Node name&gt;}</code></td>
   </tr>
 </table>
+
 
 For instance, publishing `enigmaiot/12:34:56:78:90:12/get/version` will produce `enigmaiot/12:34:56:78:90:12/result/version 0.2.0`.
 
@@ -372,6 +427,8 @@ Messages are encoded to reduce the amount of bytes to be sent over internal prot
 | Reset config confirmation | `0x85` | None |
 | Request measure RSSI | `0x06` | None |
 | Report measure RSSI | `0x86` | RSSI (signed integer - 8 bit), WiFi channel (unsigned integer - 8 bit) |
+| Get node name | `0x07` | None |
+| Set node name | `0x87` | Node name as string |
 
 ## OTA Update
 
@@ -397,7 +454,7 @@ Options:
   -f FILENAME, --file=FILENAME
                         File to program into device
   -d ADDRESS, --daddress=ADDRESS
-                        Device address
+                        Node address or name
   -t BASETOPIC, --topic=BASETOPIC
                         Base topic for MQTT messages
   -u MQTTUSER, --user=MQTTUSER

@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_node.ino
-  * @version 0.9.1
-  * @date 28/05/2020
+  * @version 0.9.2
+  * @date 01/07/2020
   * @author German Martin
   * @brief Node based on EnigmaIoT over ESP-NOW
   *
@@ -74,19 +74,13 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 		serializeJsonPretty (doc, Serial);
 		break;
 	}
-
-	//for (int i = 0; i < length; i++) {
-	//	Serial.print ((char)buffer[i]);
-	//}
-	//Serial.println ();
-	//Serial.println ();
 }
 
 void setup () {
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
 	time_t start = millis ();
-	
+
 	EnigmaIOTNode.setLed (BLUE_LED);
 	EnigmaIOTNode.setResetPin (RESET_PIN);
 	EnigmaIOTNode.onConnected (connectEventHandler);
@@ -94,12 +88,12 @@ void setup () {
 	EnigmaIOTNode.onDataRx (processRxData);
 
 	EnigmaIOTNode.begin (&Espnow_hal);
-	
+
 	// Put here your code to read sensor and compose buffer
-    CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
+	CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
 
 	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
-    msg.addTemperature (1, 20.34);
+	msg.addTemperature (1, 20.34);
 	msg.addDigitalInput (2, 123);
 	msg.addBarometricPressure (3, 1007.25);
 	msg.addCurrent (4, 2.43);
@@ -109,15 +103,15 @@ void setup () {
 
 	Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
-    // Send buffer data
+	// Send buffer data
 	if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
 		Serial.println ("---- Error sending data");
 	} else {
 		Serial.println ("---- Data sent");
 	}
-	Serial.printf ("Total time: %d ms\n", millis() - start);
+	Serial.printf ("Total time: %d ms\n", millis () - start);
 
-    // Go to sleep
+	// Go to sleep
 	EnigmaIOTNode.sleep ();
 }
 

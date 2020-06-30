@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTjsonController.h
-  * @version 0.9.1
-  * @date 28/05/2020
+  * @version 0.9.2
+  * @date 01/07/2020
   * @author German Martin
   * @brief Prototype for JSON/MSGPACK based controller node
   */
@@ -17,8 +17,6 @@
 
 #include <EnigmaIOTNode.h>
 #include <ArduinoJson.h>
-#include <EnigmaIOTNode.h>
-
 
 #if defined ESP8266 || defined ESP32
 #include <functional>
@@ -27,24 +25,23 @@ typedef std::function<bool (const uint8_t* data, size_t len, nodePayloadEncoding
 #error This code only supports ESP8266 or ESP32 platforms
 #endif
 
-class EnigmaIOTjsonController
-{
- protected:
+class EnigmaIOTjsonController {
+protected:
 	sendData_cb sendData;
 	EnigmaIOTNodeClass* enigmaIotNode;
 
- public:
-	/**
-	  * @brief Initialize data structures
-	  * @param config Pointer to configuration structure. If it is `NULL` then it tries to load configuration from flash
-	  */
+public:
+   /**
+	 * @brief Initialize data structures
+	 * @param config Pointer to configuration structure. If it is `NULL` then it tries to load configuration from flash
+	 */
 	virtual void begin (void* config = NULL) = 0;
-	 
+
 	/**
 	 * @brief This should be called periodically for module handling
 	 */
 	virtual void loop () = 0;
-	 
+
 	/**
 	 * @brief Called to process a downlink command
 	 * @param mac Address of sender
@@ -56,7 +53,7 @@ class EnigmaIOTjsonController
 	 */
 	virtual bool processRxCommand (
 		const uint8_t* mac, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding) = 0;
-		 
+
 	/**
 	 * @brief Register send data callback to run when module needs to send a message
 	 * @param cb Callback with sendData_cb format
@@ -92,7 +89,7 @@ protected:
 	  * @return Returns `true` if message sending was successful. `false` otherwise
 	  */
 	virtual bool sendCommandResp (const char* command, bool result) = 0;
-	
+
 	/**
 	  * @brief Send a message to notify node has started running
 	  * @return Returns `true` if message sending was successful. `false` otherwise
@@ -115,7 +112,7 @@ protected:
 		len = serializeMsgPack (json, (char*)buffer, len);
 
 		size_t strLen = measureJson (json) + 1;
-		char* strBuffer = (char*)calloc (sizeof(uint8_t), strLen);
+		char* strBuffer = (char*)calloc (sizeof (uint8_t), strLen);
 
 		/*Serial.printf ("Trying to send: %s\n", printHexBuffer (
 			buffer, len));*/

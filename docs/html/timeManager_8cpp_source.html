@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.1</span>
+   &#160;<span id="projectnumber">0.9.2</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -74,53 +74,60 @@ $(function() {
 <div class="contents">
 <a href="timeManager_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="timeManager_8h.html">timeManager.h</a>&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classTimeManagerClass.html#a287d09f5425a5cff7f357b0ae619270e">   11</a></span>&#160;clock_t <a class="code" href="classTimeManagerClass.html#a287d09f5425a5cff7f357b0ae619270e">TimeManagerClass::setOrigin</a> () {</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="comment">//Serial.printf (&quot;millis: %u\n&quot;, millis ());</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="comment">//Serial.printf (&quot;offset: %d\n&quot;, offset);</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="comment">//Serial.printf (&quot;clock:  %u %u\n&quot;, millis () + offset, clock());</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classTimeManagerClass.html#a8355f1a5e5d15f1fac0b43301541c3c4">clock</a> ();</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classTimeManagerClass.html#a8355f1a5e5d15f1fac0b43301541c3c4">   19</a></span>&#160;clock_t <a class="code" href="classTimeManagerClass.html#a8355f1a5e5d15f1fac0b43301541c3c4">TimeManagerClass::clock</a> () {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="classTimeManagerClass.html#a1e2a434bb89a84d777f40b03d499ba6f">timeIsAdjusted</a>) {</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        clock_t clk = (clock_t)(<a class="code" href="classTimeManagerClass.html#a18dbda6ff57544a6b029cc55dda46d30">offset</a> + (time_t)(millis ()));</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">return</span> clk;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordflow">return</span> millis ();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    }</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classTimeManagerClass.html#ac63284929b7ca56e0d22933fd3947229">   28</a></span>&#160;time_t <a class="code" href="classTimeManagerClass.html#ac63284929b7ca56e0d22933fd3947229">TimeManagerClass::adjustTime</a> (clock_t t1r, clock_t t2r, clock_t t3r, clock_t t4r) {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    clock_t t1 = t1r;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    clock_t t2 = t2r;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    clock_t t3 = t3r;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    clock_t t4 = t4r;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    time_t delay = (long)((t2 - t1) + (t3 - t4)) / 2L;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="classTimeManagerClass.html#a18dbda6ff57544a6b029cc55dda46d30">offset</a> += delay;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="classTimeManagerClass.html#a8fb658610a1550211c2e5d12f3c47dc0">roundTripDelay</a> = (t4 - t1) - (t3 - t2);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="classTimeManagerClass.html#a1e2a434bb89a84d777f40b03d499ba6f">timeIsAdjusted</a> = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">return</span> delay;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="debug_8h.html">debug.h</a>&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classTimeManagerClass.html#abee40a2c59125c58f03c8093b4121a66">   12</a></span>&#160;int64_t <a class="code" href="classTimeManagerClass.html#abee40a2c59125c58f03c8093b4121a66">TimeManagerClass::setOrigin</a> () {</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="comment">//Serial.printf (&quot;millis: %u\n&quot;, millis ());</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="comment">//Serial.printf (&quot;offset: %d\n&quot;, offset);</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="comment">//Serial.printf (&quot;clock:  %u %u\n&quot;, millis () + offset, clock());</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classTimeManagerClass.html#a85889f0610371fd502b47aae07d35506">clock</a> ();</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;}</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classTimeManagerClass.html#a85889f0610371fd502b47aae07d35506">   20</a></span>&#160;int64_t <a class="code" href="classTimeManagerClass.html#a85889f0610371fd502b47aae07d35506">TimeManagerClass::clock</a> () {</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="classTimeManagerClass.html#a1e2a434bb89a84d777f40b03d499ba6f">timeIsAdjusted</a>) {</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        int64_t clk = <a class="code" href="classTimeManagerClass.html#a76446d0df445c23ecb583b3d50fb3f95">offset</a> + (time_t)(millis ());</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        DEBUG_DBG (<span class="stringliteral">&quot;Clock: %lld&quot;</span>, clk);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordflow">return</span> clk;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordflow">return</span> millis ();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    }</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classTimeManagerClass.html#a339f610c808ea5b39ccc9ca462269cf2">   30</a></span>&#160;int64_t <a class="code" href="classTimeManagerClass.html#a339f610c808ea5b39ccc9ca462269cf2">TimeManagerClass::adjustTime</a> (int64_t t1r, int64_t t2r, int64_t t3r, int64_t t4r) {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    int64_t t1 = t1r;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    int64_t t2 = t2r;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    int64_t t3 = t3r;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    int64_t t4 = t4r;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    DEBUG_DBG (<span class="stringliteral">&quot;T1: %lld, T2: %lld, T3: %lld, T4: %lld&quot;</span>, t1, t2, t3, t4);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    int64_t delay = ((t2 - t1) + (t3 - t4)) / 2;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    DEBUG_DBG (<span class="stringliteral">&quot;Delay: %lld&quot;</span>, delay);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="classTimeManagerClass.html#a76446d0df445c23ecb583b3d50fb3f95">offset</a> += delay;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    DEBUG_DBG (<span class="stringliteral">&quot;New offset: %lld&quot;</span>, <a class="code" href="classTimeManagerClass.html#a76446d0df445c23ecb583b3d50fb3f95">offset</a>);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="classTimeManagerClass.html#addb0c670f91aed75698ff9b70048ed71">roundTripDelay</a> = (t4 - t1) - (t3 - t2);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    DEBUG_DBG (<span class="stringliteral">&quot;Round trip delay: %lld&quot;</span>, <a class="code" href="classTimeManagerClass.html#addb0c670f91aed75698ff9b70048ed71">roundTripDelay</a>);</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="timeManager_8h.html#aa2f15646607c9908039f67741ccbab58">   45</a></span>&#160;<a class="code" href="classTimeManagerClass.html">TimeManagerClass</a> <a class="code" href="timeManager_8cpp.html#aa2f15646607c9908039f67741ccbab58">TimeManager</a>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="classTimeManagerClass.html#a1e2a434bb89a84d777f40b03d499ba6f">timeIsAdjusted</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">return</span> delay;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="timeManager_8h.html#aa2f15646607c9908039f67741ccbab58">   51</a></span>&#160;<a class="code" href="classTimeManagerClass.html">TimeManagerClass</a> <a class="code" href="timeManager_8cpp.html#aa2f15646607c9908039f67741ccbab58">TimeManager</a>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassTimeManagerClass_html_ac63284929b7ca56e0d22933fd3947229"><div class="ttname"><a href="classTimeManagerClass.html#ac63284929b7ca56e0d22933fd3947229">TimeManagerClass::adjustTime</a></div><div class="ttdeci">time_t adjustTime(clock_t t1r, clock_t t2r, clock_t t3r, clock_t t4r)</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8cpp_source.html#l00028">timeManager.cpp:28</a></div></div>
 <div class="ttc" id="atimeManager_8h_html"><div class="ttname"><a href="timeManager_8h.html">timeManager.h</a></div><div class="ttdoc">Clock synchronisation calculations.</div></div>
-<div class="ttc" id="aclassTimeManagerClass_html_a8fb658610a1550211c2e5d12f3c47dc0"><div class="ttname"><a href="classTimeManagerClass.html#a8fb658610a1550211c2e5d12f3c47dc0">TimeManagerClass::roundTripDelay</a></div><div class="ttdeci">time_t roundTripDelay</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8h_source.html#l00019">timeManager.h:19</a></div></div>
-<div class="ttc" id="atimeManager_8cpp_html_aa2f15646607c9908039f67741ccbab58"><div class="ttname"><a href="timeManager_8cpp.html#aa2f15646607c9908039f67741ccbab58">TimeManager</a></div><div class="ttdeci">TimeManagerClass TimeManager</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8cpp_source.html#l00045">timeManager.cpp:45</a></div></div>
-<div class="ttc" id="aclassTimeManagerClass_html_a287d09f5425a5cff7f357b0ae619270e"><div class="ttname"><a href="classTimeManagerClass.html#a287d09f5425a5cff7f357b0ae619270e">TimeManagerClass::setOrigin</a></div><div class="ttdeci">clock_t setOrigin()</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8cpp_source.html#l00011">timeManager.cpp:11</a></div></div>
-<div class="ttc" id="aclassTimeManagerClass_html_a18dbda6ff57544a6b029cc55dda46d30"><div class="ttname"><a href="classTimeManagerClass.html#a18dbda6ff57544a6b029cc55dda46d30">TimeManagerClass::offset</a></div><div class="ttdeci">time_t offset</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8h_source.html#l00018">timeManager.h:18</a></div></div>
-<div class="ttc" id="aclassTimeManagerClass_html_a1e2a434bb89a84d777f40b03d499ba6f"><div class="ttname"><a href="classTimeManagerClass.html#a1e2a434bb89a84d777f40b03d499ba6f">TimeManagerClass::timeIsAdjusted</a></div><div class="ttdeci">bool timeIsAdjusted</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8h_source.html#l00017">timeManager.h:17</a></div></div>
-<div class="ttc" id="aclassTimeManagerClass_html_a8355f1a5e5d15f1fac0b43301541c3c4"><div class="ttname"><a href="classTimeManagerClass.html#a8355f1a5e5d15f1fac0b43301541c3c4">TimeManagerClass::clock</a></div><div class="ttdeci">clock_t clock()</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8cpp_source.html#l00019">timeManager.cpp:19</a></div></div>
+<div class="ttc" id="atimeManager_8cpp_html_aa2f15646607c9908039f67741ccbab58"><div class="ttname"><a href="timeManager_8cpp.html#aa2f15646607c9908039f67741ccbab58">TimeManager</a></div><div class="ttdeci">TimeManagerClass TimeManager</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8cpp_source.html#l00051">timeManager.cpp:51</a></div></div>
+<div class="ttc" id="aclassTimeManagerClass_html_a339f610c808ea5b39ccc9ca462269cf2"><div class="ttname"><a href="classTimeManagerClass.html#a339f610c808ea5b39ccc9ca462269cf2">TimeManagerClass::adjustTime</a></div><div class="ttdeci">int64_t adjustTime(int64_t t1r, int64_t t2r, int64_t t3r, int64_t t4r)</div><div class="ttdoc">Gets delay between Gateway time and local clock and adjust local clock accordingly....</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8cpp_source.html#l00030">timeManager.cpp:30</a></div></div>
+<div class="ttc" id="aclassTimeManagerClass_html_addb0c670f91aed75698ff9b70048ed71"><div class="ttname"><a href="classTimeManagerClass.html#addb0c670f91aed75698ff9b70048ed71">TimeManagerClass::roundTripDelay</a></div><div class="ttdeci">int64_t roundTripDelay</div><div class="ttdoc">Propagation delay between Node and Gateway.</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8h_source.html#l00019">timeManager.h:19</a></div></div>
+<div class="ttc" id="aclassTimeManagerClass_html_a1e2a434bb89a84d777f40b03d499ba6f"><div class="ttname"><a href="classTimeManagerClass.html#a1e2a434bb89a84d777f40b03d499ba6f">TimeManagerClass::timeIsAdjusted</a></div><div class="ttdeci">bool timeIsAdjusted</div><div class="ttdoc">Indicates if time has been synchronized.</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8h_source.html#l00017">timeManager.h:17</a></div></div>
+<div class="ttc" id="aclassTimeManagerClass_html_abee40a2c59125c58f03c8093b4121a66"><div class="ttname"><a href="classTimeManagerClass.html#abee40a2c59125c58f03c8093b4121a66">TimeManagerClass::setOrigin</a></div><div class="ttdeci">int64_t setOrigin()</div><div class="ttdoc">Inits time synchronization getting local clock to be assigned to T1.</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8cpp_source.html#l00012">timeManager.cpp:12</a></div></div>
+<div class="ttc" id="aclassTimeManagerClass_html_a85889f0610371fd502b47aae07d35506"><div class="ttname"><a href="classTimeManagerClass.html#a85889f0610371fd502b47aae07d35506">TimeManagerClass::clock</a></div><div class="ttdeci">int64_t clock()</div><div class="ttdoc">Gets local clock. It returns millis() if not synchronized, local clock otherwise.</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8cpp_source.html#l00020">timeManager.cpp:20</a></div></div>
 <div class="ttc" id="aclassTimeManagerClass_html"><div class="ttname"><a href="classTimeManagerClass.html">TimeManagerClass</a></div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8h_source.html#l00014">timeManager.h:14</a></div></div>
+<div class="ttc" id="aclassTimeManagerClass_html_a76446d0df445c23ecb583b3d50fb3f95"><div class="ttname"><a href="classTimeManagerClass.html#a76446d0df445c23ecb583b3d50fb3f95">TimeManagerClass::offset</a></div><div class="ttdeci">int64_t offset</div><div class="ttdoc">Offet between node millis() and gateway time.</div><div class="ttdef"><b>Definition:</b> <a href="timeManager_8h_source.html#l00018">timeManager.h:18</a></div></div>
+<div class="ttc" id="adebug_8h_html"><div class="ttname"><a href="debug_8h.html">debug.h</a></div><div class="ttdoc">Auxiliary functions for debugging over Serial.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

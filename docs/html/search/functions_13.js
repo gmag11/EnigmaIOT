@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['wifimanagerexit_696',['wifiManagerExit',['../EnigmaIOTGatewayDummy_8ino.html#a960401606ecc83efdb2e45646619f277',1,'wifiManagerExit(boolean status):&#160;EnigmaIOTGatewayDummy.ino'],['../EnigmaIOTGatewayMQTT_8ino.html#a960401606ecc83efdb2e45646619f277',1,'wifiManagerExit(boolean status):&#160;EnigmaIOTGatewayMQTT.ino']]],
-  ['wifimanagerstarted_697',['wifiManagerStarted',['../EnigmaIOTGatewayDummy_8ino.html#ad151c02682f80a13429640710b842160',1,'wifiManagerStarted():&#160;EnigmaIOTGatewayDummy.ino'],['../EnigmaIOTGatewayMQTT_8ino.html#ad151c02682f80a13429640710b842160',1,'wifiManagerStarted():&#160;EnigmaIOTGatewayMQTT.ino']]]
+  ['validaddress_904',['validAddress',['../classDallasTemperature.html#a71e4744b8d7b2f1c05a96cd158c83007',1,'DallasTemperature']]],
+  ['validfamily_905',['validFamily',['../classDallasTemperature.html#a3f3678c8defd473e8eebd9cfe793b329',1,'DallasTemperature']]]
 ];

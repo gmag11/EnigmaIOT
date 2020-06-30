@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['mqtt_5fqueue_5fitem_5ft_495',['mqtt_queue_item_t',['../structmqtt__queue__item__t.html',1,'']]],
-  ['mqttgw_5fconfig_5ft_496',['mqttgw_config_t',['../structmqttgw__config__t.html',1,'']]],
-  ['msg_5fqueue_5fitem_5ft_497',['msg_queue_item_t',['../structmsg__queue__item__t.html',1,'']]]
+  ['gateway_5fconfig_5ft_632',['gateway_config_t',['../structgateway__config__t.html',1,'']]],
+  ['gatewayoutput_5fdummy_633',['GatewayOutput_dummy',['../classGatewayOutput__dummy.html',1,'']]],
+  ['gatewayoutput_5fgeneric_634',['GatewayOutput_generic',['../classGatewayOutput__generic.html',1,'']]],
+  ['gwoutput_5fmqtt_635',['GwOutput_MQTT',['../classGwOutput__MQTT.html',1,'']]]
 ];

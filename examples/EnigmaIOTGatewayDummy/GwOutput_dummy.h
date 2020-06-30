@@ -1,7 +1,7 @@
 /**
   * @file GwOutput_dummy.h
-  * @version 0.9.1
-  * @date 28/05/2020
+  * @version 0.9.2
+  * @date 01/07/2020
   * @author German Martin
   * @brief  Dummy Gateway output module
   */
@@ -18,9 +18,6 @@
 #else
 #include "WProgram.h"
 #endif
-
-#include <functional>
-typedef std::function<void (uint8_t* address, control_message_type_t msgType, char* data, unsigned int len)> onDlData_t;
 
 class GatewayOutput_dummy : public GatewayOutput_generic {
 protected:
