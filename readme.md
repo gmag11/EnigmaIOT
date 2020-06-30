@@ -180,7 +180,7 @@ In non sleepy nodes, it may be useful to send a message from time to time to let
 
 Clock syncronization may be a very good feature if you need to coordinate actions on different nodes.
 
-EnigmaIOT combines these two features into one request and response. Nodes may send clock sync request every some time to ping gateway and get common clock updated. Clock synchronization uses a mechanism similar to the one used by [SNTP protocol](https://en.wikipedia.org/wiki/Network_Time_Protocol#:~:text=Simple%20Network%20Time%20Protocol%20(SNTP,NTP%20capability%20is%20not%20required.).
+EnigmaIOT combines these two features into one request and response. Nodes may send clock sync request every some time to ping gateway and get common clock updated. Clock synchronization uses a mechanism similar to the one used by [SNTP protocol](https://en.wikipedia.org/wiki/Network_Time_Protocol#:~:text=Simple%20Network%20Time%20Protocol%20).
 
 ~~Notice that this is not world time sync but a numeric clock.~~
 
