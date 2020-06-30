@@ -15,17 +15,22 @@ class TimeManagerClass {
 protected:
     //clock_t t1, t2, t3, t4;
     bool timeIsAdjusted = false;
-    time_t offset = 0;
-    time_t roundTripDelay;
+    int64_t offset = 0;
+    int64_t roundTripDelay;
 
 public:
-    clock_t setOrigin ();
+    int64_t setOrigin ();
 
-    clock_t clock ();
+    int64_t clock ();
 
-    time_t adjustTime (clock_t t1r, clock_t t2r, clock_t t3r, clock_t t4r);
+    time_t unixtime () {
+        uint64_t time_sec = clock () / 1000;
+        return time_sec;
+    }
 
-    time_t getOffset () {
+    int64_t adjustTime (int64_t t1r, int64_t t2r, int64_t t3r, int64_t t4r);
+
+    int64_t getOffset () {
         return offset;
     }
 
@@ -33,7 +38,7 @@ public:
         return timeIsAdjusted;
     }
 
-    time_t getDelay () {
+    int64_t getDelay () {
         return roundTripDelay;
     }
 

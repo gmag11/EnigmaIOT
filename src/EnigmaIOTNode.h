@@ -650,9 +650,15 @@ public:
 
 	/**
 	  * @brief Gets current clock counter. millis() + offset
-	  * @return Clock value in `time_t` format
+	  * @return Clock value in `int64_t` format
 	  */
-	time_t clock ();
+	int64_t clock ();
+
+	/**
+	  * @brief Gets current time in seconds from 1970, if time is synchronized
+	  * @return Time value in `time_t` format
+	  */
+	time_t unixtime ();
 
 	/**
 	  * @brief Checks if internal clock is synchronized to gateway

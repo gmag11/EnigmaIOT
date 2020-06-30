@@ -873,7 +873,7 @@ bool EnigmaIOTNodeClass::clockRequest () {
 	struct  __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
-		clock_t t1;
+		int64_t t1;
 		uint8_t tag[TAG_LENGTH];
 	} clockRequest_msg;
 
@@ -888,10 +888,10 @@ bool EnigmaIOTNodeClass::clockRequest () {
 
 	node.t1 = TimeManager.setOrigin ();
 
-	memcpy (&(clockRequest_msg.t1), &(node.t1), sizeof (clock_t));
+	memcpy (&(clockRequest_msg.t1), &(node.t1), sizeof (int64_t));
 
 	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)&clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
-	DEBUG_DBG ("T1: %u", node.t1);
+	DEBUG_DBG ("T1: %llu", node.t1);
 
 	uint8_t addDataLen = 1 + IV_LENGTH;
 	uint8_t aad[AAD_LENGTH + addDataLen];
@@ -925,8 +925,8 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
-		clock_t t2;
-		clock_t t3;
+		int64_t t2;
+		int64_t t3;
 		uint8_t tag[TAG_LENGTH];
 	} clockResponse_msg;
 
@@ -944,7 +944,7 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 
 	uint8_t packetLen = count - TAG_LENGTH;
 
-	if (!CryptModule::decryptBuffer ((uint8_t*)&(clockResponse_msg.t2), sizeof (clock_t) << 1, // Decrypt from t2, 8 bytes
+	if (!CryptModule::decryptBuffer ((uint8_t*)&(clockResponse_msg.t2), sizeof (int64_t) << 1, // Decrypt from t2, 16 bytes
 									 clockResponse_msg.iv, IV_LENGTH,
 									 node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
 									 aad, sizeof (aad), clockResponse_msg.tag, TAG_LENGTH)) {
@@ -966,7 +966,7 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 
 	memcpy (&clockResponse_msg, buf, count);
 
-	time_t offset = TimeManager.adjustTime (node.t1, node.t2, node.t3, node.t4);
+	int64_t offset = TimeManager.adjustTime (node.t1, node.t2, node.t3, node.t4);
 
 	if (offset < MIN_SYNC_ACCURACY && offset > (MIN_SYNC_ACCURACY * -1)) {
 		timeSyncPeriod = TIME_SYNC_PERIOD;
@@ -975,22 +975,30 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 	}
 	DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)&clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
 
-	DEBUG_DBG ("T1: %u", node.t1);
-	DEBUG_DBG ("T2: %u", node.t2);
-	DEBUG_DBG ("T3: %u", node.t3);
-	DEBUG_DBG ("T4: %u", node.t4);
-	DEBUG_DBG ("Offest adjusted to %d ms, Roundtrip delay is %d", offset, TimeManager.getDelay ());
+	DEBUG_DBG ("T1: %llu", node.t1);
+	DEBUG_DBG ("T2: %llu", node.t2);
+	DEBUG_DBG ("T3: %llu", node.t3);
+	DEBUG_DBG ("T4: %llu", node.t4);
+	DEBUG_DBG ("Offest adjusted to %lld ms, Roundtrip delay is %lld", offset, TimeManager.getDelay ());
 
 	return true;
 }
 
-time_t EnigmaIOTNodeClass::clock () {
+int64_t EnigmaIOTNodeClass::clock () {
 	if (node.getInitAsSleepy ()) {
 		return millis ();
 	} else {
 		return TimeManager.clock ();
 	}
 
+}
+
+time_t EnigmaIOTNodeClass::unixtime () {
+	if (node.getInitAsSleepy ()) {
+		return millis () / 1000;
+	} else {
+		return TimeManager.unixtime ();
+	}
 }
 
 bool EnigmaIOTNodeClass::hasClockSync () {

@@ -89,8 +89,38 @@ void setup () {
 	EnigmaIOTNode.onConnected (connectEventHandler);
 	EnigmaIOTNode.onDisconnected (disconnectEventHandler);
 	EnigmaIOTNode.onDataRx (processRxData);
+	EnigmaIOTNode.enableClockSync ();
 
 	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, false);
+}
+
+void showTime () {
+	//const int time_freq = 10000;
+	const char* TZINFO = "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00";
+	
+	tm timeinfo;
+	static time_t displayTime;
+	
+	if (EnigmaIOTNode.hasClockSync()) {
+		setenv ("TZ", TZINFO, 1);
+		displayTime = millis ();
+		time_t local_time_ms = EnigmaIOTNode.clock ();
+		//local_time_ms /= 1000;
+		time_t local_time = EnigmaIOTNode.unixtime ();
+		localtime_r (&local_time, &timeinfo);
+		//Serial.printf ("Timestamp ms: %lld\n", local_time_ms);
+		//Serial.printf ("Timestamp sec: %ld\n", local_time);
+		Serial.printf ("%02d/%02d/%04d %02d:%02d:%02d\n",
+					   timeinfo.tm_mday,
+					   timeinfo.tm_mon + 1,
+					   timeinfo.tm_year + 1900,
+					   timeinfo.tm_hour,
+					   timeinfo.tm_min,
+					   timeinfo.tm_sec);
+	} else {
+		Serial.printf ("Time not sync'ed\n");
+	}
+
 }
 
 void loop () {
@@ -103,7 +133,7 @@ void loop () {
 	static const time_t SENSOR_PERIOD = 10000;
 	if (millis () - lastSensorData > SENSOR_PERIOD) {
 		lastSensorData = millis ();
-
+		showTime ();
 		// Read sensor data
 		msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
 		Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
