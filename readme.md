@@ -182,7 +182,9 @@ Clock syncronization may be a very good feature if you need to coordinate action
 
 EnigmaIOT combines these two features into one request and response. Nodes may send clock sync request every some time to ping gateway and get common clock updated. Clock synchronization uses a mechanism similar to the one used by [SNTP protocol](https://en.wikipedia.org/wiki/Network_Time_Protocol#:~:text=Simple%20Network%20Time%20Protocol%20(SNTP,NTP%20capability%20is%20not%20required.).
 
-Notice that this is not world time sync but a numeric clock.
+~~Notice that this is not world time sync but a numeric clock.~~
+
+Since version 0.9.2, if Gateway has its internal time synchronized using NTP it sends non sleepy nodes **current real date and time** in millisecond Unix format .
 
 This feature may be disabled if needed.
 
