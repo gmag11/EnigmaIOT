@@ -12,7 +12,7 @@
 // Global configuration. Physical layer settings
 static const uint8_t MAX_MESSAGE_LENGTH = 250; ///< @brief Maximum payload size on ESP-NOW
 static const size_t ENIGMAIOT_ADDR_LEN = 6; ///< @brief Address size. Mac address = 6 bytes
-static const char ENIGMAIOT_PROT_VERS[] = "0.9.1"; ///< @brief EnitmaIoT Version
+static const char ENIGMAIOT_PROT_VERS[] = "0.9.2"; ///< @brief EnitmaIoT Version
 static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on ESP-NOW
 static const uint32_t FLASH_LED_TIME = 50; ///< @brief Time that led keeps on during flash in ms
 static const uint8_t NETWORK_NAME_LENGTH = 21; ///< @brief Maximum number of characters of network name
