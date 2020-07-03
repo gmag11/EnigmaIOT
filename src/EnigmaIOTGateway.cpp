@@ -448,7 +448,8 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	char networkKey[33] = "";
 	//char networkName[NETWORK_NAME_LENGTH] = "";
 	char channel[4];
-	String (gwConfig.channel).toCharArray (channel, 4);
+	//String (gwConfig.channel).toCharArray (channel, 4);
+	snprintf (channel, 4, "%u", gwConfig.channel)
 
 	//AsyncWiFiManager wifiManager (&server, &dns);
 	AsyncWiFiManagerParameter netNameParam ("netname", "Network Name", gwConfig.networkName, (int)NETWORK_NAME_LENGTH - 1, "required type=\"text\" maxlength=20");
@@ -566,10 +567,15 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			CryptModule::getSHA256 (gwConfig.networkKey, KEY_LENGTH);
 			DEBUG_VERBOSE ("Raw Network key: %s", printHexBuffer (gwConfig.networkKey, KEY_LENGTH));
 
-			String output;
+#if DEBUG_LEVEL >= DBG
+			char* output;
+			size_t json_len = measureJsonPretty (doc);
+			output = (char*)malloc (json_len);
 			serializeJsonPretty (doc, output);
 
-			DEBUG_DBG ("JSON file %s", output.c_str ());
+			DEBUG_DBG ("JSON file %s", output);
+			free (output);
+#endif
 
 		} else {
 			DEBUG_WARN ("Error opening %s", CONFIG_FILE);
@@ -610,10 +616,16 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 		return false;
 	}
 
-	String output;
+#if DEBUG_LEVEL >= DBG
+	char* output;
+	size_t json_len = measureJsonPretty (doc);
+	output = (char*)malloc (json_len);
 	serializeJsonPretty (doc, output);
 
 	DEBUG_DBG ("%s", output.c_str ());
+
+	free (output);
+#endif
 
 	configFile.flush ();
 	size_t size = configFile.size ();
@@ -664,7 +676,7 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 			DEBUG_INFO ("Configuration loaded from flash");
 		}
 
-		initWiFi (gwConfig.channel, COMM_GATEWAY, String (gwConfig.networkName));
+		initWiFi (gwConfig.channel, COMM_GATEWAY, gwConfig.networkName);
 		comm->begin (NULL, gwConfig.channel, COMM_GATEWAY);
 		comm->onDataRcvd (rx_cb);
 		comm->onDataSent (tx_cb);
