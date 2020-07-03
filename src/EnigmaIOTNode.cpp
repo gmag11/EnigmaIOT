@@ -159,6 +159,7 @@ bool EnigmaIOTNodeClass::loadFlashData () {
 			}
 			DEBUG_DBG ("Network Key dump: %s", printHexBuffer (rtcmem_data.networkKey, KEY_LENGTH));
 			strncpy ((char*)rtcmem_data.nodeName, doc["nodeName"] | "", NODE_NAME_LENGTH);
+			node.setNodeName (rtcmem_data.nodeName);
 
 			uint8_t gwAddr[ENIGMAIOT_ADDR_LEN];
 			char gwAddrStr[ENIGMAIOT_ADDR_LEN * 3];
@@ -1318,8 +1319,14 @@ bool EnigmaIOTNodeClass::processGetNameCommand (const uint8_t* mac, const uint8_
 
 	uint8_t* nodeAddress = node.getMacAddress ();
 
-	char* name = node.getNodeName ();
-	size_t nameLen = strlen (name);
+	char* name = rtcmem_data.nodeName;
+	size_t nameLen = 0;
+	if (name) {
+		nameLen = strlen (name);
+	} else {
+		DEBUG_WARN ("Emprty name");
+		return false;
+	}
 
 	memcpy (buffer + 1, nodeAddress, ENIGMAIOT_ADDR_LEN);
 	memcpy (buffer + 1 + ENIGMAIOT_ADDR_LEN, name, nameLen);
@@ -1755,6 +1762,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			//ESP.restart ();
 			otaRunning = false;
 			shouldRestart = true;
+			clearRTC ();
 			return true; // Restart does not happen inmediatelly, so code goes on
 		} else {
 			responseBuffer[0] = control_message_type::OTA_ANS;
