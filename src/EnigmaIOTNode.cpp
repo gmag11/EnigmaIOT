@@ -521,7 +521,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 	while (!(WiFi.scanComplete () || (millis () - scanStarted) > 1500)) {
 #if DEBUG_LEVEL >= DBG
 		delay (250);
-		Serial.printf ("%d.", millis () - scanStarted);
+		Serial.printf ("%lu.", millis () - scanStarted);
 #else
 		delay (50);
 #endif
@@ -1326,7 +1326,7 @@ bool EnigmaIOTNodeClass::processGetNameCommand (const uint8_t* mac, const uint8_
 	bufLength = 1 + ENIGMAIOT_ADDR_LEN + nameLen;
 
 	if (sendData (buffer, bufLength, true)) {
-		DEBUG_DBG ("Node name is %s", name);
+		DEBUG_DBG ("Node name is %s", name ? name : "NULL name");
 		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
 		return true;
 	} else {
@@ -1372,7 +1372,7 @@ bool EnigmaIOTNodeClass::processSetNameResponse (const uint8_t* mac, const uint8
 		return false;
 	}
 
-	DEBUG_VERBOSE ("Decrypted Node Name Set response message: %s", printHexBuffer ((uint8_t*)&serverHello_msg, SHMSG_LEN - TAG_LENGTH));
+	DEBUG_VERBOSE ("Decrypted Node Name Set response message: %s", printHexBuffer ((uint8_t*)&nodeNameSetResponse_msg, NNSRMSG_LEN - TAG_LENGTH));
 
 	if (nodeNameSetResponse_msg.errorCode != NAME_OK) {
 		DEBUG_WARN ("Name error: %d", nodeNameSetResponse_msg.errorCode);
