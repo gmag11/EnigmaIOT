@@ -1943,7 +1943,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 				node.printToSerial (&DEBUG_ESP_PORT);
 #endif
 				if (!sendNodeNameSet (rtcmem_data.nodeName)) {
-					DEBUG_WARN ("Error sending set node name %s", rtcmem_data.nodeName);
+					DEBUG_WARN ("Error sending set node name %s", rtcmem_data.nodeName ? rtcmem_data.nodeName : "NULL name");
 				}
 
 				// send notification to user code
