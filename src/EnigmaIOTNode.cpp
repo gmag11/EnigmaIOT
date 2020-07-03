@@ -159,6 +159,7 @@ bool EnigmaIOTNodeClass::loadFlashData () {
 			}
 			DEBUG_DBG ("Network Key dump: %s", printHexBuffer (rtcmem_data.networkKey, KEY_LENGTH));
 			strncpy ((char*)rtcmem_data.nodeName, doc["nodeName"] | "", NODE_NAME_LENGTH);
+			node.setNodeName (rtcmem_data.nodeName);
 
 			uint8_t gwAddr[ENIGMAIOT_ADDR_LEN];
 			char gwAddrStr[ENIGMAIOT_ADDR_LEN * 3];
@@ -521,7 +522,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 	while (!(WiFi.scanComplete () || (millis () - scanStarted) > 1500)) {
 #if DEBUG_LEVEL >= DBG
 		delay (250);
-		Serial.printf ("%d.", millis () - scanStarted);
+		Serial.printf ("%lu.", millis () - scanStarted);
 #else
 		delay (50);
 #endif
@@ -1318,15 +1319,21 @@ bool EnigmaIOTNodeClass::processGetNameCommand (const uint8_t* mac, const uint8_
 
 	uint8_t* nodeAddress = node.getMacAddress ();
 
-	char* name = node.getNodeName ();
-	size_t nameLen = strlen (name);
+	char* name = rtcmem_data.nodeName;
+	size_t nameLen = 0;
+	if (name) {
+		nameLen = strlen (name);
+	} else {
+		DEBUG_WARN ("Emprty name");
+		return false;
+	}
 
 	memcpy (buffer + 1, nodeAddress, ENIGMAIOT_ADDR_LEN);
 	memcpy (buffer + 1 + ENIGMAIOT_ADDR_LEN, name, nameLen);
 	bufLength = 1 + ENIGMAIOT_ADDR_LEN + nameLen;
 
 	if (sendData (buffer, bufLength, true)) {
-		DEBUG_DBG ("Node name is %s", name);
+		DEBUG_DBG ("Node name is %s", name ? name : "NULL name");
 		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
 		return true;
 	} else {
@@ -1372,7 +1379,7 @@ bool EnigmaIOTNodeClass::processSetNameResponse (const uint8_t* mac, const uint8
 		return false;
 	}
 
-	DEBUG_VERBOSE ("Decrypted Node Name Set response message: %s", printHexBuffer ((uint8_t*)&serverHello_msg, SHMSG_LEN - TAG_LENGTH));
+	DEBUG_VERBOSE ("Decrypted Node Name Set response message: %s", printHexBuffer ((uint8_t*)&nodeNameSetResponse_msg, NNSRMSG_LEN - TAG_LENGTH));
 
 	if (nodeNameSetResponse_msg.errorCode != NAME_OK) {
 		DEBUG_WARN ("Name error: %d", nodeNameSetResponse_msg.errorCode);
@@ -1755,6 +1762,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			//ESP.restart ();
 			otaRunning = false;
 			shouldRestart = true;
+			clearRTC ();
 			return true; // Restart does not happen inmediatelly, so code goes on
 		} else {
 			responseBuffer[0] = control_message_type::OTA_ANS;
@@ -1935,7 +1943,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 				node.printToSerial (&DEBUG_ESP_PORT);
 #endif
 				if (!sendNodeNameSet (rtcmem_data.nodeName)) {
-					DEBUG_WARN ("Error sending set node name %s", rtcmem_data.nodeName);
+					DEBUG_WARN ("Error sending set node name %s", rtcmem_data.nodeName ? rtcmem_data.nodeName : "NULL name");
 				}
 
 				// send notification to user code

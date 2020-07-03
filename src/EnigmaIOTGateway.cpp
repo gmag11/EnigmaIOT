@@ -449,7 +449,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	//char networkName[NETWORK_NAME_LENGTH] = "";
 	char channel[4];
 	//String (gwConfig.channel).toCharArray (channel, 4);
-	snprintf (channel, 4, "%u", gwConfig.channel)
+	snprintf (channel, 4, "%u", gwConfig.channel);
 
 	//AsyncWiFiManager wifiManager (&server, &dns);
 	AsyncWiFiManagerParameter netNameParam ("netname", "Network Name", gwConfig.networkName, (int)NETWORK_NAME_LENGTH - 1, "required type=\"text\" maxlength=20");
@@ -571,7 +571,7 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			char* output;
 			size_t json_len = measureJsonPretty (doc);
 			output = (char*)malloc (json_len);
-			serializeJsonPretty (doc, output);
+			serializeJsonPretty (doc, output, json_len);
 
 			DEBUG_DBG ("JSON file %s", output);
 			free (output);
@@ -620,9 +620,9 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 	char* output;
 	size_t json_len = measureJsonPretty (doc);
 	output = (char*)malloc (json_len);
-	serializeJsonPretty (doc, output);
+	serializeJsonPretty (doc, output, json_len);
 
-	DEBUG_DBG ("%s", output.c_str ());
+	DEBUG_DBG ("%s", output);
 
 	free (output);
 #endif
