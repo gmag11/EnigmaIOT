@@ -23,7 +23,6 @@
 #include <cstddef>
 #include <cstdint>
 
-
 const char CONFIG_FILE[] = "/config.json";
 
 bool shouldSave = false;
@@ -44,14 +43,14 @@ void EnigmaIOTGatewayClass::setTxLed (uint8_t led, time_t onTime) {
 	this->txled = led;
 	txLedOnTime = onTime;
 	pinMode (txled, OUTPUT);
-	digitalWrite (txled, HIGH);
+	digitalWrite (txled, LED_OFF);
 }
 
 void EnigmaIOTGatewayClass::setRxLed (uint8_t led, time_t onTime) {
 	this->rxled = led;
 	rxLedOnTime = onTime;
 	pinMode (rxled, OUTPUT);
-	digitalWrite (rxled, HIGH);
+	digitalWrite (rxled, LED_OFF);
 }
 
 const void* memstr (const void* str, size_t str_size,
@@ -496,7 +495,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 			if (netKey && (netKey[0] != '\0')) {// If password is empty, keep the old one
 				memset (this->gwConfig.networkKey, 0, KEY_LENGTH);
 				memcpy (this->gwConfig.networkKey, netKey, keySize);
-				memcpy (this->networkKey, netKey, keySize);
+				memcpy (this->plainNetKey, netKey, keySize);
 				CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
 			} else {
 				DEBUG_INFO ("Network key password field empty. Keeping the old one");
@@ -606,7 +605,7 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 	DynamicJsonDocument doc (capacity);
 
 	doc["channel"] = gwConfig.channel;
-	doc["networkKey"] = networkKey;
+	doc["networkKey"] = plainNetKey;
 	doc["networkName"] = gwConfig.networkName;
 
 	if (serializeJson (doc, configFile) == 0) {
@@ -632,7 +631,7 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 
 	configFile.close ();
 
-	memset (networkKey, 0, KEY_LENGTH);
+	//memset (networkKey, 0, KEY_LENGTH);
 
 	DEBUG_DBG ("Gateway configuration saved to flash. %u bytes", size);
 	return true;
@@ -676,7 +675,7 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 			DEBUG_INFO ("Configuration loaded from flash");
 		}
 
-		initWiFi (gwConfig.channel, COMM_GATEWAY, gwConfig.networkName);
+		initWiFi (gwConfig.channel, gwConfig.networkName, plainNetKey, COMM_GATEWAY);
 		comm->begin (NULL, gwConfig.channel, COMM_GATEWAY);
 		comm->onDataRcvd (rx_cb);
 		comm->onDataSent (tx_cb);
@@ -770,25 +769,25 @@ void EnigmaIOTGatewayClass::handle () {
 			flashTx = true;
 		} else {
 			rxOntime = millis ();
-			digitalWrite (rxled, LOW);
+			digitalWrite (rxled, LED_ON);
 		}
 		flashRx = false;
 	}
 
 	if (rxled != txled) {
 		if (!digitalRead (rxled) && millis () - rxOntime > rxLedOnTime) {
-			digitalWrite (rxled, HIGH);
+			digitalWrite (rxled, LED_OFF);
 		}
 	}
 
 	if (flashTx) {
 		txOntime = millis ();
-		digitalWrite (txled, LOW);
+		digitalWrite (txled, LED_ON);
 		flashTx = false;
 	}
 
 	if (!digitalRead (txled) && millis () - txOntime > txLedOnTime) {
-		digitalWrite (txled, HIGH);
+		digitalWrite (txled, LED_OFF);
 	}
 //#endif
 
@@ -1072,7 +1071,6 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 		error = nodelist.checkNodeName (nodeName, mac);
 	}
 
-	// TODO: Send response error
 	nodeNameSetRespose (node, error);
 
 	if (error) {

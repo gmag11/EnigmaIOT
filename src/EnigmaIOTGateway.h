@@ -25,6 +25,9 @@
 
 #include "helperFunctions.h"
 
+#define LED_ON HIGH
+#define LED_OFF !LED_ON
+
 /**
   * @brief Message code definition
   */
@@ -215,7 +218,7 @@ protected:
 	onNodeDisconnected_t notifyNodeDisconnection; ///< @brief Callback function that will be invoked when a node gets disconnected
 	bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
 	gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
-	char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
+	//char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
 	char plainNetKey[KEY_LENGTH];
 #ifdef ESP32
 	portMUX_TYPE myMutex = portMUX_INITIALIZER_UNLOCKED; ///< @brief Handle to control critical sections

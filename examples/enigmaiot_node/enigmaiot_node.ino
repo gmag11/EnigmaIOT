@@ -8,28 +8,43 @@
   * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
 
-#ifndef ESP8266
+#/*ifndef ESP8266
 #error Node only supports ESP8266 platform
-#endif
+#endif*/
 
 #include <Arduino.h>
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
 #include <CayenneLPP.h>
 
+#ifdef ESP8266
 #include <ESP8266WiFi.h>
+#include <ESPAsyncTCP.h> // Comment to compile for ESP32
+#include <Hash.h>
+#elif defined ESP32
+#include <WiFi.h>
+//#include <AsyncTCP.h> // Comment to compile for ESP8266
+#include <SPIFFS.h>
+#include <Update.h>
+#include <driver/adc.h>
+#endif
 #include <ArduinoJson.h>
 #include <Curve25519.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
-#include <ESPAsyncTCP.h>
-#include <Hash.h>
 #include <DNSServer.h>
+#include <FS.h>
+
+#ifndef LED_BUILTIN
+#define LED_BUILTIN 5 // ESP32 boards noramlly have a LED in GPIO5
+#endif // !LED_BUILTIN
 
 #define BLUE_LED LED_BUILTIN
 constexpr auto RESET_PIN = 13;
 
+#ifdef ESP8266
 ADC_MODE (ADC_VCC);
+#endif
 
 void connectEventHandler () {
 	Serial.println ("Registered");
@@ -73,6 +88,8 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 		deserializeMsgPack (doc, tempBuffer, length);
 		serializeJsonPretty (doc, Serial);
 		break;
+	default:
+		DEBUG_WARN ("Payload encoding %d is not yet supported", payloadEncoding);
 	}
 }
 
@@ -92,13 +109,21 @@ void setup () {
 	// Put here your code to read sensor and compose buffer
 	CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
 
+#ifdef ESP8266
 	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
+#elif defined ESP32
+	msg.addAnalogInput (0, (float)(analogRead (ADC1_CHANNEL_0_GPIO_NUM) * 4096 / 3.6));
+#endif
 	msg.addTemperature (1, 20.34);
 	msg.addDigitalInput (2, 123);
 	msg.addBarometricPressure (3, 1007.25);
 	msg.addCurrent (4, 2.43);
 
-	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
+#ifdef ESP8266
+	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ())/ 1000);
+#elif defined ESP32
+	Serial.printf ("Vcc: %f\n", (float)(analogRead(ADC1_CHANNEL_0_GPIO_NUM) * 4096 / 3.6));
+#endif
 	// End of user code
 
 	Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
@@ -109,7 +134,7 @@ void setup () {
 	} else {
 		Serial.println ("---- Data sent");
 	}
-	Serial.printf ("Total time: %d ms\n", millis () - start);
+	Serial.printf ("Total time: %lu ms\n", millis () - start);
 
 	// Go to sleep
 	EnigmaIOTNode.sleep ();

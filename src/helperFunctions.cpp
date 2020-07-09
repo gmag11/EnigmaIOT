@@ -28,7 +28,7 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 	return tempStr;
 }
 
-void initWiFi (uint8_t channel, uint8_t role, const char* networkName) {
+void initWiFi (uint8_t channel, const char* networkName, const char* networkKey, uint8_t role) {
 	DEBUG_DBG ("initWifi");
 	if (role == 0) { // Node
 		WiFi.mode (WIFI_STA);
@@ -40,7 +40,7 @@ void initWiFi (uint8_t channel, uint8_t role, const char* networkName) {
 	} else { // Gateway
 		WiFi.mode (WIFI_AP);
 		// TODO: password should be true random or use network key
-		WiFi.softAP (networkName, "2599657852368549566551", channel);
+		WiFi.softAP (networkName, networkKey, channel);
 		DEBUG_DBG ("Mode set to AP in channel %u", channel);
 	}
 

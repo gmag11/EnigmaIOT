@@ -8,7 +8,7 @@
 
 #ifndef _ENIGMAIOTNODE_h
 #define _ENIGMAIOTNODE_h
-#ifdef ESP8266
+//#ifdef ESP8266
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
@@ -70,7 +70,7 @@ enum nodeInvalidateReason_t {
 /**
   * @brief Context data to be stored con persistent storage to be used after wake from sleep mode
   */
-struct rtcmem_data_t {
+typedef struct {
 	uint32_t crc32; /**< CRC to check RTC data integrity */
 	uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
 	uint16_t lastMessageCounter; /**< Node last message counter */
@@ -87,7 +87,7 @@ struct rtcmem_data_t {
 	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
 	uint8_t commErrors = 0; /**< number of non acknowledged packets. May mean that gateway is not available or its channel has changed.
 								This is used to retrigger Gateway scan*/
-};
+} rtcmem_data_t;
 
 typedef nodeMessageType nodeMessageType_t;
 
@@ -121,7 +121,9 @@ protected:
 	onConnected_t notifyConnection; ///< @brief Callback that will be called anytime a new node is registered
 	onDisconnected_t notifyDisconnection; ///< @brief Callback that will be called anytime a node is disconnected
 	bool useCounter = true; ///< @brief `true` means that data message counter will be used to mark message order
+#ifdef ESP8266
 	rtcmem_data_t rtcmem_data; ///< @brief Context data to be stored on persistent storage
+#endif
 	bool sleepRequested = false; ///< @brief `true` means that this node will sleep as soon a message is sent and downlink wait time has passed
 	uint64_t sleepTime; ///< @brief Time in microseconds that this node will be slept between measurements
 	uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed
@@ -486,13 +488,7 @@ public:
 	  * @brief Returns sleep period in seconds
 	  * @return Sleep period in seconds
 	  */
-	uint32_t getSleepTime () {
-		if (!node.getSleepy ()) {
-			return 0;
-		} else {
-			return rtcmem_data.sleepTime;
-		}
-	}
+	uint32_t getSleepTime ();
 
 	/**
 	  * @brief This method should be called periodically for instance inside `loop()` function.
@@ -687,9 +683,7 @@ public:
 	 * @brief Gets latest RSSI measurement. It is updated during start up or in case of transmission errors
 	 * @return RSSI value
 	 */
-	int8_t getRSSI () {
-		return rtcmem_data.rssi;
-	}
+	int8_t getRSSI ();
 
 	/**
 	 * @brief Deletes configuration file stored on SPIFFS. It makes neccessary to configure it again using WiFi Portal
@@ -700,5 +694,5 @@ public:
 
 extern EnigmaIOTNodeClass EnigmaIOTNode;
 
-#endif // ESP8266
+//#endif // ESP8266
 #endif // _ENIGMAIOTNODE_h

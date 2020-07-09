@@ -72,7 +72,7 @@ float temperature;
 #endif
 
 #ifndef LED_BUILTIN
-#define LED_BUILTIN 5
+#define LED_BUILTIN 2
 #endif // BUILTIN_LED
 
 #define BLUE_LED LED_BUILTIN
@@ -119,7 +119,7 @@ void stopConnectionFlash () {
 	if (connectionLedFlashing) {
 		connectionLedFlashing = false;
 		ets_timer_disarm (&connectionLedTimer);
-		digitalWrite (connectionLed, HIGH);
+		digitalWrite (connectionLed, LED_OFF);
 	}
 #endif // ESP32
 }
@@ -367,7 +367,7 @@ void setup () {
 
 #endif
 	pinMode (LED_BUILTIN, OUTPUT);
-	digitalWrite (LED_BUILTIN, HIGH);
+	digitalWrite (LED_BUILTIN, LED_OFF);
 	startConnectionFlash (100);
 
 #ifdef MEAS_TEMP

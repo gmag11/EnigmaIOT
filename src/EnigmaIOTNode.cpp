@@ -8,19 +8,38 @@
 
 //#define ESP8266
 
-#ifdef ESP8266
+//#ifdef ESP8266
 #include <Arduino.h>
 #include "EnigmaIOTNode.h"
 #include "timeManager.h"
 #include <FS.h>
 #include <MD5Builder.h>
+#ifdef ESP8266
 #include <Updater.h>
+#elif defined ESP32
+#include <Update.h>
+#include <SPIFFS.h>
+#include "esp_wifi.h"
+#endif
 #include <StreamString.h>
 #include <ArduinoJson.h>
 
 const char CONFIG_FILE[] = "/config.json";
 
+int localLed = -1;
+
+#ifdef ESP32
+TimerHandle_t ledTimer;
+#elif defined(ESP8266)
 ETSTimer ledTimer;
+#endif // ESP32
+
+bool nodeConnectionLedFlashing = false;
+
+#ifdef ESP32
+RTC_DATA_ATTR rtcmem_data_t rtcmem_data; ///< @brief Context data to be stored on persistent storage
+#endif
+
 
 void EnigmaIOTNodeClass::resetConfig () {
 	SPIFFS.begin ();
@@ -30,6 +49,18 @@ void EnigmaIOTNodeClass::resetConfig () {
 
 	clearRTC ();
 	ESP.restart ();
+}
+
+uint32_t EnigmaIOTNodeClass::getSleepTime () {
+	if (!node.getSleepy ()) {
+		return 0;
+	} else {
+		return rtcmem_data.sleepTime;
+	}
+}
+
+int8_t EnigmaIOTNodeClass::getRSSI () {
+	return rtcmem_data.rssi;
 }
 
 void EnigmaIOTNodeClass::setLed (uint8_t led, time_t onTime) {
@@ -79,6 +110,7 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
 }
 
 bool EnigmaIOTNodeClass::loadRTCData () {
+#ifdef ESP8266
 	if (ESP.rtcUserMemoryRead (RTC_ADDRESS, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
 		DEBUG_VERBOSE ("Read RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
 	} else {
@@ -86,6 +118,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 		clearRtcData (&rtcmem_data);
 		return false;
 	}
+#endif
 	if (!checkCRC ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t), &rtcmem_data.crc32)) {
 		DEBUG_DBG ("RTC Data is not valid");
 		clearRtcData (&rtcmem_data);
@@ -250,6 +283,7 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 	if (configCleared)
 		return false;
 	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+#ifdef ESP8266
 	if (ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
 		DEBUG_DBG ("Write configuration data to RTC memory");
 #if DEBUG_LEVEL >= VERBOSE
@@ -258,6 +292,7 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 #endif
 		return true;
 	}
+#endif
 	return false;
 }
 
@@ -304,9 +339,16 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	wifiManager->setConnectTimeout (30);
 	wifiManager->setBreakAfterConfig (true);
 	wifiManager->setTryConnectDuringConfigPortal (false);
-	String apname = "EnigmaIoTNode" + String (ESP.getChipId (), 16);
+	char apname[64];
+#ifdef ESP8266
+	snprintf (apname, 64, "EnigmaIoTNode%06x", ESP.getChipId ());
+	//String apname = "EnigmaIoTNode" + String (ESP.getChipId (), 16);
+#elif defined ESP32
+	snprintf (apname, 64, "EnigmaIoTNode%06x", ((uint32_t)ESP.getEfuseMac ()) | 0x00FFFFFF);
+	//String apname = "EnigmaIoTNode" + String (ESP.getEfuseMac (), 16);
+#endif
 
-	boolean result = wifiManager->startConfigPortal (apname.c_str (), NULL);
+	boolean result = wifiManager->startConfigPortal (apname, NULL);
 	if (true /*result*/) {
 		DEBUG_DBG ("==== Config Portal result ====");
 
@@ -347,17 +389,53 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	return result;
 }
 
-void startFlash (time_t period) {
-	ets_timer_disarm (&ledTimer);
-	ets_timer_arm_new (&ledTimer, period, true, true);
+void flashLed (void* led) {
+#ifdef ESP8266
+	digitalWrite (*(int*)led, !digitalRead (*(int*)led));
+#elif defined ESP32
+	digitalWrite (*(int*)localLed, !digitalRead (*(int*)localLed));
+#endif
 }
+
+//void startFlash (time_t period) {
+//	ets_timer_disarm (&ledTimer);
+//	ets_timer_arm_new (&ledTimer, period, true, true);
+//}
+
+void startFlash (time_t period) {
+#ifdef ESP32
+	if (!nodeConnectionLedFlashing) {
+		nodeConnectionLedFlashing = true;
+		ledTimer = xTimerCreate ("led_flash", pdMS_TO_TICKS (period), pdTRUE, (void*)0, flashLed);
+		xTimerStart (ledTimer, 0);
+	}
+#elif defined (ESP8266)
+	ets_timer_disarm (&ledTimer);
+	if (!nodeConnectionLedFlashing) {
+		nodeConnectionLedFlashing = true;
+		ets_timer_arm_new (&ledTimer, period, true, true);
+	}
+#endif // ESP32
+}
+
+//void stopFlash () {
+//	ets_timer_disarm (&ledTimer);
+//}
 
 void stopFlash () {
-	ets_timer_disarm (&ledTimer);
+#ifdef ESP32
+	if (nodeConnectionLedFlashing) {
+		nodeConnectionLedFlashing = false;
+		xTimerStop (ledTimer, 0);
+		xTimerDelete (ledTimer, 0);
 }
-
-void flashLed (void* led) {
-	digitalWrite (*(int*)led, !digitalRead (*(int*)led));
+#elif defined(ESP8266)
+	if (nodeConnectionLedFlashing) {
+		nodeConnectionLedFlashing = false;
+		ets_timer_disarm (&ledTimer);
+		digitalWrite (localLed, HIGH);
+	}
+#endif // ESP32
 }
 
 void EnigmaIOTNodeClass::startIdentifying (time_t period) {
@@ -395,7 +473,10 @@ void EnigmaIOTNodeClass::checkResetButton () {
 
 void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t* networkKey, bool useCounter, bool sleepy) {
 	pinMode (led, OUTPUT);
+#ifdef ESP8266
 	ets_timer_setfn (&ledTimer, flashLed, (void*)&led);
+#endif
+	localLed = led;
 
 	checkResetButton ();
 
@@ -410,8 +491,12 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 	DEBUG_DBG ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
 
 	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
-
-	if (wifi_get_macaddr (STATION_IF, macAddress)) {
+#ifdef ESP8266
+	if (wifi_get_macaddr (STATION_IF, macAddress))
+#elif defined ESP32
+	if (esp_wifi_get_mac (WIFI_IF_STA, macAddress) == ESP_OK)
+#endif
+	{
 		node.setMacAddress (macAddress);
 	}
 
@@ -419,8 +504,8 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 #if DEBUG_LEVEL >= DBG
 		char gwAddress[ENIGMAIOT_ADDR_LEN * 3];
 		DEBUG_DBG ("RTC data loaded. Gateway: %s", mac2str (rtcmem_data.gateway, gwAddress));
-#endif
 		DEBUG_DBG ("Own address: %s", mac2str (node.getMacAddress (), gwAddress));
+#endif
 	} else { // No RTC data, first boot or not configured
 		if (gateway && networkKey) { // If connection data has been passed to library
 			DEBUG_DBG ("EnigmaIot started with config data con begin() call");
@@ -503,23 +588,36 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 
 	}
 
-	initWiFi (rtcmem_data.channel);
+	initWiFi (rtcmem_data.channel, rtcmem_data.networkName);
 	comm->begin (rtcmem_data.gateway, rtcmem_data.channel);
 	comm->onDataRcvd (rx_cb);
 	comm->onDataSent (tx_cb);
 
+#ifdef ESP8266
 	wifi_set_channel (rtcmem_data.channel);
+#elif defined ESP32
+	esp_wifi_set_channel (rtcmem_data.channel, WIFI_SECOND_CHAN_NONE);
+#endif
+
 	DEBUG_DBG ("Comms started. Channel %u", rtcmem_data.channel);
 
 }
 
-bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStoreData) {
-	DEBUG_DBG ("Searching for AP %s", data->networkName);
+#ifdef ESP32
+int scanGatewaySSID (char* name, int& wifiIndex) {
+	uint32_t scanStarted;
+	int16_t numAP;
+	const int MAX_INDEXES = 10;
+	int numFound = 0;
+	int indexes[MAX_INDEXES];
 
-	//WiFi.mode (WIFI_STA);
-	int numWifi = WiFi.scanNetworks (false, false, 0, (uint8_t*)(data->networkName));
-	time_t scanStarted = millis ();
-	while (!(WiFi.scanComplete () || (millis () - scanStarted) > 1500)) {
+	if (!name) {
+		DEBUG_WARN ("SSID Name is NULL");
+		return 0;
+	}
+
+	scanStarted = millis ();
+	while (!(numAP = WiFi.scanComplete ()) || (millis () - scanStarted) > 1500) { //scanNetworks (false, false, false, 300U);
 #if DEBUG_LEVEL >= DBG
 		delay (250);
 		Serial.printf ("%lu.", millis () - scanStarted);
@@ -528,18 +626,62 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 #endif
 	}
 
+	DEBUG_DBG ("Found %d APs in %lu ms\n", numAP, millis () - scanStarted);
+
+	wifi_ap_record_t* wifiAP;
+
+	for (int i = 0; i < numAP; i++) {
+		wifiAP = (wifi_ap_record_t*)WiFi.getScanInfoByIndex (i);
+		DEBUG_DBG ("Found AP %.*s with BSSID " MACSTR " and RSSI %d dBm\n", 32, wifiAP->ssid, MAC2STR (wifiAP->bssid), wifiAP->rssi);
+		if (!strncmp (name, (char*)(wifiAP->ssid), 32)) {
+			indexes[numFound] = i;
+			numFound++;
+			if (numFound >= MAX_INDEXES) {
+				break;
+			}
+		}
+	}
+
+	wifiIndex = indexes[0];
+
+	return numFound;
+}
+#endif
+
+bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStoreData) {
+	DEBUG_DBG ("Searching for AP %s", data->networkName);
+
+	//WiFi.mode (WIFI_STA);
+	int numWifi = 0;
+	int wifiIndex = 0;
+
+	time_t scanStarted = millis ();
+#ifdef ESP8266
+	numWifi = WiFi.scanNetworks (false, false, 0, (uint8_t*)(data->networkName));
+	while (!(WiFi.scanComplete () || (millis () - scanStarted) > 1500)) {
+#if DEBUG_LEVEL >= DBG
+		delay (250);
+		Serial.printf ("%lu.", millis () - scanStarted);
+#else
+		delay (50);
+#endif
+}
+#elif defined ESP32
+	numWifi = scanGatewaySSID (data->networkName, wifiIndex);
+#endif // ESP8266
+
 	uint8_t prevGwAddr[ENIGMAIOT_ADDR_LEN];
 	memcpy (prevGwAddr, data->gateway, 6);
 
 	if (numWifi > 0) {
 		DEBUG_INFO ("Gateway %s found: %d", data->networkName, numWifi);
-		DEBUG_INFO ("BSSID: %s", WiFi.BSSIDstr (0).c_str ());
-		DEBUG_INFO ("Channel: %d", WiFi.channel (0));
-		DEBUG_INFO ("RSSI: %d", WiFi.RSSI (0));
+		DEBUG_INFO ("BSSID: %s", WiFi.BSSIDstr (wifiIndex).c_str ());
+		DEBUG_INFO ("Channel: %d", WiFi.channel (wifiIndex));
+		DEBUG_INFO ("RSSI: %d", WiFi.RSSI (wifiIndex));
 		// TODO: In future, to manage redundancy select higher RSSI gateway
-		data->channel = WiFi.channel (0); // It is done here, maybe
-		data->rssi = WiFi.RSSI (0);
-		memcpy (data->gateway, WiFi.BSSID (0), 6);
+		data->channel = WiFi.channel (wifiIndex); // It is done here, maybe
+		data->rssi = WiFi.RSSI (wifiIndex);
+		memcpy (data->gateway, WiFi.BSSID (wifiIndex), 6);
 
 		if (shouldStoreData) {
 			DEBUG_DBG ("Found gateway. Storing");
@@ -557,7 +699,11 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		//WiFi.mode (WIFI_AP);
 		//WiFi.softAPdisconnect ();
 
+#ifdef ESP8266
 		wifi_set_channel (data->channel);
+#elif defined ESP32
+		esp_wifi_set_channel (data->channel, WIFI_SECOND_CHAN_NONE);
+#endif
 
 		requestReportRSSI = true;
 		return true;
@@ -566,7 +712,6 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 	return false;
 }
 
-
 void EnigmaIOTNodeClass::stop () {
 	comm->stop ();
 	DEBUG_DBG ("Communication layer uninitalized");
@@ -574,19 +719,28 @@ void EnigmaIOTNodeClass::stop () {
 
 void EnigmaIOTNodeClass::setSleepTime (uint32_t sleepTime) {
 	if (node.getInitAsSleepy ()) {
+#ifdef ESP8266 // ESP32 does not have this limitation
 		uint64_t maxSleepTime = (ESP.deepSleepMax () / (uint64_t)1000000);
+#endif
 
 		if (sleepTime == 0) {
 			node.setSleepy (false);
 			//rtcmem_data.sleepy = false; // This setting is temporary, do not store
-		} else if (sleepTime < maxSleepTime) {
+		} else if (sleepTime 
+#ifdef ESP8266
+				   < maxSleepTime
+#endif
+				   ) {
 			node.setSleepy (true);
 			rtcmem_data.sleepTime = sleepTime;
-		} else {
+		} 
+#ifdef ESP8266
+		else {
 			DEBUG_DBG ("Max sleep time is %lu", (uint32_t)maxSleepTime);
 			node.setSleepy (true);
 			rtcmem_data.sleepTime = (uint32_t)maxSleepTime;
 		}
+#endif
 		this->sleepTime = (uint64_t)rtcmem_data.sleepTime * (uint64_t)1000000;
 		DEBUG_DBG ("Sleep time set to %d. Sleepy mode is %s",
 				   rtcmem_data.sleepTime,
@@ -652,9 +806,13 @@ void EnigmaIOTNodeClass::handle () {
 	// Check if this should go to sleep
 	if (node.getSleepy ()) {
 		if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered () && !indentifying) {
-			uint64_t usSleep = sleepTime / (uint64_t)1000;
-			DEBUG_INFO ("Go to sleep for %lu ms", (uint32_t)(usSleep));
+			uint64_t msSleep = sleepTime / (uint64_t)1000;
+			DEBUG_INFO ("Go to sleep for %lu ms", (uint32_t)(msSleep));
+#ifdef ESP8266
 			ESP.deepSleep (sleepTime);
+#elif defined ESP32
+			esp_deep_sleep (sleepTime);
+#endif
 		}
 	}
 
@@ -672,9 +830,14 @@ void EnigmaIOTNodeClass::handle () {
 					DEBUG_ERROR ("Error saving data on RTC");
 				}
 
-				DEBUG_INFO ("Registration timeout. Go to sleep for %lu ms", (uint32_t)(RECONNECTION_PERIOD * 4));
 				uint32_t rnd = Crypto.random (PRE_REG_DELAY * 1000); // nanoseconds
+
+				DEBUG_INFO ("Registration timeout. Go to sleep for %lu ms", (uint32_t)(RECONNECTION_PERIOD * 4 + rnd/1000));
+#ifdef ESP8266
 				ESP.deepSleep (RECONNECTION_PERIOD * 4000 + rnd, RF_NO_CAL);
+#elif defined ESP32
+				ESP.deepSleep (RECONNECTION_PERIOD * 4000 + rnd);
+#endif
 			}
 		} else { // Retry registration
 			if (millis () - node.getLastMessageTime () > RECONNECTION_PERIOD * 5) {
@@ -776,7 +939,7 @@ void EnigmaIOTNodeClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
 }
 
 bool EnigmaIOTNodeClass::checkCRC (const uint8_t* buf, size_t count, uint32_t* crc) {
-	uint32 recvdCRC;
+	uint32_t recvdCRC;
 
 	memcpy (&recvdCRC, crc, sizeof (uint32_t));
 	//DEBUG_VERBOSE ("Received CRC32: 0x%08X", *crc32);
@@ -808,7 +971,11 @@ bool EnigmaIOTNodeClass::clientHello () {
 	node.setStatus (INIT);
 	rtcmem_data.nodeRegisterStatus = INIT;
 	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
+#ifdef ESP8266
 	if (wifi_get_macaddr (STATION_IF, macAddress)) {
+#elif defined ESP32
+	if (esp_wifi_get_mac (WIFI_IF_STA, macAddress) == ESP_OK) {
+#endif
 		node.setMacAddress (macAddress);
 	}
 
@@ -1558,7 +1725,9 @@ void EnigmaIOTNodeClass::clearRTC () {
 
 	memset (data, 0, sizeof (rtcmem_data));
 
+#ifdef ESP8266
 	ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)data, sizeof (rtcmem_data));
+#endif
 
 	DEBUG_DBG ("RTC Cleared");
 }
@@ -1701,7 +1870,9 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 				DEBUG_ERROR ("Error begginning OTA. OTA size: %u", otaSize);
 				return false;
 			}
+#ifdef ESP8266
 			Update.runAsync (true);
+#endif
 			if (!Update.setMD5 (md5buffer)) {
 				DEBUG_ERROR ("Error setting MD5");
 				return false;
@@ -2037,4 +2208,4 @@ void EnigmaIOTNodeClass::getStatus (uint8_t* mac_addr, uint8_t status) {
 
 EnigmaIOTNodeClass EnigmaIOTNode;
 
-#endif
+//#endif
