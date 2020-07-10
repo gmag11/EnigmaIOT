@@ -349,7 +349,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 #endif
 
 	boolean result = wifiManager->startConfigPortal (apname, NULL);
-	if (true /*result*/) {
+	if (result) {
 		DEBUG_DBG ("==== Config Portal result ====");
 
 		DEBUG_DBG ("Network Name: %s", networkNameParam.getValue ());
@@ -384,7 +384,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	}
 
 	if (notifyWiFiManagerExit) {
-		notifyWiFiManagerExit (true /*result*/);
+		notifyWiFiManagerExit (result);
 	}
 
 	return result;
