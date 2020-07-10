@@ -312,7 +312,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	AsyncWebServer server (80);
 	DNSServer dns;
 
-	char networkKey[33] = "";
+	//char networkKey[33] = "";
 	char sleepy[5] = "10";
 	char networkName[NETWORK_NAME_LENGTH] = "";
 	char nodeName[NODE_NAME_LENGTH] = "";
@@ -320,14 +320,14 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	wifiManager = new AsyncWiFiManager (&server, &dns);
 
 	AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
-	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
+	//AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
 	AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
 	AsyncWiFiManagerParameter nodeNameParam ("nodename", "Node Name", nodeName, NODE_NAME_LENGTH, "type=\"text\" maxlength=32");
 
 	// TODO: Check node name valid characters
 
 	wifiManager->addParameter (&networkNameParam);
-	wifiManager->addParameter (&netKeyParam);
+	//wifiManager->addParameter (&netKeyParam);
 	wifiManager->addParameter (&sleepyParam);
 	wifiManager->addParameter (&nodeNameParam);
 
@@ -353,7 +353,8 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 		DEBUG_DBG ("==== Config Portal result ====");
 
 		DEBUG_DBG ("Network Name: %s", networkNameParam.getValue ());
-		DEBUG_DBG ("Network Key: %s", netKeyParam.getValue ());
+		const char* netkey = WiFi.psk ().c_str ();
+		DEBUG_DBG ("Network Key: %s", netkey);
 		DEBUG_DBG ("Sleppy time: %s", sleepyParam.getValue ());
 		DEBUG_DBG ("Node Name: %s", nodeNameParam.getValue ());
 
@@ -362,7 +363,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 		memcpy (data->networkName, networkNameParam.getValue (), networkNameParam.getValueLength ());
 
 		DEBUG_DBG ("Stored network name: %s", data->networkName);
-		strncpy ((char*)(data->networkKey), netKeyParam.getValue (), KEY_LENGTH);
+		strncpy ((char*)(data->networkKey), netkey, KEY_LENGTH);
 		DEBUG_DBG ("Stored network key before hash: %.*s", KEY_LENGTH, (char*)(data->networkKey));
 		// TODO: use WiFi Pass as Raw Network Key
 
