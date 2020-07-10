@@ -57,7 +57,7 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 
-#define MEAS_TEMP // Temperature measurement for Gateway monitoring
+//#define MEAS_TEMP // Temperature measurement for Gateway monitoring using DS18B20
 
 #ifdef MEAS_TEMP
 #include <DallasTemperature.h>
@@ -402,7 +402,7 @@ void setup () {
 
 	EnigmaIOTGateway.configWiFiManager ();
 
-	WiFi.softAP (EnigmaIOTGateway.getNetworkName (), EnigmaIOTGateway.getNetworkKey ());
+	WiFi.softAP (EnigmaIOTGateway.getNetworkName (), EnigmaIOTGateway.getNetworkKey (true));
 	stopConnectionFlash ();
 
 	DEBUG_INFO ("STA MAC Address: %s", WiFi.macAddress ().c_str ());

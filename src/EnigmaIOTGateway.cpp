@@ -535,7 +535,7 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			size_t size = configFile.size ();
 			DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, size);
 
-			const size_t capacity = JSON_OBJECT_SIZE (3) + 50;
+			const size_t capacity = JSON_OBJECT_SIZE (3) + 150;
 			DynamicJsonDocument doc (capacity);
 
 			DeserializationError error = deserializeJson (doc, configFile);
@@ -568,7 +568,7 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 
 #if DEBUG_LEVEL >= DBG
 			char* output;
-			size_t json_len = measureJsonPretty (doc);
+			size_t json_len = measureJsonPretty (doc)+1;
 			output = (char*)malloc (json_len);
 			serializeJsonPretty (doc, output, json_len);
 
@@ -601,7 +601,7 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 		return false;
 	}
 
-	const size_t capacity = JSON_OBJECT_SIZE (3) + 50;
+	const size_t capacity = JSON_OBJECT_SIZE (3) + 150;
 	DynamicJsonDocument doc (capacity);
 
 	doc["channel"] = gwConfig.channel;
@@ -617,11 +617,11 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 
 #if DEBUG_LEVEL >= DBG
 	char* output;
-	size_t json_len = measureJsonPretty (doc);
+	size_t json_len = measureJsonPretty (doc) + 1;
 	output = (char*)malloc (json_len);
 	serializeJsonPretty (doc, output, json_len);
 
-	DEBUG_DBG ("%s", output);
+	DEBUG_DBG ("\n%s", output);
 
 	free (output);
 #endif
