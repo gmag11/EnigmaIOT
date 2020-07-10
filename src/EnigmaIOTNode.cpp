@@ -37,7 +37,7 @@ ETSTimer ledTimer;
 bool nodeConnectionLedFlashing = false;
 
 #ifdef ESP32
-RTC_DATA_ATTR rtcmem_data_t rtcmem_data; ///< @brief Context data to be stored on persistent storage
+RTC_DATA_ATTR rtcmem_data_t rtcmem_data_storage; ///< @brief Context data to be kept on persistent storage
 #endif
 
 
@@ -118,6 +118,9 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 		clearRtcData (&rtcmem_data);
 		return false;
 	}
+#elif defined ESP32
+	memcpy ((uint8_t*)&rtcmem_data, (uint8_t*)&rtcmem_data_storage, sizeof (rtcmem_data));
+	DEBUG_WARN ("----- Read RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
 #endif
 	if (!checkCRC ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t), &rtcmem_data.crc32)) {
 		DEBUG_DBG ("RTC Data is not valid");
@@ -282,9 +285,9 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 bool EnigmaIOTNodeClass::saveRTCData () {
 	if (configCleared)
 		return false;
-	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 #ifdef ESP8266
-	if (ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
+	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+	if (ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)&rtcmem_data, &rtcmem_data))) {
 		DEBUG_DBG ("Write configuration data to RTC memory");
 #if DEBUG_LEVEL >= VERBOSE
 		DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
@@ -292,6 +295,12 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 #endif
 		return true;
 	}
+#elif defined ESP32
+	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t)); 
+	memcpy ((uint8_t*)&rtcmem_data_storage, (uint8_t*)&rtcmem_data, sizeof (rtcmem_data));
+	rtcmem_data_storage.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data_storage.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+	DEBUG_WARN ("----- Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
+	return true;
 #endif
 	return false;
 }
@@ -344,9 +353,10 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	snprintf (apname, 64, "EnigmaIoTNode%06x", ESP.getChipId ());
 	//String apname = "EnigmaIoTNode" + String (ESP.getChipId (), 16);
 #elif defined ESP32
-	snprintf (apname, 64, "EnigmaIoTNode%06x", ((uint32_t)ESP.getEfuseMac ()) | 0x00FFFFFF);
+	snprintf (apname, 64, "EnigmaIoTNode%06x", (uint32_t)(ESP.getEfuseMac ()) & (uint64_t)0x0000000000FFFFFF);
 	//String apname = "EnigmaIoTNode" + String (ESP.getEfuseMac (), 16);
 #endif
+	DEBUG_VERBOSE ("Start AP: %s", apname);
 
 	boolean result = wifiManager->startConfigPortal (apname, NULL);
 	if (result) {
@@ -559,8 +569,8 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 				}
 			} else { // Configuration empty. Enter config AP mode
 				DEBUG_DBG ("No flash data present. Starting Configuration AP");
-				configWiFiManager (&rtcmem_data);
-				if (true) {// AP not needed. Assume always valid
+				bool result = configWiFiManager (&rtcmem_data);
+				if (result) {
 					DEBUG_DBG ("Got configuration. Searching for Gateway");
 					if (!searchForGateway (&rtcmem_data), true) {
 						DEBUG_DBG ("Found EnigmaIOT Gateway. Storing configuration");
@@ -597,7 +607,16 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 #ifdef ESP8266
 	wifi_set_channel (rtcmem_data.channel);
 #elif defined ESP32
-	esp_wifi_set_channel (rtcmem_data.channel, WIFI_SECOND_CHAN_NONE);
+	esp_err_t err_ok;
+	if ((err_ok = esp_wifi_set_promiscuous (true))) {
+		DEBUG_ERROR ("Error setting promiscuous mode: %s", esp_err_to_name (err_ok));
+		}
+	if ((err_ok = esp_wifi_set_channel (rtcmem_data.channel, WIFI_SECOND_CHAN_NONE))) {
+		DEBUG_ERROR ("Error setting wifi channel: %s", esp_err_to_name (err_ok));
+	}
+	if ((err_ok = esp_wifi_set_promiscuous (false))) {
+		DEBUG_ERROR ("Error setting promiscuous mode off: %s", esp_err_to_name (err_ok));
+	}
 #endif
 
 	DEBUG_DBG ("Comms started. Channel %u", rtcmem_data.channel);
@@ -607,7 +626,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 #ifdef ESP32
 int scanGatewaySSID (char* name, int& wifiIndex) {
 	uint32_t scanStarted;
-	int16_t numAP;
+	int16_t numAP = 0;
 	const int MAX_INDEXES = 10;
 	int numFound = 0;
 	int indexes[MAX_INDEXES];
@@ -618,7 +637,10 @@ int scanGatewaySSID (char* name, int& wifiIndex) {
 	}
 
 	scanStarted = millis ();
-	while (!(numAP = WiFi.scanComplete ()) || (millis () - scanStarted) > 1500) { //scanNetworks (false, false, false, 300U);
+	numAP = WiFi.scanNetworks (false, false, false, 300U);
+	DEBUG_DBG ("Found %d APs in %lu ms", numAP, millis () - scanStarted);
+	DEBUG_DBG ("Scan finished. Result = %d", WiFi.scanComplete ());
+	while (!(WiFi.scanComplete ()) && (millis () - scanStarted) > 1500) { //
 #if DEBUG_LEVEL >= DBG
 		delay (250);
 		Serial.printf ("%lu.", millis () - scanStarted);
@@ -626,14 +648,15 @@ int scanGatewaySSID (char* name, int& wifiIndex) {
 		delay (50);
 #endif
 	}
+	DEBUG_DBG ("Scan finished. Result = %d", WiFi.scanComplete ());
 
-	DEBUG_DBG ("Found %d APs in %lu ms\n", numAP, millis () - scanStarted);
+	DEBUG_DBG ("Found %d APs in %lu ms", numAP, millis () - scanStarted);
 
 	wifi_ap_record_t* wifiAP;
 
 	for (int i = 0; i < numAP; i++) {
 		wifiAP = (wifi_ap_record_t*)WiFi.getScanInfoByIndex (i);
-		DEBUG_DBG ("Found AP %.*s with BSSID " MACSTR " and RSSI %d dBm\n", 32, wifiAP->ssid, MAC2STR (wifiAP->bssid), wifiAP->rssi);
+		DEBUG_DBG ("Found AP %.*s with BSSID " MACSTR " and RSSI %d dBm", 32, wifiAP->ssid, MAC2STR (wifiAP->bssid), wifiAP->rssi);
 		if (!strncmp (name, (char*)(wifiAP->ssid), 32)) {
 			indexes[numFound] = i;
 			numFound++;
@@ -703,7 +726,16 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 #ifdef ESP8266
 		wifi_set_channel (data->channel);
 #elif defined ESP32
-		esp_wifi_set_channel (data->channel, WIFI_SECOND_CHAN_NONE);
+		esp_err_t err_ok;
+		if ((err_ok = esp_wifi_set_promiscuous (true))) {
+			DEBUG_ERROR ("Error setting promiscuous mode: %s", esp_err_to_name (err_ok));
+	}
+		if ((err_ok = esp_wifi_set_channel (data->channel, WIFI_SECOND_CHAN_NONE))) {
+			DEBUG_ERROR ("Error setting wifi channel: %s", esp_err_to_name (err_ok));
+		}
+		if ((err_ok = esp_wifi_set_promiscuous (false))) {
+			DEBUG_ERROR ("Error setting promiscuous mode off: %s", esp_err_to_name (err_ok));
+		}
 #endif
 
 		requestReportRSSI = true;

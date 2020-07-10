@@ -32,6 +32,18 @@ void initWiFi (uint8_t channel, const char* networkName, const char* networkKey,
 	DEBUG_DBG ("initWifi");
 	if (role == 0) { // Node
 		WiFi.mode (WIFI_STA);
+#ifdef ESP32
+		esp_err_t err_ok;
+		if (!(err_ok = esp_wifi_set_promiscuous (true))) {
+			DEBUG_ERROR ("Error setting promiscuous mode: %s", esp_err_to_name (err_ok));
+		}
+		if (!(err_ok = esp_wifi_set_channel (channel, WIFI_SECOND_CHAN_NONE))) {
+			DEBUG_ERROR ("Error setting wifi channel: %s", esp_err_to_name (err_ok));
+		}
+		if (!(err_ok = esp_wifi_set_promiscuous (false))) {
+			DEBUG_ERROR ("Error setting promiscuous mode off: %s", esp_err_to_name (err_ok));
+		}
+#endif
 		WiFi.disconnect ();
 #ifdef ESP8266
 		wifi_set_channel (channel);
@@ -39,7 +51,6 @@ void initWiFi (uint8_t channel, const char* networkName, const char* networkKey,
 		DEBUG_DBG ("Mode set to STA. Channel %u", channel);
 	} else { // Gateway
 		WiFi.mode (WIFI_AP);
-		// TODO: password should be true random or use network key
 		WiFi.softAP (networkName, networkKey, channel);
 		DEBUG_DBG ("Mode set to AP in channel %u", channel);
 	}

@@ -73,6 +73,8 @@ enum nodeInvalidateReason_t {
 typedef struct {
 	uint32_t crc32; /**< CRC to check RTC data integrity */
 	uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
+	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
+	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
 	uint16_t lastMessageCounter; /**< Node last message counter */
 	uint16_t nodeId; /**< Node identification */
 	uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
@@ -80,11 +82,9 @@ typedef struct {
 	int8_t rssi; /**< Gateway signal strength */
 	uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
 	char networkName[NETWORK_NAME_LENGTH]; /**< Network name. Used to search gateway peer */
-	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
 	bool sleepy; /**< Sleepy node */
 	uint32_t sleepTime = 0; /**< Time to sleep between sensor data delivery */
 	char nodeName[NODE_NAME_LENGTH + 1]; /**< Node name. Use as a human friendly name to avoid use of numeric address*/
-	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
 	uint8_t commErrors = 0; /**< number of non acknowledged packets. May mean that gateway is not available or its channel has changed.
 								This is used to retrigger Gateway scan*/
 } rtcmem_data_t;
@@ -121,9 +121,7 @@ protected:
 	onConnected_t notifyConnection; ///< @brief Callback that will be called anytime a new node is registered
 	onDisconnected_t notifyDisconnection; ///< @brief Callback that will be called anytime a node is disconnected
 	bool useCounter = true; ///< @brief `true` means that data message counter will be used to mark message order
-#ifdef ESP8266
 	rtcmem_data_t rtcmem_data; ///< @brief Context data to be stored on persistent storage
-#endif
 	bool sleepRequested = false; ///< @brief `true` means that this node will sleep as soon a message is sent and downlink wait time has passed
 	uint64_t sleepTime; ///< @brief Time in microseconds that this node will be slept between measurements
 	uint8_t dataMessageSent[MAX_MESSAGE_LENGTH]; ///< @brief Buffer where sent message is stored in case of retransmission is needed

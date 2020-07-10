@@ -12,7 +12,6 @@ extern "C" {
 #include <espnow.h>
 #elif defined ESP32
 #include <esp_now.h>
-#include <esp_log.h>
 #include <esp_wifi.h>
 #endif
 }
@@ -37,8 +36,9 @@ void Espnow_halClass::initComms (peerType_t peerType) {
 		networkGw.channel = channel;
 		networkGw.ifidx = ESP_IF_WIFI_STA;
 		networkGw.encrypt = false;
-		esp_now_add_peer (&networkGw);
-		DEBUG_INFO ("Gateway peer Added");
+		esp_err_t result = esp_now_add_peer (&networkGw);
+		DEBUG_INFO ("Gateway peer Added in channel %d. Result = %s", channel, esp_err_to_name(result));
+		DEBUG_DBG ("WIFI channel is %d", WiFi.channel ());
 #endif
 	}
 #ifdef ESP8266
@@ -67,7 +67,9 @@ void ICACHE_FLASH_ATTR Espnow_halClass::tx_cb (uint8_t* mac_addr, uint8_t status
 void Espnow_halClass::begin (uint8_t* gateway, uint8_t channel, peerType_t peerType) {
 	_ownPeerType = peerType;
 	_peerType = peerType;
+	DEBUG_INFO ("Starting ESP-NOW as %s", _peerType == COMM_GATEWAY ? "gateway" : "node");
 	if (peerType == COMM_NODE) {
+		DEBUG_DBG ("Gateway address is " MACSTR, MAC2STR (gateway));
 		memcpy (this->gateway, gateway, COMMS_HAL_ADDR_LEN);
 		this->channel = channel;
 	}
@@ -75,7 +77,7 @@ void Espnow_halClass::begin (uint8_t* gateway, uint8_t channel, peerType_t peerT
 }
 
 void Espnow_halClass::stop () {
-	Serial.println ("-------------> ESP-NOW STOP");
+	DEBUG_INFO ("-------------> ESP-NOW STOP");
 	esp_now_unregister_recv_cb ();
 	esp_now_unregister_send_cb ();
 	esp_now_deinit ();
@@ -85,7 +87,7 @@ int32_t Espnow_halClass::send (uint8_t* da, uint8_t* data, int len) {
 #ifdef ESP32
 	char buffer[18];
 	mac2str (da, buffer);
-	ESP_LOGD (TAG, "ESP-NOW message to %s", buffer);
+	DEBUG_DBG ("ESP-NOW message to %s", buffer);
 	if (_ownPeerType == COMM_GATEWAY) {
 		esp_now_peer_info_t peer;
 		memcpy (peer.peer_addr, da, COMMS_HAL_ADDR_LEN);
@@ -96,7 +98,7 @@ int32_t Espnow_halClass::send (uint8_t* da, uint8_t* data, int len) {
 		peer.ifidx = ESP_IF_WIFI_AP;
 		peer.encrypt = false;
 		esp_err_t error = esp_now_add_peer (&peer);
-		ESP_LOGD (TAG, "Peer added on channel %u. Result %d", ch, error);
+		DEBUG_DBG ("Peer added on channel %u. Result %d", ch, error);
 
 		//wifi_bandwidth_t bw;
 		//esp_wifi_get_bandwidth (ESP_IF_WIFI_AP, &bw);
@@ -107,10 +109,10 @@ int32_t Espnow_halClass::send (uint8_t* da, uint8_t* data, int len) {
 	// Serial.printf ("Phy Mode ---> %d\n", (int)wifi_get_phy_mode ());
 	int32_t error = esp_now_send (da, data, len);
 #ifdef ESP32
-	ESP_LOGD (TAG, "esp now send result = %d", error);
+	DEBUG_DBG ("esp now send result = %d", error);
 	if (_ownPeerType == COMM_GATEWAY) {
 		esp_err_t error = esp_now_del_peer (da);
-		ESP_LOGD (TAG, "Peer deleted. Result %d", error);
+		DEBUG_DBG ("Peer deleted. Result %d", error);
 
 	}
 #endif

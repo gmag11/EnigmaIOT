@@ -23,6 +23,7 @@
 #endif
 #include "Comms_hal.h"
 #include "helperFunctions.h"
+#include "debug.h"
 
 /**
   * @brief Definition for ESP-NOW hardware abstraction layer
