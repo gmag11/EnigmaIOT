@@ -1760,6 +1760,8 @@ void EnigmaIOTNodeClass::clearRTC () {
 
 #ifdef ESP8266
 	ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)data, sizeof (rtcmem_data));
+#elif defined ESP32
+	memset (rtcmem_data_storage, 0, sizeof (rtcmem_data));
 #endif
 
 	DEBUG_DBG ("RTC Cleared");
