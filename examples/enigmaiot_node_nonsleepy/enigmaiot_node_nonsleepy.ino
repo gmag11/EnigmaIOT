@@ -8,8 +8,8 @@
   * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
 
-#ifndef ESP8266
-#error Node only supports ESP8266 platform
+#if !defined ESP8266 && !defined ESP32
+#error Node only supports ESP8266 or ESP32 platform
 #endif
 
 #include <Arduino.h>
@@ -17,22 +17,35 @@
 #include <espnow_hal.h>
 #include <CayenneLPP.h>
 
+#ifdef ESP8266
 #include <ESP8266WiFi.h>
+//#include <ESPAsyncTCP.h> // Comment to compile for ESP32
+#include <Hash.h>
+#elif defined ESP32
+#include <WiFi.h>
+#include <AsyncTCP.h> // Comment to compile for ESP8266
+#include <SPIFFS.h>
+#include <Update.h>
+#include <driver/adc.h>
+#include "esp_wifi.h"
+#endif
 #include <ArduinoJson.h>
 #include <Curve25519.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
-#include <ESPAsyncTCP.h>
-#include <Hash.h>
 #include <DNSServer.h>
+#include <FS.h>
 
-#ifndef ESP8266
-#error Node only supports ESP8266 platform
-#endif
+#ifndef LED_BUILTIN
+#define LED_BUILTIN 5 // ESP32 boards noramlly have a LED in GPIO5
+#endif // !LED_BUILTIN
 
 #define BLUE_LED LED_BUILTIN
+constexpr auto RESET_PIN = -1;
 
+#ifdef ESP8266
 ADC_MODE (ADC_VCC);
+#endif
 
 void connectEventHandler () {
 	Serial.println ("Connected");
@@ -76,6 +89,8 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 		deserializeMsgPack (doc, tempBuffer, length);
 		serializeJsonPretty (doc, Serial);
 		break;
+	default:
+		DEBUG_WARN ("Payload encoding %d is not (yet) supported", payloadEncoding);
 	}
 }
 
@@ -86,12 +101,27 @@ void setup () {
 	EnigmaIOTNode.setLed (BLUE_LED);
 	//pinMode (BLUE_LED, OUTPUT);
 	//digitalWrite (BLUE_LED, HIGH); // Turn on LED
+	EnigmaIOTNode.setResetPin (RESET_PIN);
 	EnigmaIOTNode.onConnected (connectEventHandler);
 	EnigmaIOTNode.onDisconnected (disconnectEventHandler);
 	EnigmaIOTNode.onDataRx (processRxData);
 	EnigmaIOTNode.enableClockSync ();
 
 	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, false);
+
+	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
+#ifdef ESP8266
+	if (wifi_get_macaddr (STATION_IF, macAddress))
+#elif defined ESP32
+	if ((esp_wifi_get_mac (WIFI_IF_STA, macAddress) == ESP_OK))
+#endif
+	{
+		EnigmaIOTNode.setNodeAddress (macAddress);
+		char macStr[ENIGMAIOT_ADDR_LEN * 3];
+		DEBUG_DBG ("Node address set to %s", mac2str (macAddress, macStr));
+	} else {
+		DEBUG_WARN ("Node address error");
+	}
 }
 
 void showTime () {
@@ -135,8 +165,13 @@ void loop () {
 		lastSensorData = millis ();
 		showTime ();
 		// Read sensor data
+#ifdef ESP8266
 		msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
 		Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
+#elif defined ESP32
+		msg.addAnalogInput (0, (float)(analogRead (ADC1_CHANNEL_0_GPIO_NUM) * 4096 / 3.6));
+		Serial.printf ("Vcc: %f\n", (float)(analogRead (ADC1_CHANNEL_0_GPIO_NUM) * 4096 / 3.6));
+#endif
 		msg.addTemperature (1, 20.34);
 		// Read sensor data
 
