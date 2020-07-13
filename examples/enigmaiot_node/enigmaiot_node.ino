@@ -41,7 +41,7 @@
 #endif // !LED_BUILTIN
 
 #define BLUE_LED LED_BUILTIN
-constexpr auto RESET_PIN = 13;
+constexpr auto RESET_PIN = -1;
 
 #ifdef ESP8266
 ADC_MODE (ADC_VCC);
