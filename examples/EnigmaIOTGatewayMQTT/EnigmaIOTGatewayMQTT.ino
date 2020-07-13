@@ -72,7 +72,7 @@ float temperature;
 #endif
 
 #ifndef LED_BUILTIN
-#define LED_BUILTIN 2
+#define LED_BUILTIN 5
 #endif // BUILTIN_LED
 
 #define BLUE_LED LED_BUILTIN

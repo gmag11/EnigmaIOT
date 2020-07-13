@@ -363,7 +363,16 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 		DEBUG_DBG ("==== Config Portal result ====");
 
 		DEBUG_DBG ("Network Name: %s", networkNameParam.getValue ());
+#ifdef ESP8266
+		station_config wifiConfig;
+		if (!wifi_station_get_config (&wifiConfig)) {
+			DEBUG_WARN ("Error getting WiFi config");
+		}
+		DEBUG_DBG ("WiFi password: %s", wifiConfig.password);
+		const char* netkey = (char*)(wifiConfig.password);
+#elif defined ESP32
 		const char* netkey = WiFi.psk ().c_str ();
+#endif
 		DEBUG_DBG ("Network Key: %s", netkey);
 		DEBUG_DBG ("Sleppy time: %s", sleepyParam.getValue ());
 		DEBUG_DBG ("Node Name: %s", nodeNameParam.getValue ());
@@ -375,7 +384,6 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 		DEBUG_DBG ("Stored network name: %s", data->networkName);
 		strncpy ((char*)(data->networkKey), netkey, KEY_LENGTH);
 		DEBUG_DBG ("Stored network key before hash: %.*s", KEY_LENGTH, (char*)(data->networkKey));
-		// TODO: use WiFi Pass as Raw Network Key
 
 		CryptModule::getSHA256 (data->networkKey, KEY_LENGTH);
 		DEBUG_DBG ("Calculated network key: %s", printHexBuffer (data->networkKey, KEY_LENGTH));
@@ -500,16 +508,6 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 	node.setInitAsSleepy (sleepy);
 	node.setSleepy (sleepy);
 	DEBUG_DBG ("Set %s mode: %s", node.getSleepy () ? "sleepy" : "non sleepy", sleepy ? "sleepy" : "non sleepy");
-
-	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
-#ifdef ESP8266
-	if (wifi_get_macaddr (STATION_IF, macAddress))
-#elif defined ESP32
-	if (esp_wifi_get_mac (WIFI_IF_STA, macAddress) == ESP_OK)
-#endif
-	{
-		node.setMacAddress (macAddress);
-	}
 
 	if (loadRTCData () && rtcmem_data.commErrors < COMM_ERRORS_BEFORE_SCAN) { // If data present on RTC node has waked up or it is just configured, continue
 #if DEBUG_LEVEL >= DBG
@@ -702,8 +700,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		DEBUG_INFO ("BSSID: %s", WiFi.BSSIDstr (wifiIndex).c_str ());
 		DEBUG_INFO ("Channel: %d", WiFi.channel (wifiIndex));
 		DEBUG_INFO ("RSSI: %d", WiFi.RSSI (wifiIndex));
-		// TODO: In future, to manage redundancy select higher RSSI gateway
-		data->channel = WiFi.channel (wifiIndex); // It is done here, maybe
+		data->channel = WiFi.channel (wifiIndex);
 		data->rssi = WiFi.RSSI (wifiIndex);
 		memcpy (data->gateway, WiFi.BSSID (wifiIndex), 6);
 
