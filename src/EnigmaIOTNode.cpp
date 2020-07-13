@@ -120,7 +120,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 	}
 #elif defined ESP32
 	memcpy ((uint8_t*)&rtcmem_data, (uint8_t*)&rtcmem_data_storage, sizeof (rtcmem_data));
-	DEBUG_WARN ("----- Read RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
+	DEBUG_VERBOSE ("----- Read RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
 #endif
 	if (!checkCRC ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t), &rtcmem_data.crc32)) {
 		DEBUG_DBG ("RTC Data is not valid");
@@ -287,7 +287,7 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 		return false;
 #ifdef ESP8266
 	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-	if (ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)&rtcmem_data, &rtcmem_data))) {
+	if (ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
 		DEBUG_DBG ("Write configuration data to RTC memory");
 #if DEBUG_LEVEL >= VERBOSE
 		DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
@@ -299,7 +299,7 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t)); 
 	memcpy ((uint8_t*)&rtcmem_data_storage, (uint8_t*)&rtcmem_data, sizeof (rtcmem_data));
 	rtcmem_data_storage.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data_storage.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-	DEBUG_WARN ("----- Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
+	DEBUG_VERBOSE ("----- Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
 	return true;
 #endif
 	return false;
@@ -750,6 +750,11 @@ void EnigmaIOTNodeClass::stop () {
 	DEBUG_DBG ("Communication layer uninitalized");
 }
 
+bool EnigmaIOTNodeClass::setNodeAddress (uint8_t address[ENIGMAIOT_ADDR_LEN]) {
+	node.setMacAddress (address);
+	return true;
+}
+
 void EnigmaIOTNodeClass::setSleepTime (uint32_t sleepTime) {
 	if (node.getInitAsSleepy ()) {
 #ifdef ESP8266 // ESP32 does not have this limitation
@@ -1003,14 +1008,14 @@ bool EnigmaIOTNodeClass::clientHello () {
 	Crypto.getDH1 ();
 	node.setStatus (INIT);
 	rtcmem_data.nodeRegisterStatus = INIT;
-	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
+	/*uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
 #ifdef ESP8266
 	if (wifi_get_macaddr (STATION_IF, macAddress)) {
 #elif defined ESP32
 	if (esp_wifi_get_mac (WIFI_IF_STA, macAddress) == ESP_OK) {
 #endif
 		node.setMacAddress (macAddress);
-	}
+	}*/
 
 	uint8_t* key = Crypto.getPubDHKey ();
 
@@ -1584,7 +1589,7 @@ bool EnigmaIOTNodeClass::processSetNameResponse (const uint8_t* mac, const uint8
 	if (nodeNameSetResponse_msg.errorCode != NAME_OK) {
 		DEBUG_WARN ("Name error: %d", nodeNameSetResponse_msg.errorCode);
 	} else {
-		DEBUG_WARN ("Name set correctly");
+		DEBUG_DBG ("Name set correctly");
 	}
 
 	return true;
@@ -1761,7 +1766,7 @@ void EnigmaIOTNodeClass::clearRTC () {
 #ifdef ESP8266
 	ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)data, sizeof (rtcmem_data));
 #elif defined ESP32
-	memset (rtcmem_data_storage, 0, sizeof (rtcmem_data));
+	memset (&rtcmem_data_storage, 0, sizeof (rtcmem_data));
 #endif
 
 	DEBUG_DBG ("RTC Cleared");
@@ -2218,9 +2223,9 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		}
 		break;
 	case NODE_NAME_RESULT:
-		DEBUG_WARN (" <------- SET NODE NAME RESULT");
+		DEBUG_INFO (" <------- SET NODE NAME RESULT");
 		if (processSetNameResponse (mac, buf, count)) {
-			DEBUG_WARN ("Set Node Name OK");
+			DEBUG_INFO ("Set Node Name OK");
 		}
 	}
 }

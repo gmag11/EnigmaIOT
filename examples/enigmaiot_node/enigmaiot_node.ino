@@ -90,7 +90,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 		serializeJsonPretty (doc, Serial);
 		break;
 	default:
-		DEBUG_WARN ("Payload encoding %d is not yet supported", payloadEncoding);
+		DEBUG_WARN ("Payload encoding %d is not (yet) supported", payloadEncoding);
 	}
 }
 

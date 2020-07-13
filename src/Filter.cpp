@@ -35,7 +35,7 @@ float FilterClass::addWeigth (float coeff) {
 		sumWeight += _weightValues[i];
 	}
 	
-	DEBUG_VERBOSE ("SumWeight: %f", sumWeight);
+	//DEBUG_VERBOSE ("SumWeight: %f", sumWeight);
 
 	return sumWeight;
 }

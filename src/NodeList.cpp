@@ -103,7 +103,7 @@ void Node::updatePacketsRate (float value) {
 
 void Node::reset () {
 	DEBUG_DBG ("Reset node");
-	memset (mac, 0, 6);
+	//memset (mac, 0, 6);
 	memset (key, 0, KEY_LENGTH);
 	memset (nodeName, 0, NODE_NAME_LENGTH);
 	keyValid = false;
@@ -183,7 +183,7 @@ int8_t NodeList::checkNodeName (const char* name, const uint8_t* address) {
 			if (currentNodeNamme && !strncmp (currentNodeNamme, name, NODE_NAME_LENGTH)) {
 				// if addresses addresses are different
 				char addrStr[ENIGMAIOT_ADDR_LEN * 3];
-				DEBUG_WARN ("Found node name %s in Node List with address %s", name, mac2str (address, addrStr));
+				DEBUG_INFO ("Found node name %s in Node List with address %s", name, mac2str (address, addrStr));
 				if (memcmp (nodes[i].getMacAddress (), address, ENIGMAIOT_ADDR_LEN)) {
 					DEBUG_ERROR ("Duplicated name %s", name);
 					return ALREADY_USED; // Already used

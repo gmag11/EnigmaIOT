@@ -73,20 +73,20 @@ enum nodeInvalidateReason_t {
 typedef struct {
 	uint32_t crc32; /**< CRC to check RTC data integrity */
 	uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
-	bool nodeKeyValid = false; /**< true if key has been negotiated successfully */
-	status_t nodeRegisterStatus = UNREGISTERED; /**< Node registration status */
-	uint16_t lastMessageCounter; /**< Node last message counter */
 	uint16_t nodeId; /**< Node identification */
-	uint8_t channel = DEFAULT_CHANNEL; /**< WiFi channel used on ESP-NOW communication */
+	uint8_t channel /*= DEFAULT_CHANNEL*/; /**< WiFi channel used on ESP-NOW communication */
 	uint8_t gateway[ENIGMAIOT_ADDR_LEN]; /**< Gateway address */
 	int8_t rssi; /**< Gateway signal strength */
 	uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
 	char networkName[NETWORK_NAME_LENGTH]; /**< Network name. Used to search gateway peer */
 	bool sleepy; /**< Sleepy node */
-	uint32_t sleepTime = 0; /**< Time to sleep between sensor data delivery */
+	uint32_t sleepTime /*= 0*/; /**< Time to sleep between sensor data delivery */
 	char nodeName[NODE_NAME_LENGTH + 1]; /**< Node name. Use as a human friendly name to avoid use of numeric address*/
-	uint8_t commErrors = 0; /**< number of non acknowledged packets. May mean that gateway is not available or its channel has changed.
+	uint8_t commErrors /*= 0*/; /**< number of non acknowledged packets. May mean that gateway is not available or its channel has changed.
 								This is used to retrigger Gateway scan*/
+	bool nodeKeyValid /* = false*/; /**< true if key has been negotiated successfully */
+	status_t nodeRegisterStatus /*= UNREGISTERED*/; /**< Node registration status */
+	uint16_t lastMessageCounter; /**< Node last message counter */
 } rtcmem_data_t;
 
 typedef nodeMessageType nodeMessageType_t;
@@ -481,6 +481,13 @@ public:
 	  *                  depends on communication process
 	  */
 	void setSleepTime (uint32_t sleepTime);
+
+	/**
+	  * @brief Set node address to be used in EnigmaIOT communication
+	  * @param address Node address
+	  * @return `true` if addres was set correctly
+	  */
+	bool setNodeAddress (uint8_t address[ENIGMAIOT_ADDR_LEN]);
 
 	/**
 	  * @brief Returns sleep period in seconds
