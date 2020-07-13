@@ -131,7 +131,6 @@ Node* NodeList::getNodeFromID (uint16_t nodeId) {
 }
 
 Node* NodeList::getNodeFromMAC (const uint8_t* mac) {
-	// TODO: Accept node name as address
 	uint16_t index = 0;
 
 	while (index < NUM_NODES) {
