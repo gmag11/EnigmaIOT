@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['node_734',['Node',['../classNode.html',1,'']]],
-  ['node_5finstance_735',['node_instance',['../structnode__instance.html',1,'']]],
-  ['nodelist_736',['NodeList',['../classNodeList.html',1,'']]]
+  ['rtcmem_5fdata_5ft_633',['rtcmem_data_t',['../structrtcmem__data__t.html',1,'']]]
 ];

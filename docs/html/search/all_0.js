@@ -7,6 +7,5 @@ var searchData=
   ['_5fownpeertype_4',['_ownPeerType',['../classComms__halClass.html#a6472373c178c2e77f4fc50eafaedc0ab',1,'Comms_halClass']]],
   ['_5fpeertype_5',['_peerType',['../espnow__hal_8cpp.html#a62ba3af3e98793dfe8f0e3039e325340',1,'espnow_hal.cpp']]],
   ['_5frawvalues_6',['_rawValues',['../classFilterClass.html#a50254c631b3e05583890f63c6f0149bc',1,'FilterClass']]],
-  ['_5fweightvalues_7',['_weightValues',['../classFilterClass.html#a1522216f9bbb9a5f7813809cb3a79ac7',1,'FilterClass']]],
-  ['_5fwire_8',['_wire',['../classDallasTemperature.html#a8b11f739e5f4e2e7cddc21b47b28eab9',1,'DallasTemperature']]]
+  ['_5fweightvalues_7',['_weightValues',['../classFilterClass.html#a1522216f9bbb9a5f7813809cb3a79ac7',1,'FilterClass']]]
 ];

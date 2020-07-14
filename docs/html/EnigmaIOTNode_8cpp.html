@@ -86,6 +86,7 @@ $(function() {
 <code>#include &lt;MD5Builder.h&gt;</code><br />
 <code>#include &lt;StreamString.h&gt;</code><br />
 <code>#include &lt;ArduinoJson.h&gt;</code><br />
+<code>#include &lt;regex&gt;</code><br />
 </div>
 <p><a href="EnigmaIOTNode_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -205,7 +206,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00075">75</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00076">76</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -235,7 +236,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00087">87</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00088">88</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -255,7 +256,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00413">413</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00432">432</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -275,7 +276,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00423">423</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00442">442</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -294,7 +295,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00443">443</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00462">462</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -311,7 +312,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00027">27</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00028">28</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -327,7 +328,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l02211">2211</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l02233">2233</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -343,7 +344,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00029">29</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00030">30</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>
@@ -359,7 +360,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00037">37</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00038">38</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>

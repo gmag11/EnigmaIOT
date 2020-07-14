@@ -58,7 +58,6 @@ var menudata={children:[
 {text:"s",url:"functions_s.html#index_s"},
 {text:"t",url:"functions_t.html#index_t"},
 {text:"u",url:"functions_u.html#index_u"},
-{text:"v",url:"functions_v.html#index_v"},
 {text:"w",url:"functions_w.html#index_w"},
 {text:"~",url:"functions_~.html#index__7E"}]},
 {text:"Functions",url:"functions_func.html",children:[
@@ -81,8 +80,6 @@ var menudata={children:[
 {text:"s",url:"functions_func_s.html#index_s"},
 {text:"t",url:"functions_func_t.html#index_t"},
 {text:"u",url:"functions_func_u.html#index_u"},
-{text:"v",url:"functions_func_v.html#index_v"},
-{text:"w",url:"functions_func_w.html#index_w"},
 {text:"~",url:"functions_func_~.html#index__7E"}]},
 {text:"Variables",url:"functions_vars.html",children:[
 {text:"_",url:"functions_vars.html#index__5F"},
@@ -106,7 +103,6 @@ var menudata={children:[
 {text:"t",url:"functions_vars.html#index_t"},
 {text:"u",url:"functions_vars.html#index_u"},
 {text:"w",url:"functions_vars.html#index_w"}]},
-{text:"Typedefs",url:"functions_type.html"},
 {text:"Related Functions",url:"functions_rela.html"}]}]},
 {text:"Files",url:"files.html",children:[
 {text:"File List",url:"files.html"},
@@ -120,7 +116,6 @@ var menudata={children:[
 {text:"e",url:"globals_e.html#index_e"},
 {text:"f",url:"globals_f.html#index_f"},
 {text:"g",url:"globals_g.html#index_g"},
-{text:"h",url:"globals_h.html#index_h"},
 {text:"i",url:"globals_i.html#index_i"},
 {text:"k",url:"globals_k.html#index_k"},
 {text:"l",url:"globals_l.html#index_l"},
@@ -191,20 +186,16 @@ var menudata={children:[
 {text:"v",url:"globals_eval.html#index_v"},
 {text:"w",url:"globals_eval.html#index_w"}]},
 {text:"Macros",url:"globals_defs.html",children:[
-{text:"a",url:"globals_defs.html#index_a"},
 {text:"b",url:"globals_defs.html#index_b"},
 {text:"c",url:"globals_defs.html#index_c"},
 {text:"d",url:"globals_defs.html#index_d"},
 {text:"e",url:"globals_defs.html#index_e"},
 {text:"g",url:"globals_defs.html#index_g"},
-{text:"h",url:"globals_defs.html#index_h"},
 {text:"i",url:"globals_defs.html#index_i"},
 {text:"l",url:"globals_defs.html#index_l"},
 {text:"m",url:"globals_defs.html#index_m"},
 {text:"n",url:"globals_defs.html#index_n"},
-{text:"o",url:"globals_defs.html#index_o"},
 {text:"r",url:"globals_defs.html#index_r"},
 {text:"s",url:"globals_defs.html#index_s"},
-{text:"t",url:"globals_defs.html#index_t"},
 {text:"v",url:"globals_defs.html#index_v"},
 {text:"w",url:"globals_defs.html#index_w"}]}]}]}]}
