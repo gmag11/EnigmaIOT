@@ -22,6 +22,7 @@
 #include "helperFunctions.h"
 #include <cstddef>
 #include <cstdint>
+#include <regex>
 
 const char CONFIG_FILE[] = "/config.json";
 
@@ -451,7 +452,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	snprintf (channel, 4, "%u", gwConfig.channel);
 
 	//AsyncWiFiManager wifiManager (&server, &dns);
-	AsyncWiFiManagerParameter netNameParam ("netname", "Network Name", gwConfig.networkName, (int)NETWORK_NAME_LENGTH - 1, "required type=\"text\" maxlength=20");
+	AsyncWiFiManagerParameter netNameParam ("netname", "Network Name", gwConfig.networkName, (int)NETWORK_NAME_LENGTH - 1, "required type=\"text\" pattern=\"^[^/\\\\]+$\" maxlength=20");
 	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" minlength=\"8\" maxlength=\"32\"");
 	AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
 
@@ -487,23 +488,48 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	DEBUG_INFO ("Save config: %s", shouldSave ? "yes" : "no");
 	if (result) {
 		if (shouldSave) {
-			memcpy (gwConfig.networkName, netNameParam.getValue (), netNameParam.getValueLength ());
-			uint8_t keySize = netKeyParam.getValueLength ();
-			if (keySize > KEY_LENGTH)
-				keySize = KEY_LENGTH;
-			const char* netKey = netKeyParam.getValue ();
-			if (netKey && (netKey[0] != '\0')) {// If password is empty, keep the old one
-				memset (this->gwConfig.networkKey, 0, KEY_LENGTH);
-				memcpy (this->gwConfig.networkKey, netKey, keySize);
-				memcpy (this->plainNetKey, netKey, keySize);
-				CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
+			bool regexResult;
+
+			std::regex networkNameRegex ("^[^/\\\\]+$");
+			regexResult = std::regex_match (netNameParam.getValue (), networkNameRegex);
+			if (regexResult) {
+				strncpy (this->gwConfig.networkName, netNameParam.getValue (), NETWORK_NAME_LENGTH - 1);
+				DEBUG_WARN ("Network name: %s", gwConfig.networkName);
 			} else {
-				DEBUG_INFO ("Network key password field empty. Keeping the old one");
+				DEBUG_WARN ("Network name parameter error");
+				result = false;
 			}
 
-			gwConfig.channel = atoi (channelParam.getValue ());
-			DEBUG_DBG ("Raw network Key: %s", printHexBuffer (this->gwConfig.networkKey, KEY_LENGTH));
-			DEBUG_VERBOSE ("WiFi ESP-NOW channel: %d", this->gwConfig.channel);
+			std::regex netKeyRegex ("^.{8,32}$");
+			regexResult = std::regex_match (netKeyParam.getValue (), netKeyRegex);
+			if (regexResult) {
+				uint8_t keySize = netKeyParam.getValueLength ();
+				if (keySize > KEY_LENGTH)
+					keySize = KEY_LENGTH;
+				const char* netKey = netKeyParam.getValue ();
+				if (netKey && (netKey[0] != '\0')) {// If password is empty, keep the old one
+					memset (this->gwConfig.networkKey, 0, KEY_LENGTH);
+					memcpy (this->gwConfig.networkKey, netKey, keySize);
+					memcpy (this->plainNetKey, netKey, keySize);
+					CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
+					DEBUG_DBG ("Raw network Key: %s", printHexBuffer (this->gwConfig.networkKey, KEY_LENGTH));
+				} else {
+					DEBUG_INFO ("Network key password field empty. Keeping the old one");
+				}
+			} else {
+				DEBUG_WARN ("Network key parameter error");
+				result = false;
+			}
+
+			std::regex channelRegex ("^([0-9]|[0-1][0-3])$");
+			regexResult = std::regex_match (channelParam.getValue (), channelRegex);
+			if (regexResult) {
+				this->gwConfig.channel = atoi (channelParam.getValue ());
+				DEBUG_VERBOSE ("WiFi ESP-NOW channel: %d", this->gwConfig.channel);
+			} else {
+				DEBUG_WARN ("Network name parameter error");
+				result = false;
+			}
 		} else {
 			DEBUG_DBG ("Configuration does not need to be saved");
 		}

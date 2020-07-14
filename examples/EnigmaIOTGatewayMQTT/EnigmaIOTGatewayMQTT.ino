@@ -56,6 +56,7 @@
 #include <DNSServer.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
+#include <regex>
 
 //#define MEAS_TEMP // Temperature measurement for Gateway monitoring using DS18B20
 
