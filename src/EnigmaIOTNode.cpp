@@ -23,6 +23,7 @@
 #endif
 #include <StreamString.h>
 #include <ArduinoJson.h>
+#include <regex>
 
 const char CONFIG_FILE[] = "/config.json";
 
@@ -321,6 +322,9 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	AsyncWebServer server (80);
 	DNSServer dns;
 
+	//regex_t regex;
+	bool regexResult;
+
 	//char networkKey[33] = "";
 	char sleepy[5] = "10";
 	//char networkName[NETWORK_NAME_LENGTH] = "";
@@ -331,7 +335,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	//AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
 	//AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
 	AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
-	AsyncWiFiManagerParameter nodeNameParam ("nodename", "Node Name", nodeName, NODE_NAME_LENGTH, "type=\"text\" maxlength=32");
+	AsyncWiFiManagerParameter nodeNameParam ("nodename", "Node Name", nodeName, NODE_NAME_LENGTH, "type=\"text\" pattern=\"^[^/\\\\]+$\" maxlength=32");
 
 	// TODO: Check node name valid characters
 
@@ -390,14 +394,29 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 		memcpy (data->networkName, netName, strlen (netName));
 		DEBUG_DBG ("Stored network name: %s", data->networkName);
 
-		int sleepyVal = atoi (sleepyParam.getValue ());
-		if (sleepyVal > 0) {
-			data->sleepy = true;
+		std::regex sleepTimeRegex ("(\\d)+");
+		regexResult = std::regex_match (sleepyParam.getValue (), sleepTimeRegex);
+		if (regexResult) {
+			DEBUG_WARN ("Sleep time check ok");
+			int sleepyVal = atoi (sleepyParam.getValue ());
+			if (sleepyVal > 0) {
+				data->sleepy = true;
+			}
+			data->sleepTime = sleepyVal;
+		} else  {
+			DEBUG_WARN ("Sleep time parameter error");
+			result = false;
 		}
-		data->sleepTime = sleepyVal;
 
-		strncpy (data->nodeName, nodeNameParam.getValue (), NODE_NAME_LENGTH);
-		DEBUG_DBG ("Node name: %s", data->nodeName);
+		std::regex nodeNameRegex ("^[^/\\\\]+$"); 
+		regexResult = std::regex_match (nodeNameParam.getValue (), nodeNameRegex);
+		if (regexResult) {
+			strncpy (data->nodeName, nodeNameParam.getValue (), NODE_NAME_LENGTH);
+			DEBUG_WARN ("Node name: %s", data->nodeName);
+		} else  {
+			DEBUG_WARN ("Node name parameter error");
+			result = false;
+		}
 
 		data->nodeKeyValid = false;
 		data->crc32 = calculateCRC32 ((uint8_t*)(data->nodeKey), sizeof (rtcmem_data_t) - sizeof (uint32_t));

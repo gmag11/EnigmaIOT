@@ -35,6 +35,7 @@
 #include <ESPAsyncWiFiManager.h>
 #include <DNSServer.h>
 #include <FS.h>
+#include <regex>
 
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 2 // ESP32 boards normally have a LED in GPIO3 or GPIO5
