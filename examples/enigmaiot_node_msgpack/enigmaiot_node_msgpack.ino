@@ -8,28 +8,40 @@
   * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
 
-#ifndef ESP8266
-#error Node only supports ESP8266 platform
-#endif
-
 #include <Arduino.h>
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
 #include <CayenneLPP.h>
 
+#ifdef ESP8266
 #include <ESP8266WiFi.h>
+//#include <ESPAsyncTCP.h> // Comment to compile for ESP32
+#include <Hash.h>
+#elif defined ESP32
+#include <WiFi.h>
+#include <AsyncTCP.h> // Comment to compile for ESP8266
+#include <SPIFFS.h>
+#include <Update.h>
+#include <driver/adc.h>
+#include "esp_wifi.h"
+#endif
 #include <ArduinoJson.h>
 #include <Curve25519.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
-#include <ESPAsyncTCP.h>
-#include <Hash.h>
 #include <DNSServer.h>
+#include <FS.h>
+
+#ifndef LED_BUILTIN
+#define LED_BUILTIN 2 // ESP32 boards normally have a LED in GPIO2 or GPIO5
+#endif // !LED_BUILTIN
 
 #define BLUE_LED LED_BUILTIN
-constexpr auto RESET_PIN = 13;
+constexpr auto RESET_PIN = -1;
 
+#ifdef ESP8266
 ADC_MODE (ADC_VCC);
+#endif
 
 void connectEventHandler () {
 	Serial.println ("Registered");
@@ -90,12 +102,30 @@ void setup () {
 	EnigmaIOTNode.onDataRx (processRxData);
 
 	EnigmaIOTNode.begin (&Espnow_hal);
+	
+	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
+#ifdef ESP8266
+	if (wifi_get_macaddr (STATION_IF, macAddress))
+#elif defined ESP32
+	if ((esp_wifi_get_mac (WIFI_IF_STA, macAddress) == ESP_OK))
+#endif
+	{
+		EnigmaIOTNode.setNodeAddress (macAddress);
+		char macStr[ENIGMAIOT_ADDR_LEN * 3];
+		DEBUG_DBG ("Node address set to %s", mac2str (macAddress, macStr));
+	} else {
+		DEBUG_WARN ("Node address error");
+	}
 
 	// Put here your code to read sensor and compose buffer
 	const size_t capacity = JSON_OBJECT_SIZE (5);
 	DynamicJsonDocument json (capacity);
 
+#ifdef ESP8266
 	json["V"] = (float)(ESP.getVcc ()) / 1000;
+#elif defined ESP32
+	json["V"] = (float)(analogRead (ADC1_CHANNEL_0_GPIO_NUM) * 3.6 / 4096);
+#endif
 	json["tem"] = 203;
 	json["din"] = 123;
 	json["pres"] = 1007;
@@ -105,7 +135,11 @@ void setup () {
 	uint8_t* buffer = (uint8_t*)malloc (len);
 	len = serializeMsgPack (json, (char*)buffer, len);
 
+#ifdef ESP8266
 	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
+#elif defined ESP32
+	Serial.printf ("Vcc: %f\n", (float)(analogRead (ADC1_CHANNEL_0_GPIO_NUM) * 3.6 / 4096));
+#endif
 	Serial.printf ("Message Len %d\n", len);
 	// End of user code
 

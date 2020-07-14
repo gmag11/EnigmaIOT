@@ -8,10 +8,6 @@
   * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
 
-#/*ifndef ESP8266
-#error Node only supports ESP8266 platform
-#endif*/
-
 #include <Arduino.h>
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
@@ -19,11 +15,11 @@
 
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h> // Comment to compile for ESP32
+//#include <ESPAsyncTCP.h> // Comment to compile for ESP32
 #include <Hash.h>
 #elif defined ESP32
 #include <WiFi.h>
-//#include <AsyncTCP.h> // Comment to compile for ESP8266
+#include <AsyncTCP.h> // Comment to compile for ESP8266
 #include <SPIFFS.h>
 #include <Update.h>
 #include <driver/adc.h>
@@ -37,7 +33,7 @@
 #include <FS.h>
 
 #ifndef LED_BUILTIN
-#define LED_BUILTIN 5 // ESP32 boards noramlly have a LED in GPIO5
+#define LED_BUILTIN 2 // ESP32 boards noramlly have a LED in GPIO2 or GPIO5
 #endif // !LED_BUILTIN
 
 #define BLUE_LED LED_BUILTIN
