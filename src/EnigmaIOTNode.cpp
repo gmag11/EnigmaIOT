@@ -472,9 +472,9 @@ void EnigmaIOTNodeClass::checkResetButton () {
 	if (resetPin > 0) {
 		pinMode (resetPin, INPUT_PULLUP);
 		digitalWrite (led, LED_ON); // Turn on LED
-		if (digitalRead (resetPin) == LED_ON) { // If pin is grounded
+		if (digitalRead (resetPin) == LOW) { // If pin is grounded
 			time_t resetPinGrounded = millis ();
-			while (digitalRead (resetPin) == LED_ON) {
+			while (digitalRead (resetPin) == LOW) {
 				if (millis () - resetPinGrounded > RESET_PIN_DURATION) {
 					DEBUG_WARN ("Produce reset");
 					digitalWrite (led, LED_OFF); // Turn off LED
@@ -832,7 +832,7 @@ void EnigmaIOTNodeClass::handle () {
 		}
 
 		if (!indentifying) {
-			if (!digitalRead (led) && millis () - blueOntime > ledOnTime) {
+			if (/*!digitalRead (led) &&*/ millis () - blueOntime > ledOnTime) {
 				digitalWrite (led, LED_OFF);
 			}
 		}

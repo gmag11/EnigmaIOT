@@ -775,7 +775,7 @@ void EnigmaIOTGatewayClass::handle () {
 	}
 
 	if (rxled != txled) {
-		if (!digitalRead (rxled) && millis () - rxOntime > rxLedOnTime) {
+		if (/*!digitalRead (rxled) &&*/ millis () - rxOntime > rxLedOnTime) {
 			digitalWrite (rxled, LED_OFF);
 		}
 	}
@@ -786,7 +786,7 @@ void EnigmaIOTGatewayClass::handle () {
 		flashTx = false;
 	}
 
-	if (!digitalRead (txled) && millis () - txOntime > txLedOnTime) {
+	if (/*!digitalRead (txled) &&*/ millis () - txOntime > txLedOnTime) {
 		digitalWrite (txled, LED_OFF);
 	}
 //#endif
