@@ -452,7 +452,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 
 	//AsyncWiFiManager wifiManager (&server, &dns);
 	AsyncWiFiManagerParameter netNameParam ("netname", "Network Name", gwConfig.networkName, (int)NETWORK_NAME_LENGTH - 1, "required type=\"text\" maxlength=20");
-	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
+	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" minlength=\"8\" maxlength=\"32\"");
 	AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
 
 	wifiManager->addParameter (&netKeyParam);
