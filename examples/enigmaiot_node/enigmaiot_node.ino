@@ -128,7 +128,7 @@ void setup () {
 #ifdef ESP8266
 	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
 #elif defined ESP32
-	msg.addAnalogInput (0, (float)(analogRead (ADC1_CHANNEL_0_GPIO_NUM) * 4096 / 3.6));
+	msg.addAnalogInput (0, (float)(analogRead (ADC1_CHANNEL_0_GPIO_NUM) * 3.6 / 4096));
 #endif
 	msg.addTemperature (1, 20.34);
 	msg.addDigitalInput (2, 123);
@@ -138,7 +138,7 @@ void setup () {
 #ifdef ESP8266
 	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ())/ 1000);
 #elif defined ESP32
-	Serial.printf ("Vcc: %f\n", (float)(analogRead(ADC1_CHANNEL_0_GPIO_NUM) * 4096 / 3.6));
+	Serial.printf ("Vcc: %f\n", (float)(analogRead(ADC1_CHANNEL_0_GPIO_NUM) * 3.6 / 4096));
 #endif
 	// End of user code
 
