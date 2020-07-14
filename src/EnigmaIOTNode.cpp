@@ -414,16 +414,22 @@ void flashLed (void* led) {
 #ifdef ESP8266
 	digitalWrite (*(int*)led, !digitalRead (*(int*)led));
 #elif defined ESP32
-	digitalWrite (*(int*)localLed, !digitalRead (*(int*)localLed));
+	bool led_on = !digitalRead (localLed);
+	DEBUG_VERBOSE ("Change LED %d to %d", localLed, led_on);
+	digitalWrite (localLed, led_on);
 #endif
 }
 
 void startFlash (time_t period) {
 #ifdef ESP32
+	static int id = 1;
+	DEBUG_INFO ("Start flash");
 	if (!nodeConnectionLedFlashing) {
 		nodeConnectionLedFlashing = true;
-		ledTimer = xTimerCreate ("led_flash", pdMS_TO_TICKS (period), pdTRUE, (void*)0, flashLed);
-		xTimerStart (ledTimer, 0);
+		ledTimer = xTimerCreate ("led_flash", pdMS_TO_TICKS (period), pdTRUE, (void*)0, &flashLed);
+		if (xTimerStart (ledTimer, 0) != pdPASS) {
+			DEBUG_WARN ("Problem starting LED timer");
+		}
 	}
 #elif defined (ESP8266)
 	ets_timer_disarm (&ledTimer);
@@ -491,6 +497,8 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 	localLed = led;
 
 	checkResetButton ();
+
+	// startFlash (100); // Do not flash during setup for less battery drain
 
 	digitalWrite (led, LED_OFF);
 
@@ -2083,6 +2091,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		if (node.getStatus () == WAIT_FOR_SERVER_HELLO) {
 			if (processServerHello (mac, buf, count)) {
 				// mark node as registered
+				//stopFlash (); // Do not flash during setup for less battery drain
 				node.setKeyValid (true);
 				rtcmem_data.nodeKeyValid = true;
 				node.setKeyValidFrom (millis ());
