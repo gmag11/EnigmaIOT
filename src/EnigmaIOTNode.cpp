@@ -525,15 +525,6 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 			//rtcmem_data.channel = channel;
 			rtcmem_data.sleepy = sleepy;
 			rtcmem_data.nodeRegisterStatus = UNREGISTERED;
-			// Is this needed ????
-//			rtcmem_data.crc32 = CRC32::calculate ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-//			if (ESP.rtcUserMemoryWrite (0, (uint32_t*)& rtcmem_data, sizeof (rtcmem_data))) {
-//#if DEBUG_LEVEL >= VERBOSE
-//				DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)& rtcmem_data, sizeof (rtcmem_data)));
-//				dumpRtcData (&rtcmem_data/*, this->gateway*/);
-//#endif
-//			}
-
 		} else { // Try read from flash
 			if (!SPIFFS.begin ()) {
 				DEBUG_ERROR ("Error mounting flash");
@@ -554,16 +545,6 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 				if (searchForGateway (&rtcmem_data), true) {
 					//DEBUG_DBG ("Found gateway. Storing");
 					rtcmem_data.commErrors = 0;
-					//if (!saveRTCData()) {
-					//	DEBUG_ERROR ("Error saving data on RTC");
-					//}
-	 //               //disabled
-	 //               if (memcmp (prevGwAddr, rtcmem_data.gateway, 6)) {
-	 //                   if (!saveFlashData ()) {
-	 //                       DEBUG_ERROR ("Error saving data on flash");
-	 //                   }
-	 //               }
-
 				}
 			} else { // Configuration empty. Enter config AP mode
 				DEBUG_DBG ("No flash data present. Starting Configuration AP");
@@ -579,13 +560,6 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 						ESP.restart ();
 						return;
 					}
-
-					//if (!saveRTCData ()) {
-					//	DEBUG_ERROR ("Error saving data on RTC");
-					//}
-	 //               if (!saveFlashData (true)) {
-	 //                   DEBUG_ERROR ("Error saving data on flash. Restarting");
-	 //               }
 					SPIFFS.end ();
 					ESP.restart ();
 				} else { // Configuration error
@@ -594,7 +568,6 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 				}
 			}
 		}
-
 	}
 
 	initWiFi (rtcmem_data.channel, rtcmem_data.networkName);
@@ -618,7 +591,6 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 #endif
 
 	DEBUG_DBG ("Comms started. Channel %u", rtcmem_data.channel);
-
 }
 
 #ifdef ESP32
@@ -949,16 +921,7 @@ void EnigmaIOTNodeClass::handle () {
 			gatewaySearchStarted = true;
 
 			if (searchForGateway (&rtcmem_data), true) {
-				//DEBUG_DBG ("Found gateway. Storing");
 				rtcmem_data.commErrors = 0;
-				//if (!saveRTCData ()) {
-				//	DEBUG_ERROR ("Error saving data on RTC");
-				//}
-				//disabled
-				//if (!saveFlashData ()) {
-				//	DEBUG_ERROR ("Error saving data on flash.");
-				//}
-
 			}
 		}
 	}
