@@ -12,7 +12,7 @@
 // Global configuration. Physical layer settings
 static const uint8_t MAX_MESSAGE_LENGTH = 250; ///< @brief Maximum payload size on ESP-NOW
 static const size_t ENIGMAIOT_ADDR_LEN = 6; ///< @brief Address size. Mac address = 6 bytes
-static const char ENIGMAIOT_PROT_VERS[] = "0.9.2"; ///< @brief EnitmaIoT Version
+static const char ENIGMAIOT_PROT_VERS[] = "0.9.3"; ///< @brief EnitmaIoT Version
 static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on ESP-NOW
 static const uint32_t FLASH_LED_TIME = 50; ///< @brief Time that led keeps on during flash in ms
 static const uint8_t NETWORK_NAME_LENGTH = 21; ///< @brief Maximum number of characters of network name
@@ -49,7 +49,7 @@ static const int MAX_DATA_PAYLOAD_SIZE = 214; ///< @brief Maximun payload size f
 static const uint32_t PRE_REG_DELAY = 5000; ///< @brief Time to wait before registration so that other nodes have time to communicate. Real delay is a random lower than this value.
 static const uint32_t POST_REG_DELAY = 1500; ///< @brief Time to waif before sending data after registration so that other nodes have time to finish their registration. Real delay is a random lower than this value.
 #ifndef CHECK_COMM_ERRORS
-static const bool CHECK_COMM_ERRORS = false; ///< @brief Try to reconnect in case of communication errors
+static const bool CHECK_COMM_ERRORS = true; ///< @brief Try to reconnect in case of communication errors
 #endif // !1
 static const uint8_t COMM_ERRORS_BEFORE_SCAN = 2; ///< @brief Node will search for a gateway if this number of communication errors have happened.
 static const uint32_t RTC_ADDRESS = 0; ///< @brief RTC memory address where to store context. Modify it if you need place to store your own data during deep sleep. Take care not to overwrite above that address.
