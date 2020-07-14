@@ -33,7 +33,7 @@
 #include <FS.h>
 
 #ifndef LED_BUILTIN
-#define LED_BUILTIN 2 // ESP32 boards noramlly have a LED in GPIO2 or GPIO5
+#define LED_BUILTIN 2 // ESP32 boards normally have a LED in GPIO2 or GPIO5
 #endif // !LED_BUILTIN
 
 #define BLUE_LED LED_BUILTIN
