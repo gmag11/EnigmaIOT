@@ -26,6 +26,9 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 
+#define LED_ON HIGH
+#define LED_OFF !LED_ON
+
 /**
   * @brief Message code definition
   */

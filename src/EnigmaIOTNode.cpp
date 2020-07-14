@@ -452,7 +452,7 @@ void stopFlash () {
 	if (nodeConnectionLedFlashing) {
 		nodeConnectionLedFlashing = false;
 		ets_timer_disarm (&ledTimer);
-		digitalWrite (localLed, HIGH);
+		digitalWrite (localLed, LED_OFF);
 	}
 #endif // ESP32
 }
@@ -471,13 +471,13 @@ void EnigmaIOTNodeClass::stopIdentifying () {
 void EnigmaIOTNodeClass::checkResetButton () {
 	if (resetPin > 0) {
 		pinMode (resetPin, INPUT_PULLUP);
-		digitalWrite (led, LOW); // Turn on LED
-		if (digitalRead (resetPin) == LOW) { // If pin is grounded
+		digitalWrite (led, LED_ON); // Turn on LED
+		if (digitalRead (resetPin) == LED_ON) { // If pin is grounded
 			time_t resetPinGrounded = millis ();
-			while (digitalRead (resetPin) == LOW) {
+			while (digitalRead (resetPin) == LED_ON) {
 				if (millis () - resetPinGrounded > RESET_PIN_DURATION) {
 					DEBUG_WARN ("Produce reset");
-					digitalWrite (led, HIGH); // Turn off LED
+					digitalWrite (led, LED_OFF); // Turn off LED
 					startFlash (50);
 					clearFlash ();
 					clearRTC ();
@@ -499,7 +499,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 
 	checkResetButton ();
 
-	digitalWrite (led, HIGH);
+	digitalWrite (led, LED_OFF);
 
 	this->comm = comm;
 
@@ -827,13 +827,13 @@ void EnigmaIOTNodeClass::handle () {
 	if (led >= 0) {
 		if (flashBlue) {
 			blueOntime = millis ();
-			digitalWrite (led, LOW);
+			digitalWrite (led, LED_ON);
 			flashBlue = false;
 		}
 
 		if (!indentifying) {
 			if (!digitalRead (led) && millis () - blueOntime > ledOnTime) {
-				digitalWrite (led, HIGH);
+				digitalWrite (led, LED_OFF);
 			}
 		}
 	}
@@ -915,7 +915,7 @@ void EnigmaIOTNodeClass::handle () {
 	if (indentifying) {
 		if (millis () - identifyStart > IDENTIFY_TIMEOUT) {
 			stopIdentifying ();
-			digitalWrite (led, HIGH);
+			digitalWrite (led, LED_OFF);
 		}
 	}
 
