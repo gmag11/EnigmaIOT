@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.2</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -70,6 +70,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#var-members">Variables</a>  </div>
@@ -105,6 +106,13 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTGatewayClass.html">EnigmaIOTGatewayClass</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main gateway class. Manages communication with nodes and sends data to upper layer.  <a href="classEnigmaIOTGatewayClass.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:af2e697ac60e05813d45ea2c9c9e79c25"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a>&#160;&#160;&#160;LOW</td></tr>
+<tr class="separator:af2e697ac60e05813d45ea2c9c9e79c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80700bb63bd56ebabbb4728aa433fd29"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#a80700bb63bd56ebabbb4728aa433fd29">LED_OFF</a>&#160;&#160;&#160;!<a class="el" href="EnigmaIOTNode_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a></td></tr>
+<tr class="separator:a80700bb63bd56ebabbb4728aa433fd29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -174,12 +182,45 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Library to build a gateway for EnigmaIoT system. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.2 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>01/07/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.3 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>14/07/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
-</div><h2 class="groupheader">Typedef Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a80700bb63bd56ebabbb4728aa433fd29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80700bb63bd56ebabbb4728aa433fd29">&#9670;&nbsp;</a></span>LED_OFF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LED_OFF&#160;&#160;&#160;!<a class="el" href="EnigmaIOTNode_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00030">30</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+
+</div>
+</div>
+<a id="af2e697ac60e05813d45ea2c9c9e79c25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2e697ac60e05813d45ea2c9c9e79c25">&#9670;&nbsp;</a></span>LED_ON</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LED_ON&#160;&#160;&#160;LOW</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00029">29</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
 <a id="aee09b06c0f38b77b6cf19f8d89750a1b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aee09b06c0f38b77b6cf19f8d89750a1b">&#9670;&nbsp;</a></span>onGwDataRx_t</h2>
 
@@ -192,7 +233,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00078">78</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00081">81</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -208,7 +249,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00079">79</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00082">82</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -224,7 +265,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00080">80</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00083">83</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -240,7 +281,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00081">81</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00084">84</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -256,7 +297,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00082">82</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00085">85</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -303,7 +344,7 @@ Variables</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00031">31</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00034">34</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -336,7 +377,7 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="a404510882576d212315fd2ed67280d8da8659eeed31ac2f38d8a14ee36175d175"></a>ENIGMAIOT&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00047">47</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00050">50</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -366,7 +407,7 @@ Variables</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00061">61</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00064">64</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -383,7 +424,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01710">1710</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01720">1720</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>

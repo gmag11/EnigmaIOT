@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.2</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -84,13 +84,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7d1e90a75f4b1b5abd5480d00102debf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#a7d1e90a75f4b1b5abd5480d00102debf">loop</a> ()=0</td></tr>
 <tr class="memdesc:a7d1e90a75f4b1b5abd5480d00102debf"><td class="mdescLeft">&#160;</td><td class="mdescRight">This should be called periodically for module handling.  <a href="classEnigmaIOTjsonController.html#a7d1e90a75f4b1b5abd5480d00102debf">More...</a><br /></td></tr>
 <tr class="separator:a7d1e90a75f4b1b5abd5480d00102debf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2f0dacf8b11038d862eb9fa3f1254ca"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#ab2f0dacf8b11038d862eb9fa3f1254ca">processRxCommand</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding)=0</td></tr>
+<tr class="memitem:ab2f0dacf8b11038d862eb9fa3f1254ca"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#ab2f0dacf8b11038d862eb9fa3f1254ca">processRxCommand</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)=0</td></tr>
 <tr class="memdesc:ab2f0dacf8b11038d862eb9fa3f1254ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to process a downlink command.  <a href="classEnigmaIOTjsonController.html#ab2f0dacf8b11038d862eb9fa3f1254ca">More...</a><br /></td></tr>
 <tr class="separator:ab2f0dacf8b11038d862eb9fa3f1254ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae59a645aaed1e5b550bdc7967c45c170"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#ae59a645aaed1e5b550bdc7967c45c170">sendDataCallback</a> (sendData_cb cb)</td></tr>
 <tr class="memdesc:ae59a645aaed1e5b550bdc7967c45c170"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register send data callback to run when module needs to send a message.  <a href="classEnigmaIOTjsonController.html#ae59a645aaed1e5b550bdc7967c45c170">More...</a><br /></td></tr>
 <tr class="separator:ae59a645aaed1e5b550bdc7967c45c170"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1800c685a75bdb951009749e62b19dbb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#a1800c685a75bdb951009749e62b19dbb">configManagerStart</a> (EnigmaIOTNodeClass *node)=0</td></tr>
+<tr class="memitem:a1800c685a75bdb951009749e62b19dbb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#a1800c685a75bdb951009749e62b19dbb">configManagerStart</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node)=0</td></tr>
 <tr class="memdesc:a1800c685a75bdb951009749e62b19dbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classEnigmaIOTjsonController.html#a1800c685a75bdb951009749e62b19dbb">More...</a><br /></td></tr>
 <tr class="separator:a1800c685a75bdb951009749e62b19dbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a844043532561398d54fa45cd7f0cf4ed"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#a844043532561398d54fa45cd7f0cf4ed">configManagerExit</a> (bool <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)=0</td></tr>
@@ -119,7 +119,7 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a13b9adbb1aaab6ec87042889289e701d"><td class="memItemLeft" align="right" valign="top">sendData_cb&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#a13b9adbb1aaab6ec87042889289e701d">sendData</a></td></tr>
 <tr class="separator:a13b9adbb1aaab6ec87042889289e701d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a661a7d9fe760c19b6992aba5b4978cde"><td class="memItemLeft" align="right" valign="top">EnigmaIOTNodeClass *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#a661a7d9fe760c19b6992aba5b4978cde">enigmaIotNode</a></td></tr>
+<tr class="memitem:a661a7d9fe760c19b6992aba5b4978cde"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#a661a7d9fe760c19b6992aba5b4978cde">enigmaIotNode</a></td></tr>
 <tr class="separator:a661a7d9fe760c19b6992aba5b4978cde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -206,7 +206,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void EnigmaIOTjsonController::configManagerStart </td>
           <td>(</td>
-          <td class="paramtype">EnigmaIOTNodeClass *&#160;</td>
+          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
           <td class="paramname"><em>node</em></td><td>)</td>
           <td></td>
         </tr>
@@ -313,13 +313,13 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">nodeMessageType_t&#160;</td>
+          <td class="paramtype"><a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a>&#160;</td>
           <td class="paramname"><em>command</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">nodePayloadEncoding_t&#160;</td>
+          <td class="paramtype"><a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a>&#160;</td>
           <td class="paramname"><em>payloadEncoding</em>&#160;</td>
         </tr>
         <tr>
@@ -530,7 +530,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">EnigmaIOTNodeClass* EnigmaIOTjsonController::enigmaIotNode</td>
+          <td class="memname"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a>* EnigmaIOTjsonController::enigmaIotNode</td>
         </tr>
       </table>
   </td>

@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.2</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -68,6 +68,10 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">EnigmaIOTNode.cpp File Reference</div>  </div>
 </div><!--header-->
@@ -75,16 +79,291 @@ $(function() {
 
 <p>Library to build a node for EnigmaIoT system.  
 <a href="#details">More...</a></p>
-
+<div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="timeManager_8h_source.html">timeManager.h</a>&quot;</code><br />
+<code>#include &lt;FS.h&gt;</code><br />
+<code>#include &lt;MD5Builder.h&gt;</code><br />
+<code>#include &lt;StreamString.h&gt;</code><br />
+<code>#include &lt;ArduinoJson.h&gt;</code><br />
+</div>
 <p><a href="EnigmaIOTNode_8cpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a2bd3dd6873079bda9c22994760e817dc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#a2bd3dd6873079bda9c22994760e817dc">CHMSG_LEN</a>&#160;&#160;&#160;sizeof(clientHello_msg)</td></tr>
+<tr class="separator:a2bd3dd6873079bda9c22994760e817dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10cde4729cd00a4e6d0398e7b0cf1cae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#a10cde4729cd00a4e6d0398e7b0cf1cae">CRSMSG_LEN</a>&#160;&#160;&#160;sizeof(clockResponse_msg)</td></tr>
+<tr class="separator:a10cde4729cd00a4e6d0398e7b0cf1cae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9b144ebcf09f24dd9b85f95e6d118d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#ab9b144ebcf09f24dd9b85f95e6d118d0">SHMSG_LEN</a>&#160;&#160;&#160;sizeof(serverHello_msg)</td></tr>
+<tr class="separator:ab9b144ebcf09f24dd9b85f95e6d118d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a568f6925a7027004598c4ad288dd11f0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#a568f6925a7027004598c4ad288dd11f0">IKMSG_LEN</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:a568f6925a7027004598c4ad288dd11f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a1b66b36dbb3d32b25e7f4b2cc4e0accb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#a1b66b36dbb3d32b25e7f4b2cc4e0accb">clearRtcData</a> (<a class="el" href="structrtcmem__data__t.html">rtcmem_data_t</a> *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>)</td></tr>
+<tr class="separator:a1b66b36dbb3d32b25e7f4b2cc4e0accb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dcb9645090920f31f391adcd5b3850c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#a4dcb9645090920f31f391adcd5b3850c">dumpRtcData</a> (<a class="el" href="structrtcmem__data__t.html">rtcmem_data_t</a> *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, uint8_t *gateway=NULL)</td></tr>
+<tr class="separator:a4dcb9645090920f31f391adcd5b3850c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f399d10e625fb459fb5e0b8a3a79ef8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#a2f399d10e625fb459fb5e0b8a3a79ef8">flashLed</a> (void *led)</td></tr>
+<tr class="separator:a2f399d10e625fb459fb5e0b8a3a79ef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae79c9303923c11f39edb388b32d4646b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#ae79c9303923c11f39edb388b32d4646b">startFlash</a> (time_t period)</td></tr>
+<tr class="separator:ae79c9303923c11f39edb388b32d4646b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad072ccb795ca00a2cc374f3ce7bd5d55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#ad072ccb795ca00a2cc374f3ce7bd5d55">stopFlash</a> ()</td></tr>
+<tr class="separator:ad072ccb795ca00a2cc374f3ce7bd5d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a47616803c1ff494134cb784756035a08"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#a47616803c1ff494134cb784756035a08">CONFIG_FILE</a> [] = &quot;/config.json&quot;</td></tr>
+<tr class="separator:a47616803c1ff494134cb784756035a08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92e5a2fd1601642b4ee6c4a9ec126524"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#a92e5a2fd1601642b4ee6c4a9ec126524">localLed</a> = -1</td></tr>
+<tr class="separator:a92e5a2fd1601642b4ee6c4a9ec126524"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bf0b548fcfd9b0089f62fda8fff81aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#a0bf0b548fcfd9b0089f62fda8fff81aa">nodeConnectionLedFlashing</a> = false</td></tr>
+<tr class="separator:a0bf0b548fcfd9b0089f62fda8fff81aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad0a67af9b0ad60557652e3170f8a2af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8cpp.html#aad0a67af9b0ad60557652e3170f8a2af">EnigmaIOTNode</a></td></tr>
+<tr class="separator:aad0a67af9b0ad60557652e3170f8a2af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Library to build a node for EnigmaIoT system. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.2 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>01/07/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.3 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>14/07/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a2bd3dd6873079bda9c22994760e817dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bd3dd6873079bda9c22994760e817dc">&#9670;&nbsp;</a></span>CHMSG_LEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CHMSG_LEN&#160;&#160;&#160;sizeof(clientHello_msg)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a10cde4729cd00a4e6d0398e7b0cf1cae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10cde4729cd00a4e6d0398e7b0cf1cae">&#9670;&nbsp;</a></span>CRSMSG_LEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CRSMSG_LEN&#160;&#160;&#160;sizeof(clockResponse_msg)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a568f6925a7027004598c4ad288dd11f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a568f6925a7027004598c4ad288dd11f0">&#9670;&nbsp;</a></span>IKMSG_LEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define IKMSG_LEN&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab9b144ebcf09f24dd9b85f95e6d118d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9b144ebcf09f24dd9b85f95e6d118d0">&#9670;&nbsp;</a></span>SHMSG_LEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SHMSG_LEN&#160;&#160;&#160;sizeof(serverHello_msg)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a1b66b36dbb3d32b25e7f4b2cc4e0accb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b66b36dbb3d32b25e7f4b2cc4e0accb">&#9670;&nbsp;</a></span>clearRtcData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void clearRtcData </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structrtcmem__data__t.html">rtcmem_data_t</a> *&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00075">75</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a4dcb9645090920f31f391adcd5b3850c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4dcb9645090920f31f391adcd5b3850c">&#9670;&nbsp;</a></span>dumpRtcData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dumpRtcData </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structrtcmem__data__t.html">rtcmem_data_t</a> *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>gateway</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00087">87</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a2f399d10e625fb459fb5e0b8a3a79ef8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f399d10e625fb459fb5e0b8a3a79ef8">&#9670;&nbsp;</a></span>flashLed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void flashLed </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>led</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00413">413</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ae79c9303923c11f39edb388b32d4646b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae79c9303923c11f39edb388b32d4646b">&#9670;&nbsp;</a></span>startFlash()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void startFlash </td>
+          <td>(</td>
+          <td class="paramtype">time_t&#160;</td>
+          <td class="paramname"><em>period</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00423">423</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ad072ccb795ca00a2cc374f3ce7bd5d55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad072ccb795ca00a2cc374f3ce7bd5d55">&#9670;&nbsp;</a></span>stopFlash()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void stopFlash </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00443">443</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a47616803c1ff494134cb784756035a08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47616803c1ff494134cb784756035a08">&#9670;&nbsp;</a></span>CONFIG_FILE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char CONFIG_FILE[] = &quot;/config.json&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00027">27</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aad0a67af9b0ad60557652e3170f8a2af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad0a67af9b0ad60557652e3170f8a2af">&#9670;&nbsp;</a></span>EnigmaIOTNode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> EnigmaIOTNode</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l02211">2211</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a92e5a2fd1601642b4ee6c4a9ec126524"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92e5a2fd1601642b4ee6c4a9ec126524">&#9670;&nbsp;</a></span>localLed</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int localLed = -1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00029">29</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0bf0b548fcfd9b0089f62fda8fff81aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bf0b548fcfd9b0089f62fda8fff81aa">&#9670;&nbsp;</a></span>nodeConnectionLedFlashing</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool nodeConnectionLedFlashing = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l00037">37</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

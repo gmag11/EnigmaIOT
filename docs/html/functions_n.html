@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.2</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -72,11 +72,12 @@ $(function() {
 , <a class="el" href="classGatewayOutput__generic.html#a088ff06222b9cbc391f2c216b8c689fa">GatewayOutput_generic</a>
 </li>
 <li>networkKey
-: <a class="el" href="classEnigmaIOTGatewayClass.html#a5f84b344b3796ad65f7d5b332a246e98">EnigmaIOTGatewayClass</a>
-, <a class="el" href="structgateway__config__t.html#a0ff4851d0c71213fa6a1a63acb5c9d6f">gateway_config_t</a>
+: <a class="el" href="structgateway__config__t.html#a0ff4851d0c71213fa6a1a63acb5c9d6f">gateway_config_t</a>
+, <a class="el" href="structrtcmem__data__t.html#aa0f566187583d3b10a7feb1a160897fd">rtcmem_data_t</a>
 </li>
 <li>networkName
 : <a class="el" href="structgateway__config__t.html#a3203f7006f14c8a96c432703c519c8d6">gateway_config_t</a>
+, <a class="el" href="structrtcmem__data__t.html#aba7d6bb1a99b92428585ea5823d2646d">rtcmem_data_t</a>
 </li>
 <li>newNodeSend()
 : <a class="el" href="classGatewayOutput__dummy.html#ae57d8fc0470c3b2fd22201eb1e3da9d4">GatewayOutput_dummy</a>
@@ -85,6 +86,7 @@ $(function() {
 </li>
 <li>node
 : <a class="el" href="classEnigmaIOTGatewayClass.html#a69e6d53334b842b054fc9e3cfdbb6067">EnigmaIOTGatewayClass</a>
+, <a class="el" href="classEnigmaIOTNodeClass.html#a59edd64bf4bf9acf6b18b6af90c9a435">EnigmaIOTNodeClass</a>
 </li>
 <li>Node()
 : <a class="el" href="classNode.html#ad7a34779cad45d997bfd6d3d8043c75f">Node</a>
@@ -97,6 +99,13 @@ $(function() {
 <li>nodeId
 : <a class="el" href="classNode.html#a4f9547a1ede244be2b33d1fcf6de68b0">Node</a>
 , <a class="el" href="structnode__instance.html#a1033bf3bedf4c20a40176e4dd458a58f">node_instance</a>
+, <a class="el" href="structrtcmem__data__t.html#af9e7c0a7f49a26a8ad8cbba8ad4a8481">rtcmem_data_t</a>
+</li>
+<li>nodeKey
+: <a class="el" href="structrtcmem__data__t.html#a51e4759aa03af09b8a614efa1b6b5cb2">rtcmem_data_t</a>
+</li>
+<li>nodeKeyValid
+: <a class="el" href="structrtcmem__data__t.html#a892e3b670910fee23a107826e0ac4463">rtcmem_data_t</a>
 </li>
 <li>nodelist
 : <a class="el" href="classEnigmaIOTGatewayClass.html#a1ef5d02770b1b3bf2acf0adf7b410a17">EnigmaIOTGatewayClass</a>
@@ -107,15 +116,26 @@ $(function() {
 </li>
 <li>nodeName
 : <a class="el" href="classNode.html#aa270ef450c28e630de129a94c6992805">Node</a>
+, <a class="el" href="structrtcmem__data__t.html#afa20feac19225b3ee433e7610493105d">rtcmem_data_t</a>
 </li>
 <li>nodeNameSetRespose()
 : <a class="el" href="classEnigmaIOTGatewayClass.html#a5d854e8aa39bd51344951c5205c09381">EnigmaIOTGatewayClass</a>
 </li>
+<li>nodeRegisterStatus
+: <a class="el" href="structrtcmem__data__t.html#a50bb8229ba54273b8da7f1a012b72496">rtcmem_data_t</a>
+</li>
 <li>nodes
 : <a class="el" href="classNodeList.html#a57a69c9dde4327beeb404c83defdbdaa">NodeList</a>
 </li>
+<li>notifyConnection
+: <a class="el" href="classEnigmaIOTNodeClass.html#ae2da55526a67b70c0b724fe1d856cc72">EnigmaIOTNodeClass</a>
+</li>
 <li>notifyData
 : <a class="el" href="classEnigmaIOTGatewayClass.html#ab21597ced9ee31298c8a8eefed562ff9">EnigmaIOTGatewayClass</a>
+, <a class="el" href="classEnigmaIOTNodeClass.html#a5c188f7db5bdde5837a02e4095c3b549">EnigmaIOTNodeClass</a>
+</li>
+<li>notifyDisconnection
+: <a class="el" href="classEnigmaIOTNodeClass.html#a0e506efc2aa99694bfa13a59b07d55cc">EnigmaIOTNodeClass</a>
 </li>
 <li>notifyNewNode
 : <a class="el" href="classEnigmaIOTGatewayClass.html#a27ddc1b8decbcf821a0427faa3c1ced3">EnigmaIOTGatewayClass</a>
@@ -125,9 +145,11 @@ $(function() {
 </li>
 <li>notifyWiFiManagerExit
 : <a class="el" href="classEnigmaIOTGatewayClass.html#a88c43de63b862f5a19a79e9d5558beba">EnigmaIOTGatewayClass</a>
+, <a class="el" href="classEnigmaIOTNodeClass.html#a2984b66fdb8a831c9c7cbf775afc82b4">EnigmaIOTNodeClass</a>
 </li>
 <li>notifyWiFiManagerStarted
 : <a class="el" href="classEnigmaIOTGatewayClass.html#ae9c6988dba886bf5b3e6540e60c9658c">EnigmaIOTGatewayClass</a>
+, <a class="el" href="classEnigmaIOTNodeClass.html#a0ab4897622a90f08a9c2ded24d99eccc">EnigmaIOTNodeClass</a>
 </li>
 <li>numElements
 : <a class="el" href="classEnigmaIOTRingBuffer.html#a312bff8624df2dfa07a823f4e0523237">EnigmaIOTRingBuffer&lt; Telement &gt;</a>

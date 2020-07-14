@@ -12,7 +12,7 @@ This protocol has been designed with security on mind. All node data is encrypte
 
 I designed this because I was searching for a way to have a relatively high number of nodes at home. I thought about using WiFi but it would overload my home router. So I looked for an alternative. I evaluated  LoRa or cheap nRF24 modules but I wanted the simplest solution in terms of hardware.
 
-ESP8266 microcontroller implements a protocol known as ESP-NOW. It is a point to point protocol, based on vendor specific [WiFi management action frames](https://mrncciew.com/2014/09/29/cwap-802-11-mgmt-frame-types/), that works in a connectionless way and every packet is a few milliseconds long. Because of this it eases to have a battery powered node so that it enables designing totally wireless sensors.
+ESP8266 and ESP32 microcontrollers implement a protocol known as ESP-NOW. It is a point to point protocol, based on vendor specific [WiFi management action frames](https://mrncciew.com/2014/09/29/cwap-802-11-mgmt-frame-types/), that works in a connectionless fashion and every packet is a few milliseconds long. Because of this, it eases to have a battery powered node so that it enables designing totally wireless sensors.
 
 But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So I thought that I could implement encryption on payload but I found many problems I should solve to grade this as "secure enough".
 
@@ -46,7 +46,7 @@ During this project conception I decided that it should fulfil this list of requ
 Notice that network key used to implement this feature is stored on flash. ESP8266 do not allow flash encryption so network key may be recovered reading flash.
 
 - [x] Pluggable physical layer communication. Right now only ESP-NOW protocol is developed but you can easily add more communication alternatives
-- [x] When using ESP-NOW only esp8266 is needed. No more electronics apart from sensor
+- [x] When using ESP-NOW only ESP8266 or ESP32 is needed. No more electronics apart from sensor
 - [x] Data message counter to detect lost or repeated messages
 - [x] Designed as two libraries (one for gateway, one for node) for easier use
 - [x] Crypto algorithm could be changed with low effort
@@ -59,6 +59,7 @@ Notice that network key used to implement this feature is stored on flash. ESP82
 - [x] OTA over MQTT/ESP-NOW
 - [x] Node identification by using a flashing LED. This is useful when you have a bunch of nodes together :D
 - [ ] Broadcast messages that go to all nodes. Under study
+- [x] Both gateway or nodes may run on ESP32 or ESP8266
 
 ## Design
 
@@ -242,22 +243,6 @@ Invalidate Key message is always sent unencrypted.
 
 ## Hardware description
 
-### Node
-
-A node is a ESP8266 board with a number of sensors. A node may sleep between sensor readings, status is stored so that it may send data without reconnection.
-
-Any ESP8266 board with at least 1 MB of flash may be used.
-
-There are several implementations in [examples](https://github.com/gmag11/EnigmaIOT/tree/master/examples):
-
-[EnigmaIOT Node](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node): Basic node with deep sleep function. Sensor data is mocked up in example and sent using CayenneLPP encoding, you only need to replace it with your sensor reading code. Expected duration with 2 AA type batteries is more than one year, but a low power booster/regulator should be used in a custom ESP8266 board.
-
-[Enigmaiot Node MsgPack](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_msgpack): It has same functionality as the example above but uses JSON and MessagePack as Payload encoding.
-
-[EnigmaIOT Node NonSleepy](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_nonsleepy): Same functionality as previous examples but this does not sleep. This may be useful for sensors or actuators which are connected to mains, like light switches or smart plugs.
-
-[EnigmaIOT LED Flasher](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_led_flasher): On non sleepy nodes a common clock may be synchronized with gateway. This is an example of this. All nodes that include this firmware will flash their built in LED synchronously after successful registration. 
-
 ### Gateway
 
 A gateway concentrates communication from all nodes, manages their registrations status, negotiate session key with them and outputs their messages to an output protocol.
@@ -269,6 +254,41 @@ Since version 0.7.0 Gateway is a ESP32 or ESP8266 board with 4 MB of flash memor
 Thanks to modular design, other output modules may be easily developed by implementing `GwOutput_generic.h`. Examples of this may be LoRaWAN output gateway, COAP gateway or any other network protocol that is needed. Even an offline SD data logger could be done.
 
 I've included a [Gateway with dummy output module](https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOTGatewayDummy) to show simple OutputGw module development.
+
+In order to **configure** you need at least this data:
+
+- **SSID**: WiFi network to connect to
+- **Password**: WiFi pre shared key
+- **Network Name**: Name of the EnigmaIOT network. If you have several gateways it is convenient to set them to different network names. Gateway sets up an AP with this name to help nodes to find its address and WiFi channel.
+- **Network Key**: Encryption key to be used during node registration. It is used as Gateway AP pre shared key (not external WiFi). It must have from 8 to 32 characters long
+- **Channel**: Initial WiFi channel to communicate nodes and Gateway. This is not important if gateway is connected to your home WiFi as nodes and gateway will use same channel as you have configured into your router.
+
+User code may add additional custom parameters.
+
+### Node
+
+A node is either a ESP8266 or ESP32 board with a number of sensors. A node may sleep between sensor readings, status is stored so that it may send data without reconnection.
+
+Any ESP8266 or ESP32 board with at least 1 MB of flash may be used.
+
+There are several implementations in [examples](https://github.com/gmag11/EnigmaIOT/tree/master/examples):
+
+[EnigmaIOT Node](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node): Basic node with deep sleep function. Sensor data is mocked up in example and sent using CayenneLPP encoding, you only need to replace it with your sensor reading code. Expected duration with 2 AA type batteries is more than one year, but a low power booster/regulator should be used in a custom board.
+
+[Enigmaiot Node MsgPack](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_msgpack): It has same functionality as the example above but uses JSON and MessagePack as Payload encoding.
+
+[EnigmaIOT Node NonSleepy](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_nonsleepy): Same functionality as previous examples but this does not sleep. This may be useful for sensors or actuators which are connected to mains, like light switches or smart plugs.
+
+[EnigmaIOT LED Flasher](https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_led_flasher): On non sleepy nodes a common clock may be synchronized with gateway. This is an example of this. All nodes that include this firmware will flash their built in LED synchronously after successful registration. 
+
+For **configuration**, node needs this data:
+
+- **SSID**: corresponds to network name configured on Gateway
+- **Password**: You must use network key used in Gateway
+- **Node Name**: Human readable name for node. This must be unique in all nodes in same EnigmaIOT network. This may be changed afterwards using MQTT protocol
+- **Sleep Time**: If a node uses deep sleep mode this configures the initial period to be slept. This can be modified using MQTT commands.
+
+User code may add additional custom parameters.
 
 ## Data format
 
@@ -286,7 +306,7 @@ This change may produce incompatibilities with older versions so make sure you u
 
 ## ESP-NOW channel selection
 
-Gateway has always its WiFi interface working as an AP. Its name correspond to configured Network Name.
+Gateway has always its WiFi interface working as an AP. Its name corresponds to configured Network Name.
 
 During first start, after connecting supply, node tries to search for a WiFi AP with that name. Whet it is found, node will use its MAC address and channel as destination for ESP-NOW messages. It also gets RSSI (signal level) and reports it to gateway.
 
@@ -296,7 +316,7 @@ In the case that gateway has changed its channel (for instance due to a reconfig
 
 If several transmission errors are detected by node, it starts searching for gateway again. When found it keeps sending messages normally.
 
-So, node will always follow the channel that gateway is working in.
+So, node will always follow the channel configuration that gateway is working in.
 
 ## Output data from gateway
 
@@ -489,14 +509,14 @@ python3 ./EnigmaIoTUpdate.py \
              -s
 ```
 
-Notice that using ESP-NOW, device address correspond to **MAC address** of your ESP8266.
+Notice that using ESP-NOW, device address correspond to **MAC address** of your ESP8266 or ESP32 node.
 
 It is very important to configure user and password on you MQTT broker. Besides, if it is going to be accessed from the Internet you should activate TLS encryption and a certificate.
 
 ## External libraries
 
-- ESPAsyncTCP -- https://github.com/me-no-dev/ESPAsyncTCP (Required only for ESP8266)
-- AsyncTCP -- https://github.com/me-no-dev/AsyncTCP (Required only for ESP32)
+- ESPAsyncTCP -- https://github.com/me-no-dev/ESPAsyncTCP **(Required only for ESP8266)**
+- AsyncTCP -- https://github.com/me-no-dev/AsyncTCP **(Required only for ESP32)**
 - ESPAsyncWebServer -- https://github.com/me-no-dev/ESPAsyncWebServer
 - ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager version > 0.22
 - Arduino Crypto Library -- https://github.com/gmag11/CryptoArduino forked and formatted from https://github.com/rweather

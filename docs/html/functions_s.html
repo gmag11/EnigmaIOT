@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.2</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -75,9 +75,16 @@ $(function() {
 </li>
 <li>saveFlashData()
 : <a class="el" href="classEnigmaIOTGatewayClass.html#a179ab2224b2cb38ea355e8d770dc0d9a">EnigmaIOTGatewayClass</a>
+, <a class="el" href="classEnigmaIOTNodeClass.html#a77b2c62dbadc2b7546d74d8ebf931cc2">EnigmaIOTNodeClass</a>
+</li>
+<li>saveRTCData()
+: <a class="el" href="classEnigmaIOTNodeClass.html#ae1bb8b93c739fced2c695e47a5242f9a">EnigmaIOTNodeClass</a>
 </li>
 <li>ScratchPad
 : <a class="el" href="classDallasTemperature.html#aa7e6595cece289fed54cab6577c1ce9f">DallasTemperature</a>
+</li>
+<li>searchForGateway()
+: <a class="el" href="classEnigmaIOTNodeClass.html#ad7a98adabe272649c3c65efd1c2cfe45">EnigmaIOTNodeClass</a>
 </li>
 <li>send()
 : <a class="el" href="classComms__halClass.html#ac5a613a21aca12c2d2efbff02a2f0ff5">Comms_halClass</a>
@@ -88,6 +95,7 @@ $(function() {
 </li>
 <li>sendData
 : <a class="el" href="classEnigmaIOTjsonController.html#a13b9adbb1aaab6ec87042889289e701d">EnigmaIOTjsonController</a>
+, <a class="el" href="classEnigmaIOTNodeClass.html#aa363596edda284c2048d4d6885bb8727">EnigmaIOTNodeClass</a>
 </li>
 <li>sendDataCallback()
 : <a class="el" href="classEnigmaIOTjsonController.html#ae59a645aaed1e5b550bdc7967c45c170">EnigmaIOTjsonController</a>
@@ -98,8 +106,14 @@ $(function() {
 <li>sendJson()
 : <a class="el" href="classEnigmaIOTjsonController.html#ae5ece1c030d9063e46127b8a48b7bfa9">EnigmaIOTjsonController</a>
 </li>
+<li>sendNodeNameSet()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a45670fbcb6213e0a028e97569d988249">EnigmaIOTNodeClass</a>
+</li>
 <li>sendStartAnouncement()
 : <a class="el" href="classEnigmaIOTjsonController.html#a8156ca47dce60feaff56f2b819a87c58">EnigmaIOTjsonController</a>
+</li>
+<li>sendUnencryptedData()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a2e6973be4195ba354607c631c587297e">EnigmaIOTNodeClass</a>
 </li>
 <li>sentResult
 : <a class="el" href="classComms__halClass.html#a3fb9182d9e9b0729d8798c43f133a130">Comms_halClass</a>
@@ -136,8 +150,14 @@ $(function() {
 <li>setLastMessageTime()
 : <a class="el" href="classNode.html#ae7d5f900dd1290910a30692175dc8e23">Node</a>
 </li>
+<li>setLed()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a187f3eb82f9948d5b53bd7eb480f1dd4">EnigmaIOTNodeClass</a>
+</li>
 <li>setMacAddress()
 : <a class="el" href="classNode.html#a13eac1fcd9caf4e4c45e952ac7f38ee2">Node</a>
+</li>
+<li>setNodeAddress()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a13509c40faa91f1ea6fa1bb9fa0097c6">EnigmaIOTNodeClass</a>
 </li>
 <li>setNodeId()
 : <a class="el" href="classNode.html#a3615b98da7f0ea0d8615a8f45519a715">Node</a>
@@ -151,11 +171,17 @@ $(function() {
 <li>setOrigin()
 : <a class="el" href="classTimeManagerClass.html#abee40a2c59125c58f03c8093b4121a66">TimeManagerClass</a>
 </li>
+<li>setResetPin()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a50b37ec711dc25df93a1aba827d59263">EnigmaIOTNodeClass</a>
+</li>
 <li>setResolution()
-: <a class="el" href="classDallasTemperature.html#a43363ee4b227f1ecf9c33cd4e072c0c9">DallasTemperature</a>
+: <a class="el" href="classDallasTemperature.html#a394897437dfb8de4c8fd2198a1d1c356">DallasTemperature</a>
 </li>
 <li>setRxLed()
 : <a class="el" href="classEnigmaIOTGatewayClass.html#a514a694eb41c0cbb43e43c1621313187">EnigmaIOTGatewayClass</a>
+</li>
+<li>setSleepTime()
+: <a class="el" href="classEnigmaIOTNodeClass.html#acbe871995405142bf6bd56bbe4ce2822">EnigmaIOTNodeClass</a>
 </li>
 <li>setSleepy()
 : <a class="el" href="classNode.html#ae1a2a8c747a1af2e7d9467ae9199edd7">Node</a>
@@ -175,15 +201,34 @@ $(function() {
 <li>setWaitForConversion()
 : <a class="el" href="classDallasTemperature.html#aa5f90d9f12327f39de97ed2244a4ad6f">DallasTemperature</a>
 </li>
+<li>shouldRestart
+: <a class="el" href="classEnigmaIOTNodeClass.html#a2e3ba13a9f6b1a0e3feb9e6bee17d365">EnigmaIOTNodeClass</a>
+</li>
 <li>shouldSaveConfig
 : <a class="el" href="classGwOutput__MQTT.html#aa8a75a12858e138be2e92c69f2111038">GwOutput_MQTT</a>
 </li>
 <li>size()
 : <a class="el" href="classEnigmaIOTRingBuffer.html#aacd555a37dc6ff614813f365e0d85419">EnigmaIOTRingBuffer&lt; Telement &gt;</a>
 </li>
+<li>sleep()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a81ab5be7b67c28948ea5de40e5d3c360">EnigmaIOTNodeClass</a>
+</li>
+<li>sleepRequested
+: <a class="el" href="classEnigmaIOTNodeClass.html#a0186926009fc565b05f5a2c37dfb3649">EnigmaIOTNodeClass</a>
+</li>
+<li>sleepTime
+: <a class="el" href="classEnigmaIOTNodeClass.html#a358bcf3efcf3a3c08249409852590e91">EnigmaIOTNodeClass</a>
+, <a class="el" href="structrtcmem__data__t.html#a78e9abdac15a5ff7bfd409fc13fa6b54">rtcmem_data_t</a>
+</li>
+<li>sleepy
+: <a class="el" href="structrtcmem__data__t.html#a245a6d744786422d9939f5f14773475e">rtcmem_data_t</a>
+</li>
 <li>sleepyNode
 : <a class="el" href="classNode.html#a774efd63a9d427c0911b07dc3a7ac11d">Node</a>
 , <a class="el" href="structnode__instance.html#adc14b97d211609ff286c2edc4bcbe061">node_instance</a>
+</li>
+<li>startIdentifying()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a1701a6f85406e5deef210c74d509a471">EnigmaIOTNodeClass</a>
 </li>
 <li>status
 : <a class="el" href="classNode.html#a02eb5aa6340f2d4e0cfd48f7bb661dd3">Node</a>
@@ -191,7 +236,11 @@ $(function() {
 </li>
 <li>stop()
 : <a class="el" href="classComms__halClass.html#aa69c265e65ce31580af6d5dd9b3cd40f">Comms_halClass</a>
+, <a class="el" href="classEnigmaIOTNodeClass.html#ae1729724a332e907bddbe7b27c2f3c22">EnigmaIOTNodeClass</a>
 , <a class="el" href="classEspnow__halClass.html#add2ac8b2494fa1b5f09d32e17118ecda">Espnow_halClass</a>
+</li>
+<li>stopIdentifying()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a659fca03ecdfd18e19be1b39b4e703b3">EnigmaIOTNodeClass</a>
 </li>
 </ul>
 </div><!-- contents -->

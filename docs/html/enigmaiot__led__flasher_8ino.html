@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.2</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -70,7 +70,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">enigmaiot_led_flasher.ino File Reference</div>  </div>
 </div><!--header-->
@@ -82,41 +83,48 @@ $(function() {
 <code>#include &lt;<a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>&gt;</code><br />
 <code>#include &lt;CayenneLPP.h&gt;</code><br />
-<code>#include &lt;ESP8266WiFi.h&gt;</code><br />
 <code>#include &lt;ArduinoJson.h&gt;</code><br />
 <code>#include &lt;Curve25519.h&gt;</code><br />
 <code>#include &lt;ESPAsyncWebServer.h&gt;</code><br />
 <code>#include &lt;ESPAsyncWiFiManager.h&gt;</code><br />
-<code>#include &lt;ESPAsyncTCP.h&gt;</code><br />
-<code>#include &lt;Hash.h&gt;</code><br />
 <code>#include &lt;DNSServer.h&gt;</code><br />
+<code>#include &lt;FS.h&gt;</code><br />
 </div>
 <p><a href="enigmaiot__led__flasher_8ino_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:af2e697ac60e05813d45ea2c9c9e79c25"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a>&#160;&#160;&#160;LOW</td></tr>
+<tr class="separator:af2e697ac60e05813d45ea2c9c9e79c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80700bb63bd56ebabbb4728aa433fd29"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#a80700bb63bd56ebabbb4728aa433fd29">LED_OFF</a>&#160;&#160;&#160;!<a class="el" href="EnigmaIOTNode_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a></td></tr>
+<tr class="separator:a80700bb63bd56ebabbb4728aa433fd29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a450a7c16ead7b3c7b882536b08f30a00"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:a450a7c16ead7b3c7b882536b08f30a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">BLUE_LED</a>&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td></tr>
 <tr class="separator:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad4407547625c19c85b1f3abd751f1e83"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#ad4407547625c19c85b1f3abd751f1e83">ADC_MODE</a> (ADC_VCC)</td></tr>
-<tr class="separator:ad4407547625c19c85b1f3abd751f1e83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a940f8c4df553df52c9145ef2df107ad3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#a940f8c4df553df52c9145ef2df107ad3">connectEventHandler</a> ()</td></tr>
 <tr class="separator:a940f8c4df553df52c9145ef2df107ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23fc74fc5731518093d5fa0db24edae1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#a23fc74fc5731518093d5fa0db24edae1">disconnectEventHandler</a> (nodeInvalidateReason_t reason)</td></tr>
+<tr class="memitem:a23fc74fc5731518093d5fa0db24edae1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#a23fc74fc5731518093d5fa0db24edae1">disconnectEventHandler</a> (<a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a> reason)</td></tr>
 <tr class="separator:a23fc74fc5731518093d5fa0db24edae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81397ad933b5a8b902d6161f702838fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#a81397ad933b5a8b902d6161f702838fc">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding)</td></tr>
+<tr class="memitem:a81397ad933b5a8b902d6161f702838fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#a81397ad933b5a8b902d6161f702838fc">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
 <tr class="separator:a81397ad933b5a8b902d6161f702838fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
 <tr class="separator:a4fc01d736fe50cf5b977f755b675f11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
 <tr class="separator:afe461d27b9c48d5921c00d521181f12f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:aa5a70ec3f08b72ccfe8365835fee927e"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8ino.html#aa5a70ec3f08b72ccfe8365835fee927e">RESET_PIN</a> = -1</td></tr>
+<tr class="separator:aa5a70ec3f08b72ccfe8365835fee927e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> based on EnigmaIoT over ESP-NOW using non sleeping mode. Demonstrate clock synchronisation function. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.2 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>01/07/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.3 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>14/07/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin Sensor reading code is mocked on this example. You can implement any other code you need for your specific need </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
@@ -133,29 +141,59 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00031">31</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00043">43</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ad4407547625c19c85b1f3abd751f1e83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4407547625c19c85b1f3abd751f1e83">&#9670;&nbsp;</a></span>ADC_MODE()</h2>
+<a id="a450a7c16ead7b3c7b882536b08f30a00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a450a7c16ead7b3c7b882536b08f30a00">&#9670;&nbsp;</a></span>LED_BUILTIN</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ADC_MODE </td>
-          <td>(</td>
-          <td class="paramtype">ADC_VCC&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="memname">#define LED_BUILTIN&#160;&#160;&#160;2</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00040">40</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
+
 </div>
 </div>
+<a id="a80700bb63bd56ebabbb4728aa433fd29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80700bb63bd56ebabbb4728aa433fd29">&#9670;&nbsp;</a></span>LED_OFF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LED_OFF&#160;&#160;&#160;!<a class="el" href="EnigmaIOTNode_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00037">37</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
+
+</div>
+</div>
+<a id="af2e697ac60e05813d45ea2c9c9e79c25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2e697ac60e05813d45ea2c9c9e79c25">&#9670;&nbsp;</a></span>LED_ON</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LED_ON&#160;&#160;&#160;LOW</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00036">36</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="a940f8c4df553df52c9145ef2df107ad3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a940f8c4df553df52c9145ef2df107ad3">&#9670;&nbsp;</a></span>connectEventHandler()</h2>
 
@@ -171,7 +209,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00034">34</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00049">49</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
 
 </div>
 </div>
@@ -184,14 +222,14 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void disconnectEventHandler </td>
           <td>(</td>
-          <td class="paramtype">nodeInvalidateReason_t&#160;</td>
+          <td class="paramtype"><a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a>&#160;</td>
           <td class="paramname"><em>reason</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00038">38</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00053">53</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
 
 </div>
 </div>
@@ -210,7 +248,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00094">94</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00126">126</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
 
 </div>
 </div>
@@ -241,13 +279,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">nodeMessageType_t&#160;</td>
+          <td class="paramtype"><a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a>&#160;</td>
           <td class="paramname"><em>command</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">nodePayloadEncoding_t&#160;</td>
+          <td class="paramtype"><a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a>&#160;</td>
           <td class="paramname"><em>payloadEncoding</em>&#160;</td>
         </tr>
         <tr>
@@ -258,7 +296,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00042">42</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00057">57</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
 
 </div>
 </div>
@@ -277,7 +315,32 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00079">79</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00096">96</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="aa5a70ec3f08b72ccfe8365835fee927e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5a70ec3f08b72ccfe8365835fee927e">&#9670;&nbsp;</a></span>RESET_PIN</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto RESET_PIN = -1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8ino_source.html#l00043">43</a> of file <a class="el" href="enigmaiot__led__flasher_8ino_source.html">enigmaiot_led_flasher.ino</a>.</p>
 
 </div>
 </div>

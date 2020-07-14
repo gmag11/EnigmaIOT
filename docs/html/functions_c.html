@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.2</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -74,6 +74,10 @@ $(function() {
 : <a class="el" href="classComms__halClass.html#ac495fb3d9e576bb2717c1f43197b458e">Comms_halClass</a>
 , <a class="el" href="classEspnow__halClass.html#a21c29d9dc5643cebaa975302058a8694">Espnow_halClass</a>
 , <a class="el" href="structgateway__config__t.html#a1ac13a1c74a672e9dd1268ffc23a1a69">gateway_config_t</a>
+, <a class="el" href="structrtcmem__data__t.html#aceff31e0cac1b5d0ca7895e8379c7fd4">rtcmem_data_t</a>
+</li>
+<li>checkCRC()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a461dd5c9def2768c3c4b87cfc9be6ef8">EnigmaIOTNodeClass</a>
 </li>
 <li>checkForConversion
 : <a class="el" href="classDallasTemperature.html#a60788371290c97ee586b8f5558ee8f92">DallasTemperature</a>
@@ -81,21 +85,44 @@ $(function() {
 <li>checkNodeName()
 : <a class="el" href="classNodeList.html#a6702f6b65634da0500f5e99ccf017178">NodeList</a>
 </li>
+<li>checkResetButton()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a2cf188fbd1d22775605eea93ed561a53">EnigmaIOTNodeClass</a>
+</li>
 <li>clear()
 : <a class="el" href="classFilterClass.html#a29933bc3e2094170afd380cee3763d95">FilterClass</a>
+</li>
+<li>clearFlash()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a531eee8dc001da6f1f1393c1cc632b09">EnigmaIOTNodeClass</a>
+</li>
+<li>clearRTC()
+: <a class="el" href="classEnigmaIOTNodeClass.html#afa97e9b5f9e73702c545a5e7b4c2c15f">EnigmaIOTNodeClass</a>
+</li>
+<li>clientHello()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a1ddc7fce5233d3959cfb52dd3c7f605c">EnigmaIOTNodeClass</a>
 </li>
 <li>clientId
 : <a class="el" href="classGatewayOutput__dummy.html#aa06190ea949a98d38e81f54a5edc7d1f">GatewayOutput_dummy</a>
 , <a class="el" href="classGatewayOutput__generic.html#ab8b6dc096f4f731c7d7dc8a6cb46f132">GatewayOutput_generic</a>
 </li>
 <li>clock()
-: <a class="el" href="classTimeManagerClass.html#a85889f0610371fd502b47aae07d35506">TimeManagerClass</a>
+: <a class="el" href="classEnigmaIOTNodeClass.html#a6830ae2f6b8dafa588f5baa1fe4e8a99">EnigmaIOTNodeClass</a>
+, <a class="el" href="classTimeManagerClass.html#a85889f0610371fd502b47aae07d35506">TimeManagerClass</a>
+</li>
+<li>clockRequest()
+: <a class="el" href="classEnigmaIOTNodeClass.html#a1d62eaa08920568f019ef240dd98dc3b">EnigmaIOTNodeClass</a>
 </li>
 <li>clockResponse()
 : <a class="el" href="classEnigmaIOTGatewayClass.html#a8209d6872ee688d53135642cc7656242">EnigmaIOTGatewayClass</a>
 </li>
+<li>clockSyncEnabled
+: <a class="el" href="classEnigmaIOTNodeClass.html#adbabb6a770438b4cfbb0f89cf2cb1795">EnigmaIOTNodeClass</a>
+</li>
 <li>comm
 : <a class="el" href="classEnigmaIOTGatewayClass.html#ab049e20310e2a18bd1f8adc4ec975254">EnigmaIOTGatewayClass</a>
+, <a class="el" href="classEnigmaIOTNodeClass.html#a7fca29c7cd9cba0115ec42566250275d">EnigmaIOTNodeClass</a>
+</li>
+<li>commErrors
+: <a class="el" href="structrtcmem__data__t.html#a2abc91bcf729ee1eb44985df9d3086a9">rtcmem_data_t</a>
 </li>
 <li>COMMS_HAL_ADDR_LEN
 : <a class="el" href="classComms__halClass.html#a6d372da9bf4d1d00c5445b26ef7d0f0b">Comms_halClass</a>
@@ -104,6 +131,9 @@ $(function() {
 <li>COMMS_HAL_MAX_MESSAGE_LENGTH
 : <a class="el" href="classComms__halClass.html#a3a0a66fe2fadc4a71dc2ac8eb7573316">Comms_halClass</a>
 , <a class="el" href="classEspnow__halClass.html#ab67eb381c0a4278b5af0235cb1aec635">Espnow_halClass</a>
+</li>
+<li>configCleared
+: <a class="el" href="classEnigmaIOTNodeClass.html#a5aea95bd2dead51558a1f7fa312cf1c6">EnigmaIOTNodeClass</a>
 </li>
 <li>configManagerExit()
 : <a class="el" href="classEnigmaIOTjsonController.html#a844043532561398d54fa45cd7f0cf4ed">EnigmaIOTjsonController</a>
@@ -119,9 +149,13 @@ $(function() {
 </li>
 <li>configWiFiManager()
 : <a class="el" href="classEnigmaIOTGatewayClass.html#ad6c301b780bd802ee98bbe25885c0cfd">EnigmaIOTGatewayClass</a>
+, <a class="el" href="classEnigmaIOTNodeClass.html#a41984c7560df0af008fc526ee38b0b42">EnigmaIOTNodeClass</a>
 </li>
 <li>countActiveNodes()
 : <a class="el" href="classNodeList.html#abb4895c5b9ae6b041c9102178de837c4">NodeList</a>
+</li>
+<li>crc32
+: <a class="el" href="structrtcmem__data__t.html#a22c20e35a06410f1060c11ef669ab96a">rtcmem_data_t</a>
 </li>
 </ul>
 </div><!-- contents -->

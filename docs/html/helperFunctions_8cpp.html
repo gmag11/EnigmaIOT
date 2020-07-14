@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.2</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -95,9 +95,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a34002f0936dac45b08bba5436ddc8a09"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8cpp.html#a34002f0936dac45b08bba5436ddc8a09">printHexBuffer</a> (const uint8_t *buffer, uint16_t len)</td></tr>
 <tr class="memdesc:a34002f0936dac45b08bba5436ddc8a09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug helper function that generates a string that represent a buffer hexadecimal values.  <a href="helperFunctions_8cpp.html#a34002f0936dac45b08bba5436ddc8a09">More...</a><br /></td></tr>
 <tr class="separator:a34002f0936dac45b08bba5436ddc8a09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ac85b62578c613214438058535f180f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8cpp.html#a3ac85b62578c613214438058535f180f">initWiFi</a> (uint8_t channel, uint8_t role, String networkName)</td></tr>
-<tr class="memdesc:a3ac85b62578c613214438058535f180f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initalizes WiFi interfaces on ESP8266 or ESP32.  <a href="helperFunctions_8cpp.html#a3ac85b62578c613214438058535f180f">More...</a><br /></td></tr>
-<tr class="separator:a3ac85b62578c613214438058535f180f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad22aae6146b9da40aa95e2acfe12f6d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8cpp.html#ad22aae6146b9da40aa95e2acfe12f6d3">initWiFi</a> (uint8_t channel, const char *networkName, const char *networkKey, uint8_t role)</td></tr>
+<tr class="memdesc:ad22aae6146b9da40aa95e2acfe12f6d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initalizes WiFi interfaces on ESP8266 or ESP32.  <a href="helperFunctions_8cpp.html#ad22aae6146b9da40aa95e2acfe12f6d3">More...</a><br /></td></tr>
+<tr class="separator:ad22aae6146b9da40aa95e2acfe12f6d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81e44efba216f1a0a981219616eeb8f3"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8cpp.html#a81e44efba216f1a0a981219616eeb8f3">calculateCRC32</a> (const uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, size_t length)</td></tr>
 <tr class="memdesc:a81e44efba216f1a0a981219616eeb8f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates CRC32 of a buffer.  <a href="helperFunctions_8cpp.html#a81e44efba216f1a0a981219616eeb8f3">More...</a><br /></td></tr>
 <tr class="separator:a81e44efba216f1a0a981219616eeb8f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -110,8 +110,8 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Auxiliary function definition. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.2 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>01/07/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.3 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>14/07/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
@@ -128,7 +128,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00072">72</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00083">83</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
 
 </div>
 </div>
@@ -187,12 +187,12 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CRC32 value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00052">52</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00063">63</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a3ac85b62578c613214438058535f180f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ac85b62578c613214438058535f180f">&#9670;&nbsp;</a></span>initWiFi()</h2>
+<a id="ad22aae6146b9da40aa95e2acfe12f6d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad22aae6146b9da40aa95e2acfe12f6d3">&#9670;&nbsp;</a></span>initWiFi()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -201,19 +201,25 @@ Functions</h2></td></tr>
           <td class="memname">void initWiFi </td>
           <td>(</td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>channel</em> = <code>3</code>, </td>
+          <td class="paramname"><em>channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>networkName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>networkKey</em> = <code>NULL</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>role</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>networkName</em> = <code>&quot;EnigmaIOT&quot;</code>&#160;</td>
+          <td class="paramname"><em>role</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -273,7 +279,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns a pointer to input buffer after writting MAC address on human readable format </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00073">73</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00084">84</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
 
 </div>
 </div>
@@ -354,7 +360,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns a pointer to <code>values</code> input buffer after writting MAC address </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00083">83</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00094">94</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
 
 </div>
 </div>

@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.2</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -67,12 +67,6 @@ $(function() {
 &#160;
 
 <h3><a id="index_a"></a>- a -</h3><ul>
-<li>ADC_MODE()
-: <a class="el" href="enigmaiot__led__flasher_8ino.html#ad4407547625c19c85b1f3abd751f1e83">enigmaiot_led_flasher.ino</a>
-, <a class="el" href="enigmaiot__node_8ino.html#ad4407547625c19c85b1f3abd751f1e83">enigmaiot_node.ino</a>
-, <a class="el" href="enigmaiot__node__msgpack_8ino.html#ad4407547625c19c85b1f3abd751f1e83">enigmaiot_node_msgpack.ino</a>
-, <a class="el" href="enigmaiot__node__nonsleepy_8ino.html#ad4407547625c19c85b1f3abd751f1e83">enigmaiot_node_nonsleepy.ino</a>
-</li>
 <li>arduinoOTAConfigure()
 : <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a8d52c8107e0bcc9687be62f7e0b388ae">EnigmaIOTGatewayMQTT.ino</a>
 </li>
@@ -118,6 +112,9 @@ $(function() {
 <li>checkMsgType()
 : <a class="el" href="GwOutput__mqtt_8cpp.html#a57969f4236bd72eca4fa83155a025085">GwOutput_mqtt.cpp</a>
 </li>
+<li>clearRtcData()
+: <a class="el" href="EnigmaIOTNode_8cpp.html#a1b66b36dbb3d32b25e7f4b2cc4e0accb">EnigmaIOTNode.cpp</a>
+</li>
 <li>connectEventHandler()
 : <a class="el" href="enigmaiot__led__flasher_8ino.html#a940f8c4df553df52c9145ef2df107ad3">enigmaiot_led_flasher.ino</a>
 , <a class="el" href="enigmaiot__node_8ino.html#a940f8c4df553df52c9145ef2df107ad3">enigmaiot_node.ino</a>
@@ -134,6 +131,9 @@ $(function() {
 , <a class="el" href="enigmaiot__node__msgpack_8ino.html#a23fc74fc5731518093d5fa0db24edae1">enigmaiot_node_msgpack.ino</a>
 , <a class="el" href="enigmaiot__node__nonsleepy_8ino.html#a23fc74fc5731518093d5fa0db24edae1">enigmaiot_node_nonsleepy.ino</a>
 </li>
+<li>dumpRtcData()
+: <a class="el" href="EnigmaIOTNode_8cpp.html#a4dcb9645090920f31f391adcd5b3850c">EnigmaIOTNode.cpp</a>
+</li>
 </ul>
 
 
@@ -144,6 +144,9 @@ $(function() {
 <li>flashConnectionLed()
 : <a class="el" href="EnigmaIOTGatewayDummy_8ino.html#ae6fc0fcbb7779efc63d50434dbd44d7a">EnigmaIOTGatewayDummy.ino</a>
 , <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#ae6fc0fcbb7779efc63d50434dbd44d7a">EnigmaIOTGatewayMQTT.ino</a>
+</li>
+<li>flashLed()
+: <a class="el" href="EnigmaIOTNode_8cpp.html#a2f399d10e625fb459fb5e0b8a3a79ef8">EnigmaIOTNode.cpp</a>
 </li>
 </ul>
 
@@ -166,8 +169,8 @@ $(function() {
 
 <h3><a id="index_i"></a>- i -</h3><ul>
 <li>initWiFi()
-: <a class="el" href="helperFunctions_8cpp.html#a3ac85b62578c613214438058535f180f">helperFunctions.cpp</a>
-, <a class="el" href="helperFunctions_8h.html#a9e3bf4153b88d690a1ecb6f62239aec9">helperFunctions.h</a>
+: <a class="el" href="helperFunctions_8cpp.html#ad22aae6146b9da40aa95e2acfe12f6d3">helperFunctions.cpp</a>
+, <a class="el" href="helperFunctions_8h.html#a5efcbae54fb852b8a9b23a25931e3f7a">helperFunctions.h</a>
 </li>
 <li>isHexChar()
 : <a class="el" href="EnigmaIOTGateway_8cpp.html#ad08e6ed992bb54d4ab67627295e7fcf0">EnigmaIOTGateway.cpp</a>
@@ -263,16 +266,16 @@ $(function() {
 <li>setup()
 : <a class="el" href="enigmaiot__led__flasher_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_led_flasher.ino</a>
 , <a class="el" href="enigmaiot__node_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_node.ino</a>
-, <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">EnigmaIOTGatewayMQTT.ino</a>
-, <a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">EnigmaIOTGatewayDummy.ino</a>
-, <a class="el" href="TwoPin__DS18B20_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">TwoPin_DS18B20.ino</a>
+, <a class="el" href="UserDataWriteBatch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">UserDataWriteBatch.ino</a>
 , <a class="el" href="Multibus__simple_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">Multibus_simple.ino</a>
 , <a class="el" href="oneWireSearch_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">oneWireSearch.ino</a>
-, <a class="el" href="SetUserData_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">SetUserData.ino</a>
-, <a class="el" href="enigmaiot__node__msgpack_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_node_msgpack.ino</a>
-, <a class="el" href="UserDataDemo_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">UserDataDemo.ino</a>
-, <a class="el" href="UserDataWriteBatch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">UserDataWriteBatch.ino</a>
 , <a class="el" href="enigmaiot__node__nonsleepy_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_node_nonsleepy.ino</a>
+, <a class="el" href="SetUserData_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">SetUserData.ino</a>
+, <a class="el" href="TwoPin__DS18B20_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">TwoPin_DS18B20.ino</a>
+, <a class="el" href="UserDataDemo_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">UserDataDemo.ino</a>
+, <a class="el" href="enigmaiot__node__msgpack_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">enigmaiot_node_msgpack.ino</a>
+, <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">EnigmaIOTGatewayMQTT.ino</a>
+, <a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">EnigmaIOTGatewayDummy.ino</a>
 </li>
 <li>showTime()
 : <a class="el" href="enigmaiot__node__nonsleepy_8ino.html#af0c88ea180e73ee60842341790d31b44">enigmaiot_node_nonsleepy.ino</a>
@@ -281,9 +284,15 @@ $(function() {
 : <a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a6ff09343e5169937476aa04932b76915">EnigmaIOTGatewayDummy.ino</a>
 , <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a6ff09343e5169937476aa04932b76915">EnigmaIOTGatewayMQTT.ino</a>
 </li>
+<li>startFlash()
+: <a class="el" href="EnigmaIOTNode_8cpp.html#ae79c9303923c11f39edb388b32d4646b">EnigmaIOTNode.cpp</a>
+</li>
 <li>stopConnectionFlash()
 : <a class="el" href="EnigmaIOTGatewayDummy_8ino.html#ad85ae6aaf68f30aa59facd8f80635ffd">EnigmaIOTGatewayDummy.ino</a>
 , <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#ad85ae6aaf68f30aa59facd8f80635ffd">EnigmaIOTGatewayMQTT.ino</a>
+</li>
+<li>stopFlash()
+: <a class="el" href="EnigmaIOTNode_8cpp.html#ad072ccb795ca00a2cc374f3ce7bd5d55">EnigmaIOTNode.cpp</a>
 </li>
 <li>str2mac()
 : <a class="el" href="helperFunctions_8cpp.html#a02961b325403161b54533152d242696a">helperFunctions.cpp</a>

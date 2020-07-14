@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.2</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -80,31 +80,29 @@ $(function() {
 <code>#include &lt;<a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>&gt;</code><br />
 <code>#include &lt;CayenneLPP.h&gt;</code><br />
-<code>#include &lt;ESP8266WiFi.h&gt;</code><br />
 <code>#include &lt;ArduinoJson.h&gt;</code><br />
 <code>#include &lt;Curve25519.h&gt;</code><br />
 <code>#include &lt;ESPAsyncWebServer.h&gt;</code><br />
 <code>#include &lt;ESPAsyncWiFiManager.h&gt;</code><br />
-<code>#include &lt;ESPAsyncTCP.h&gt;</code><br />
-<code>#include &lt;Hash.h&gt;</code><br />
 <code>#include &lt;DNSServer.h&gt;</code><br />
+<code>#include &lt;FS.h&gt;</code><br />
 </div>
 <p><a href="enigmaiot__node__msgpack_8ino_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a450a7c16ead7b3c7b882536b08f30a00"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node__msgpack_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:a450a7c16ead7b3c7b882536b08f30a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node__msgpack_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">BLUE_LED</a>&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td></tr>
 <tr class="separator:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad4407547625c19c85b1f3abd751f1e83"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node__msgpack_8ino.html#ad4407547625c19c85b1f3abd751f1e83">ADC_MODE</a> (ADC_VCC)</td></tr>
-<tr class="separator:ad4407547625c19c85b1f3abd751f1e83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a940f8c4df553df52c9145ef2df107ad3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node__msgpack_8ino.html#a940f8c4df553df52c9145ef2df107ad3">connectEventHandler</a> ()</td></tr>
 <tr class="separator:a940f8c4df553df52c9145ef2df107ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23fc74fc5731518093d5fa0db24edae1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node__msgpack_8ino.html#a23fc74fc5731518093d5fa0db24edae1">disconnectEventHandler</a> (nodeInvalidateReason_t reason)</td></tr>
+<tr class="memitem:a23fc74fc5731518093d5fa0db24edae1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node__msgpack_8ino.html#a23fc74fc5731518093d5fa0db24edae1">disconnectEventHandler</a> (<a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a> reason)</td></tr>
 <tr class="separator:a23fc74fc5731518093d5fa0db24edae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15c150763c9e39ec5e7b94a5fddcb95f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node__msgpack_8ino.html#a15c150763c9e39ec5e7b94a5fddcb95f">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t encoding)</td></tr>
+<tr class="memitem:a15c150763c9e39ec5e7b94a5fddcb95f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node__msgpack_8ino.html#a15c150763c9e39ec5e7b94a5fddcb95f">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> encoding)</td></tr>
 <tr class="separator:a15c150763c9e39ec5e7b94a5fddcb95f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node__msgpack_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
 <tr class="separator:a4fc01d736fe50cf5b977f755b675f11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,7 +111,7 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aa5a70ec3f08b72ccfe8365835fee927e"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node__msgpack_8ino.html#aa5a70ec3f08b72ccfe8365835fee927e">RESET_PIN</a> = 13</td></tr>
+<tr class="memitem:aa5a70ec3f08b72ccfe8365835fee927e"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node__msgpack_8ino.html#aa5a70ec3f08b72ccfe8365835fee927e">RESET_PIN</a> = -1</td></tr>
 <tr class="separator:aa5a70ec3f08b72ccfe8365835fee927e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -129,29 +127,27 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00030">30</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00040">40</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ad4407547625c19c85b1f3abd751f1e83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4407547625c19c85b1f3abd751f1e83">&#9670;&nbsp;</a></span>ADC_MODE()</h2>
+<a id="a450a7c16ead7b3c7b882536b08f30a00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a450a7c16ead7b3c7b882536b08f30a00">&#9670;&nbsp;</a></span>LED_BUILTIN</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ADC_MODE </td>
-          <td>(</td>
-          <td class="paramtype">ADC_VCC&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="memname">#define LED_BUILTIN&#160;&#160;&#160;2</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00037">37</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
+
 </div>
 </div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="a940f8c4df553df52c9145ef2df107ad3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a940f8c4df553df52c9145ef2df107ad3">&#9670;&nbsp;</a></span>connectEventHandler()</h2>
 
@@ -167,7 +163,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00034">34</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00046">46</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
 
 </div>
 </div>
@@ -180,14 +176,14 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">void disconnectEventHandler </td>
           <td>(</td>
-          <td class="paramtype">nodeInvalidateReason_t&#160;</td>
+          <td class="paramtype"><a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a>&#160;</td>
           <td class="paramname"><em>reason</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00038">38</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00050">50</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
 
 </div>
 </div>
@@ -206,7 +202,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00128">128</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00162">162</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
 
 </div>
 </div>
@@ -237,13 +233,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">nodeMessageType_t&#160;</td>
+          <td class="paramtype"><a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a>&#160;</td>
           <td class="paramname"><em>command</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">nodePayloadEncoding_t&#160;</td>
+          <td class="paramtype"><a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a>&#160;</td>
           <td class="paramname"><em>encoding</em>&#160;</td>
         </tr>
         <tr>
@@ -254,7 +250,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00042">42</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00054">54</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
 
 </div>
 </div>
@@ -273,7 +269,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00081">81</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00093">93</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
 
 </div>
 </div>
@@ -288,7 +284,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr auto RESET_PIN = 13</td>
+          <td class="memname">constexpr auto RESET_PIN = -1</td>
         </tr>
       </table>
   </td>
@@ -298,7 +294,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00030">30</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__node__msgpack_8ino_source.html#l00040">40</a> of file <a class="el" href="enigmaiot__node__msgpack_8ino_source.html">enigmaiot_node_msgpack.ino</a>.</p>
 
 </div>
 </div>

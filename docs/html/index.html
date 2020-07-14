@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.2</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -74,7 +74,7 @@ $(function() {
 <p>A number of nodes with one or more sensors each one communicate in a <b>secure</b> way to a central gateway in a star network using EnigmaIoT protocol.</p>
 <p>This protocol has been designed with security on mind. All node data is encrypted with a random key that changes periodically. Key is unique for each node and dynamically negotiated, so user do not have to enter any key. Indeed, all encryption and key agreement is transparent to user.</p>
 <p>I designed this because I was searching for a way to have a relatively high number of nodes at home. I thought about using WiFi but it would overload my home router. So I looked for an alternative. I evaluated LoRa or cheap nRF24 modules but I wanted the simplest solution in terms of hardware.</p>
-<p>ESP8266 microcontroller implements a protocol known as ESP-NOW. It is a point to point protocol, based on vendor specific <a href="https://mrncciew.com/2014/09/29/cwap-802-11-mgmt-frame-types/">WiFi management action frames</a>, that works in a connectionless way and every packet is a few milliseconds long. Because of this it eases to have a battery powered node so that it enables designing totally wireless sensors.</p>
+<p>ESP8266 and ESP32 microcontrollers implement a protocol known as ESP-NOW. It is a point to point protocol, based on vendor specific <a href="https://mrncciew.com/2014/09/29/cwap-802-11-mgmt-frame-types/">WiFi management action frames</a>, that works in a connectionless fashion and every packet is a few milliseconds long. Because of this, it eases to have a battery powered node so that it enables designing totally wireless sensors.</p>
 <p>But use of encryption on ESP-NOW limits the number of nodes to only 6 nodes. So I thought that I could implement encryption on payload but I found many problems I should solve to grade this as "secure enough".</p>
 <p>Find library documentation on <a href="https://gmag11.github.io/EnigmaIOT">https://gmag11.github.io/EnigmaIOT</a></p>
 <h1>Project requirements</h1>
@@ -104,7 +104,7 @@ $(function() {
 <p>Notice that network key used to implement this feature is stored on flash. ESP8266 do not allow flash encryption so network key may be recovered reading flash.</p>
 <ul>
 <li>[x] Pluggable physical layer communication. Right now only ESP-NOW protocol is developed but you can easily add more communication alternatives</li>
-<li>[x] When using ESP-NOW only esp8266 is needed. No more electronics apart from sensor</li>
+<li>[x] When using ESP-NOW only ESP8266 or ESP32 is needed. No more electronics apart from sensor</li>
 <li>[x] Data message counter to detect lost or repeated messages</li>
 <li>[x] Designed as two libraries (one for gateway, one for node) for easier use</li>
 <li>[x] Crypto algorithm could be changed with low effort</li>
@@ -117,6 +117,7 @@ $(function() {
 <li>[x] OTA over MQTT/ESP-NOW</li>
 <li>[x] <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> identification by using a flashing LED. This is useful when you have a bunch of nodes together :D</li>
 <li>[ ] Broadcast messages that go to all nodes. Under study</li>
+<li>[x] Both gateway or nodes may run on ESP32 or ESP8266</li>
 </ul>
 <h1>Design</h1>
 <h2>System Design</h2>
@@ -180,7 +181,7 @@ $(function() {
 <p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/ClockSyncResponse.png" alt="Clock sync response" class="inline"/></p>
 <p>In non sleepy nodes, it may be useful to send a message from time to time to let Gateway know that node is still active and let <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> to check that is is still registered in Gateway.</p>
 <p>Clock syncronization may be a very good feature if you need to coordinate actions on different nodes.</p>
-<p>EnigmaIOT combines these two features into one request and response. Nodes may send clock sync request every some time to ping gateway and get common clock updated. Clock synchronization uses a mechanism similar to the one used by [SNTP protocol](<a href="https://en.wikipedia.org/wiki/Network_Time_Protocol#:~:text=Simple%20Network%20Time%20Protocol%20(SNTP,NTP%20capability%20is%20not%20required.)">https://en.wikipedia.org/wiki/Network_Time_Protocol#:~:text=Simple%20Network%20Time%20Protocol%20(SNTP,NTP%20capability%20is%20not%20required.)</a>.</p>
+<p>EnigmaIOT combines these two features into one request and response. Nodes may send clock sync request every some time to ping gateway and get common clock updated. Clock synchronization uses a mechanism similar to the one used by <a href="https://en.wikipedia.org/wiki/Network_Time_Protocol#:~:text=Simple%20Network%20Time%20Protocol%20">SNTP protocol</a>.</p>
 <p><strike>Notice that this is not world time sync but a numeric clock.</strike></p>
 <p>Since version 0.9.2, if Gateway has its internal time synchronized using NTP it sends non sleepy nodes <b>current real date and time</b> in millisecond Unix format .</p>
 <p>This feature may be disabled if needed.</p>
@@ -211,20 +212,37 @@ $(function() {
 <h2>Wrong Data Counter</h2>
 <p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/WrongCounter.svg?sanitize=true" alt="Wrong Counter message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
 <h1>Hardware description</h1>
-<h2><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a></h2>
-<p>A node is a ESP8266 board with a number of sensors. A node may sleep between sensor readings, status is stored so that it may send data without reconnection.</p>
-<p>Any ESP8266 board with at least 1 MB of flash may be used.</p>
-<p>There are several implementations in <a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples">examples</a>:</p>
-<p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node">EnigmaIOT Node</a>: Basic node with deep sleep function. Sensor data is mocked up in example and sent using CayenneLPP encoding, you only need to replace it with your sensor reading code. Expected duration with 2 AA type batteries is more than one year, but a low power booster/regulator should be used in a custom ESP8266 board.</p>
-<p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_msgpack">Enigmaiot Node MsgPack</a>: It has same functionality as the example above but uses JSON and MessagePack as Payload encoding.</p>
-<p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_nonsleepy">EnigmaIOT Node NonSleepy</a>: Same functionality as previous examples but this does not sleep. This may be useful for sensors or actuators which are connected to mains, like light switches or smart plugs.</p>
-<p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_led_flasher">EnigmaIOT LED Flasher</a>: On non sleepy nodes a common clock may be synchronized with gateway. This is an example of this. All nodes that include this firmware will flash their built in LED synchronously after successful registration.</p>
 <h2>Gateway</h2>
 <p>A gateway concentrates communication from all nodes, manages their registrations status, negotiate session key with them and outputs their messages to an output protocol.</p>
 <p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOTGatewayMQTT">EnigmaIOT MQTT Gateway</a> is the implementation for a MQTT gateway.</p>
 <p>Since version 0.7.0 Gateway is a ESP32 or ESP8266 board with 4 MB of flash memory or more. ESP8266 gateways cannot use MQTT TLS encryption due to memory limitations.</p>
 <p>Thanks to modular design, other output modules may be easily developed by implementing <code><a class="el" href="GwOutput__generic_8h.html" title="Generic Gateway output module template.">GwOutput_generic.h</a></code>. Examples of this may be LoRaWAN output gateway, COAP gateway or any other network protocol that is needed. Even an offline SD data logger could be done.</p>
 <p>I've included a <a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOTGatewayDummy">Gateway with dummy output module</a> to show simple OutputGw module development.</p>
+<p>In order to <b>configure</b> you need at least this data:</p>
+<ul>
+<li><b>SSID</b>: WiFi network to connect to</li>
+<li><b>Password</b>: WiFi pre shared key</li>
+<li><b>Network Name</b>: Name of the EnigmaIOT network. If you have several gateways it is convenient to set them to different network names. Gateway sets up an AP with this name to help nodes to find its address and WiFi channel.</li>
+<li><b>Network Key</b>: Encryption key to be used during node registration. It is used as Gateway AP pre shared key (not external WiFi). It must have from 8 to 32 characters long</li>
+<li><b>Channel</b>: Initial WiFi channel to communicate nodes and Gateway. This is not important if gateway is connected to your home WiFi as nodes and gateway will use same channel as you have configured into your router.</li>
+</ul>
+<p>User code may add additional custom parameters.</p>
+<h2><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a></h2>
+<p>A node is either a ESP8266 or ESP32 board with a number of sensors. A node may sleep between sensor readings, status is stored so that it may send data without reconnection.</p>
+<p>Any ESP8266 or ESP32 board with at least 1 MB of flash may be used.</p>
+<p>There are several implementations in <a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples">examples</a>:</p>
+<p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node">EnigmaIOT Node</a>: Basic node with deep sleep function. Sensor data is mocked up in example and sent using CayenneLPP encoding, you only need to replace it with your sensor reading code. Expected duration with 2 AA type batteries is more than one year, but a low power booster/regulator should be used in a custom board.</p>
+<p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_msgpack">Enigmaiot Node MsgPack</a>: It has same functionality as the example above but uses JSON and MessagePack as Payload encoding.</p>
+<p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_node_nonsleepy">EnigmaIOT Node NonSleepy</a>: Same functionality as previous examples but this does not sleep. This may be useful for sensors or actuators which are connected to mains, like light switches or smart plugs.</p>
+<p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/enigmaiot_led_flasher">EnigmaIOT LED Flasher</a>: On non sleepy nodes a common clock may be synchronized with gateway. This is an example of this. All nodes that include this firmware will flash their built in LED synchronously after successful registration.</p>
+<p>For <b>configuration</b>, node needs this data:</p>
+<ul>
+<li><b>SSID</b>: corresponds to network name configured on Gateway</li>
+<li><b>Password</b>: You must use network key used in Gateway</li>
+<li><b><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> Name</b>: Human readable name for node. This must be unique in all nodes in same EnigmaIOT network. This may be changed afterwards using MQTT protocol</li>
+<li><b>Sleep Time</b>: If a node uses deep sleep mode this configures the initial period to be slept. This can be modified using MQTT commands.</li>
+</ul>
+<p>User code may add additional custom parameters.</p>
 <h1>Data format</h1>
 <p>Although it is not mandatory at all, use of <a href="https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload">CayenneLPP format</a> is recommended for sensor data compactness.</p>
 <p>You may use <a href="https://github.com/ElectronicCats/CayenneLPP">CayenneLPP library</a> for encoding on node and decoding on Gateway.</p>
@@ -233,12 +251,12 @@ $(function() {
 <p>Since version 0.9 payload encoding is signalled on user data messages (both uplink and downlink) so new formats are possible. Currently <a href="https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload">CayenneLPP</a> and <a href="https://msgpack.org">MessagePack</a> formats, in addition to RAW data, are possible. Check examples for usage instruction.</p>
 <p>This change may produce incompatibilities with older versions so make sure you update your gateway and all your nodes to latest library version.</p>
 <h1>ESP-NOW channel selection</h1>
-<p>Gateway has always its WiFi interface working as an AP. Its name correspond to configured Network Name.</p>
+<p>Gateway has always its WiFi interface working as an AP. Its name corresponds to configured Network Name.</p>
 <p>During first start, after connecting supply, node tries to search for a WiFi AP with that name. Whet it is found, node will use its MAC address and channel as destination for ESP-NOW messages. It also gets RSSI (signal level) and reports it to gateway.</p>
 <p>This information is stored in flash so node will use it to communicate in all following messages.</p>
 <p>In the case that gateway has changed its channel (for instance due to a reconfiguration) node will not be able to communicate again.</p>
 <p>If several transmission errors are detected by node, it starts searching for gateway again. When found it keeps sending messages normally.</p>
-<p>So, node will always follow the channel that gateway is working in.</p>
+<p>So, node will always follow the channel configuration that gateway is working in.</p>
 <h1>Output data from gateway</h1>
 <h2>Uplink messages</h2>
 <p>A user may program their own output format modifying gateway example program. For my use case gateway outputs MQTT messages in this format: </p><div class="fragment"><div class="line">&lt;configurable prefix&gt;/&lt;node address | node name&gt;/data &lt;json data&gt;</div>
@@ -369,12 +387,12 @@ $(function() {
 <div class="line">             -p 8883 \</div>
 <div class="line">             -D medium \</div>
 <div class="line">             -s</div>
-</div><!-- fragment --><p>Notice that using ESP-NOW, device address correspond to <b>MAC address</b> of your ESP8266.</p>
+</div><!-- fragment --><p>Notice that using ESP-NOW, device address correspond to <b>MAC address</b> of your ESP8266 or ESP32 node.</p>
 <p>It is very important to configure user and password on you MQTT broker. Besides, if it is going to be accessed from the Internet you should activate TLS encryption and a certificate.</p>
 <h1>External libraries</h1>
 <ul>
-<li>ESPAsyncTCP &ndash; <a href="https://github.com/me-no-dev/ESPAsyncTCP">https://github.com/me-no-dev/ESPAsyncTCP</a> (Required only for ESP8266)</li>
-<li>AsyncTCP &ndash; <a href="https://github.com/me-no-dev/AsyncTCP">https://github.com/me-no-dev/AsyncTCP</a> (Required only for ESP32)</li>
+<li>ESPAsyncTCP &ndash; <a href="https://github.com/me-no-dev/ESPAsyncTCP">https://github.com/me-no-dev/ESPAsyncTCP</a> **(Required only for ESP8266)**</li>
+<li>AsyncTCP &ndash; <a href="https://github.com/me-no-dev/AsyncTCP">https://github.com/me-no-dev/AsyncTCP</a> **(Required only for ESP32)**</li>
 <li>ESPAsyncWebServer &ndash; <a href="https://github.com/me-no-dev/ESPAsyncWebServer">https://github.com/me-no-dev/ESPAsyncWebServer</a></li>
 <li>ESPAsyncWiFiManager &ndash; <a href="https://github.com/alanswx/ESPAsyncWiFiManager">https://github.com/alanswx/ESPAsyncWiFiManager</a> version &gt; 0.22</li>
 <li>Arduino Crypto Library &ndash; <a href="https://github.com/gmag11/CryptoArduino">https://github.com/gmag11/CryptoArduino</a> forked and formatted from <a href="https://github.com/rweather">https://github.com/rweather</a></li>
