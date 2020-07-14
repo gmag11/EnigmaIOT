@@ -323,19 +323,19 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 
 	//char networkKey[33] = "";
 	char sleepy[5] = "10";
-	char networkName[NETWORK_NAME_LENGTH] = "";
+	//char networkName[NETWORK_NAME_LENGTH] = "";
 	char nodeName[NODE_NAME_LENGTH] = "";
 
 	wifiManager = new AsyncWiFiManager (&server, &dns);
 
-	AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
+	//AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
 	//AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
 	AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
 	AsyncWiFiManagerParameter nodeNameParam ("nodename", "Node Name", nodeName, NODE_NAME_LENGTH, "type=\"text\" maxlength=32");
 
 	// TODO: Check node name valid characters
 
-	wifiManager->addParameter (&networkNameParam);
+	//wifiManager->addParameter (&networkNameParam);
 	//wifiManager->addParameter (&netKeyParam);
 	wifiManager->addParameter (&sleepyParam);
 	wifiManager->addParameter (&nodeNameParam);
@@ -362,7 +362,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	if (result) {
 		DEBUG_DBG ("==== Config Portal result ====");
 
-		DEBUG_DBG ("Network Name: %s", networkNameParam.getValue ());
+		DEBUG_DBG ("Network Name: %s", WiFi.SSID ().c_str ());
 #ifdef ESP8266
 		station_config wifiConfig;
 		if (!wifi_station_get_config (&wifiConfig)) {
@@ -379,15 +379,17 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 
 		data->lastMessageCounter = 0;
 
-		memcpy (data->networkName, networkNameParam.getValue (), networkNameParam.getValueLength ());
-
-		DEBUG_DBG ("Stored network name: %s", data->networkName);
 		strncpy ((char*)(data->networkKey), netkey, KEY_LENGTH);
 		DEBUG_DBG ("Stored network key before hash: %.*s", KEY_LENGTH, (char*)(data->networkKey));
 
 		CryptModule::getSHA256 (data->networkKey, KEY_LENGTH);
 		DEBUG_DBG ("Calculated network key: %s", printHexBuffer (data->networkKey, KEY_LENGTH));
 		data->nodeRegisterStatus = UNREGISTERED;
+
+		const char* netName = WiFi.SSID ().c_str ();
+		memcpy (data->networkName, netName, strlen (netName));
+		DEBUG_DBG ("Stored network name: %s", data->networkName);
+
 		int sleepyVal = atoi (sleepyParam.getValue ());
 		if (sleepyVal > 0) {
 			data->sleepy = true;
@@ -416,11 +418,6 @@ void flashLed (void* led) {
 #endif
 }
 
-//void startFlash (time_t period) {
-//	ets_timer_disarm (&ledTimer);
-//	ets_timer_arm_new (&ledTimer, period, true, true);
-//}
-
 void startFlash (time_t period) {
 #ifdef ESP32
 	if (!nodeConnectionLedFlashing) {
@@ -436,10 +433,6 @@ void startFlash (time_t period) {
 	}
 #endif // ESP32
 }
-
-//void stopFlash () {
-//	ets_timer_disarm (&ledTimer);
-//}
 
 void stopFlash () {
 #ifdef ESP32
