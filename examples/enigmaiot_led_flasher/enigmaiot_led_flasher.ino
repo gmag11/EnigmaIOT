@@ -15,6 +15,8 @@
 
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <ESP8266httpUpdate.h>
 #include <ESPAsyncTCP.h> // Comment to compile for ESP32
 #include <Hash.h>
 #elif defined ESP32
