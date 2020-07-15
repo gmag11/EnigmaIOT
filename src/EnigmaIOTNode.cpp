@@ -397,7 +397,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 		std::regex sleepTimeRegex ("(\\d)+");
 		regexResult = std::regex_match (sleepyParam.getValue (), sleepTimeRegex);
 		if (regexResult) {
-			DEBUG_WARN ("Sleep time check ok");
+			DEBUG_DBG ("Sleep time check ok");
 			int sleepyVal = atoi (sleepyParam.getValue ());
 			if (sleepyVal > 0) {
 				data->sleepy = true;
@@ -412,7 +412,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 		regexResult = std::regex_match (nodeNameParam.getValue (), nodeNameRegex);
 		if (regexResult) {
 			strncpy (data->nodeName, nodeNameParam.getValue (), NODE_NAME_LENGTH);
-			DEBUG_WARN ("Node name: %s", data->nodeName);
+			DEBUG_DBG ("Node name: %s", data->nodeName);
 		} else  {
 			DEBUG_WARN ("Node name parameter error");
 			result = false;
@@ -849,7 +849,7 @@ void EnigmaIOTNodeClass::handle () {
 	if (status == WAIT_FOR_SERVER_HELLO /*|| status == WAIT_FOR_CIPHER_FINISHED*/) {
 		if (node.getSleepy ()) { // Sleep after registration timeout
 			if (millis () - node.getLastMessageTime () > RECONNECTION_PERIOD) {
-				DEBUG_WARN ("Current node status: %d", node.getStatus ());
+				DEBUG_INFO ("Current node status: %d", node.getStatus ());
 				node.reset ();
 				rtcmem_data.nodeRegisterStatus = UNREGISTERED;
 

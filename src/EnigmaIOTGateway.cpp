@@ -494,7 +494,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 			regexResult = std::regex_match (netNameParam.getValue (), networkNameRegex);
 			if (regexResult) {
 				strncpy (this->gwConfig.networkName, netNameParam.getValue (), NETWORK_NAME_LENGTH - 1);
-				DEBUG_WARN ("Network name: %s", gwConfig.networkName);
+				DEBUG_DBG ("Network name: %s", gwConfig.networkName);
 			} else {
 				DEBUG_WARN ("Network name parameter error");
 				result = false;
@@ -525,7 +525,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 			regexResult = std::regex_match (channelParam.getValue (), channelRegex);
 			if (regexResult) {
 				this->gwConfig.channel = atoi (channelParam.getValue ());
-				DEBUG_VERBOSE ("WiFi ESP-NOW channel: %d", this->gwConfig.channel);
+				DEBUG_DBG ("WiFi ESP-NOW channel: %d", this->gwConfig.channel);
 			} else {
 				DEBUG_WARN ("Network name parameter error");
 				result = false;
