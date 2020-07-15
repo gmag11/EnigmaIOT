@@ -136,6 +136,22 @@ uint8_t* str2mac (const char* macAddrString, uint8_t* macBytes) {
 	return macBytes;
 }
 
+#ifdef ESP8266
+const char* IRAM_ATTR extractFileName (const char* path) {
+	size_t i = 0;
+	size_t pos = 0;
+	char* p = (char*)path;
+	while (*p) {
+		i++;
+		if (*p == '/' || *p == '\\') {
+			pos = i;
+		}
+		p++;
+	}
+	return path + pos;
+}
+#endif
+
 //int str2mac (const char* mac, uint8_t* values) {
 //	int error = std::sscanf (mac, "%02x:%02x:%02x:%02x:%02x:%02x", &values[0], &values[1], &values[2], &values[3], &values[4], &values[5]);
 //	Serial.printf ("Error: %d", error);

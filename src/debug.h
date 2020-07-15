@@ -29,7 +29,8 @@
 #define VERBOSE	5 ///< @brief Debug level that will give all defined messages
 
 #ifdef ESP8266
-#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf_P (PSTR("[%lu] %lu free (%s:%d) "),millis(),(unsigned long)ESP.getFreeHeap(),__FUNCTION__,__LINE__)
+const char* extractFileName (const char* path);
+#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf_P (PSTR("[%lu][%s:%d] %s() Heap: %lu | "),millis(),extractFileName(__FILE__),__LINE__,__FUNCTION__,(unsigned long)ESP.getFreeHeap())
 #endif
 
 #ifdef DEBUG_ESP_PORT
