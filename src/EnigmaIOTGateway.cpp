@@ -456,6 +456,7 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" minlength=\"8\" maxlength=\"32\"");
 	AsyncWiFiManagerParameter channelParam ("channel", "WiFi Channel", channel, 4, "required type=\"number\" min=\"0\" max=\"13\" step=\"1\"");
 
+	wifiManager->setCustomHeadElement ("<style>input:invalid {border: 2px dashed red;input:valid{border: 2px solid black;}</style>");
 	wifiManager->addParameter (&netKeyParam);
 	wifiManager->addParameter (&channelParam);
 	wifiManager->addParameter (&netNameParam);

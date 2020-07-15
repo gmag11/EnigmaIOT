@@ -337,8 +337,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
 	AsyncWiFiManagerParameter nodeNameParam ("nodename", "Node Name", nodeName, NODE_NAME_LENGTH, "type=\"text\" pattern=\"^[^/\\\\]+$\" maxlength=32");
 
-	// TODO: Check node name valid characters
-
+	wifiManager->setCustomHeadElement ("<style>input:invalid {border: 2px dashed red;input:valid{border: 2px solid black;}</style>");
 	//wifiManager->addParameter (&networkNameParam);
 	//wifiManager->addParameter (&netKeyParam);
 	wifiManager->addParameter (&sleepyParam);
