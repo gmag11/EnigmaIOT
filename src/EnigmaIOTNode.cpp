@@ -297,7 +297,7 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 		return true;
 	}
 #elif defined ESP32
-	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t)); 
+	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 	memcpy ((uint8_t*)&rtcmem_data_storage, (uint8_t*)&rtcmem_data, sizeof (rtcmem_data));
 	rtcmem_data_storage.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data_storage.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 	DEBUG_VERBOSE ("----- Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
@@ -323,7 +323,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	DNSServer dns;
 
 	//regex_t regex;
-	bool regexResult;
+	bool regexResult = true;
 
 	//char networkKey[33] = "";
 	char sleepy[5] = "10";
@@ -389,30 +389,48 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 		DEBUG_DBG ("Calculated network key: %s", printHexBuffer (data->networkKey, KEY_LENGTH));
 		data->nodeRegisterStatus = UNREGISTERED;
 
-		const char* netName = WiFi.SSID ().c_str ();
-		memcpy (data->networkName, netName, strlen (netName));
+		//const char* netName = WiFi.SSID ().c_str ();
+		DEBUG_DBG ("Temp network name: %s", WiFi.SSID ().c_str ());
+		strncpy (data->networkName, WiFi.SSID ().c_str (), NETWORK_NAME_LENGTH - 1);
 		DEBUG_DBG ("Stored network name: %s", data->networkName);
 
+#ifdef ESP32
 		std::regex sleepTimeRegex ("(\\d)+");
 		regexResult = std::regex_match (sleepyParam.getValue (), sleepTimeRegex);
 		if (regexResult) {
+#endif
 			DEBUG_DBG ("Sleep time check ok");
 			int sleepyVal = atoi (sleepyParam.getValue ());
 			if (sleepyVal > 0) {
 				data->sleepy = true;
 			}
 			data->sleepTime = sleepyVal;
-		} else  {
+#ifdef ESP32
+	} else {
 			DEBUG_WARN ("Sleep time parameter error");
 			result = false;
 		}
+#endif
 
-		std::regex nodeNameRegex ("^[^/\\\\]+$"); 
-		regexResult = std::regex_match (nodeNameParam.getValue (), nodeNameRegex);
+		//char tempStr[NODE_NAME_LENGTH];
+		//strncpy (tempStr, nodeNameParam.getValue (), NODE_NAME_LENGTH - 1);
+
+#ifdef ESP32
+		std::regex nodeNameRegex ("^[^/\\\\]+$");
+		regexResult = std::regex_match (tempStr, nodeNameRegex);
+#elif defined ESP8266
+		if (strstr (nodeNameParam.getValue (), "/")) {
+			regexResult = false;
+			DEBUG_WARN ("Node name parameter error. Contains '/'");
+		} else if (strstr (nodeNameParam.getValue (), "\\")) {
+			regexResult = false;
+			DEBUG_WARN ("Node name parameter error. Contains '\\'");
+		}
+#endif
 		if (regexResult) {
 			strncpy (data->nodeName, nodeNameParam.getValue (), NODE_NAME_LENGTH);
 			DEBUG_DBG ("Node name: %s", data->nodeName);
-		} else  {
+		} else {
 			DEBUG_WARN ("Node name parameter error");
 			result = false;
 		}
@@ -464,7 +482,7 @@ void stopFlash () {
 		nodeConnectionLedFlashing = false;
 		xTimerStop (ledTimer, 0);
 		xTimerDelete (ledTimer, 0);
-}
+	}
 #elif defined(ESP8266)
 	if (nodeConnectionLedFlashing) {
 		nodeConnectionLedFlashing = false;
@@ -600,7 +618,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 	esp_err_t err_ok;
 	if ((err_ok = esp_wifi_set_promiscuous (true))) {
 		DEBUG_ERROR ("Error setting promiscuous mode: %s", esp_err_to_name (err_ok));
-		}
+	}
 	if ((err_ok = esp_wifi_set_channel (rtcmem_data.channel, WIFI_SECOND_CHAN_NONE))) {
 		DEBUG_ERROR ("Error setting wifi channel: %s", esp_err_to_name (err_ok));
 	}
@@ -678,7 +696,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 #else
 		delay (50);
 #endif
-}
+	}
 #elif defined ESP32
 	numWifi = scanGatewaySSID (data->networkName, wifiIndex);
 #endif // ESP8266
@@ -717,7 +735,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		esp_err_t err_ok;
 		if ((err_ok = esp_wifi_set_promiscuous (true))) {
 			DEBUG_ERROR ("Error setting promiscuous mode: %s", esp_err_to_name (err_ok));
-	}
+		}
 		if ((err_ok = esp_wifi_set_channel (data->channel, WIFI_SECOND_CHAN_NONE))) {
 			DEBUG_ERROR ("Error setting wifi channel: %s", esp_err_to_name (err_ok));
 		}
@@ -752,14 +770,14 @@ void EnigmaIOTNodeClass::setSleepTime (uint32_t sleepTime) {
 		if (sleepTime == 0) {
 			node.setSleepy (false);
 			//rtcmem_data.sleepy = false; // This setting is temporary, do not store
-		} else if (sleepTime 
+		} else if (sleepTime
 #ifdef ESP8266
 				   < maxSleepTime
 #endif
 				   ) {
 			node.setSleepy (true);
 			rtcmem_data.sleepTime = sleepTime;
-		} 
+		}
 #ifdef ESP8266
 		else {
 			DEBUG_DBG ("Max sleep time is %lu", (uint32_t)maxSleepTime);
@@ -858,7 +876,7 @@ void EnigmaIOTNodeClass::handle () {
 
 				uint32_t rnd = Crypto.random (PRE_REG_DELAY * 1000); // nanoseconds
 
-				DEBUG_INFO ("Registration timeout. Go to sleep for %lu ms", (uint32_t)(RECONNECTION_PERIOD * 4 + rnd/1000));
+				DEBUG_INFO ("Registration timeout. Go to sleep for %lu ms", (uint32_t)(RECONNECTION_PERIOD * 4 + rnd / 1000));
 #ifdef ESP8266
 				ESP.deepSleep (RECONNECTION_PERIOD * 4000 + rnd, RF_NO_CAL);
 #elif defined ESP32
@@ -1553,11 +1571,11 @@ bool EnigmaIOTNodeClass::processSetNameResponse (const uint8_t* mac, const uint8
 	memcpy (aad, (uint8_t*)&nodeNameSetResponse_msg, addDataLen); // Copy message upto iv
 
 	// Copy 8 last bytes from NetworkKey
-	memcpy (aad + addDataLen, node.getEncriptionKey() + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+	memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-	if (!CryptModule::decryptBuffer ((uint8_t*)&(nodeNameSetResponse_msg.errorCode), sizeof(uint8_t),
+	if (!CryptModule::decryptBuffer ((uint8_t*)&(nodeNameSetResponse_msg.errorCode), sizeof (uint8_t),
 									 nodeNameSetResponse_msg.iv, IV_LENGTH,
-									 node.getEncriptionKey(), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
 									 aad, sizeof (aad), nodeNameSetResponse_msg.tag, TAG_LENGTH)) {
 		DEBUG_ERROR ("Error during decryption");
 		return false;

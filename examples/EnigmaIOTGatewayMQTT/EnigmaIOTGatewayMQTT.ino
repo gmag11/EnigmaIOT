@@ -13,14 +13,16 @@
 
 #define MQTT_MAX_PACKET_SIZE 2048
 #include <PubSubClient.h>
+
+#include <GwOutput_generic.h>
+#include "GwOutput_mqtt.h"
+
 #ifdef SECURE_MQTT
 #include <WiFiClientSecure.h>
 #else
 #include <WiFiClient.h>
 #endif // SECURE_MQTT
 
-#include <GwOutput_generic.h>
-#include "GwOutput_mqtt.h"
 
 #ifdef ESP32
 #include <WiFi.h>
