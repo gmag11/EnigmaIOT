@@ -216,6 +216,7 @@ $(function() {
 <p>A gateway concentrates communication from all nodes, manages their registrations status, negotiate session key with them and outputs their messages to an output protocol.</p>
 <p><a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOTGatewayMQTT">EnigmaIOT MQTT Gateway</a> is the implementation for a MQTT gateway.</p>
 <p>Since version 0.7.0 Gateway is a ESP32 or ESP8266 board with 4 MB of flash memory or more. ESP8266 gateways cannot use MQTT TLS encryption due to memory limitations.</p>
+<p>Use of ESP32 platform is recommended. ESP8266 EnigmaIOT gateway code is less tested.</p>
 <p>Thanks to modular design, other output modules may be easily developed by implementing <code><a class="el" href="GwOutput__generic_8h.html" title="Generic Gateway output module template.">GwOutput_generic.h</a></code>. Examples of this may be LoRaWAN output gateway, COAP gateway or any other network protocol that is needed. Even an offline SD data logger could be done.</p>
 <p>I've included a <a href="https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOTGatewayDummy">Gateway with dummy output module</a> to show simple OutputGw module development.</p>
 <p>In order to <b>configure</b> you need at least this data:</p>

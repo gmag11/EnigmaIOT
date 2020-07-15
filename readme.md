@@ -251,6 +251,8 @@ A gateway concentrates communication from all nodes, manages their registrations
 
 Since version 0.7.0 Gateway is a ESP32 or ESP8266 board with 4 MB of flash memory or more. ESP8266 gateways cannot use MQTT TLS encryption due to memory limitations.
 
+Use of ESP32 platform is recommended. ESP8266 EnigmaIOT gateway code is less tested.
+
 Thanks to modular design, other output modules may be easily developed by implementing `GwOutput_generic.h`. Examples of this may be LoRaWAN output gateway, COAP gateway or any other network protocol that is needed. Even an offline SD data logger could be done.
 
 I've included a [Gateway with dummy output module](https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOTGatewayDummy) to show simple OutputGw module development.
