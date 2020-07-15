@@ -417,7 +417,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 
 #ifdef ESP32
 		std::regex nodeNameRegex ("^[^/\\\\]+$");
-		regexResult = std::regex_match (tempStr, nodeNameRegex);
+		regexResult = std::regex_match (nodeNameParam.getValue (), nodeNameRegex);
 #elif defined ESP8266
 		if (strstr (nodeNameParam.getValue (), "/")) {
 			regexResult = false;
