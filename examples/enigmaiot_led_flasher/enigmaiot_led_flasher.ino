@@ -24,6 +24,8 @@
 #include <Update.h>
 #include <driver/adc.h>
 #include "esp_wifi.h"
+#include "soc/soc.h"           // Disable brownout problems
+#include "soc/rtc_cntl_reg.h"  // Disable brownout problems
 #endif
 #include <ArduinoJson.h>
 #include <Curve25519.h>
@@ -96,6 +98,12 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 void setup () {
 
 	Serial.begin (115200); Serial.println (); Serial.println ();
+
+#ifdef ESP32
+	// Turn-off the 'brownout detector' to avoid random restarts during wake up,
+	// normally due to bad quality regulator on board
+	WRITE_PERI_REG (RTC_CNTL_BROWN_OUT_REG, 0);
+#endif
 
 	//EnigmaIOTNode.setLed (BLUE_LED);
 	pinMode (BLUE_LED, OUTPUT);

@@ -31,6 +31,8 @@
 #include "esp_event.h"
 #include "esp_tls.h"
 #include <ESPmDNS.h>
+#include "soc/soc.h"           // Disable brownout problems
+#include "soc/rtc_cntl_reg.h"  // Disable brownout problems
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 //#include <ESPAsyncTCP.h> // Comment to compile for ESP32
@@ -362,6 +364,13 @@ void nodeDisconnected (uint8_t* mac, gwInvalidateReason_t reason) {
 
 void setup () {
 	Serial.begin (115200); Serial.println (); Serial.println ();
+
+#ifdef ESP32
+// Turn-off the 'brownout detector' to avoid random restarts during wake up,
+// normally due to bad quality regulator on board
+	WRITE_PERI_REG (RTC_CNTL_BROWN_OUT_REG, 0);
+#endif
+
 #ifdef ESP8266
 	ets_timer_setfn (&connectionLedTimer, flashConnectionLed, (void*)&connectionLed);
 #elif defined ESP32
