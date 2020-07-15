@@ -58,7 +58,6 @@
 #include <DNSServer.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
-#include <regex>
 
 //#define MEAS_TEMP // Temperature measurement for Gateway monitoring using DS18B20
 
@@ -142,9 +141,9 @@ void arduinoOTAConfigure () {
 	// ArduinoOTA.setPasswordHash("21232f297a57a5a743894a0e4a801fc3");
 
 	ArduinoOTA.onStart ([]() {
-		if (ArduinoOTA.getCommand () == U_FLASH)
+		if (ArduinoOTA.getCommand () == U_FLASH) {
 			DEBUG_WARN ("Start updating sketch");
-		else {// U_SPIFFS
+		} else {// U_SPIFFS
 			DEBUG_WARN ("Start updating filesystem");
 			// NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
 		}
@@ -171,11 +170,11 @@ void arduinoOTAConfigure () {
 	});
 	ArduinoOTA.onError ([](ota_error_t error) {
 		DEBUG_WARN ("OTA Error[%u]: ", error);
-		if (error == OTA_AUTH_ERROR) DEBUG_WARN ("OTA Auth Failed");
-		else if (error == OTA_BEGIN_ERROR) DEBUG_WARN ("OTA Begin Failed");
-		else if (error == OTA_CONNECT_ERROR) DEBUG_WARN ("OTA Connect Failed");
-		else if (error == OTA_RECEIVE_ERROR) DEBUG_WARN ("OTA Receive Failed");
-		else if (error == OTA_END_ERROR) DEBUG_WARN ("OTA End Failed");
+		if (error == OTA_AUTH_ERROR) { DEBUG_WARN ("OTA Auth Failed"); }
+		else if (error == OTA_BEGIN_ERROR) { DEBUG_WARN ("OTA Begin Failed"); }
+		else if (error == OTA_CONNECT_ERROR) { DEBUG_WARN ("OTA Connect Failed"); }
+		else if (error == OTA_RECEIVE_ERROR) { DEBUG_WARN ("OTA Receive Failed"); }
+		else if (error == OTA_END_ERROR) { DEBUG_WARN ("OTA End Failed"); }
 						});
 
 	ArduinoOTA.begin ();

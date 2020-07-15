@@ -33,20 +33,21 @@ void GatewayOutput_dummy::configManagerStart (EnigmaIOTGatewayClass* enigmaIotGw
 }
 
 bool GatewayOutput_dummy::saveConfig () {
-
+    return true;
 }
 
 bool GatewayOutput_dummy::loadConfig () {
-
+    return true;
 }
 
 
 void GatewayOutput_dummy::configManagerExit (bool status) {
-    
+
 }
 
 bool GatewayOutput_dummy::begin () {
     DEBUG_INFO ("Begin");
+    return true;
 }
 
 
@@ -56,16 +57,20 @@ void GatewayOutput_dummy::loop () {
 
 bool GatewayOutput_dummy::outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type) {
     DEBUG_WARN ("Output data send. Address %s. Data %.*s", address, length, data);
+    return true;
 }
 
 bool GatewayOutput_dummy::outputControlSend (char* address, uint8_t* data, size_t length) {
     DEBUG_INFO ("Output control send. Address %s. Data %s", address, printHexBuffer(data, length));
+    return true;
 }
 
 bool GatewayOutput_dummy::newNodeSend (char* address, uint16_t node_id) {
     DEBUG_WARN ("New node: %s NodeID: %d", address, node_id);
+    return true;
 }
 
 bool GatewayOutput_dummy::nodeDisconnectedSend (char* address, gwInvalidateReason_t reason) {
     DEBUG_WARN ("Node %s disconnected. Reason %d", address, reason);
+    return true;
 }
