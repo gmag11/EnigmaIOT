@@ -35,7 +35,7 @@ public:
 	 * @brief Initialize data structures
 	 * @param config Pointer to configuration structure. If it is `NULL` then it tries to load configuration from flash
 	 */
-	virtual void begin (void* config = NULL) = 0;
+	virtual void setup (void* config = NULL) = 0;
 
 	/**
 	 * @brief This should be called periodically for module handling
