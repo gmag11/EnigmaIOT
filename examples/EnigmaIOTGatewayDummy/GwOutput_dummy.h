@@ -9,15 +9,14 @@
 #ifndef _GWOUT_DUMMY_h
 #define _GWOUT_DUMMY_h
 
-#include <Arduino.h>
-#include <EnigmaIOTGateway.h>
-#include <GwOutput_generic.h>
-
 #if defined(ARDUINO) && ARDUINO >= 100
-#include "arduino.h"
+#include "Arduino.h"
 #else
 #include "WProgram.h"
 #endif
+
+#include <EnigmaIOTGateway.h>
+#include <GwOutput_generic.h>
 
 class GatewayOutput_dummy : public GatewayOutput_generic {
 protected:

@@ -7,7 +7,6 @@
   */
 
 #include "helperFunctions.h"
-//#include <sstream>
 #ifdef ESP32
 #include <esp_wifi.h>
 #endif
