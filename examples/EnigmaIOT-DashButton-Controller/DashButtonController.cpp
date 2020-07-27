@@ -2,7 +2,6 @@
 // 
 // 
 
-#include "debug.h"
 #include <functional>
 #include "DashButtonController.h"
 
