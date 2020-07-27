@@ -372,7 +372,7 @@ bool CONTROLLER_CLASS_NAME::loadConfig () {
 		SPIFFS.format ();
 	}
 
-	SPIFFS.remove (CONFIG_FILE); // Only for testing
+	// SPIFFS.remove (CONFIG_FILE); // Only for testing
 
 	if (SPIFFS.exists (CONFIG_FILE)) {
 		DEBUG_WARN ("Opening %s file", CONFIG_FILE);
