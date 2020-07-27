@@ -16,7 +16,7 @@
 
 #include <Arduino.h>
 #include <EnigmaIOTjsonController.h>
-#include "BasicController.h" // <-- Include here your controller class header
+#include "DashButtonController.h" // <-- Include here your controller class header
 
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
@@ -45,7 +45,7 @@
 #include <DNSServer.h>
 #include <FS.h>
 
-#define SLEEPY 0 // Set it to 1 if your node should sleep after sending data
+#define SLEEPY 1 // Set it to 1 if your node should sleep after sending data
 
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 2 // ESP32 boards normally have a LED in GPIO3 or GPIO5
@@ -98,7 +98,7 @@ void setup () {
 
 #ifdef USE_SERIAL
 	Serial.begin (115200);
-	delay (1000);
+	//delay (1000);
 	Serial.println ();
 #endif
 
@@ -120,6 +120,7 @@ void setup () {
 	}
 
 	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY==1); // Start EnigmaIOT communication
+	EnigmaIOTNode.setSleepTime (0, true);
 
 	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
 	// Set Address using internal MAC Address. Do not modify

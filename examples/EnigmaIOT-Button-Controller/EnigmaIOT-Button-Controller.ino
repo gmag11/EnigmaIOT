@@ -16,7 +16,7 @@
 
 #include <Arduino.h>
 #include <EnigmaIOTjsonController.h>
-#include "BasicController.h" // <-- Include here your controller class header
+#include "ButtonController.h" // <-- Include here your controller class header
 
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>

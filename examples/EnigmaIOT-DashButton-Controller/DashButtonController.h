@@ -1,7 +1,7 @@
 // BasicController.h
 
-#ifndef _BASICCONTROLLER_h
-#define _BASICCONTROLLER_h
+#ifndef _DASHBUTTONCONTROLLER_h
+#define _DASHBUTTONCONTROLLER_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "Arduino.h"
@@ -16,7 +16,7 @@
 #endif
 
 #include <EnigmaIOTjsonController.h>
-#define CONTROLLER_CLASS_NAME BasicController
+#define CONTROLLER_CLASS_NAME DashButtonController
 
 // --------------------------------------------------
 // You may define data structures and constants here

@@ -4,7 +4,7 @@
 
 #include "debug.h"
 #include <functional>
-#include "BasicController.h"
+#include "DashButtonController.h"
 
 using namespace std;
 using namespace placeholders;
@@ -42,7 +42,18 @@ void CONTROLLER_CLASS_NAME::setup (void* data) {
 	// You do node setup here. Use it as it was the normal setup() Arduino function
 
 	// Send a 'hello' message when initalizing is finished
-	sendStartAnouncement ();
+	// Not needed as this will reboot after deep sleep
+	// sendStartAnouncement (); 
+
+	const size_t capacity = JSON_OBJECT_SIZE (2);
+	DynamicJsonDocument json (capacity);
+	json["button"] = 1;
+
+	if (sendJson (json)) {
+		DEBUG_WARN ("Button press sent");
+	} else {
+		DEBUG_WARN ("Error sending message");
+	}
 
 	DEBUG_DBG ("Finish begin");
 

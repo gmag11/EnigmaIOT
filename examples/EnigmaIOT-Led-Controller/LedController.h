@@ -16,17 +16,21 @@
 #endif
 
 #include <EnigmaIOTjsonController.h>
-#define CONTROLLER_CLASS_NAME BasicController
+#define CONTROLLER_CLASS_NAME LedController
 
 // --------------------------------------------------
 // You may define data structures and constants here
 // --------------------------------------------------
+#define LED_PIN 14
+#define LED_ON HIGH
+#define LED_OFF !LED_ON
 
 class CONTROLLER_CLASS_NAME : EnigmaIOTjsonController {
 protected:
 	// --------------------------------------------------
 	// add all parameters that your project needs here
 	// --------------------------------------------------
+	int led = LED_OFF;
 
 public:
 	void setup (void* data = NULL);
@@ -69,6 +73,8 @@ protected:
 	// ------------------------------------------------------------
 	// You may add additional method definitions that you need here
 	// ------------------------------------------------------------
+
+	bool sendLedStatus ();
 };
 
 #endif

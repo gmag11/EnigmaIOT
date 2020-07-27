@@ -16,7 +16,7 @@
 
 #include <Arduino.h>
 #include <EnigmaIOTjsonController.h>
-#include "BasicController.h" // <-- Include here your controller class header
+#include "SmartSwitchController.h" // <-- Include here your controller class header
 
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
@@ -109,7 +109,7 @@ void setup () {
 	EnigmaIOTNode.onConnected (connectEventHandler); // Configure registration handler
 	EnigmaIOTNode.onDisconnected (disconnectEventHandler); // Configure unregistration handler
 	EnigmaIOTNode.onDataRx (processRxData); // Configure incoming data handler
-	EnigmaIOTNode.enableClockSync (false); // Set to true if you need this node to get its clock syncronized with gateway
+	EnigmaIOTNode.enableClockSync (true); // Set to true if you need this node to get its clock syncronized with gateway
 	EnigmaIOTNode.onWiFiManagerStarted (wifiManagerStarted);
 	EnigmaIOTNode.onWiFiManagerExit (wifiManagerExit);
 

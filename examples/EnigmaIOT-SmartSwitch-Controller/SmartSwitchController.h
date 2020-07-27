@@ -16,17 +16,42 @@
 #endif
 
 #include <EnigmaIOTjsonController.h>
-#define CONTROLLER_CLASS_NAME BasicController
+#define CONTROLLER_CLASS_NAME SmartSwitchController
 
 // --------------------------------------------------
 // You may define data structures and constants here
 // --------------------------------------------------
+#define DEFAULT_BUTTON_PIN 4
+#define DEFAULT_RELAY_PIN 14
+#define ON HIGH
+#define OFF !ON
+
+typedef enum {
+	RELAY_OFF = 0,
+	RELAY_ON = 1,
+	SAVE_RELAY_STATUS = 2
+} bootRelayStatus_t;
+
+struct smartSwitchControllerHw_t {
+	int relayPin;
+	bool relayStatus;
+	uint8_t buttonPin;
+	bool linked;
+	bootRelayStatus_t bootStatus;
+	int ON_STATE;
+};
 
 class CONTROLLER_CLASS_NAME : EnigmaIOTjsonController {
 protected:
 	// --------------------------------------------------
 	// add all parameters that your project needs here
 	// --------------------------------------------------
+	bool pushTriggered = false;
+	bool pushReleased = true;
+	smartSwitchControllerHw_t config;
+	AsyncWiFiManagerParameter* buttonPinParam;
+	AsyncWiFiManagerParameter* bootStatusParam;
+	AsyncWiFiManagerParameter* bootStatusListParam;
 
 public:
 	void setup (void* data = NULL);
@@ -69,6 +94,21 @@ protected:
 	// ------------------------------------------------------------
 	// You may add additional method definitions that you need here
 	// ------------------------------------------------------------
+	void defaultConfig ();
+
+	void toggleRelay ();
+
+	void setRelay (bool state);
+
+	bool sendRelayStatus ();
+
+	void setLinked (bool state);
+
+	bool sendLinkStatus ();
+
+	void setBoot (int state);
+
+	bool sendBootStatus ();
 };
 
 #endif

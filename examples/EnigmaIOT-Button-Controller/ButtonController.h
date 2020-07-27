@@ -1,7 +1,7 @@
 // BasicController.h
 
-#ifndef _BASICCONTROLLER_h
-#define _BASICCONTROLLER_h
+#ifndef _BUTTONCONTROLLER_h
+#define _BUTTONCONTROLLER_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "Arduino.h"
@@ -9,24 +9,26 @@
 	#include "WProgram.h"
 #endif
 
-//#define DEBUG_SERIAL
-
 #ifdef ESP32
 #include <SPIFFS.h>
 #endif
 
 #include <EnigmaIOTjsonController.h>
-#define CONTROLLER_CLASS_NAME BasicController
 
 // --------------------------------------------------
 // You may define data structures and constants here
 // --------------------------------------------------
+#define BUTTON_PIN 4
+
+#define CONTROLLER_CLASS_NAME ButtonController
 
 class CONTROLLER_CLASS_NAME : EnigmaIOTjsonController {
 protected:
 	// --------------------------------------------------
 	// add all parameters that your project needs here
 	// --------------------------------------------------
+	bool pushTriggered = false;
+	bool pushReleased = true;
 
 public:
 	void setup (void* data = NULL);

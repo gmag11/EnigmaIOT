@@ -4,7 +4,7 @@
 
 #include "debug.h"
 #include <functional>
-#include "BasicController.h"
+#include "ButtonController.h"
 
 using namespace std;
 using namespace placeholders;
@@ -15,6 +15,7 @@ constexpr auto CONFIG_FILE = "/customconf.json"; ///< @brief Custom configuratio
 // You may add some global variables you need here,
 // like serial port instances, I2C, etc
 // -----------------------------------------
+
 
 bool CONTROLLER_CLASS_NAME::processRxCommand (const uint8_t* address, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding) {
 	// Process incoming messages here
@@ -40,6 +41,7 @@ bool CONTROLLER_CLASS_NAME::sendStartAnouncement () {
 void CONTROLLER_CLASS_NAME::setup (void* data) {
 
 	// You do node setup here. Use it as it was the normal setup() Arduino function
+	pinMode (BUTTON_PIN, INPUT_PULLUP);
 
 	// Send a 'hello' message when initalizing is finished
 	sendStartAnouncement ();
@@ -54,15 +56,45 @@ void CONTROLLER_CLASS_NAME::loop () {
 
 	// If your node stays allways awake do your periodic task here
 
-	// You can send your data as JSON. This is a basic example
+	if (pushReleased) { // Enter this only if button were not pushed in the last loop
+		if (!digitalRead (BUTTON_PIN)) {
+			delay (50); // debounce button push
+			if (!digitalRead (BUTTON_PIN)) {
+				DEBUG_WARN ("Button triggered!");
+				pushTriggered = true; // Button is pushed
+				pushReleased = false; // Mark button as not released
+			}
+		}
+	}
 
-		//const size_t capacity = JSON_OBJECT_SIZE (4);
-		//DynamicJsonDocument json (capacity);
-		//json["sensor"] = data_description;
-		//json["meas"] = measurement;
+	if (pushTriggered) { // If button was pushed
+		pushTriggered = false; // Disable push trigger
+		const size_t capacity = JSON_OBJECT_SIZE (2);
+		DynamicJsonDocument json (capacity);
+		json["button"] = BUTTON_PIN;
+		json["push"] = 1;
+		if (sendJson (json)) {
+			DEBUG_WARN ("Push triggered sent");
+		} else {
+			DEBUG_ERROR ("Push send error");
+		}
+	}
 
-		//sendJson (json);
-
+	if (!pushReleased) {
+		if (digitalRead (BUTTON_PIN)) { // If button is released
+			DEBUG_WARN ("Button released");
+			pushReleased = true;
+			const size_t capacity = JSON_OBJECT_SIZE (2);
+			DynamicJsonDocument json (capacity);
+			json["button"] = BUTTON_PIN;
+			json["push"] = 0;
+			if (sendJson (json)) {
+				DEBUG_WARN ("Push released sent");
+			} else {
+				DEBUG_ERROR ("Push send error");
+			}
+		}
+	}
 }
 
 CONTROLLER_CLASS_NAME::~CONTROLLER_CLASS_NAME () {
