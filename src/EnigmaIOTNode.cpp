@@ -761,13 +761,13 @@ bool EnigmaIOTNodeClass::setNodeAddress (uint8_t address[ENIGMAIOT_ADDR_LEN]) {
 	return true;
 }
 
-void EnigmaIOTNodeClass::setSleepTime (uint32_t sleepTime) {
+void EnigmaIOTNodeClass::setSleepTime (uint32_t sleepTime, bool forceSleepForever) {
 	if (node.getInitAsSleepy ()) {
 #ifdef ESP8266 // ESP32 does not have this limitation
 		uint64_t maxSleepTime = (ESP.deepSleepMax () / (uint64_t)1000000);
 #endif
 
-		if (sleepTime == 0) {
+		if (sleepTime == 0 && !forceSleepForever) {
 			node.setSleepy (false);
 			//rtcmem_data.sleepy = false; // This setting is temporary, do not store
 		} else if (sleepTime

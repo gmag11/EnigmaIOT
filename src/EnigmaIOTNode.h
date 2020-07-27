@@ -481,9 +481,11 @@ public:
 	/**
 	  * @brief Allows to configure a new sleep time period from user code
 	  * @param sleepTime Time in seconds. Final period is not espected to be exact. Its value
-	  *                  depends on communication process
+	  *                  depends on communication process. If it is zero, disables deep sleep.
+	  * @param forceSleepForever Ignored if `sleepTime` is not zero. If it has zero value forces
+	                             deepSleep command to sleep indifinitely.
 	  */
-	void setSleepTime (uint32_t sleepTime);
+	void setSleepTime (uint32_t sleepTime, bool forceSleepForever = false);
 
 	/**
 	  * @brief Set node address to be used in EnigmaIOT communication
