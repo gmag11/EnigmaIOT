@@ -90,6 +90,7 @@ typedef struct {
 	bool nodeKeyValid /* = false*/; /**< true if key has been negotiated successfully */
 	status_t nodeRegisterStatus /*= UNREGISTERED*/; /**< Node registration status */
 	uint16_t lastMessageCounter; /**< Node last message counter */
+	uint16_t lastControlCounter; /**< Control message last counter */
 } rtcmem_data_t;
 
 typedef nodeMessageType nodeMessageType_t;
@@ -99,13 +100,13 @@ typedef nodeMessageType nodeMessageType_t;
 typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding)> onNodeDataRx_t;
 typedef std::function<void ()> onConnected_t;
 typedef std::function<void (nodeInvalidateReason_t reason)> onDisconnected_t;
-typedef std::function<void (boolean status)> onWiFiManagerExit_t;
+typedef std::function<void (bool status)> onWiFiManagerExit_t;
 typedef std::function<void (void)> onWiFiManagerStarted_t;
 #else
 typedef void (*onNodeDataRx_t)(const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding);
 typedef void (*onConnected_t)();
 typedef void (*onDisconnected_t)(nodeInvalidateReason_t reason);
-typedef void (*onWiFiManagerExit_t)(boolean status);
+typedef void (*onWiFiManagerExit_t)(bool status);
 typedef void (*onWiFiManagerStarted_t)(void);
 #endif
 
