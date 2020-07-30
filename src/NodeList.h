@@ -78,6 +78,7 @@ struct node_instance {
     uint16_t nodeId; ///< @brief Node identifier asigned by gateway
     uint8_t key[32]; ///< @brief Shared key
     uint16_t lastMessageCounter; ///< @brief Last message counter state for specific Node
+    uint16_t lastControlCounter; ///< @brief Last control message counter state for specific Node
     time_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
     time_t lastMessageTime; ///< @brief Last time a message was received by Node
     status_t status = UNREGISTERED; ///< @brief Node state
@@ -204,11 +205,27 @@ public:
     }
 
     /**
+      * @brief Gets counter for last received control message from node
+      * @return Message counter
+      */
+    uint16_t getLastControlCounter () {
+        return lastControlCounter;
+    }
+
+    /**
       * @brief Sets counter for last received message from node
       * @param counter Message counter
       */
     void setLastMessageCounter (uint16_t counter) {
         lastMessageCounter = counter;
+    }
+
+    /**
+      * @brief Sets counter for last received control message from node
+      * @param counter Message counter
+      */
+    void setLastControlCounter (uint16_t counter) {
+        lastControlCounter = counter;
     }
 
     /**
