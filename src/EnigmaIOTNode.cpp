@@ -406,7 +406,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 			}
 			data->sleepTime = sleepyVal;
 #ifdef ESP32
-	} else {
+		} else {
 			DEBUG_WARN ("Sleep time parameter error");
 			result = false;
 		}
@@ -1342,17 +1342,15 @@ bool EnigmaIOTNodeClass::unencryptedDataMessage (const uint8_t* data, size_t len
 
 	memcpy (buf + nodeId_idx, &nodeId, sizeof (uint16_t));
 
-	if (!controlMessage) { // Control messages do not use counter
-		if (useCounter) {
-			counter = node.getLastMessageCounter () + 1;
-			node.setLastMessageCounter (counter);
-			rtcmem_data.lastMessageCounter = counter;
-		} else {
-			counter = (uint16_t)(Crypto.random ());
-		}
-
-		memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
+	if (useCounter) {
+		counter = node.getLastMessageCounter () + 1;
+		node.setLastMessageCounter (counter);
+		rtcmem_data.lastMessageCounter = counter;
+	} else {
+		counter = (uint16_t)(Crypto.random ());
 	}
+
+	memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
 
 	buf[encoding_idx] = (uint8_t)payloadEncoding;
 
