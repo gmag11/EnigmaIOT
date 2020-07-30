@@ -79,6 +79,7 @@ struct node_instance {
     uint8_t key[32]; ///< @brief Shared key
     uint16_t lastMessageCounter; ///< @brief Last message counter state for specific Node
     uint16_t lastControlCounter; ///< @brief Last control message counter state for specific Node
+    uint16_t lastDownlinkMsgCounter; ///< @brief Last downlink message counter state for specific Node
     time_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
     time_t lastMessageTime; ///< @brief Last time a message was received by Node
     status_t status = UNREGISTERED; ///< @brief Node state
@@ -213,6 +214,14 @@ public:
     }
 
     /**
+      * @brief Gets counter for last downlink message from gateway
+      * @return Message counter
+      */
+    uint16_t getLastDownlinkMsgCounter () {
+        return lastDownlinkMsgCounter;
+    }
+
+    /**
       * @brief Sets counter for last received message from node
       * @param counter Message counter
       */
@@ -226,6 +235,14 @@ public:
       */
     void setLastControlCounter (uint16_t counter) {
         lastControlCounter = counter;
+    }
+
+    /**
+      * @brief Sets counter for last downlink message from gateway
+      * @param counter Message counter
+      */
+    void setLastDownlinkMsgCounter (uint16_t counter) {
+        lastDownlinkMsgCounter = counter;
     }
 
     /**
@@ -355,6 +372,7 @@ protected:
     status_t status; ///< @brief Current node status. See `enum node_status`
     uint16_t lastMessageCounter; ///< @brief Last message counter state for specific Node
     uint16_t lastControlCounter; ///< @brief Last message counter state for specific Node
+    uint16_t lastDownlinkMsgCounter; ///< @brief Last downlink message counter state for specific Node
     uint16_t nodeId; ///< @brief Node identifier asigned by gateway
     timer_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
     bool sleepyNode = true; ///< @brief Node sleepy definition

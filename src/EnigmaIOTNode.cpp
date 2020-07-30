@@ -1103,6 +1103,8 @@ bool EnigmaIOTNodeClass::clockRequest () {
 		counter = (uint16_t)(Crypto.random ());
 	}
 
+	DEBUG_WARN ("Control message #%d", counter);
+
 	memcpy (&(clockRequest_msg.counter), &counter, sizeof (uint16_t));
 
 	node.t1 = TimeManager.setOrigin ();
@@ -1136,6 +1138,12 @@ bool EnigmaIOTNodeClass::clockRequest () {
 
 	flashBlue = true;
 
+	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
+		if (!saveRTCData ()) {
+			DEBUG_ERROR ("Error saving data on RTC");
+		}
+	}
+
 	return comm->send (rtcmem_data.gateway, (uint8_t*)&clockRequest_msg, CRMSG_LEN) == 0;
 
 }
@@ -1144,10 +1152,13 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
+		uint16_t counter;
 		int64_t t2;
 		int64_t t3;
 		uint8_t tag[TAG_LENGTH];
 	} clockResponse_msg;
+
+	uint16_t counter;
 
 #define CRSMSG_LEN sizeof(clockResponse_msg)
 
@@ -1172,6 +1183,19 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 	}
 
 	DEBUG_VERBOSE ("Decripted Clock Response message: %s", printHexBuffer ((uint8_t*)&clockResponse_msg, packetLen));
+
+	memcpy (&counter, &(clockResponse_msg.counter), sizeof (uint16_t));
+	DEBUG_WARN ("Donlink msg #%d", counter);
+	if (useCounter) {
+		if (counter > node.getLastDownlinkMsgCounter ()) {
+			DEBUG_WARN ("Accepted");
+			node.setLastDownlinkMsgCounter (counter);
+			rtcmem_data.lastDownlinkMsgCounter = counter;
+		} else {
+			DEBUG_WARN ("Rejected");
+			return false;
+		}
+	}
 
 
 	node.t2 = clockResponse_msg.t2;
@@ -1199,6 +1223,12 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 	DEBUG_DBG ("T3: %llu", node.t3);
 	DEBUG_DBG ("T4: %llu", node.t4);
 	DEBUG_DBG ("Offest adjusted to %lld ms, Roundtrip delay is %lld", offset, TimeManager.getDelay ());
+
+	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
+		if (!saveRTCData ()) {
+			DEBUG_ERROR ("Error saving data on RTC");
+		}
+	}
 
 	return true;
 }
@@ -1453,6 +1483,13 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
 			counter = (uint16_t)(Crypto.random ());
 		}
 	}
+
+	if (!controlMessage) {
+		DEBUG_WARN ("Data message #%d", counter);
+	} else {
+		DEBUG_WARN ("Control message #%d", counter);
+	}
+
 	memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
 
 	buf[encoding_idx] = payloadEncoding;
@@ -1573,9 +1610,12 @@ bool EnigmaIOTNodeClass::processSetNameResponse (const uint8_t* mac, const uint8
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
+		uint16_t counter;
 		int8_t errorCode;
 		uint8_t tag[TAG_LENGTH];
 	} nodeNameSetResponse_msg;
+
+	uint16_t counter;
 
 	const unsigned int NNSRMSG_LEN = sizeof (nodeNameSetResponse_msg);
 
@@ -1603,10 +1643,29 @@ bool EnigmaIOTNodeClass::processSetNameResponse (const uint8_t* mac, const uint8
 
 	DEBUG_VERBOSE ("Decrypted Node Name Set response message: %s", printHexBuffer ((uint8_t*)&nodeNameSetResponse_msg, NNSRMSG_LEN - TAG_LENGTH));
 
+	memcpy (&counter, &(nodeNameSetResponse_msg.counter), sizeof (uint16_t));
+	DEBUG_WARN ("Downlink msg #%d", counter);
+	if (useCounter) {
+		if (counter > node.getLastDownlinkMsgCounter ()) {
+			DEBUG_WARN ("Accepted");
+			node.setLastDownlinkMsgCounter (counter);
+			rtcmem_data.lastDownlinkMsgCounter = counter;
+		} else {
+			DEBUG_WARN ("Rejected");
+			return false;
+		}
+	}
+
 	if (nodeNameSetResponse_msg.errorCode != NAME_OK) {
 		DEBUG_WARN ("Name error: %d", nodeNameSetResponse_msg.errorCode);
 	} else {
 		DEBUG_DBG ("Name set correctly");
+	}
+
+	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
+		if (!saveRTCData ()) {
+			DEBUG_ERROR ("Error saving data on RTC");
+		}
 	}
 
 	return true;
@@ -1694,6 +1753,9 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
 	} else {
 		counter = (uint16_t)(Crypto.random ());
 	}
+
+	DEBUG_WARN ("Control message #%d", counter);
+
 	memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
 
 	memcpy (buf + nodeId_idx, &nodeId, sizeof (uint16_t));
@@ -1732,6 +1794,12 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
 	flashBlue = true;
 
 	DEBUG_INFO ("-------> NODE NAME SEND");
+
+	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
+		if (!saveRTCData ()) {
+			DEBUG_ERROR ("Error saving data on RTC");
+		}
+	}
 
 	return (comm->send (rtcmem_data.gateway, buf, packet_length + TAG_LENGTH) == 0);
 
@@ -2067,22 +2135,25 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
 bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_t* buf, size_t count, bool control) {
 	/*
 	* --------------------------------------------------------------------------
-	*| msgType (1) | IV (12) | length (2) | NodeId (2) | Data (....) | Tag (16) |
+	*| msgType (1) | IV (12) | length (2) | Counter (2) | NodeId (2) | Data (....) | Tag (16) |
 	* --------------------------------------------------------------------------
 	*/
 
 	uint8_t iv_idx = 1;
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
+	uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
 	uint8_t encoding_idx;
 	uint8_t data_idx;
 	if (!control) {
-		encoding_idx = nodeId_idx + sizeof (int16_t);
+		encoding_idx = counter_idx + sizeof (int16_t);
 		data_idx = encoding_idx + sizeof (int8_t);
 	} else {
-		data_idx = nodeId_idx + sizeof (int16_t);
+		data_idx = counter_idx + sizeof (int16_t);
 	}
 	uint8_t tag_idx = count - TAG_LENGTH;
+
+	uint16_t counter;
 
 	uint8_t addDataLen = 1 + IV_LENGTH;
 	uint8_t aad[AAD_LENGTH + addDataLen];
@@ -2104,6 +2175,19 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 
 	DEBUG_VERBOSE ("Decripted downstream message: %s", printHexBuffer (buf, count - TAG_LENGTH));
 
+	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));
+	DEBUG_WARN ("Downlink msg #%d", counter);
+	if (useCounter) {
+		if (counter > node.getLastDownlinkMsgCounter ()) {
+			DEBUG_WARN ("Accepted");
+			node.setLastDownlinkMsgCounter (counter);
+			rtcmem_data.lastDownlinkMsgCounter = counter;
+		} else {
+			DEBUG_WARN ("Rejected");
+			return false;
+		}
+	}
+
 	if (control) {
 		DEBUG_INFO ("Control command");
 		DEBUG_VERBOSE ("Data: %s", printHexBuffer (&buf[data_idx], tag_idx - data_idx));
@@ -2113,6 +2197,12 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 	DEBUG_VERBOSE ("Sending data notification. Payload length: %d", tag_idx - data_idx);
 	if (notifyData) {
 		notifyData (mac, &buf[data_idx], tag_idx - data_idx, (nodeMessageType_t)(buf[0]), (nodePayloadEncoding_t)(buf[encoding_idx]));
+	}
+
+	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
+		if (!saveRTCData ()) {
+			DEBUG_ERROR ("Error saving data on RTC");
+		}
 	}
 
 	return true;

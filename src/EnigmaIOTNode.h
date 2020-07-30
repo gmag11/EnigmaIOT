@@ -91,6 +91,7 @@ typedef struct {
 	status_t nodeRegisterStatus /*= UNREGISTERED*/; /**< Node registration status */
 	uint16_t lastMessageCounter; /**< Node last message counter */
 	uint16_t lastControlCounter; /**< Control message last counter */
+	uint16_t lastDownlinkMsgCounter; /**< Downlink message last counter */
 } rtcmem_data_t;
 
 typedef nodeMessageType nodeMessageType_t;

@@ -1014,11 +1014,13 @@ bool EnigmaIOTGatewayClass::nodeNameSetRespose (Node* node, int8_t error) {
 	nodeNameSetResponse_msg.msgType = NODE_NAME_RESULT;
 
 	if (useCounter) {
-		counter = node.getLastControlCounter () + 1;
-		node.setLastControlCounter (counter);
+		counter = node->getLastDownlinkMsgCounter () + 1;
+		node->setLastDownlinkMsgCounter (counter);
 	} else {
 		counter = (uint16_t)(Crypto.random ());
 	}
+	DEBUG_WARN ("Downlink message #%d", counter);
+
 	memcpy (&(nodeNameSetResponse_msg.counter), &counter, sizeof (uint16_t));
 		
 	DEBUG_DBG ("Set node name Response. Error code: %d", error);
@@ -1097,10 +1099,13 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 	}
 
 	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));
+	DEBUG_WARN ("Node Id %d. Control message #%d", node->getNodeId (), counter);
 	if (useCounter) {
 		if (counter > node->getLastControlCounter ()) {
+			DEBUG_WARN ("Accepted");
 			node->setLastControlCounter (counter);
 		} else {
+			DEBUG_WARN ("Rejected");
 			return false;
 		}
 	}
@@ -1169,10 +1174,13 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_A
 	DEBUG_VERBOSE ("Decripted control message: %s", printHexBuffer (buf, count - TAG_LENGTH));
 
 	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));
+	DEBUG_WARN ("Node Id %d. Control message #%d", node->getNodeId (), counter);
 	if (useCounter) {
 		if (counter > node->getLastControlCounter ()) {
+			DEBUG_WARN ("Accepted");
 			node->setLastControlCounter (counter);
 		} else {
+			DEBUG_WARN ("Rejected");
 			return false;
 		}
 	}
@@ -1300,12 +1308,15 @@ bool EnigmaIOTGatewayClass::processDataMessage (const uint8_t mac[ENIGMAIOT_ADDR
 	node->packetNumber++;
 
 	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));
+	DEBUG_WARN ("Node Id %d. Data message #%d", node->getNodeId (), counter);
 	if (useCounter) {
 		if (counter > node->getLastMessageCounter ()) {
+			DEBUG_WARN ("Accepted");
 			lostMessages = counter - node->getLastMessageCounter () - 1;
 			node->packetErrors += lostMessages;
 			node->setLastMessageCounter (counter);
 		} else {
+			DEBUG_WARN ("Rejected");
 			return false;
 		}
 	}
@@ -1418,12 +1429,14 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	memcpy (buffer + nodeId_idx, &nodeId, sizeof (uint16_t));
 
 	if (useCounter) {
-		counter = node.getLastControlCounter () + 1;
-		node.setLastControlCounter (counter);
+		counter = node->getLastDownlinkMsgCounter () + 1;
+		node->setLastDownlinkMsgCounter (counter);
 	} else {
 		counter = (uint16_t)(Crypto.random ());
 	}
-	memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
+	DEBUG_WARN ("Downlink message #%d", counter);
+
+	memcpy (buffer + counter_idx, &counter, sizeof (uint16_t));
 
 	memcpy (buffer + data_idx, data, len);
 
@@ -1626,10 +1639,13 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 	DEBUG_VERBOSE ("Decripted Clock Request message: %s", printHexBuffer ((uint8_t*)&clockRequest_msg, packetLen));
 
 	memcpy (&counter, &(clockRequest_msg.counter), sizeof (uint16_t));
+	DEBUG_WARN ("Node Id %d. Control message #%d", node->getNodeId (), counter);
 	if (useCounter) {
 		if (counter > node->getLastControlCounter ()) {
+			DEBUG_WARN ("Accepted");
 			node->setLastControlCounter (counter);
 		} else {
+			DEBUG_WARN ("Rejected");
 			return false;
 		}
 	}
@@ -1670,11 +1686,13 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 	clockResponse_msg.msgType = CLOCK_RESPONSE;
 
 	if (useCounter) {
-		counter = node.getLastControlCounter () + 1;
-		node.setLastControlCounter (counter);
+		counter = node->getLastDownlinkMsgCounter () + 1;
+		node->setLastDownlinkMsgCounter (counter);
 	} else {
 		counter = (uint16_t)(Crypto.random ());
 	}
+	DEBUG_WARN ("Downlink message #%d", counter);
+
 	memcpy (&(clockResponse_msg.counter), &counter, sizeof (uint16_t));
 
 	memcpy (&(clockResponse_msg.t2), &(node->t2), sizeof (int64_t));
