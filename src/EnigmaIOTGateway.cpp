@@ -995,21 +995,32 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 
 bool EnigmaIOTGatewayClass::nodeNameSetRespose (Node* node, int8_t error) {
 	/*
-	 * ---------------------------------------------------
-	 *| msgType (1) | IV (12) | Result code (1) | tag (16) |
-	 * ---------------------------------------------------
+	 * ------------------------------------------------------------------
+	 *| msgType (1) | IV (12) | Counter (2) | Result code (1) | tag (16) |
+	 * ------------------------------------------------------------------
 	 */
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
+		uint16_t counter;
 		int8_t errorCode;
 		uint8_t tag[TAG_LENGTH];
 	} nodeNameSetResponse_msg;
 
+	uint16_t counter;
+
 	const unsigned int NNSRMSG_LEN = sizeof (nodeNameSetResponse_msg);
 
 	nodeNameSetResponse_msg.msgType = NODE_NAME_RESULT;
-	
+
+	if (useCounter) {
+		counter = node.getLastControlCounter () + 1;
+		node.setLastControlCounter (counter);
+	} else {
+		counter = (uint16_t)(Crypto.random ());
+	}
+	memcpy (&(nodeNameSetResponse_msg.counter), &counter, sizeof (uint16_t));
+		
 	DEBUG_DBG ("Set node name Response. Error code: %d", error);
 
 	CryptModule::random (nodeNameSetResponse_msg.iv, IV_LENGTH);
@@ -1051,9 +1062,9 @@ bool EnigmaIOTGatewayClass::nodeNameSetRespose (Node* node, int8_t error) {
 
 bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR_LEN], uint8_t* buf, size_t count, Node* node) {
 	/*
-	* ----------------------------------------------------------------------
-	*| msgType (1) | IV (12) | NodeID (2) | Node name (up to 32) | tag (16) |
-	* ----------------------------------------------------------------------
+	* ------------------------------------------------------------------------------------
+	*| msgType (1) | IV (12) | NodeID (2) | Counter (2) | Node name (up to 32) | tag (16) |
+	* ------------------------------------------------------------------------------------
 	*/
 	int8_t error = 0;
 
@@ -1062,8 +1073,11 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 
 	uint8_t iv_idx = 1;
 	uint8_t nodeId_idx = iv_idx + IV_LENGTH;
-	uint8_t nodeName_idx = nodeId_idx + sizeof (int16_t);
+	uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
+	uint8_t nodeName_idx = counter_idx + sizeof (int16_t);
 	uint8_t tag_idx = count - TAG_LENGTH;
+
+	uint16_t counter;
 
 	const uint8_t addDataLen = 1 + IV_LENGTH;
 	uint8_t aad[AAD_LENGTH + addDataLen];
@@ -1080,6 +1094,15 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 									 aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
 		DEBUG_ERROR ("Error during decryption");
 		error = -4; // Message error
+	}
+
+	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));
+	if (useCounter) {
+		if (counter > node->getLastControlCounter ()) {
+			node->setLastControlCounter (counter);
+		} else {
+			return false;
+		}
 	}
 
 	if (!error) {
@@ -1123,6 +1146,8 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_A
 	uint8_t data_idx = counter_idx + sizeof (int16_t);
 	uint8_t tag_idx = count - TAG_LENGTH;
 
+	uint16_t counter;
+
 	const uint8_t addDataLen = 1 + IV_LENGTH;
 	uint8_t aad[AAD_LENGTH + addDataLen];
 
@@ -1142,6 +1167,15 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_A
 	}
 
 	DEBUG_VERBOSE ("Decripted control message: %s", printHexBuffer (buf, count - TAG_LENGTH));
+
+	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));
+	if (useCounter) {
+		if (counter > node->getLastControlCounter ()) {
+			node->setLastControlCounter (counter);
+		} else {
+			return false;
+		}
+	}
 
 	// Check if command informs about a sleepy mode change
 	const uint8_t* payload = buf + data_idx;
@@ -1327,9 +1361,9 @@ double EnigmaIOTGatewayClass::getPacketsHour (uint8_t* address) {
 
 bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding) {
 	/*
-	* ---------------------------------------------------------------------------
-	*| msgType (1) | IV (12) | length (2) | NodeId (2)  | Data (....) | Tag (16) |
-	* ---------------------------------------------------------------------------
+	* ----------------------------------------------------------------------------------------
+	*| msgType (1) | IV (12) | length (2) | NodeId (2) | Counter (2) | Data (....) | Tag (16) |
+	* ----------------------------------------------------------------------------------------
 	*/
 
 	uint8_t buffer[MAX_MESSAGE_LENGTH];
@@ -1341,20 +1375,22 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	}
 
 	uint16_t nodeId = node->getNodeId ();
+	uint16_t counter;
 
 	uint8_t iv_idx = 1;
 	uint8_t length_idx = iv_idx + IV_LENGTH;
 	uint8_t nodeId_idx = length_idx + sizeof (int16_t);
+	uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
 	uint8_t data_idx;
 	uint8_t encoding_idx; // Only for user data
 	if (controlData == USERDATA_GET || controlData == USERDATA_SET) {
-		encoding_idx = nodeId_idx + sizeof (int16_t);
+		encoding_idx = counter_idx + sizeof (int16_t);
 		data_idx = encoding_idx + sizeof (int8_t);
 		buffer[encoding_idx] = encoding;
-		packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + 1 + len;
+		packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + sizeof (int16_t) + 1 + len;
 	} else {
-		data_idx = nodeId_idx + sizeof (int16_t);
-		packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + len;
+		data_idx = counter_idx + sizeof (int16_t);
+		packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + sizeof (int16_t) + len;
 	}
 	uint8_t tag_idx = data_idx + len;
 
@@ -1381,18 +1417,16 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 	memcpy (buffer + nodeId_idx, &nodeId, sizeof (uint16_t));
 
-	//if (useCounter) {
-	//    counter = node.getLastMessageCounter () + 1;
-	//    node.setLastMessageCounter (counter);
-	//    rtcmem_data.lastMessageCounter = counter;
-	//}
-	//else {
-	//    counter = Crypto.random ();
-	//}
-
-	//memcpy (counter_p, &counter, sizeof (uint16_t));
+	if (useCounter) {
+		counter = node.getLastControlCounter () + 1;
+		node.setLastControlCounter (counter);
+	} else {
+		counter = (uint16_t)(Crypto.random ());
+	}
+	memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
 
 	memcpy (buffer + data_idx, data, len);
+
 	DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer + data_idx, len));
 
 	memcpy (buffer + length_idx, &packet_length, sizeof (uint16_t));
@@ -1541,15 +1575,22 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[ENIGMAIOT_ADDR
 }
 
 bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADDR_LEN], const uint8_t* buf, size_t count, Node* node) {
+	/*
+	* ---------------------------------------------------------
+	*| msgType (1) | IV (12) | Counter (2) | T1 (8) | Tag (16) |
+	* ---------------------------------------------------------
+	*/
 	struct timeval tv;
 	struct timezone tz;
 	
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
+		uint16_t counter;
 		int64_t t1;
 		uint8_t tag[TAG_LENGTH];
 	} clockRequest_msg;
+	uint16_t counter;
 
 #define CRMSG_LEN sizeof(clockRequest_msg)
 
@@ -1558,11 +1599,11 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 		return false;
 	}
 
-	CryptModule::random (clockRequest_msg.iv, IV_LENGTH);
-
-	DEBUG_VERBOSE ("IV: %s", printHexBuffer (clockRequest_msg.iv, IV_LENGTH));
+	//CryptModule::random (clockRequest_msg.iv, IV_LENGTH);
 
 	memcpy (&clockRequest_msg, buf, count);
+
+	DEBUG_VERBOSE ("IV: %s", printHexBuffer (clockRequest_msg.iv, IV_LENGTH));
 
 	const uint8_t addDataLen = 1 + IV_LENGTH;
 	uint8_t aad[AAD_LENGTH + addDataLen];
@@ -1583,6 +1624,15 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 	}
 
 	DEBUG_VERBOSE ("Decripted Clock Request message: %s", printHexBuffer ((uint8_t*)&clockRequest_msg, packetLen));
+
+	memcpy (&counter, &(clockRequest_msg.counter), sizeof (uint16_t));
+	if (useCounter) {
+		if (counter > node->getLastControlCounter ()) {
+			node->setLastControlCounter (counter);
+		} else {
+			return false;
+		}
+	}
 
 	node->t1 = clockRequest_msg.t1;
 
@@ -1607,14 +1657,25 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
+		uint16_t counter;
 		int64_t t2;
 		int64_t t3;
 		uint8_t tag[TAG_LENGTH];
 	} clockResponse_msg;
 
+	uint16_t counter;
+
 	const unsigned int CRSMSG_LEN = sizeof (clockResponse_msg);
 
 	clockResponse_msg.msgType = CLOCK_RESPONSE;
+
+	if (useCounter) {
+		counter = node.getLastControlCounter () + 1;
+		node.setLastControlCounter (counter);
+	} else {
+		counter = (uint16_t)(Crypto.random ());
+	}
+	memcpy (&(clockResponse_msg.counter), &counter, sizeof (uint16_t));
 
 	memcpy (&(clockResponse_msg.t2), &(node->t2), sizeof (int64_t));
 

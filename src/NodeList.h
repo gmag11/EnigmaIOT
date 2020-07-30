@@ -354,6 +354,7 @@ protected:
     bool keyValid; ///< @brief Node shared key valid
     status_t status; ///< @brief Current node status. See `enum node_status`
     uint16_t lastMessageCounter; ///< @brief Last message counter state for specific Node
+    uint16_t lastControlCounter; ///< @brief Last message counter state for specific Node
     uint16_t nodeId; ///< @brief Node identifier asigned by gateway
     timer_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
     bool sleepyNode = true; ///< @brief Node sleepy definition

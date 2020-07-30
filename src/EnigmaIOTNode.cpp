@@ -1073,12 +1073,19 @@ bool EnigmaIOTNodeClass::clientHello () {
 }
 
 bool EnigmaIOTNodeClass::clockRequest () {
+	/*
+	 * ---------------------------------------------------------
+	 *| msgType (1) | IV (12) | Counter (2) | T1 (8) | tag (16) |
+	 * ---------------------------------------------------------
+	 */
 	struct  __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
+		int16_t counter;
 		int64_t t1;
 		uint8_t tag[TAG_LENGTH];
 	} clockRequest_msg;
+	uint16_t counter;
 
 	static const uint8_t CRMSG_LEN = sizeof (clockRequest_msg);
 
@@ -1088,6 +1095,15 @@ bool EnigmaIOTNodeClass::clockRequest () {
 
 	DEBUG_VERBOSE ("IV: %s", printHexBuffer (clockRequest_msg.iv, IV_LENGTH));
 
+	if (useCounter) {
+		counter = node.getLastControlCounter () + 1;
+		node.setLastControlCounter (counter);
+		rtcmem_data.lastControlCounter = counter;
+	} else {
+		counter = (uint16_t)(Crypto.random ());
+	}
+
+	memcpy (&(clockRequest_msg.counter), &counter, sizeof (uint16_t));
 
 	node.t1 = TimeManager.setOrigin ();
 
@@ -1349,7 +1365,6 @@ bool EnigmaIOTNodeClass::unencryptedDataMessage (const uint8_t* data, size_t len
 	} else {
 		counter = (uint16_t)(Crypto.random ());
 	}
-
 	memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
 
 	buf[encoding_idx] = (uint8_t)payloadEncoding;
@@ -1647,18 +1662,20 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
 	}
 
    /*
-	* ----------------------------------------------------------------------
-	*| msgType (1) | IV (12) | NodeID (2) | Node name (up to 32) | tag (16) |
-	* ----------------------------------------------------------------------
+	* ------------------------------------------------------------------------------------
+	*| msgType (1) | IV (12) | NodeID (2) | Counter (2) | Node name (up to 32) | tag (16) |
+	* ------------------------------------------------------------------------------------
 	*/
 
 	uint8_t buf[MAX_MESSAGE_LENGTH];
 	uint8_t tag[TAG_LENGTH];
 	uint16_t nodeId = node.getNodeId ();
+	uint16_t counter;
 
 	uint8_t iv_idx = 1;
 	uint8_t nodeId_idx = iv_idx + IV_LENGTH;
-	uint8_t nodeName_idx = nodeId_idx + sizeof (int16_t);
+	uint8_t counter_idx = nodeId_idx + sizeof (int16_t);
+	uint8_t nodeName_idx = counter_idx + sizeof (int16_t);
 	uint8_t tag_idx = nodeName_idx + nameLength;
 
 	size_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + nameLength;
@@ -1669,6 +1686,15 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
 	CryptModule::random (buf + iv_idx, IV_LENGTH);
 
 	DEBUG_VERBOSE ("IV: %s", printHexBuffer (buf + iv_idx, IV_LENGTH));
+
+	if (useCounter) {
+		counter = node.getLastControlCounter () + 1;
+		node.setLastControlCounter (counter);
+		rtcmem_data.lastControlCounter = counter;
+	} else {
+		counter = (uint16_t)(Crypto.random ());
+	}
+	memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
 
 	memcpy (buf + nodeId_idx, &nodeId, sizeof (uint16_t));
 
