@@ -1423,7 +1423,7 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
 
 	memcpy (buf + nodeId_idx, &nodeId, sizeof (uint16_t));
 
-	if (!controlMessage) { // Control messages do not use counter
+	if (!controlMessage) { // Control messages and data messages use different counters
 		if (useCounter) {
 			counter = node.getLastMessageCounter () + 1;
 			node.setLastMessageCounter (counter);
@@ -1431,9 +1431,16 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
 		} else {
 			counter = (uint16_t)(Crypto.random ());
 		}
-
-		memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
+	} else {
+		if (useCounter) {
+			counter = node.getLastControlCounter () + 1;
+			node.setLastControlCounter (counter);
+			rtcmem_data.lastControlCounter = counter;
+		} else {
+			counter = (uint16_t)(Crypto.random ());
+		}
 	}
+	memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
 
 	buf[encoding_idx] = payloadEncoding;
 
