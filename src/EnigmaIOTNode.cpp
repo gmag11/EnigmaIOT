@@ -1107,7 +1107,7 @@ bool EnigmaIOTNodeClass::clockRequest () {
 		counter = (uint16_t)(Crypto.random ());
 	}
 
-	DEBUG_WARN ("Control message #%d", counter);
+	DEBUG_INFO ("Control message #%d", counter);
 
 	memcpy (&(clockRequest_msg.counter), &counter, sizeof (uint16_t));
 
