@@ -182,6 +182,7 @@ def main():
     md5_str = hash_md5.hexdigest()
 
     # msg 0, file size, number of chunks, md5 checksum
+    print("Sending %d chunks" % len(encoded_string))
     client.publish(ota_topic, "0," + str(ota_length) + "," + str(len(encoded_string)) + "," + md5_str)
 
     # for i in range(0, len(chunked_string), 1):
