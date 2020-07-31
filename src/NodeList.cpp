@@ -108,6 +108,8 @@ void Node::reset () {
 	memset (nodeName, 0, NODE_NAME_LENGTH);
 	keyValid = false;
 	lastMessageCounter = 0;
+	lastControlCounter = 0;
+	lastDownlinkMsgCounter = 0;
 	keyValidFrom = 0;
 	status = UNREGISTERED;
 	if (rateFilter) {

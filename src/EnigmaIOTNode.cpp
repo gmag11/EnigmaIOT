@@ -94,6 +94,8 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
 		Serial.printf (" -- Node status is %d: %s\n", data->nodeRegisterStatus, data->nodeRegisterStatus == REGISTERED ? "REGISTERED" : "NOT REGISTERED");
 		Serial.printf (" -- Node name: %s\n", data->nodeName);
 		Serial.printf (" -- Last message counter: %d\n", data->lastMessageCounter);
+		Serial.printf (" -- Last control counter: %d\n", data->lastControlCounter);
+		Serial.printf (" -- Last downlink counter: %d\n", data->lastDownlinkMsgCounter);
 		Serial.printf (" -- NodeID: %d\n", data->nodeId);
 		Serial.printf (" -- Channel: %d\n", data->channel);
 		Serial.printf (" -- RSSI: %d\n", data->rssi);
@@ -133,6 +135,8 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 		if (rtcmem_data.nodeKeyValid)
 			node.setKeyValidFrom (millis ());
 		node.setLastMessageCounter (rtcmem_data.lastMessageCounter);
+		node.setLastControlCounter (rtcmem_data.lastControlCounter);
+		node.setLastDownlinkMsgCounter (rtcmem_data.lastDownlinkMsgCounter);
 		node.setLastMessageTime ();
 		node.setNodeId (rtcmem_data.nodeId);
 		// setChannel (rtcmem_data.channel);
@@ -1737,7 +1741,7 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
 	uint8_t nodeName_idx = counter_idx + sizeof (int16_t);
 	uint8_t tag_idx = nodeName_idx + nameLength;
 
-	size_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + nameLength;
+	size_t packet_length = 1 + IV_LENGTH + sizeof (int16_t) + sizeof (int16_t) + nameLength;
 
 
 	buf[0] = (uint8_t)NODE_NAME_SET;
@@ -2188,6 +2192,12 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 		}
 	}
 
+	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
+		if (!saveRTCData ()) {
+			DEBUG_ERROR ("Error saving data on RTC");
+		}
+	}
+
 	if (control) {
 		DEBUG_INFO ("Control command");
 		DEBUG_VERBOSE ("Data: %s", printHexBuffer (&buf[data_idx], tag_idx - data_idx));
@@ -2197,12 +2207,6 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 	DEBUG_VERBOSE ("Sending data notification. Payload length: %d", tag_idx - data_idx);
 	if (notifyData) {
 		notifyData (mac, &buf[data_idx], tag_idx - data_idx, (nodeMessageType_t)(buf[0]), (nodePayloadEncoding_t)(buf[encoding_idx]));
-	}
-
-	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
-		if (!saveRTCData ()) {
-			DEBUG_ERROR ("Error saving data on RTC");
-		}
 	}
 
 	return true;
@@ -2259,8 +2263,10 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 				// save context to RTC memory
 				memcpy (rtcmem_data.nodeKey, node.getEncriptionKey (), KEY_LENGTH);
 				rtcmem_data.lastMessageCounter = 0;
+				rtcmem_data.lastDownlinkMsgCounter = 0;
+				rtcmem_data.lastControlCounter = 0;
 				rtcmem_data.nodeId = node.getNodeId ();
-
+				DEBUG_WARN ("------------- Reset counters");
 				if (!saveRTCData ()) {
 					DEBUG_ERROR ("Error saving data on RTC");
 				}
