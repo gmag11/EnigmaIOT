@@ -2315,6 +2315,9 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		invalidateReason = processInvalidateKey (mac, buf, count);
 		requestSearchGateway = true;
 		node.reset ();
+		rtcmem_data.lastMessageCounter = 0;
+		rtcmem_data.lastControlCounter = 0;
+		rtcmem_data.lastDownlinkMsgCounter = 0;
 		TimeManager.reset ();
 		timeSyncPeriod = QUICK_SYNC_TIME;
 		if (notifyDisconnection) {

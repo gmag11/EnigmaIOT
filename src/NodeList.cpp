@@ -282,6 +282,7 @@ Node* NodeList::getNewNode (const uint8_t* mac) {
 		for (int i = 0; i < NUM_NODES; i++) {
 			if (nodes[i].status == UNREGISTERED) {
 				nodes[i].setMacAddress (const_cast<uint8_t*>(mac));
+				nodes[i].reset ();
 				return &(nodes[i]);
 			}
 		}

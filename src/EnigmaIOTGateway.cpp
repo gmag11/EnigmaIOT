@@ -880,6 +880,8 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 					node->setStatus (REGISTERED);
 					node->setKeyValidFrom (millis ());
 					node->setLastMessageCounter (0);
+					node->setLastControlCounter (0);
+					node->setLastDownlinkMsgCounter (0);
 					node->setLastMessageTime ();
 					if (notifyNewNode) {
 						notifyNewNode (node->getMacAddress (), node->getNodeId (), NULL);
@@ -1512,7 +1514,9 @@ bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t rea
 		uint8_t* mac = node->getMacAddress ();
 		notifyNodeDisconnection (mac, reason);
 	}
-	return comm->send (node->getMacAddress (), (uint8_t*)&invalidateKey_msg, IKMSG_LEN) == 0;
+	int32_t error = comm->send (node->getMacAddress (), (uint8_t*)&invalidateKey_msg, IKMSG_LEN) == 0;
+	node->reset ();
+	return error;
 }
 
 bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[ENIGMAIOT_ADDR_LEN], const uint8_t* buf, size_t count, Node* node) {
