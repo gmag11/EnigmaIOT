@@ -1,13 +1,9 @@
 /**
-  * @file EnigmaIOT-Json-Controller-Template.ino
-  * @version 0.9.3
-  * @date 24/07/2020
+  * @file EnigmaIOT-SmartSwitch-Controller.ino
+  * @version 0.9.4
+  * @date 31/07/2020
   * @author German Martin
   * @brief Node template for easy custom node creation
-  *
-  * Using this template you may create custom nodes in minutes by adding your code in a class.
-  * You only need to edit BasicController.h and BasicController.cpp with your code.
-  * All EnigmaIOT management is done internally
   */
 
 #if !defined ESP8266 && !defined ESP32

@@ -1,7 +1,7 @@
 /**
   * @file GwOutput_mqtt.h
-  * @version 0.9.3
-  * @date 14/07/2020
+  * @version 0.9.4
+  * @date 31/07/2020
   * @author German Martin
   * @brief MQTT Gateway output module
   *
