@@ -1189,14 +1189,14 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 	DEBUG_VERBOSE ("Decripted Clock Response message: %s", printHexBuffer ((uint8_t*)&clockResponse_msg, packetLen));
 
 	memcpy (&counter, &(clockResponse_msg.counter), sizeof (uint16_t));
-	DEBUG_WARN ("Donlink msg #%d", counter);
+	DEBUG_INFO ("Downlink msg #%d", counter);
 	if (useCounter) {
 		if (counter > node.getLastDownlinkMsgCounter ()) {
-			DEBUG_WARN ("Accepted");
+			DEBUG_INFO ("Accepted");
 			node.setLastDownlinkMsgCounter (counter);
 			rtcmem_data.lastDownlinkMsgCounter = counter;
 		} else {
-			DEBUG_WARN ("Rejected");
+			DEBUG_WARN ("Downlink msg rejected");
 			return false;
 		}
 	}
@@ -1489,9 +1489,9 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
 	}
 
 	if (!controlMessage) {
-		DEBUG_WARN ("Data message #%d", counter);
+		DEBUG_INFO ("Data message #%d", counter);
 	} else {
-		DEBUG_WARN ("Control message #%d", counter);
+		DEBUG_INFO ("Control message #%d", counter);
 	}
 
 	memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
@@ -1648,14 +1648,14 @@ bool EnigmaIOTNodeClass::processSetNameResponse (const uint8_t* mac, const uint8
 	DEBUG_VERBOSE ("Decrypted Node Name Set response message: %s", printHexBuffer ((uint8_t*)&nodeNameSetResponse_msg, NNSRMSG_LEN - TAG_LENGTH));
 
 	memcpy (&counter, &(nodeNameSetResponse_msg.counter), sizeof (uint16_t));
-	DEBUG_WARN ("Downlink msg #%d", counter);
+	DEBUG_INFO ("Downlink msg #%d", counter);
 	if (useCounter) {
 		if (counter > node.getLastDownlinkMsgCounter ()) {
-			DEBUG_WARN ("Accepted");
+			DEBUG_INFO ("Accepted");
 			node.setLastDownlinkMsgCounter (counter);
 			rtcmem_data.lastDownlinkMsgCounter = counter;
 		} else {
-			DEBUG_WARN ("Rejected");
+			DEBUG_WARN ("Downlink msg rejected");
 			return false;
 		}
 	}
@@ -1758,7 +1758,7 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
 		counter = (uint16_t)(Crypto.random ());
 	}
 
-	DEBUG_WARN ("Control message #%d", counter);
+	DEBUG_INFO ("Control message #%d", counter);
 
 	memcpy (buf + counter_idx, &counter, sizeof (uint16_t));
 
@@ -2180,14 +2180,14 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 	DEBUG_VERBOSE ("Decripted downstream message: %s", printHexBuffer (buf, count - TAG_LENGTH));
 
 	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));
-	DEBUG_WARN ("Downlink msg #%d", counter);
+	DEBUG_INFO ("Downlink msg #%d", counter);
 	if (useCounter) {
 		if (counter > node.getLastDownlinkMsgCounter ()) {
-			DEBUG_WARN ("Accepted");
+			DEBUG_INFO ("Accepted");
 			node.setLastDownlinkMsgCounter (counter);
 			rtcmem_data.lastDownlinkMsgCounter = counter;
 		} else {
-			DEBUG_WARN ("Rejected");
+			DEBUG_WARN ("Downlink msg rejected");
 			return false;
 		}
 	}
@@ -2266,7 +2266,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 				rtcmem_data.lastDownlinkMsgCounter = 0;
 				rtcmem_data.lastControlCounter = 0;
 				rtcmem_data.nodeId = node.getNodeId ();
-				DEBUG_WARN ("------------- Reset counters");
+				DEBUG_INFO("Reset counters");
 				if (!saveRTCData ()) {
 					DEBUG_ERROR ("Error saving data on RTC");
 				}
