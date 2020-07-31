@@ -28,7 +28,7 @@ EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ());
 When receiving this message, MQTT Gateway produces this output:
 
 ```json
-EnigmaTest/<node_name>/data 
+<network_name>/<node_name>/data 
 
 [{"channel":0, "type":2,   "name":"analog_input",  "value":3.28},
  {"channel":1, "type":103, "name":"temperature",   "value":20.3},
