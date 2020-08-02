@@ -4,11 +4,11 @@ This example implements a complete EnigmaIOT gateway that sends data and allow i
 
 You may use in your projects as it is, without any modification.
 
-It uses `GwOutput_generic.h` to implement MQTT communication as a module.
+It uses [`GwOutput_generic.h`](https://github.com/gmag11/EnigmaIOT/blob/master/src/GwOutput_generic.h) to implement MQTT communication as a module.
 
-`dstrootca.h` includes **DST Root CA X3** certificate, valid until 2021-09-30 14:01­:15 UTC. It is the root CA for Let's Encrypt certificates, so if you use a different one or expiry date has passed make sure that you update the file with the right certificate.
+[`dstrootca.h`](https://github.com/gmag11/EnigmaIOT/blob/master/examples/EnigmaIOTGatewayMQTT/dstrootca.h) includes **DST Root CA X3** certificate, valid until 2021-09-30 14:01­:15 UTC. It is the root CA for Let's Encrypt certificates, so if you use a different one or expiry date has passed make sure that you update the file with the right certificate.
 
-If you have a MQTT broker without TLS activated you have to disable `#include "dstrootca.h"` on `GwOutput_mqtt.h`  
+If you have a MQTT broker without TLS activated you have to disable [`#include "dstrootca.h"`](https://github.com/gmag11/EnigmaIOT/blob/master/examples/EnigmaIOTGatewayMQTT/GwOutput_mqtt.h#L21) on [`GwOutput_mqtt.h`](https://github.com/gmag11/EnigmaIOT/blob/master/examples/EnigmaIOTGatewayMQTT/GwOutput_mqtt.h)  
 
 ## Data Format
 
