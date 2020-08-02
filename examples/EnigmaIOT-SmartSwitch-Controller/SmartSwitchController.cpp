@@ -300,6 +300,9 @@ CONTROLLER_CLASS_NAME::~CONTROLLER_CLASS_NAME () {
 	// This is normally not needed but it is a good practice
 	if (buttonPinParam) {
 		delete (buttonPinParam);
+		delete (relayPinParam);
+		delete (bootStatusListParam);
+		delete (bootStatusParam);
 	}
 }
 
@@ -309,23 +312,28 @@ void CONTROLLER_CLASS_NAME::configManagerStart (EnigmaIOTNodeClass* node) {
 	// If you need to add custom configuration parameters do it here
 
 	static char buttonPinParamStr[4];
-	itoa (DEFAULT_BUTTON_PIN, buttonPinParamStr, 3);
-	buttonPinParam = new AsyncWiFiManagerParameter ("buttonPin", "Button Pin", buttonPinParamStr, 3, "required type=\"number\" min=\"0\" max=\"15\" step=\"1\"");
-	//bootStatusParam = new AsyncWiFiManagerParameter ("bootStatus", "Boot Relay Status", "", 6, "required type=\"text\" list=\"bootStatusList\"");
-	//bootStatusListParam = new AsyncWiFiManagerParameter ("<datalist id=\"bootStatusList\">" \
-	//													 "<option value = \"OFF\" >" \
-	//													 "<option value = \"ON\">" \
-	//													 "<option value = \"SAVE\">" \
-	//													 "</datalist>");
-	bootStatusParam = new AsyncWiFiManagerParameter ("<label for=\"bootStatus\">Boot Relay Status:</label> " \
-													 "<select id=\"bootStatus\" >" \
-													 "name=\"bootStatus\" required " \
-													 "<option value=\"0\">Off</option>" \
-													 "<option value=\"1\">On</option>" \
-													 "<option value=\"2\">Save</option>" \
-													 "</select>");
+	itoa (DEFAULT_BUTTON_PIN, buttonPinParamStr,10);
+	static char relayPinParamStr[4];
+	itoa (DEFAULT_RELAY_PIN, relayPinParamStr,10);
+	buttonPinParam = new AsyncWiFiManagerParameter ("buttonPin", "Button Pin", buttonPinParamStr, 3, "required type=\"text\" pattern=\"^1[2-5]$|^[0-5]$\"");
+	relayPinParam = new AsyncWiFiManagerParameter ("relayPin", "Relay Pin", relayPinParamStr, 3, "required type=\"text\" pattern=\"^1[2-5]$|^[0-5]$\"");
+	bootStatusParam = new AsyncWiFiManagerParameter ("bootStatus", "Boot Relay Status", "", 6, "required type=\"text\" list=\"bootStatusList\" pattern=\"^ON$|^OFF$|^SAVE$\"");
+	bootStatusListParam = new AsyncWiFiManagerParameter ("<datalist id=\"bootStatusList\">" \
+														 "<option value = \"OFF\" >" \
+														 "<option value = \"ON\">" \
+														 "<option value = \"SAVE\">" \
+														 "</datalist>");
+	//bootStatusParam = new AsyncWiFiManagerParameter ("<label for=\"bootStatus\">Boot Relay Status:</label> " \
+	//												 "<select id=\"bootStatus\" >" \
+	//												 "name=\"bootStatus\" required " \
+	//												 "<option value=\"0\">Off</option>" \
+	//												 "<option value=\"1\">On</option>" \
+	//												 "<option value=\"2\">Save</option>" \
+	//												 "</select>");
 
 	enigmaIotNode->addWiFiManagerParameter (buttonPinParam);
+	enigmaIotNode->addWiFiManagerParameter (relayPinParam);
+	enigmaIotNode->addWiFiManagerParameter (bootStatusListParam);
 	enigmaIotNode->addWiFiManagerParameter (bootStatusParam);
 }
 
@@ -335,15 +343,26 @@ void CONTROLLER_CLASS_NAME::configManagerExit (bool status) {
 	DEBUG_WARN ("Button Pin: %s", buttonPinParam->getValue ());
 	DEBUG_WARN ("Boot Relay Status: %s", bootStatusParam->getValue ());
 
+	// TODO: Finish bootStatusParam analysis
+
 	if (status) {
 		config.buttonPin = atoi (buttonPinParam->getValue ());
 		if (config.buttonPin > 15 || config.buttonPin < 0) {
 			config.buttonPin = DEFAULT_BUTTON_PIN;
 		}
+		config.relayPin = atoi (relayPinParam->getValue ());
+		if (config.relayPin > 15 || config.relayPin < 0) {
+			config.relayPin = DEFAULT_BUTTON_PIN;
+		}
+		if (!strncmp(bootStatusParam->getValue (),"ON", 6)) {
+			config.bootStatus = RELAY_ON;
+		} else if (!strncmp (bootStatusParam->getValue (), "SAVE", 6)) {
+			config.bootStatus = SAVE_RELAY_STATUS;
+		} else {
+			config.bootStatus = RELAY_OFF;
+		}
 		config.ON_STATE = ON;
 		config.linked = true;
-		config.bootStatus = RELAY_OFF;
-		config.relayPin = DEFAULT_RELAY_PIN;
 
 		if (!saveConfig ()) {
 			DEBUG_ERROR ("Error writting blind controller config to filesystem.");

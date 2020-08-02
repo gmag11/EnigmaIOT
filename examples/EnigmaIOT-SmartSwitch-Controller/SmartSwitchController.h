@@ -50,6 +50,7 @@ protected:
 	bool pushReleased = true;
 	smartSwitchControllerHw_t config;
 	AsyncWiFiManagerParameter* buttonPinParam;
+	AsyncWiFiManagerParameter* relayPinParam;
 	AsyncWiFiManagerParameter* bootStatusParam;
 	AsyncWiFiManagerParameter* bootStatusListParam;
 
