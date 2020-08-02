@@ -54,7 +54,7 @@
 
 EnigmaIOTjsonController* controller; // Generic controller is refferenced here. You do not need to modify it
 
-#define RESET_PIN 13 // You can set a different configuration reset pin here. Check for conflicts with used pins.
+#define RESET_PIN 4 // You can set a different configuration reset pin here. Check for conflicts with used pins.
 
 // Called when node is connected to gateway. You don't need to do anything here usually
 void connectEventHandler () { 
