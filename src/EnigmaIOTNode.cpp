@@ -83,6 +83,7 @@ void clearRtcData (rtcmem_data_t* data) {
 	data->nodeRegisterStatus = UNREGISTERED;
 	data->sleepy = false;
 	data->nodeKeyValid = false;
+	DEBUG_DBG ("RTC Cleared");
 }
 
 void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
@@ -567,6 +568,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 			rtcmem_data.sleepy = sleepy;
 			rtcmem_data.nodeRegisterStatus = UNREGISTERED;
 		} else { // Try read from flash
+			DEBUG_INFO ("Starting from Flash");
 			if (!SPIFFS.begin ()) {
 				DEBUG_ERROR ("Error mounting flash");
 				if (SPIFFS.format ()) {
@@ -577,6 +579,8 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 				delay (2500);
 				ESP.restart ();
 				//return;
+			} else {
+				DEBUG_INFO ("SPIFFS mounted");
 			}
 			if (loadFlashData ()) { // If data present on flash, read and continue
 				node.setStatus (UNREGISTERED);
