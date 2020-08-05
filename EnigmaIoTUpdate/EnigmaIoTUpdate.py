@@ -140,7 +140,7 @@ def main():
     with open(args.filename, "rb") as binary_file:
         chunked_file = []
         encoded_string = []
-        n = 212  # Max 217 - 2. Divisible by 4 => 212
+        n = 212  # Max 215 - 2. Divisible by 4 => 212
 
         for chunk in iter(lambda: binary_file.read(n), b""):
             chunked_file.append(chunk)

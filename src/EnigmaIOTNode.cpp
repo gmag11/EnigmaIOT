@@ -2077,7 +2077,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			//ESP.restart ();
 			otaRunning = false;
 			shouldRestart = true;
-			clearRTC ();
+			//clearRTC ();
 			return true; // Restart does not happen inmediatelly, so code goes on
 		} else {
 			responseBuffer[0] = control_message_type::OTA_ANS;
