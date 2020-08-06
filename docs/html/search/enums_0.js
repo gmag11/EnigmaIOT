@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['control_5fmessage_5ftype_1111',['control_message_type',['../NodeList_8h.html#af7c3a73e42834705926eba633e55daa4',1,'NodeList.h']]]
+  ['bootrelaystatus_5ft_1259',['bootRelayStatus_t',['../SmartSwitchController_8h.html#a53ec8322ae36a86ecab4a1cf69b5064a',1,'SmartSwitchController.h']]]
 ];

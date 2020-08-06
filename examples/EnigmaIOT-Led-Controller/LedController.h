@@ -43,7 +43,7 @@ public:
 
 	/**
 	 * @brief Called when wifi manager starts config portal
-	 * @param enigmaIotGw Pointer to EnigmaIOT gateway instance
+	 * @param node Pointer to EnigmaIOT gateway instance
 	 */
 	void configManagerStart (EnigmaIOTNodeClass* node);
 

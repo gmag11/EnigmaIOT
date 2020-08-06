@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.3</span>
+   &#160;<span id="projectnumber">0.9.4</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -105,7 +105,7 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:af2e697ac60e05813d45ea2c9c9e79c25"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a>&#160;&#160;&#160;HIGH</td></tr>
+<tr class="memitem:af2e697ac60e05813d45ea2c9c9e79c25"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a>&#160;&#160;&#160;LOW</td></tr>
 <tr class="separator:af2e697ac60e05813d45ea2c9c9e79c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80700bb63bd56ebabbb4728aa433fd29"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8h.html#a80700bb63bd56ebabbb4728aa433fd29">LED_OFF</a>&#160;&#160;&#160;!<a class="el" href="EnigmaIOTNode_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a></td></tr>
 <tr class="separator:a80700bb63bd56ebabbb4728aa433fd29"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,8 +120,8 @@ Typedefs</h2></td></tr>
 <tr class="separator:a37ce04fd79315c001e113198fab23386"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a450524067c6c3ce8b2fda7e2c7d2c9e9"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8h.html#a450524067c6c3ce8b2fda7e2c7d2c9e9">onDisconnected_t</a>) (<a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a> reason)</td></tr>
 <tr class="separator:a450524067c6c3ce8b2fda7e2c7d2c9e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a059cb90513e14cc8dc7befecc75bc891"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8h.html#a059cb90513e14cc8dc7befecc75bc891">onWiFiManagerExit_t</a>) (boolean <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
-<tr class="separator:a059cb90513e14cc8dc7befecc75bc891"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0bcd76b3f8b10cfc0f8c75d00e33012"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8h.html#ac0bcd76b3f8b10cfc0f8c75d00e33012">onWiFiManagerExit_t</a>) (bool <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
+<tr class="separator:ac0bcd76b3f8b10cfc0f8c75d00e33012"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeafba3e3725226cdcb14a23c4e57c97a"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8h.html#aeafba3e3725226cdcb14a23c4e57c97a">onWiFiManagerStarted_t</a>) (void)</td></tr>
 <tr class="separator:aeafba3e3725226cdcb14a23c4e57c97a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -179,8 +179,8 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Library to build a node for EnigmaIoT system. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.3 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>14/07/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.4 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>31/07/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
@@ -208,7 +208,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define LED_ON&#160;&#160;&#160;HIGH</td>
+          <td class="memname">#define LED_ON&#160;&#160;&#160;LOW</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -230,7 +230,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00095">95</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00097">97</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -246,7 +246,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00106">106</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00108">108</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -262,7 +262,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00107">107</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00109">109</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -278,23 +278,23 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00105">105</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00107">107</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
-<a id="a059cb90513e14cc8dc7befecc75bc891"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a059cb90513e14cc8dc7befecc75bc891">&#9670;&nbsp;</a></span>onWiFiManagerExit_t</h2>
+<a id="ac0bcd76b3f8b10cfc0f8c75d00e33012"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0bcd76b3f8b10cfc0f8c75d00e33012">&#9670;&nbsp;</a></span>onWiFiManagerExit_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* onWiFiManagerExit_t) (boolean <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td>
+          <td class="memname">typedef void(* onWiFiManagerExit_t) (bool <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00108">108</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00110">110</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -310,7 +310,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00109">109</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00111">111</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -436,7 +436,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l02229">2229</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l02381">2381</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>

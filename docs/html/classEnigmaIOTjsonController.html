@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.3</span>
+   &#160;<span id="projectnumber">0.9.4</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -75,12 +75,21 @@ $(function() {
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for EnigmaIOTjsonController:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classEnigmaIOTjsonController.png" usemap="#EnigmaIOTjsonController_map" alt=""/>
+  <map id="EnigmaIOTjsonController_map" name="EnigmaIOTjsonController_map">
+<area href="classCONTROLLER__CLASS__NAME.html" alt="CONTROLLER_CLASS_NAME" shape="rect" coords="0,56,187,80"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a56783a94a58cfb5fa7cb0764bf81ce00"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#a56783a94a58cfb5fa7cb0764bf81ce00">begin</a> (void *config=NULL)=0</td></tr>
-<tr class="memdesc:a56783a94a58cfb5fa7cb0764bf81ce00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classEnigmaIOTjsonController.html#a56783a94a58cfb5fa7cb0764bf81ce00">More...</a><br /></td></tr>
-<tr class="separator:a56783a94a58cfb5fa7cb0764bf81ce00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bda5dc0df3fd994b126ce701303ca2f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#a8bda5dc0df3fd994b126ce701303ca2f">setup</a> (void *config=NULL)=0</td></tr>
+<tr class="memdesc:a8bda5dc0df3fd994b126ce701303ca2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classEnigmaIOTjsonController.html#a8bda5dc0df3fd994b126ce701303ca2f">More...</a><br /></td></tr>
+<tr class="separator:a8bda5dc0df3fd994b126ce701303ca2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d1e90a75f4b1b5abd5480d00102debf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#a7d1e90a75f4b1b5abd5480d00102debf">loop</a> ()=0</td></tr>
 <tr class="memdesc:a7d1e90a75f4b1b5abd5480d00102debf"><td class="mdescLeft">&#160;</td><td class="mdescRight">This should be called periodically for module handling.  <a href="classEnigmaIOTjsonController.html#a7d1e90a75f4b1b5abd5480d00102debf">More...</a><br /></td></tr>
 <tr class="separator:a7d1e90a75f4b1b5abd5480d00102debf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,40 +135,6 @@ Protected Attributes</h2></td></tr>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00028">28</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a56783a94a58cfb5fa7cb0764bf81ce00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56783a94a58cfb5fa7cb0764bf81ce00">&#9670;&nbsp;</a></span>begin()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void EnigmaIOTjsonController::begin </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>config</em> = <code>NULL</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Initialize data structures. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">config</td><td>Pointer to configuration structure. If it is <code>NULL</code> then it tries to load configuration from flash </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a844043532561398d54fa45cd7f0cf4ed"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a844043532561398d54fa45cd7f0cf4ed">&#9670;&nbsp;</a></span>configManagerExit()</h2>
 
@@ -192,6 +167,8 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
+<p>Implemented in <a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">CONTROLLER_CLASS_NAME</a>, and <a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">CONTROLLER_CLASS_NAME</a>.</p>
+
 </div>
 </div>
 <a id="a1800c685a75bdb951009749e62b19dbb"></a>
@@ -221,10 +198,12 @@ Protected Attributes</h2></td></tr>
 <p>Called when wifi manager starts config portal. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">enigmaIotNode</td><td>Pointer to EnigmaIOT node instance </td></tr>
+    <tr><td class="paramname">node</td><td>Pointer to EnigmaIOT node instance </td></tr>
   </table>
   </dd>
 </dl>
+
+<p>Implemented in <a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">CONTROLLER_CLASS_NAME</a>, and <a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">CONTROLLER_CLASS_NAME</a>.</p>
 
 </div>
 </div>
@@ -254,6 +233,8 @@ Protected Attributes</h2></td></tr>
 <p>Loads output module configuration. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if load was successful. <code>false</code> otherwise </dd></dl>
 
+<p>Implemented in <a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">CONTROLLER_CLASS_NAME</a>, and <a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">CONTROLLER_CLASS_NAME</a>.</p>
+
 </div>
 </div>
 <a id="a7d1e90a75f4b1b5abd5480d00102debf"></a>
@@ -280,6 +261,8 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This should be called periodically for module handling. </p>
+
+<p>Implemented in <a class="el" href="classCONTROLLER__CLASS__NAME.html#a4848555c02bbbddd9af9f3f60a9117f5">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a4848555c02bbbddd9af9f3f60a9117f5">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a4848555c02bbbddd9af9f3f60a9117f5">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a4848555c02bbbddd9af9f3f60a9117f5">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a4848555c02bbbddd9af9f3f60a9117f5">CONTROLLER_CLASS_NAME</a>, and <a class="el" href="classCONTROLLER__CLASS__NAME.html#a4848555c02bbbddd9af9f3f60a9117f5">CONTROLLER_CLASS_NAME</a>.</p>
 
 </div>
 </div>
@@ -348,6 +331,8 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> on success </dd></dl>
 
+<p>Implemented in <a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">CONTROLLER_CLASS_NAME</a>, and <a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">CONTROLLER_CLASS_NAME</a>.</p>
+
 </div>
 </div>
 <a id="a83069acbd6d2b8c1c9b36974fdb35b1e"></a>
@@ -375,6 +360,8 @@ Protected Attributes</h2></td></tr>
 
 <p>Saves output module configuration. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if save was successful. <code>false</code> otherwise </dd></dl>
+
+<p>Implemented in <a class="el" href="classCONTROLLER__CLASS__NAME.html#ae572fe1f0d2bb7b4fb99067d815d5807">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ae572fe1f0d2bb7b4fb99067d815d5807">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ae572fe1f0d2bb7b4fb99067d815d5807">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ae572fe1f0d2bb7b4fb99067d815d5807">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ae572fe1f0d2bb7b4fb99067d815d5807">CONTROLLER_CLASS_NAME</a>, and <a class="el" href="classCONTROLLER__CLASS__NAME.html#ae572fe1f0d2bb7b4fb99067d815d5807">CONTROLLER_CLASS_NAME</a>.</p>
 
 </div>
 </div>
@@ -421,6 +408,8 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message sending was successful. <code>false</code> otherwise </dd></dl>
+
+<p>Implemented in <a class="el" href="classCONTROLLER__CLASS__NAME.html#a0965ba804f4f0d1533f888fa9011aa86">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a0965ba804f4f0d1533f888fa9011aa86">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a0965ba804f4f0d1533f888fa9011aa86">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a0965ba804f4f0d1533f888fa9011aa86">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a0965ba804f4f0d1533f888fa9011aa86">CONTROLLER_CLASS_NAME</a>, and <a class="el" href="classCONTROLLER__CLASS__NAME.html#a0965ba804f4f0d1533f888fa9011aa86">CONTROLLER_CLASS_NAME</a>.</p>
 
 </div>
 </div>
@@ -516,6 +505,44 @@ Protected Attributes</h2></td></tr>
 
 <p>Send a message to notify node has started running. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message sending was successful. <code>false</code> otherwise </dd></dl>
+
+<p>Implemented in <a class="el" href="classCONTROLLER__CLASS__NAME.html#a2af1a99bb4a2d7b83125861f127279e8">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a2af1a99bb4a2d7b83125861f127279e8">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a2af1a99bb4a2d7b83125861f127279e8">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a2af1a99bb4a2d7b83125861f127279e8">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a2af1a99bb4a2d7b83125861f127279e8">CONTROLLER_CLASS_NAME</a>, and <a class="el" href="classCONTROLLER__CLASS__NAME.html#a2af1a99bb4a2d7b83125861f127279e8">CONTROLLER_CLASS_NAME</a>.</p>
+
+</div>
+</div>
+<a id="a8bda5dc0df3fd994b126ce701303ca2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bda5dc0df3fd994b126ce701303ca2f">&#9670;&nbsp;</a></span>setup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void EnigmaIOTjsonController::setup </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>config</em> = <code>NULL</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initialize data structures. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">config</td><td>Pointer to configuration structure. If it is <code>NULL</code> then it tries to load configuration from flash </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">CONTROLLER_CLASS_NAME</a>, and <a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">CONTROLLER_CLASS_NAME</a>.</p>
 
 </div>
 </div>

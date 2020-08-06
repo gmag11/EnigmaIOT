@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['peertype_5ft_1123',['peerType_t',['../Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4',1,'Comms_hal.h']]]
+  ['ota_5fstatus_1271',['ota_status',['../NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4',1,'NodeList.h']]]
 ];

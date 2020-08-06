@@ -64,7 +64,7 @@ public:
 
 	/**
 	 * @brief Called when wifi manager starts config portal
-	 * @param enigmaIotNode Pointer to EnigmaIOT node instance
+	 * @param node Pointer to EnigmaIOT node instance
 	 */
 	virtual void configManagerStart (EnigmaIOTNodeClass* node) = 0;
 

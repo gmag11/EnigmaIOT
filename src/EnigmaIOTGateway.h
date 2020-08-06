@@ -536,6 +536,7 @@ public:
 	 * @param len Payload length
 	 * @param controlData Indicates if data is control data and its class
 	 * @param payload_type Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
+	 * @param nodeName Causes data to be sent to a node with this name instead of numeric address
 	 * @return Returns true if everything went ok
 	 */
 	bool sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t payload_type = RAW, char* nodeName = NULL);

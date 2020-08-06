@@ -250,7 +250,8 @@ protected:
 	  * @param data Buffer to store payload to be sent
 	  * @param len Length of payload data
 	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
-	  * @param payloadEncoding Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
+	  * @param payloadEncoding Determine payload data encoding as nodePayloadEncoding_t. It can be RAW, CAYENNELPP, MSGPACK
+	  * @param encrypt Indicates if message should be encrypted. True by default. Not recommended to set to false, use it only if you absolutely need more performance
 	  * @return Returns `true` if message could be correcly sent
 	  */
 	bool dataMessage (const uint8_t* data, size_t len, bool controlMessage = false, bool encrypt = true, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);
@@ -260,6 +261,7 @@ protected:
 	  * @param data Buffer to store payload to be sent
 	  * @param len Length of payload data
 	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
+	  * @param payloadEncoding Determine payload data encoding as nodePayloadEncoding_t. It can be RAW, CAYENNELPP, MSGPACK
 	  * @return Returns `true` if message could be correcly sent
 	  */
 	bool unencryptedDataMessage (const uint8_t* data, size_t len, bool controlMessage = false, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);

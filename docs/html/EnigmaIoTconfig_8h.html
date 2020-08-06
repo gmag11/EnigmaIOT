@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.3</span>
+   &#160;<span id="projectnumber">0.9.4</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -78,7 +78,8 @@ $(function() {
 
 <p>Parameter configuration.  
 <a href="#details">More...</a></p>
-
+<div class="textblock"><code>#include &quot;<a class="el" href="EnigmaIoTconfigAdvanced_8h_source.html">EnigmaIoTconfigAdvanced.h</a>&quot;</code><br />
+</div>
 <p><a href="EnigmaIoTconfig_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -86,8 +87,6 @@ Macros</h2></td></tr>
 <tr class="memitem:a3be8ceb481b00916205f536e6028e2f5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a3be8ceb481b00916205f536e6028e2f5">CONNECT_TO_WIFI_AP</a>&#160;&#160;&#160;1</td></tr>
 <tr class="memdesc:a3be8ceb481b00916205f536e6028e2f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">In projects where gateway should not be connected to WiFi (for instance a data logger to SD) it may be useful to disable WiFi setting this to 0. Set it to 1 otherwise.  <a href="EnigmaIoTconfig_8h.html#a3be8ceb481b00916205f536e6028e2f5">More...</a><br /></td></tr>
 <tr class="separator:a3be8ceb481b00916205f536e6028e2f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60424869b9d0955e8745158aadcd95b0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a60424869b9d0955e8745158aadcd95b0">CYPHER_TYPE</a>&#160;&#160;&#160;ChaChaPoly</td></tr>
-<tr class="separator:a60424869b9d0955e8745158aadcd95b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59484fb7e3490df6600b5add60badbb7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a59484fb7e3490df6600b5add60badbb7">DEBUG_ESP_PORT</a>&#160;&#160;&#160;Serial</td></tr>
 <tr class="memdesc:a59484fb7e3490df6600b5add60badbb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stream to output debug info. It will normally be <code>Serial</code>  <a href="EnigmaIoTconfig_8h.html#a59484fb7e3490df6600b5add60badbb7">More...</a><br /></td></tr>
 <tr class="separator:a59484fb7e3490df6600b5add60badbb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -97,13 +96,7 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a9dbccd523bb0ed9a3266bc8c448f4432"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a9dbccd523bb0ed9a3266bc8c448f4432">MAX_MESSAGE_LENGTH</a> = 250</td></tr>
-<tr class="memdesc:a9dbccd523bb0ed9a3266bc8c448f4432"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum payload size on ESP-NOW.  <a href="EnigmaIoTconfig_8h.html#a9dbccd523bb0ed9a3266bc8c448f4432">More...</a><br /></td></tr>
-<tr class="separator:a9dbccd523bb0ed9a3266bc8c448f4432"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a479714978e5c2a44dce41ae3be800ffd"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a479714978e5c2a44dce41ae3be800ffd">ENIGMAIOT_ADDR_LEN</a> = 6</td></tr>
-<tr class="memdesc:a479714978e5c2a44dce41ae3be800ffd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address size. Mac address = 6 bytes.  <a href="EnigmaIoTconfig_8h.html#a479714978e5c2a44dce41ae3be800ffd">More...</a><br /></td></tr>
-<tr class="separator:a479714978e5c2a44dce41ae3be800ffd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac00fc04374b3c61f75a7f0f2f4eb60f9"><td class="memItemLeft" align="right" valign="top">static const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#ac00fc04374b3c61f75a7f0f2f4eb60f9">ENIGMAIOT_PROT_VERS</a> [] = &quot;0.9.3&quot;</td></tr>
+<tr class="memitem:ac00fc04374b3c61f75a7f0f2f4eb60f9"><td class="memItemLeft" align="right" valign="top">static const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#ac00fc04374b3c61f75a7f0f2f4eb60f9">ENIGMAIOT_PROT_VERS</a> [] = &quot;0.9.4&quot;</td></tr>
 <tr class="memdesc:ac00fc04374b3c61f75a7f0f2f4eb60f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">EnitmaIoT Version.  <a href="EnigmaIoTconfig_8h.html#ac00fc04374b3c61f75a7f0f2f4eb60f9">More...</a><br /></td></tr>
 <tr class="separator:ac00fc04374b3c61f75a7f0f2f4eb60f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af561a36a9d4be8596b2187252342ffdf"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#af561a36a9d4be8596b2187252342ffdf">DEFAULT_CHANNEL</a> = 3</td></tr>
@@ -112,24 +105,15 @@ Variables</h2></td></tr>
 <tr class="memitem:a152501c4de4fad4ccdc6dffa8b47c349"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a152501c4de4fad4ccdc6dffa8b47c349">FLASH_LED_TIME</a> = 50</td></tr>
 <tr class="memdesc:a152501c4de4fad4ccdc6dffa8b47c349"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time that led keeps on during flash in ms.  <a href="EnigmaIoTconfig_8h.html#a152501c4de4fad4ccdc6dffa8b47c349">More...</a><br /></td></tr>
 <tr class="separator:a152501c4de4fad4ccdc6dffa8b47c349"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9865adf18595ebc6eb73154e6267380e"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a9865adf18595ebc6eb73154e6267380e">NETWORK_NAME_LENGTH</a> = 21</td></tr>
-<tr class="memdesc:a9865adf18595ebc6eb73154e6267380e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of characters of network name.  <a href="EnigmaIoTconfig_8h.html#a9865adf18595ebc6eb73154e6267380e">More...</a><br /></td></tr>
-<tr class="separator:a9865adf18595ebc6eb73154e6267380e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a025eed5564c31f411fc6950a5ecd4c40"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a025eed5564c31f411fc6950a5ecd4c40">NODE_NAME_LENGTH</a> = 33</td></tr>
-<tr class="memdesc:a025eed5564c31f411fc6950a5ecd4c40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of characters of node name.  <a href="EnigmaIoTconfig_8h.html#a025eed5564c31f411fc6950a5ecd4c40">More...</a><br /></td></tr>
-<tr class="separator:a025eed5564c31f411fc6950a5ecd4c40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59cb3b60750ca326ee647918af7a4d0b"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a59cb3b60750ca326ee647918af7a4d0b">RESET_PIN_DURATION</a> = 5000</td></tr>
 <tr class="memdesc:a59cb3b60750ca326ee647918af7a4d0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of milliseconds that reset pin has to be grounded to produce a configuration reset.  <a href="EnigmaIoTconfig_8h.html#a59cb3b60750ca326ee647918af7a4d0b">More...</a><br /></td></tr>
 <tr class="separator:a59cb3b60750ca326ee647918af7a4d0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadcc5d2ec146be476018bdfc71d04f79"><td class="memItemLeft" align="right" valign="top">static const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#aadcc5d2ec146be476018bdfc71d04f79">MAX_KEY_VALIDITY</a> = 86400000U</td></tr>
-<tr class="memdesc:aadcc5d2ec146be476018bdfc71d04f79"><td class="mdescLeft">&#160;</td><td class="mdescRight">After this time (in ms) a nude is unregistered.  <a href="EnigmaIoTconfig_8h.html#aadcc5d2ec146be476018bdfc71d04f79">More...</a><br /></td></tr>
+<tr class="memdesc:aadcc5d2ec146be476018bdfc71d04f79"><td class="mdescLeft">&#160;</td><td class="mdescRight">After this time (in ms) a node is unregistered.  <a href="EnigmaIoTconfig_8h.html#aadcc5d2ec146be476018bdfc71d04f79">More...</a><br /></td></tr>
 <tr class="separator:aadcc5d2ec146be476018bdfc71d04f79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a718f713933a902050be33c5651800011"><td class="memItemLeft" align="right" valign="top">static const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a718f713933a902050be33c5651800011">MAX_NODE_INACTIVITY</a> = 86400000U</td></tr>
 <tr class="memdesc:a718f713933a902050be33c5651800011"><td class="mdescLeft">&#160;</td><td class="mdescRight">After this time (in ms) a node is marked as gone.  <a href="EnigmaIoTconfig_8h.html#a718f713933a902050be33c5651800011">More...</a><br /></td></tr>
 <tr class="separator:a718f713933a902050be33c5651800011"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad94db36f97a563732bfd0ca10b164f9"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#aad94db36f97a563732bfd0ca10b164f9">OTA_GW_TIMEOUT</a> = 11000</td></tr>
-<tr class="memdesc:aad94db36f97a563732bfd0ca10b164f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">OTA mode timeout. In OTA mode all data messages are ignored.  <a href="EnigmaIoTconfig_8h.html#aad94db36f97a563732bfd0ca10b164f9">More...</a><br /></td></tr>
-<tr class="separator:aad94db36f97a563732bfd0ca10b164f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78ee44942fc7c28441d0cd502d1d3d3d"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a78ee44942fc7c28441d0cd502d1d3d3d">MAX_MQTT_QUEUE_SIZE</a> = 5</td></tr>
 <tr class="memdesc:a78ee44942fc7c28441d0cd502d1d3d3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of MQTT messages to be sent.  <a href="EnigmaIoTconfig_8h.html#a78ee44942fc7c28441d0cd502d1d3d3d">More...</a><br /></td></tr>
 <tr class="separator:a78ee44942fc7c28441d0cd502d1d3d3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,9 +126,6 @@ Variables</h2></td></tr>
 <tr class="memitem:a71ee5004618cb61a934f136d7c2f45e2"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a71ee5004618cb61a934f136d7c2f45e2">NUM_NODES</a> = 20</td></tr>
 <tr class="memdesc:a71ee5004618cb61a934f136d7c2f45e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of nodes that this gateway can handle.  <a href="EnigmaIoTconfig_8h.html#a71ee5004618cb61a934f136d7c2f45e2">More...</a><br /></td></tr>
 <tr class="separator:a71ee5004618cb61a934f136d7c2f45e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6aa9a1bf5b534f017d6c1c7bec100d1d"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a6aa9a1bf5b534f017d6c1c7bec100d1d">DISCONNECT_ON_DATA_ERROR</a> = true</td></tr>
-<tr class="memdesc:a6aa9a1bf5b534f017d6c1c7bec100d1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activates node invalidation in case of data error.  <a href="EnigmaIoTconfig_8h.html#a6aa9a1bf5b534f017d6c1c7bec100d1d">More...</a><br /></td></tr>
-<tr class="separator:a6aa9a1bf5b534f017d6c1c7bec100d1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b8712b5d25abc82bd371e652eae5826"><td class="memItemLeft" align="right" valign="top">static const int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a0b8712b5d25abc82bd371e652eae5826">RECONNECTION_PERIOD</a> = 1500</td></tr>
 <tr class="memdesc:a0b8712b5d25abc82bd371e652eae5826"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time to retry Gateway connection.  <a href="EnigmaIoTconfig_8h.html#a0b8712b5d25abc82bd371e652eae5826">More...</a><br /></td></tr>
 <tr class="separator:a0b8712b5d25abc82bd371e652eae5826"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,9 +135,6 @@ Variables</h2></td></tr>
 <tr class="memitem:a4400d84e20bfd15aed72aa991dd87d4f"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a4400d84e20bfd15aed72aa991dd87d4f">DEFAULT_SLEEP_TIME</a> = 10</td></tr>
 <tr class="memdesc:a4400d84e20bfd15aed72aa991dd87d4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default sleep time if it was not set.  <a href="EnigmaIoTconfig_8h.html#a4400d84e20bfd15aed72aa991dd87d4f">More...</a><br /></td></tr>
 <tr class="separator:a4400d84e20bfd15aed72aa991dd87d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb4681294ade5149d1db83df99744f6e"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#aeb4681294ade5149d1db83df99744f6e">OTA_TIMEOUT_TIME</a> = 10000</td></tr>
-<tr class="memdesc:aeb4681294ade5149d1db83df99744f6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timeout between OTA messages. In milliseconds.  <a href="EnigmaIoTconfig_8h.html#aeb4681294ade5149d1db83df99744f6e">More...</a><br /></td></tr>
-<tr class="separator:aeb4681294ade5149d1db83df99744f6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27132ec0215933e4201ee048b43916a5"><td class="memItemLeft" align="right" valign="top">static const time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a27132ec0215933e4201ee048b43916a5">IDENTIFY_TIMEOUT</a> = 10000</td></tr>
 <tr class="memdesc:a27132ec0215933e4201ee048b43916a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">How long LED will be flashing during identification.  <a href="EnigmaIoTconfig_8h.html#a27132ec0215933e4201ee048b43916a5">More...</a><br /></td></tr>
 <tr class="separator:a27132ec0215933e4201ee048b43916a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,44 +144,20 @@ Variables</h2></td></tr>
 <tr class="memitem:a446963c57800cd34607bcc6fa1e933e9"><td class="memItemLeft" align="right" valign="top">static const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a446963c57800cd34607bcc6fa1e933e9">QUICK_SYNC_TIME</a> = 5000</td></tr>
 <tr class="memdesc:a446963c57800cd34607bcc6fa1e933e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Period of clock synchronization request in case of resync is needed.  <a href="EnigmaIoTconfig_8h.html#a446963c57800cd34607bcc6fa1e933e9">More...</a><br /></td></tr>
 <tr class="separator:a446963c57800cd34607bcc6fa1e933e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6be31758c99161d257bf66a6a809047d"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a6be31758c99161d257bf66a6a809047d">MIN_SYNC_ACCURACY</a> = 5</td></tr>
-<tr class="memdesc:a6be31758c99161d257bf66a6a809047d"><td class="mdescLeft">&#160;</td><td class="mdescRight">If calculated offset absolute value is higher than this value resync is done more often.  <a href="EnigmaIoTconfig_8h.html#a6be31758c99161d257bf66a6a809047d">More...</a><br /></td></tr>
-<tr class="separator:a6be31758c99161d257bf66a6a809047d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8df0346a1f3e282d6875b04a9fe4ec8f"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a8df0346a1f3e282d6875b04a9fe4ec8f">MAX_DATA_PAYLOAD_SIZE</a> = 214</td></tr>
-<tr class="memdesc:a8df0346a1f3e282d6875b04a9fe4ec8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximun payload size for data packets.  <a href="EnigmaIoTconfig_8h.html#a8df0346a1f3e282d6875b04a9fe4ec8f">More...</a><br /></td></tr>
-<tr class="separator:a8df0346a1f3e282d6875b04a9fe4ec8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a122e04d1d7956015ed3e7d349fa34a6a"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a122e04d1d7956015ed3e7d349fa34a6a">PRE_REG_DELAY</a> = 5000</td></tr>
 <tr class="memdesc:a122e04d1d7956015ed3e7d349fa34a6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time to wait before registration so that other nodes have time to communicate. Real delay is a random lower than this value.  <a href="EnigmaIoTconfig_8h.html#a122e04d1d7956015ed3e7d349fa34a6a">More...</a><br /></td></tr>
 <tr class="separator:a122e04d1d7956015ed3e7d349fa34a6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a198819f64ca0424df0b0fc930b85caed"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a198819f64ca0424df0b0fc930b85caed">POST_REG_DELAY</a> = 1500</td></tr>
-<tr class="memdesc:a198819f64ca0424df0b0fc930b85caed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time to waif before sending data after registration so that other nodes have time to finish their registration. Real delay is a random lower than this value.  <a href="EnigmaIoTconfig_8h.html#a198819f64ca0424df0b0fc930b85caed">More...</a><br /></td></tr>
+<tr class="memdesc:a198819f64ca0424df0b0fc930b85caed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time to wait before sending data after registration so that other nodes have time to finish their registration. Real delay is a random lower than this value.  <a href="EnigmaIoTconfig_8h.html#a198819f64ca0424df0b0fc930b85caed">More...</a><br /></td></tr>
 <tr class="separator:a198819f64ca0424df0b0fc930b85caed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27b8cf1e2d300318f7102b8bc0facef9"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a27b8cf1e2d300318f7102b8bc0facef9">CHECK_COMM_ERRORS</a> = true</td></tr>
-<tr class="memdesc:a27b8cf1e2d300318f7102b8bc0facef9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to reconnect in case of communication errors.  <a href="EnigmaIoTconfig_8h.html#a27b8cf1e2d300318f7102b8bc0facef9">More...</a><br /></td></tr>
-<tr class="separator:a27b8cf1e2d300318f7102b8bc0facef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a700642be35601636c1af04d831f177c5"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a700642be35601636c1af04d831f177c5">COMM_ERRORS_BEFORE_SCAN</a> = 2</td></tr>
 <tr class="memdesc:a700642be35601636c1af04d831f177c5"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> will search for a gateway if this number of communication errors have happened.  <a href="EnigmaIoTconfig_8h.html#a700642be35601636c1af04d831f177c5">More...</a><br /></td></tr>
 <tr class="separator:a700642be35601636c1af04d831f177c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68fd5dd70eb1fa10fa1878e044d14cb0"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a68fd5dd70eb1fa10fa1878e044d14cb0">RTC_ADDRESS</a> = 0</td></tr>
-<tr class="memdesc:a68fd5dd70eb1fa10fa1878e044d14cb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">RTC memory address where to store context. Modify it if you need place to store your own data during deep sleep. Take care not to overwrite above that address.  <a href="EnigmaIoTconfig_8h.html#a68fd5dd70eb1fa10fa1878e044d14cb0">More...</a><br /></td></tr>
-<tr class="separator:a68fd5dd70eb1fa10fa1878e044d14cb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a863ca9be67da8cdc5fb9447378021e07"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a863ca9be67da8cdc5fb9447378021e07">KEY_LENGTH</a> = 32</td></tr>
-<tr class="memdesc:a863ca9be67da8cdc5fb9447378021e07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing.  <a href="EnigmaIoTconfig_8h.html#a863ca9be67da8cdc5fb9447378021e07">More...</a><br /></td></tr>
-<tr class="separator:a863ca9be67da8cdc5fb9447378021e07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ae6c4c749724e380b6e717a6535bed6"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a0ae6c4c749724e380b6e717a6535bed6">IV_LENGTH</a> = 12</td></tr>
-<tr class="memdesc:a0ae6c4c749724e380b6e717a6535bed6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initalization vector length used by selected crypto algorythm.  <a href="EnigmaIoTconfig_8h.html#a0ae6c4c749724e380b6e717a6535bed6">More...</a><br /></td></tr>
-<tr class="separator:a0ae6c4c749724e380b6e717a6535bed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e80e7a8216a26293d66f1e35829df71"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a2e80e7a8216a26293d66f1e35829df71">TAG_LENGTH</a> = 16</td></tr>
-<tr class="memdesc:a2e80e7a8216a26293d66f1e35829df71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Authentication tag length. For Poly1305 it is always 16.  <a href="EnigmaIoTconfig_8h.html#a2e80e7a8216a26293d66f1e35829df71">More...</a><br /></td></tr>
-<tr class="separator:a2e80e7a8216a26293d66f1e35829df71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a00052a511fa3b63de7e280320b1ef9"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a3a00052a511fa3b63de7e280320b1ef9">AAD_LENGTH</a> = 8</td></tr>
-<tr class="memdesc:a3a00052a511fa3b63de7e280320b1ef9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of bytes from last part of key that will be used for additional authenticated data.  <a href="EnigmaIoTconfig_8h.html#a3a00052a511fa3b63de7e280320b1ef9">More...</a><br /></td></tr>
-<tr class="separator:a3a00052a511fa3b63de7e280320b1ef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Parameter configuration. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.3 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>14/07/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.4 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>31/07/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
@@ -222,23 +176,7 @@ Variables</h2></td></tr>
 
 <p>In projects where gateway should not be connected to WiFi (for instance a data logger to SD) it may be useful to disable WiFi setting this to 0. Set it to 1 otherwise. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00037">37</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a60424869b9d0955e8745158aadcd95b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60424869b9d0955e8745158aadcd95b0">&#9670;&nbsp;</a></span>CYPHER_TYPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CYPHER_TYPE&#160;&#160;&#160;ChaChaPoly</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00063">63</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00031">31</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -256,7 +194,7 @@ Variables</h2></td></tr>
 
 <p>Stream to output debug info. It will normally be <code>Serial</code> </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00066">66</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00046">46</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -274,55 +212,11 @@ Variables</h2></td></tr>
 
 <p>Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00068">68</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00048">48</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="a3a00052a511fa3b63de7e280320b1ef9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a00052a511fa3b63de7e280320b1ef9">&#9670;&nbsp;</a></span>AAD_LENGTH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const uint8_t AAD_LENGTH = 8</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Number of bytes from last part of key that will be used for additional authenticated data. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00061">61</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a27b8cf1e2d300318f7102b8bc0facef9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27b8cf1e2d300318f7102b8bc0facef9">&#9670;&nbsp;</a></span>CHECK_COMM_ERRORS</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const bool CHECK_COMM_ERRORS = true</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Try to reconnect in case of communication errors. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00052">52</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
 <a id="a700642be35601636c1af04d831f177c5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a700642be35601636c1af04d831f177c5">&#9670;&nbsp;</a></span>COMM_ERRORS_BEFORE_SCAN</h2>
 
@@ -345,7 +239,7 @@ Variables</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> will search for a gateway if this number of communication errors have happened. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00054">54</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00042">42</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -397,33 +291,7 @@ Variables</h2></td></tr>
 
 <p>Default sleep time if it was not set. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00042">42</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a6aa9a1bf5b534f017d6c1c7bec100d1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6aa9a1bf5b534f017d6c1c7bec100d1d">&#9670;&nbsp;</a></span>DISCONNECT_ON_DATA_ERROR</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const bool DISCONNECT_ON_DATA_ERROR = true</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Activates node invalidation in case of data error. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00033">33</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00036">36</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -449,33 +317,7 @@ Variables</h2></td></tr>
 
 <p>Time to wait for downlink message before sleep. Setting less than 180 ms causes ESP-NOW errors due to lack of ACK processing. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00041">41</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a479714978e5c2a44dce41ae3be800ffd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a479714978e5c2a44dce41ae3be800ffd">&#9670;&nbsp;</a></span>ENIGMAIOT_ADDR_LEN</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const size_t ENIGMAIOT_ADDR_LEN = 6</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Address size. Mac address = 6 bytes. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00014">14</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00035">35</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -489,7 +331,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char ENIGMAIOT_PROT_VERS[] = &quot;0.9.3&quot;</td>
+          <td class="memname">const char ENIGMAIOT_PROT_VERS[] = &quot;0.9.4&quot;</td>
         </tr>
       </table>
   </td>
@@ -553,69 +395,7 @@ Variables</h2></td></tr>
 
 <p>How long LED will be flashing during identification. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00044">44</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a0ae6c4c749724e380b6e717a6535bed6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ae6c4c749724e380b6e717a6535bed6">&#9670;&nbsp;</a></span>IV_LENGTH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const uint8_t IV_LENGTH = 12</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Initalization vector length used by selected crypto algorythm. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00059">59</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a863ca9be67da8cdc5fb9447378021e07"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a863ca9be67da8cdc5fb9447378021e07">&#9670;&nbsp;</a></span>KEY_LENGTH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const uint8_t KEY_LENGTH = 32</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00058">58</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a8df0346a1f3e282d6875b04a9fe4ec8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8df0346a1f3e282d6875b04a9fe4ec8f">&#9670;&nbsp;</a></span>MAX_DATA_PAYLOAD_SIZE</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int MAX_DATA_PAYLOAD_SIZE = 214</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Maximun payload size for data packets. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00048">48</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00037">37</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -641,7 +421,7 @@ Variables</h2></td></tr>
 
 <p>Input queue size for EnigmaIOT messages. Acts as a buffer to be able to handle messages during high load. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00028">28</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00025">25</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -665,35 +445,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>After this time (in ms) a nude is unregistered. </p>
+<p>After this time (in ms) a node is unregistered. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00023">23</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a9dbccd523bb0ed9a3266bc8c448f4432"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9dbccd523bb0ed9a3266bc8c448f4432">&#9670;&nbsp;</a></span>MAX_MESSAGE_LENGTH</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const uint8_t MAX_MESSAGE_LENGTH = 250</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Maximum payload size on ESP-NOW. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00013">13</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00021">21</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -719,7 +473,7 @@ Variables</h2></td></tr>
 
 <p>Maximum number of MQTT messages to be sent. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00026">26</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00023">23</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -745,85 +499,7 @@ Variables</h2></td></tr>
 
 <p>After this time (in ms) a node is marked as gone. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00024">24</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a6be31758c99161d257bf66a6a809047d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6be31758c99161d257bf66a6a809047d">&#9670;&nbsp;</a></span>MIN_SYNC_ACCURACY</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int MIN_SYNC_ACCURACY = 5</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>If calculated offset absolute value is higher than this value resync is done more often. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00047">47</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a9865adf18595ebc6eb73154e6267380e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9865adf18595ebc6eb73154e6267380e">&#9670;&nbsp;</a></span>NETWORK_NAME_LENGTH</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const uint8_t NETWORK_NAME_LENGTH = 21</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Maximum number of characters of network name. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00018">18</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a025eed5564c31f411fc6950a5ecd4c40"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a025eed5564c31f411fc6950a5ecd4c40">&#9670;&nbsp;</a></span>NODE_NAME_LENGTH</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const uint8_t NODE_NAME_LENGTH = 33</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Maximum number of characters of node name. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00019">19</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00022">22</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -849,59 +525,7 @@ Variables</h2></td></tr>
 
 <p>Maximum number of nodes that this gateway can handle. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00030">30</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="aad94db36f97a563732bfd0ca10b164f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad94db36f97a563732bfd0ca10b164f9">&#9670;&nbsp;</a></span>OTA_GW_TIMEOUT</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int OTA_GW_TIMEOUT = 11000</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>OTA mode timeout. In OTA mode all data messages are ignored. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00025">25</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="aeb4681294ade5149d1db83df99744f6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb4681294ade5149d1db83df99744f6e">&#9670;&nbsp;</a></span>OTA_TIMEOUT_TIME</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const uint32_t OTA_TIMEOUT_TIME = 10000</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Timeout between OTA messages. In milliseconds. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00043">43</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00027">27</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -925,9 +549,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Time to waif before sending data after registration so that other nodes have time to finish their registration. Real delay is a random lower than this value. </p>
+<p>Time to wait before sending data after registration so that other nodes have time to finish their registration. Real delay is a random lower than this value. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00050">50</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00041">41</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -953,7 +577,7 @@ Variables</h2></td></tr>
 
 <p>Time to wait before registration so that other nodes have time to communicate. Real delay is a random lower than this value. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00049">49</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00040">40</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -979,7 +603,7 @@ Variables</h2></td></tr>
 
 <p>Period of clock synchronization request in case of resync is needed. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00046">46</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00039">39</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -1005,7 +629,7 @@ Variables</h2></td></tr>
 
 <p>Message rate filter order. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00027">27</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00024">24</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -1031,7 +655,7 @@ Variables</h2></td></tr>
 
 <p>Time to retry Gateway connection. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00040">40</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00034">34</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -1057,51 +681,7 @@ Variables</h2></td></tr>
 
 <p>Number of milliseconds that reset pin has to be grounded to produce a configuration reset. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00020">20</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a68fd5dd70eb1fa10fa1878e044d14cb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68fd5dd70eb1fa10fa1878e044d14cb0">&#9670;&nbsp;</a></span>RTC_ADDRESS</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const uint32_t RTC_ADDRESS = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>RTC memory address where to store context. Modify it if you need place to store your own data during deep sleep. Take care not to overwrite above that address. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00055">55</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
-
-</div>
-</div>
-<a id="a2e80e7a8216a26293d66f1e35829df71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e80e7a8216a26293d66f1e35829df71">&#9670;&nbsp;</a></span>TAG_LENGTH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const uint8_t TAG_LENGTH = 16</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Authentication tag length. For Poly1305 it is always 16. </p>
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00060">60</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00018">18</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -1127,7 +707,7 @@ Variables</h2></td></tr>
 
 <p>Period of clock synchronization request. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00045">45</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00038">38</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>

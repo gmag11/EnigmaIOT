@@ -55,6 +55,7 @@ uint8_t* str2mac (const char* mac, uint8_t* values);
   * @param channel WiFi channel for interface initialization
   * @param role 0 for node, 1 for gateway
   * @param networkName Name that gateway AP will take
+  * @param networkKey Network key. This is not required normally as this is provided using configuration web portal
   */
 void initWiFi (uint8_t channel, const char* networkName, const char* networkKey = NULL, uint8_t role = 0);
 

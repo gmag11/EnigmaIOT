@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['license_2emd_665',['LICENSE.md',['../LICENSE_8md.html',1,'']]]
+  ['helperfunctions_2ecpp_766',['helperFunctions.cpp',['../helperFunctions_8cpp.html',1,'']]],
+  ['helperfunctions_2eh_767',['helperFunctions.h',['../helperFunctions_8h.html',1,'']]]
 ];
