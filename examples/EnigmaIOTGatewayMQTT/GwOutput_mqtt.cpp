@@ -233,6 +233,16 @@ void GwOutput_MQTT::reconnect () {
 	while (!mqtt_client.connected ()) {
 		// TODO: startConnectionFlash (500);
 		DEBUG_INFO ("Attempting MQTT connection...");
+		for (int i = 1; i < 5; i++) {
+			DEBUG_WARN ("Connecting to WiFi %s", WiFi.SSID ().c_str ());
+			delay (1000);
+			if (WiFi.isConnected ()) {
+				DEBUG_WARN ("WiFi is connected");
+				break;
+			} else {
+				WiFi.begin ();
+			}
+		}
 		// Create a random client ID
 		// Attempt to connect
 #ifdef SECURE_MQTT
