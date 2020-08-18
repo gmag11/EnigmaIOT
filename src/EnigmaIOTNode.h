@@ -151,6 +151,7 @@ protected:
 	AsyncWiFiManager* wifiManager; ///< @brief Wifi configuration portal
 	onWiFiManagerExit_t notifyWiFiManagerExit; ///< @brief Function called when configuration portal exits
 	onWiFiManagerStarted_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
+	time_t cycleStartedTime;
 
 	/**
 	  * @brief Check that a given CRC matches to calulated value from a buffer

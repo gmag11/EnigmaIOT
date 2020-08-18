@@ -531,6 +531,7 @@ void EnigmaIOTNodeClass::checkResetButton () {
 }
 
 void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t* networkKey, bool useCounter, bool sleepy) {
+	cycleStartedTime = 0; // Calculate time from start
 	pinMode (led, OUTPUT);
 #ifdef ESP8266
 	ets_timer_setfn (&ledTimer, flashLed, (void*)&led);
@@ -858,12 +859,19 @@ void EnigmaIOTNodeClass::handle () {
 	// Check if this should go to sleep
 	if (node.getSleepy ()) {
 		if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered () && !indentifying) {
-			uint64_t msSleep = sleepTime / (uint64_t)1000;
-			DEBUG_INFO ("Go to sleep for %lu ms", (uint32_t)(msSleep));
+			// Substract running time
+			int64_t sleep_t = sleepTime - ((millis () - cycleStartedTime) * 1000);
+			if (sleep_t < 1000) {
+				// Avoid negative values
+				sleep_t = 1000;
+			}
+			int64_t msSleep = sleep_t / 1000;
+			DEBUG_WARN ("Go to sleep for %ld ms", (int32_t)(msSleep));
+			DEBUG_WARN ("%d", millis ());
 #ifdef ESP8266
-			ESP.deepSleep (sleepTime);
+			ESP.deepSleep (sleep_t);
 #elif defined ESP32
-			esp_deep_sleep (sleepTime);
+			esp_deep_sleep (sleep_t);
 #endif
 		}
 	}
@@ -2030,7 +2038,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			// Process OTA Update
 			size_t numBytes = Update.write (dataPtr, dataLen);
 			totalBytes += dataLen;
-			DEBUG_WARN ("%u bytes written. Total %u", numBytes, totalBytes);
+			DEBUG_INFO ("%u bytes written. Total %u", numBytes, totalBytes);
 		} else {
 			if (!otaError) {
 				otaError = true;
@@ -2305,6 +2313,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 						}
 					}
 				}
+				cycleStartedTime = millis ();
 
 
 			} else {
