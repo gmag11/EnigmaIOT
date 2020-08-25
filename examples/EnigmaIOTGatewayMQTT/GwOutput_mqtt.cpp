@@ -423,6 +423,7 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 
 void GwOutput_MQTT::loop () {
 	mqtt_queue_item_t* message;
+	static time_t statusLastUpdated;
 
 	mqtt_client.loop ();
 	if (!mqtt_client.connected ()) {
@@ -434,6 +435,10 @@ void GwOutput_MQTT::loop () {
 				DEBUG_DBG ("MQTT published. %s %.*s", message->topic, message->payload_len, message->payload);
 				popMQTTqueue ();
 			}
+		}
+		if (millis () - statusLastUpdated > STATUS_SEND_PERIOD) {
+			statusLastUpdated = millis ();
+			publishMQTT (gwTopic.c_str (), "1", 1, true);
 		}
 	}
 }

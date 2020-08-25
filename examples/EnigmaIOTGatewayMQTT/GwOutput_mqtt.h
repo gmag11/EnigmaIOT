@@ -53,6 +53,8 @@
 #define NODE_STATUS      "status"
 #define GW_STATUS        "/gateway/status"
 
+const time_t STATUS_SEND_PERIOD = 300000;
+
 constexpr auto CONFIG_FILE = "/mqtt.json"; ///< @brief MQTT outout configuration file name
 
 typedef struct {
