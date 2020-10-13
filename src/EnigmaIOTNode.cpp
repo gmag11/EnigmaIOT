@@ -113,6 +113,77 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
 	}
 }
 
+#if USE_FLASH_AS_RTC
+const char* RTC_DATA_FILE = "\context.bin";
+bool EnigmaIOTNodeClass::loadRTCData () {
+	//SPIFFS.remove (RTC_DATA_FILE); // Only for testing
+	//bool file_correct = false;
+	rtcmem_data_t context;
+
+	if (SPIFFS.exists (RTC_DATA_FILE)) {
+		DEBUG_DBG ("Opening %s file", RTC_DATA_FILE);
+		File contextFile = SPIFFS.open (RTC_DATA_FILE, "r");
+		if (contextFile) {
+			DEBUG_DBG ("%s opened", RTC_DATA_FILE);
+			size_t size = contextFile.size ();
+			if (size != sizeof (rtcmem_data_t)) {
+				DEBUG_WARN ("File size error. Expected %d bytes. Got %d", sizeof (rtcmem_data_t), size);
+				contextFile.close ();
+				SPIFFS.remove (RTC_DATA_FILE);
+				return false;
+			}
+			size = contextFile.readBytes ((char*)&context, sizeof (rtcmem_data_t));
+			if (size != sizeof (rtcmem_data_t)) {
+				DEBUG_WARN ("File read error. Expected %d bytes. Got %d", sizeof (rtcmem_data_t), size);
+				contextFile.close ();
+				SPIFFS.remove (RTC_DATA_FILE);
+				return false;
+			}
+			if (!checkCRC ((uint8_t*)context.nodeKey, sizeof (rtcmem_data_t) - sizeof (uint32_t), &context.crc32)) {
+				DEBUG_DBG ("RTC Data is not valid. Wrong CRC");
+				contextFile.close ();
+				SPIFFS.remove (RTC_DATA_FILE);
+				return false;
+			} else {
+				memcpy (&rtcmem_data, &context, sizeof (rtcmem_data_t));
+				node.setEncryptionKey (rtcmem_data.nodeKey);
+				node.setKeyValid (rtcmem_data.nodeKeyValid);
+				if (rtcmem_data.nodeKeyValid)
+					node.setKeyValidFrom (millis ());
+				node.setLastMessageCounter (rtcmem_data.lastMessageCounter);
+				node.setLastControlCounter (rtcmem_data.lastControlCounter);
+				node.setLastDownlinkMsgCounter (rtcmem_data.lastDownlinkMsgCounter);
+				node.setLastMessageTime ();
+				node.setNodeId (rtcmem_data.nodeId);
+				// setChannel (rtcmem_data.channel);
+				//channel = rtcmem_data.channel;
+				//memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
+				//memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
+				node.setSleepy (rtcmem_data.sleepy);
+				node.setNodeName (rtcmem_data.nodeName);
+				// set default sleep time if it was not set
+				if (rtcmem_data.sleepy && rtcmem_data.sleepTime == 0) {
+					rtcmem_data.sleepTime = DEFAULT_SLEEP_TIME;
+				}
+				node.setStatus (rtcmem_data.nodeRegisterStatus);
+				DEBUG_DBG ("Set %s mode", node.getSleepy () ? "sleepy" : "non sleepy");
+#if DEBUG_LEVEL >= VERBOSE
+				dumpRtcData (&rtcmem_data);
+#endif
+			}
+		} else {
+			DEBUG_WARN ("Error opening file %s", RTC_DATA_FILE);
+			SPIFFS.remove (RTC_DATA_FILE);
+			return false;
+		}
+	} else {
+		DEBUG_WARN ("%s do not exist", RTC_DATA_FILE);
+		return false;
+	}
+
+	return true;
+}
+#else
 bool EnigmaIOTNodeClass::loadRTCData () {
 #ifdef ESP8266
 	if (ESP.rtcUserMemoryRead (RTC_ADDRESS, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
@@ -160,6 +231,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 	return true;
 
 }
+#endif
 
 bool EnigmaIOTNodeClass::loadFlashData () {
 	//SPIFFS.remove (CONFIG_FILE); // Only for testing
