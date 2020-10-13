@@ -360,6 +360,30 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 	return true;
 }
 
+#if USE_FLASH_AS_RTC
+bool EnigmaIOTNodeClass::saveRTCData () {
+	if (configCleared)
+		return false;
+	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
+	File contextFile = SPIFFS.open (RTC_DATA_FILE, "w");
+	if (!contextFile) {
+		DEBUG_WARN ("failed to open config file %s for writing", RTC_DATA_FILE);
+		return false;
+	}
+	contextFile.write ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data));
+	contextFile.flush ();
+	size_t size = contextFile.size ();
+	contextFile.close ();
+	DEBUG_DBG ("Write configuration data to flash. %u bytes", size);
+#if DEBUG_LEVEL >= VERBOSE
+	DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
+	dumpRtcData (&rtcmem_data);
+#endif
+	return true;
+}
+
+#else
+
 bool EnigmaIOTNodeClass::saveRTCData () {
 	if (configCleared)
 		return false;
@@ -382,6 +406,7 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 #endif
 	return false;
 }
+#endif
 
 void EnigmaIOTNodeClass::clearFlash () {
 	if (!SPIFFS.begin ()) {
