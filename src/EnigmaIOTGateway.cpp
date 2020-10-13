@@ -142,6 +142,16 @@ bool buildSetResetConfig (uint8_t* data, size_t& dataLen, const uint8_t* inputDa
 	return true;
 }
 
+bool buildRestartNode (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Restart Node' message from: %s", printHexBuffer (inputData, inputLen));
+	if (dataLen < 1) {
+		return false;
+	}
+	data[0] = (uint8_t)control_message_type::RESTART_NODE;
+	dataLen = 1;
+	return true;
+}
+
 int getNextNumber (char*& data, size_t& len/*, char* &position*/) {
 	char strNum[10];
 	int number;
@@ -408,6 +418,13 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 			return false;
 		}
 		DEBUG_VERBOSE ("Set name message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
+	case control_message_type::RESTART_NODE:
+		if (!buildRestartNode (downstreamData, dataLen, data, len)) {
+			DEBUG_ERROR ("Error building restart node message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Restart node message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
 	case control_message_type::USERDATA_GET:
 		DEBUG_INFO ("Data message GET");

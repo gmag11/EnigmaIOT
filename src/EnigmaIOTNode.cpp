@@ -1841,6 +1841,11 @@ bool EnigmaIOTNodeClass::processGetRSSICommand (const uint8_t* mac, const uint8_
 	return true;
 }
 
+bool EnigmaIOTNodeClass::processSetRestartCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	restart ();
+	return true;
+}
+
 bool EnigmaIOTNodeClass::processSetResetConfigCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
 	uint8_t buffer[MAX_MESSAGE_LENGTH];
 	uint8_t bufLength;
@@ -2137,6 +2142,8 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
 		return processGetNameCommand (mac, data, len);
 	case control_message_type::NAME_SET:
 		return processSetNameCommand (mac, data, len);
+	case control_message_type::RESTART_NODE:
+		return processSetRestartCommand (mac, data, len);
 	case control_message_type::OTA:
 		if (processOTACommand (mac, data, len)) {
 			return true;

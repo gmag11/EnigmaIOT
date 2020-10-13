@@ -337,8 +337,11 @@ control_message_type_t checkMsgType (String data) {
 		DEBUG_INFO ("GET NODE NAME AND ADDRESS");
 		return control_message_type::NAME_GET;
 	} else if (data == SET_NAME) {
-		DEBUG_INFO ("SET NODE NAME %", data.c_str ());
+		DEBUG_INFO ("SET NODE NAME %s", data.c_str ());
 		return control_message_type::NAME_SET;
+	} else if (data == SET_RESTART_MCU) {
+		DEBUG_INFO ("RESET MCU");
+		return control_message_type::RESTART_NODE;
 	} else
 		return control_message_type::INVALID;
 }
