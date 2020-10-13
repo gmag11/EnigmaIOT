@@ -371,12 +371,13 @@ Normally control commands trigger a response as an uplink message.
 This is the list of currently implemented control commands:
 
 - Get node protocol version
-- Get sleep duration time
-- Set sleep duration time
+- Get/Set sleep duration time
 - OTA Update
 - Identify
 - Node configuration reset
 - Request measure RSSI
+- Get/Set node name
+- Restart node MCU
 
 <table>
   <tr>
@@ -428,7 +429,13 @@ This is the list of currently implemented control commands:
     <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/name &lt;Node name&gt;</code></td>
     <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/name {"address":&lt;node address&gt;,"name":&lt;Node name&gt;}</code></td>
   </tr>
+    <tr>
+    <td>Restart Node MCU</td>
+    <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/set/restart</code></td>
+    <td>None</td>
+  </tr>
 </table>
+
 
 
 For instance, publishing `enigmaiot/12:34:56:78:90:12/get/version` will produce `enigmaiot/12:34:56:78:90:12/result/version 0.2.0`.
@@ -450,7 +457,9 @@ Messages are encoded to reduce the amount of bytes to be sent over internal prot
 | Request measure RSSI | `0x06` | None |
 | Report measure RSSI | `0x86` | RSSI (signed integer - 8 bit), WiFi channel (unsigned integer - 8 bit) |
 | Get node name | `0x07` | None |
-| Set node name | `0x87` | Node name as string |
+| Report node name | `0x87` | Node name as string |
+| Set node name | `0x08` | Node name as string |
+| Restart node MCU | `0x09` | None |
 
 ## OTA Update
 
