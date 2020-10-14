@@ -113,7 +113,7 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
 	}
 }
 
-#if USE_FLASH_AS_RTC
+#if USE_FLASH_INSTEAD_RTC
 const char* RTC_DATA_FILE = "/context.bin";
 bool EnigmaIOTNodeClass::loadRTCData () {
 	//SPIFFS.remove (RTC_DATA_FILE); // Only for testing
@@ -366,7 +366,7 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 	return true;
 }
 
-#if USE_FLASH_AS_RTC
+#if USE_FLASH_INSTEAD_RTC
 bool EnigmaIOTNodeClass::saveRTCData () {
 	time_t start_save = millis ();
 	if (configCleared)
