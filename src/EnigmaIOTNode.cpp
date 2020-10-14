@@ -118,6 +118,7 @@ const char* RTC_DATA_FILE = "/context.bin";
 bool EnigmaIOTNodeClass::loadRTCData () {
 	//SPIFFS.remove (RTC_DATA_FILE); // Only for testing
 	//bool file_correct = false;
+	time_t start_load = millis ();
 	SPIFFS.begin ();
 	
 	rtcmem_data_t context;
@@ -126,7 +127,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 		DEBUG_DBG ("Opening %s file", RTC_DATA_FILE);
 		File contextFile = SPIFFS.open (RTC_DATA_FILE, "r");
 		if (contextFile) {
-			DEBUG_DBG ("%s opened", RTC_DATA_FILE);
+			DEBUG_WARN ("%s opened", RTC_DATA_FILE);
 			size_t size = contextFile.size ();
 			if (size != sizeof (rtcmem_data_t)) {
 				DEBUG_WARN ("File size error. Expected %d bytes. Got %d", sizeof (rtcmem_data_t), size);
@@ -135,15 +136,16 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 				return false;
 			}
 			size = contextFile.readBytes ((char*)&context, sizeof (rtcmem_data_t));
+			contextFile.close ();
 			if (size != sizeof (rtcmem_data_t)) {
 				DEBUG_WARN ("File read error. Expected %d bytes. Got %d", sizeof (rtcmem_data_t), size);
-				contextFile.close ();
+				//contextFile.close ();
 				SPIFFS.remove (RTC_DATA_FILE);
 				return false;
 			}
 			if (!checkCRC ((uint8_t*)context.nodeKey, sizeof (rtcmem_data_t) - sizeof (uint32_t), &context.crc32)) {
-				DEBUG_DBG ("RTC Data is not valid. Wrong CRC");
-				contextFile.close ();
+				DEBUG_WARN ("RTC Data is not valid. Wrong CRC");
+				//contextFile.close ();
 				SPIFFS.remove (RTC_DATA_FILE);
 				return false;
 			} else {
@@ -182,6 +184,8 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 		DEBUG_WARN ("%s do not exist", RTC_DATA_FILE);
 		return false;
 	}
+
+	DEBUG_WARN ("Load process finished in %d ms", millis () - start_load);
 
 	return true;
 }
@@ -364,6 +368,7 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 
 #if USE_FLASH_AS_RTC
 bool EnigmaIOTNodeClass::saveRTCData () {
+	time_t start_save = millis ();
 	if (configCleared)
 		return false;
 	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
@@ -376,11 +381,13 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 	contextFile.flush ();
 	size_t size = contextFile.size ();
 	contextFile.close ();
-	DEBUG_DBG ("Write configuration data to flash. %u bytes", size);
-#if DEBUG_LEVEL >= VERBOSE
+	DEBUG_WARN ("Write configuration data to file %s in flash. %u bytes", RTC_DATA_FILE, size);
 	DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
+#if DEBUG_LEVEL >= VERBOSE
 	dumpRtcData (&rtcmem_data);
 #endif
+	DEBUG_WARN ("Save process finished in %d ms", millis () - start_save);
+
 	return true;
 }
 
