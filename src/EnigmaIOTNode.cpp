@@ -118,6 +118,8 @@ const char* RTC_DATA_FILE = "/context.bin";
 bool EnigmaIOTNodeClass::loadRTCData () {
 	//SPIFFS.remove (RTC_DATA_FILE); // Only for testing
 	//bool file_correct = false;
+	SPIFFS.begin ();
+	
 	rtcmem_data_t context;
 
 	if (SPIFFS.exists (RTC_DATA_FILE)) {
