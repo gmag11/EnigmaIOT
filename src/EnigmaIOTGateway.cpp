@@ -838,9 +838,11 @@ void EnigmaIOTGatewayClass::handle () {
 	// Clean up dead nodes
 	for (int i = 0; i < NUM_NODES; i++) {
 		Node* node = nodelist.getNodeFromID (i);
-		if (node->isRegistered () && millis () - node->getLastMessageTime () > MAX_NODE_INACTIVITY) {
-			// TODO. Trigger node expired event
-			node->reset ();
+		if (MAX_NODE_INACTIVITY > 0) {
+			if (node->isRegistered () && millis () - node->getLastMessageTime () > MAX_NODE_INACTIVITY) {
+				// TODO. Trigger node expired event
+				node->reset ();
+			}
 		}
 	}
 
@@ -929,8 +931,10 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		if (node->getStatus () == REGISTERED) {
 			if (processControlMessage (mac, buf, count, node)) {
 				DEBUG_INFO ("Control message OK");
-				if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
-					invalidateKey (node, KEY_EXPIRED);
+				if (MAX_KEY_VALIDITY > 0) {
+					if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
+						invalidateKey (node, KEY_EXPIRED);
+					}
 				}
 			} else {
 				if (DISCONNECT_ON_DATA_ERROR) {
@@ -960,8 +964,10 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 				node->setLastMessageTime ();
 				DEBUG_INFO ("Data OK");
 				DEBUG_VERBOSE ("Key valid from %lu ms", millis () - node->getKeyValidFrom ());
-				if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
-					invalidateKey (node, KEY_EXPIRED);
+				if (MAX_KEY_VALIDITY > 0) {
+					if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
+						invalidateKey (node, KEY_EXPIRED);
+					}
 				}
 			} else {
 				if (DISCONNECT_ON_DATA_ERROR) {
@@ -982,8 +988,10 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		if (node->getStatus () == REGISTERED) {
 			if (processClockRequest (mac, buf, count, node)) {
 				DEBUG_INFO ("Clock request OK");
-				if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
-					invalidateKey (node, KEY_EXPIRED);
+				if (MAX_KEY_VALIDITY > 0) {
+					if (millis () - node->getKeyValidFrom () > MAX_KEY_VALIDITY) {
+						invalidateKey (node, KEY_EXPIRED);
+					}
 				}
 			} else {
 				invalidateKey (node, WRONG_DATA);
