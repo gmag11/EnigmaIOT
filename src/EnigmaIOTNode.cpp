@@ -127,7 +127,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 		DEBUG_DBG ("Opening %s file", RTC_DATA_FILE);
 		File contextFile = SPIFFS.open (RTC_DATA_FILE, "r");
 		if (contextFile) {
-			DEBUG_WARN ("%s opened", RTC_DATA_FILE);
+			DEBUG_DBG ("%s opened", RTC_DATA_FILE);
 			size_t size = contextFile.size ();
 			if (size != sizeof (rtcmem_data_t)) {
 				DEBUG_WARN ("File size error. Expected %d bytes. Got %d", sizeof (rtcmem_data_t), size);
@@ -185,7 +185,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 		return false;
 	}
 
-	DEBUG_WARN ("Load process finished in %d ms", millis () - start_load);
+	DEBUG_DBG ("Load process finished in %d ms", millis () - start_load);
 
 	return true;
 }
@@ -381,12 +381,12 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 	contextFile.flush ();
 	size_t size = contextFile.size ();
 	contextFile.close ();
-	DEBUG_WARN ("Write configuration data to file %s in flash. %u bytes", RTC_DATA_FILE, size);
+	DEBUG_DBG ("Write configuration data to file %s in flash. %u bytes", RTC_DATA_FILE, size);
 	DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
 #if DEBUG_LEVEL >= VERBOSE
 	dumpRtcData (&rtcmem_data);
 #endif
-	DEBUG_WARN ("Save process finished in %d ms", millis () - start_save);
+	DEBUG_DBG ("Save process finished in %d ms", millis () - start_save);
 
 	return true;
 }
