@@ -352,6 +352,25 @@ public:
     }
 
     /**
+      * @brief Returns if node broadcast mode is enabled. In that case, node is able to send and receive encrypted broadcast
+      * messages. If this is enabled this will be notified to gateway so that it sends broadcast key.
+      * Notice this mode is optional and does not disable the ability to send normal messages.
+      * @return `true` if node has broadcast mode enabled.
+      */
+    bool broadcastIsEnabled () {
+        return broadcastEnabled;
+    }
+
+    /**
+      * @brief Enables node broadcast mode. Node will request broadcast key to Gateway. When it is received node will be able to send
+      * and receive encrypted broadcast messages. 
+      * @param broadcast `true` to enable broadcast mode on this node.
+      */
+    void enableBroadcast (bool broadcast) {
+        broadcastEnabled = broadcast;
+    }
+
+    /**
       * @brief Adds a new message rate value for filter calculation
       * @param value Next value for calculation
       */
@@ -377,6 +396,7 @@ protected:
     uint16_t nodeId; ///< @brief Node identifier asigned by gateway
     timer_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
     bool sleepyNode = true; ///< @brief Node sleepy definition
+    bool broadcastEnabled = false; ///< @brief Node is able to send broadcast messages
     bool initAsSleepy; ///< @brief Stores initial sleepy node. If this is false, this node does not accept sleep time changes
     uint8_t mac[ENIGMAIOT_ADDR_LEN]; ///< @brief Node address
     uint8_t key[KEY_LENGTH]; ///< @brief Shared key

@@ -88,6 +88,9 @@ typedef struct {
 	uint8_t commErrors /*= 0*/; /**< number of non acknowledged packets. May mean that gateway is not available or its channel has changed.
 								This is used to retrigger Gateway scan*/
 	bool nodeKeyValid /* = false*/; /**< true if key has been negotiated successfully */
+	uint8_t broadcastKey[KEY_LENGTH]; /**< Key to encrypt broadcast messages */
+	bool broadcastKeyValid /* = false*/; /**< true if broadcast key has been received from gateway */
+	bool broadcastKeyRequested /* = false*/; /**< true if broadcast key has been requested to gateway */
 	status_t nodeRegisterStatus /*= UNREGISTERED*/; /**< Node registration status */
 	uint16_t lastMessageCounter; /**< Node last message counter */
 	uint16_t lastControlCounter; /**< Control message last counter */
@@ -513,6 +516,27 @@ public:
 	  * @return Sleep period in seconds
 	  */
 	uint32_t getSleepTime ();
+
+	/**
+	  * @brief Returns if node broadcast mode is enabled. In that case, node is able to send and receive encrypted broadcast
+	  * messages. If this is enabled this will be notified to gateway so that it sends broadcast key.
+	  * Notice this mode is optional and does not disable the ability to send normal messages.
+	  * @return `true` if node has broadcast mode enabled.
+	  */
+	bool broadcastIsEnabled () {
+		return node.broadcastIsEnabled();
+	}
+
+	/**
+	  * @brief Enables node broadcast mode. Node will request broadcast key to Gateway. When it is received node will be able to send
+	  * and receive encrypted broadcast messages.
+	  * @param broadcast `true` to enable broadcast mode on this node.
+	  */
+	void enableBroadcast (bool broadcast) {
+		node.enableBroadcast(broadcast);
+		rtcmem_data.broadcastKeyValid = false;
+		rtcmem_data.broadcastKeyRequested = false; // Key is not requested yet
+	}
 
 	/**
 	  * @brief This method should be called periodically for instance inside `loop()` function.

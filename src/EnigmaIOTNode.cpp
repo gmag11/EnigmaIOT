@@ -1108,7 +1108,7 @@ bool EnigmaIOTNodeClass::checkCRC (const uint8_t* buf, size_t count, uint32_t* c
 bool EnigmaIOTNodeClass::clientHello () {
 	/*
 	* -------------------------------------------------------
-	*| msgType (1) | random (12) | DH Kmaster (32) | Tag (16) |
+	*| msgType (1) | IV (12) | DH Kmaster (32) | Random (30 bits) | Broadcast (1 bit) | Sleepy (1 bit) | Tag (16) |
 	* -------------------------------------------------------
 	*/
 
@@ -1161,6 +1161,16 @@ bool EnigmaIOTNodeClass::clientHello () {
 		DEBUG_DBG ("Signal sleepy node");
 	} else {
 		random = random & 0xFFFFFFFEU; // Signal always awake node
+		DEBUG_DBG ("Signal non sleepy node");
+	}
+
+	if (node.broadcastIsEnabled ()) {
+		random = random | 0x00000003U; // Signal broadcast mode enabled to request broadcast key
+		rtcmem_data.broadcastKeyRequested = true;
+		DEBUG_DBG ("Signal sleepy node");
+	} else {
+		random = random & 0xFFFFFFFDU; // Signal broadcast disabled
+		rtcmem_data.broadcastKeyRequested = false;
 		DEBUG_DBG ("Signal non sleepy node");
 	}
 
