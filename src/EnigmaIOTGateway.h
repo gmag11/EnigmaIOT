@@ -220,6 +220,7 @@ protected:
 	gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
 	//char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
 	char plainNetKey[KEY_LENGTH];
+	uint8_t broadcastKey[KEY_LENGTH]; ///< @brief Key used to encrypt and decrypt broadcast messages. It is generated on every boot
 #ifdef ESP32
 	portMUX_TYPE myMutex = portMUX_INITIALIZER_UNLOCKED; ///< @brief Handle to control critical sections
 #endif

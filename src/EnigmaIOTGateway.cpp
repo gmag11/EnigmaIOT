@@ -686,6 +686,9 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	this->comm = comm;
 	this->useCounter = useDataCounter;
 
+	CryptModule::random (broadcastKey, KEY_LENGTH); // Generate random broadcast key
+	DEBUG_WARN ("Broadcast key: %s", printHexBuffer (broadcastKey, KEY_LENGTH));
+	
 	if (networkKey) {
 		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
 		strncpy (plainNetKey, (char*)networkKey, KEY_LENGTH);
