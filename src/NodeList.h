@@ -371,6 +371,22 @@ public:
     }
 
     /**
+      * @brief Mark node to be waiting for broadcast key
+      * @param request `true` to mark node as waiting.
+      */
+    void setBroadcastKeyRequested (bool request) {
+        broadcastKeyRequested = request;
+    }
+
+    /**
+      * @brief Checks if node is waiting for broadcast key
+      * @return `true` if node is waiting.
+      */
+    bool isBroadcastKeyRequested () {
+        return broadcastKeyRequested;
+    }
+
+    /**
       * @brief Adds a new message rate value for filter calculation
       * @param value Next value for calculation
       */
@@ -397,6 +413,7 @@ protected:
     timer_t keyValidFrom; ///< @brief Last time that Node and Gateway agreed a key
     bool sleepyNode = true; ///< @brief Node sleepy definition
     bool broadcastEnabled = false; ///< @brief Node is able to send broadcast messages
+    bool broadcastKeyRequested = false; ///< @brief Node is waiting for broadcast key
     bool initAsSleepy; ///< @brief Stores initial sleepy node. If this is false, this node does not accept sleep time changes
     uint8_t mac[ENIGMAIOT_ADDR_LEN]; ///< @brief Node address
     uint8_t key[KEY_LENGTH]; ///< @brief Shared key

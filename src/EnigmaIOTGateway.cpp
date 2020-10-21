@@ -1546,12 +1546,13 @@ bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t rea
 
 bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[ENIGMAIOT_ADDR_LEN], const uint8_t* buf, size_t count, Node* node) {
 	/*
-	* -------------------------------------------------------
-	*| msgType (1) | random (12) | DH Kmaster (32) | Tag (16) |
-	* -------------------------------------------------------
+	* ------------------------------------------------------------------------------------------------------------
+	*| msgType (1) | IV (12) | DH Kmaster (32) | Random (30 bits) | Broadcast (1 bit) | Sleepy (1 bit) | Tag (16) |
+	* ------------------------------------------------------------------------------------------------------------
 	*/
 
 	bool sleepyNode;
+	bool broadcast;
 
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
@@ -1610,8 +1611,12 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[ENIGMAIOT_ADDR
 	sleepyNode = (clientHello_msg.random & 0x00000001U) == 1;
 	node->setInitAsSleepy (sleepyNode);
 	node->setSleepy (sleepyNode);
-
 	DEBUG_VERBOSE ("This is a %s node", sleepyNode ? "sleepy" : "always awaken");
+
+	broadcast = (clientHello_msg.random & 0x00000003U) == 3;
+	node->enableBroadcast (broadcast);
+	node->setBroadcastKeyRequested (broadcast);
+	DEBUG_WARN ("This node has broadcast mode %s", broadcast ? "enabled" : "disabled");
 
 	return true;
 }
