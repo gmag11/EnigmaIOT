@@ -110,6 +110,7 @@ void setup () {
 	EnigmaIOTNode.onConnected (connectEventHandler);
 	EnigmaIOTNode.onDisconnected (disconnectEventHandler);
 	EnigmaIOTNode.onDataRx (processRxData);
+	EnigmaIOTNode.enableBroadcast (true);
 
 	EnigmaIOTNode.begin (&Espnow_hal);
 	
