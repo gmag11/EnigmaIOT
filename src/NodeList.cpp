@@ -149,6 +149,17 @@ Node* NodeList::getNodeFromMAC (const uint8_t* mac) {
 	return NULL;
 }
 
+void NodeList::initBroadcastNode () {
+	node_t node;
+
+	memcpy (node.mac, BROADCAST_ADDRESS, ENIGMAIOT_ADDR_LEN);
+	node.nodeId = 0xffff;
+	node.status = UNREGISTERED;
+	node.sleepyNode = false;
+
+	broadcastNode = new Node (node);
+}
+
 Node* NodeList::getNodeFromName (const char* name) {
 	uint16_t index = 0;
 

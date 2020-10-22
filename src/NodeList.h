@@ -527,8 +527,22 @@ public:
       */
     void printToSerial (Stream *port);
 
+    /**
+     * @brief Gets broadcas node instance
+     * @return Broadcas node instance
+     */
+    Node* getBroadcastNode () {
+        return broadcastNode;
+    }
+
+    /**
+     * @brief Init broadcast node data
+     */
+    void initBroadcastNode ();
+
 protected:
     Node nodes[NUM_NODES]; ///< @brief Static Node array that holds maximum number of supported nodes 
+    Node* broadcastNode;
 
 };
 

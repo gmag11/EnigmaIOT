@@ -209,7 +209,6 @@ protected:
 	bool flashTx = false; ///< @brief `true` if Tx LED should flash
 	volatile bool flashRx = false; ///< @brief `true` if Rx LED should flash
 	node_t node; ///< @brief temporary store to keep node data while processing a message
-	Node* broadcastNode; ///< Helper to send broadcast messages
 	NodeList nodelist; ///< @brief Node database that keeps status and shared keys
 	Comms_halClass* comm; ///< @brief Instance of physical communication layer
 	int8_t txled = -1; ///< @brief I/O pin to connect a led that flashes when gateway transmits data
@@ -221,9 +220,7 @@ protected:
 	onNodeDisconnected_t notifyNodeDisconnection; ///< @brief Callback function that will be invoked when a node gets disconnected
 	bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
 	gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
-	//char networkKey[KEY_LENGTH]; ///< @brief Temporary store for textual network key
 	char plainNetKey[KEY_LENGTH];
-	//uint8_t broadcastKey[KEY_LENGTH]; ///< @brief Key used to encrypt and decrypt broadcast messages. It is generated on every boot
 #ifdef ESP32
 	portMUX_TYPE myMutex = portMUX_INITIALIZER_UNLOCKED; ///< @brief Handle to control critical sections
 #endif
@@ -241,11 +238,6 @@ protected:
 	 * @brief Activates a flag that signals that configuration has to be saved
 	 */
 	static void doSave (void);
-
-	/**
-	 * @brief Init broadcast node data
-	 */
-	void initBroadcastNode ();
 
 	/**
 	 * @brief Build a **ServerHello** message and send it to node
