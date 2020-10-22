@@ -158,10 +158,16 @@ void NodeList::initBroadcastNode () {
 	node.sleepyNode = false;
 
 	broadcastNode = new Node (node);
+	broadcastNode->setNodeName (BROADCAST_NONE_NAME);
 }
 
 Node* NodeList::getNodeFromName (const char* name) {
 	uint16_t index = 0;
+
+	// check if destination is broadcast
+	if (!strncmp (nodes[index].nodeName, BROADCAST_NONE_NAME, NODE_NAME_LENGTH)) {
+		return broadcastNode;
+	}
 
 	while (index < NUM_NODES) {
 		if (!strncmp (nodes[index].nodeName, name, NODE_NAME_LENGTH)) {
