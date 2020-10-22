@@ -42,6 +42,8 @@ enum gatewayMessageType_t {
 	CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
 	NODE_NAME_SET = 0x07, /**< Message from node to signal its own custom node name */
 	NODE_NAME_RESULT = 0x17, /**< Message from gateway to get result after set node name */
+	BROADCAST_KEY_REQUEST = 0x08, /**< Message from node to request broadcast key */
+	BROADCAST_KEY_RESPONSE = 0x18, /**< Message from gateway with broadcast key */
 	CLIENT_HELLO = 0xFF, /**< ClientHello message from sensor node */
 	SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
 	INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
@@ -240,12 +242,19 @@ protected:
 	static void doSave (void);
 
 	/**
-	 * @brief Build a **ServerHello** messange and send it to node
+	 * @brief Build a **ServerHello** message and send it to node
 	 * @param key Node public key to be used on Diffie Hellman algorithm
 	 * @param node Entry in node list database where node will be registered
 	 * @return Returns `true` if ServerHello message was successfully sent. `false` otherwise
 	 */
 	bool serverHello (const uint8_t* key, Node* node);
+
+	/**
+	 * @brief Sends broadcast key to node if it has requested it explicitly or it has notified during handshake
+	 * @param node Entry in node list database to get destination address
+	 * @return Returns `true` if message was successfully sent. `false` otherwise
+	 */
+	bool sendBroadcastKey (Node* node);
 
 	/**
 	 * @brief Gets a buffer containing a **ClientHello** message and process it. This carries node public key to be used on Diffie Hellman algorithm

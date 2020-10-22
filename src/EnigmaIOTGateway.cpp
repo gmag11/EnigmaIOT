@@ -911,6 +911,14 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 #if DEBUG_LEVEL >= INFO
 					nodelist.printToSerial (&DEBUG_ESP_PORT);
 #endif
+					if (node->broadcastIsEnabled ()) {
+						if (!sendBroadcastKey (node)) {
+							DEBUG_WARN ("Error sending broadcast key to node");
+						} else {
+							node->setBroadcastKeyRequested (false);
+							DEBUG_WARN ("Broadcast key sent to node");
+						}
+					}
 				} else {
 					node->reset ();
 					DEBUG_INFO ("Error sending Server Hello");
@@ -1761,6 +1769,7 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 	// Copy 8 last bytes from NetworkKey
 	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
+	// TODO: BUG: encryption should happen after counter
 	if (!CryptModule::encryptBuffer ((uint8_t*)&(clockResponse_msg.t2), sizeof (int64_t) << 1, // Encrypt only from t2, 16 bytes
 									 clockResponse_msg.iv, IV_LENGTH,
 									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
@@ -1782,11 +1791,81 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 	}
 }
 
+bool EnigmaIOTGatewayClass::sendBroadcastKey (Node* node) {
+   /*
+	* --------------------------------------------------------------------
+	*| msgType (1) | IV (12) | Counter (2) | BroadcastKey (32) | Tag (16) |
+	* --------------------------------------------------------------------
+	*/
+
+	struct __attribute__ ((packed, aligned (1))) {
+		uint8_t msgType;
+		uint8_t iv[IV_LENGTH];
+		uint16_t counter;
+		uint8_t broadcastKey[KEY_LENGTH];
+		uint8_t tag[TAG_LENGTH];
+	} broadcastKey_msg;
+
+#define BRKMSG_LEN sizeof(broadcastKey_msg)
+
+	broadcastKey_msg.msgType = BROADCAST_KEY_RESPONSE;
+
+	CryptModule::random (broadcastKey_msg.iv, IV_LENGTH);
+	DEBUG_VERBOSE ("IV: %s", printHexBuffer (broadcastKey_msg.iv, IV_LENGTH));
+
+	memcpy (broadcastKey_msg.broadcastKey, broadcastKey, KEY_LENGTH);
+
+	uint16_t counter;
+	if (useCounter) {
+		counter = node->getLastDownlinkMsgCounter () + 1;
+		node->setLastDownlinkMsgCounter (counter);
+	} else {
+		counter = (uint16_t)(Crypto.random ());
+	}
+	memcpy (&(broadcastKey_msg.counter), &counter, sizeof (uint16_t));
+	DEBUG_INFO ("Downlink message #%d", counter);
+
+	DEBUG_VERBOSE ("Broadcast key message: %s", printHexBuffer ((uint8_t*)&broadcastKey_msg, BRKMSG_LEN - TAG_LENGTH));
+
+	const uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
+
+	memcpy (aad, (uint8_t*)&broadcastKey_msg, addDataLen); // Copy message upto iv
+
+	// Copy 8 last bytes from Key
+	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+	if (!CryptModule::encryptBuffer ((uint8_t*)&(broadcastKey_msg.counter), BRKMSG_LEN - TAG_LENGTH - IV_LENGTH - 1, // Encrypt only counter, excluding tag, iv and message type
+									 broadcastKey_msg.iv, IV_LENGTH,
+									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of key
+									 aad, sizeof (aad), broadcastKey_msg.tag, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during encryption");
+		return false;
+	}
+
+	DEBUG_VERBOSE ("Encrypted Clock Response message: %s", printHexBuffer ((uint8_t*)&broadcastKey_msg, BRKMSG_LEN));
+
+	DEBUG_INFO (" -------> BROADCAST KEY");
+#ifdef DEBUG_ESP_PORT
+	char mac[ENIGMAIOT_ADDR_LEN * 3];
+	mac2str (node->getMacAddress (), mac);
+#endif
+	if (comm->send (node->getMacAddress (), (uint8_t*)&broadcastKey_msg, BRKMSG_LEN) == 0) {
+		DEBUG_INFO ("Broadcast Key message sent to %s", mac);
+		return true;
+	} else {
+		//nodelist.unregisterNode (node);
+		DEBUG_ERROR ("Error sending Broadcast Key message to %s", mac);
+		return false;
+	}
+
+}
+
 bool EnigmaIOTGatewayClass::serverHello (const uint8_t* key, Node* node) {
 	/*
-	* ------------------------------------------------------
-	*| msgType (1) | random (12) | DH Kslave (32) | Tag (16) |
-	* ------------------------------------------------------
+	* -----------------------------------------------------------------------------
+	*| msgType (1) | IV (12) | DH Kslave (32) | NodeID (2) | Random (4) | Tag (16) |
+	* -----------------------------------------------------------------------------
 	*/
 
 	struct __attribute__ ((packed, aligned (1))) {

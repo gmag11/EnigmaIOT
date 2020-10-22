@@ -112,6 +112,8 @@ void Node::reset () {
 	lastDownlinkMsgCounter = 0;
 	keyValidFrom = 0;
 	status = UNREGISTERED;
+	//broadcastEnabled = false;
+	broadcastKeyRequested = false;
 	if (rateFilter) {
 		DEBUG_DBG ("Reset packet rate");
 		rateFilter->clear ();
