@@ -20,6 +20,7 @@ static const uint8_t MAX_MESSAGE_LENGTH = 250; ///< @brief Maximum payload size 
 static const size_t ENIGMAIOT_ADDR_LEN = 6; ///< @brief Address size. Mac address = 6 bytes
 static const uint8_t NETWORK_NAME_LENGTH = 21; ///< @brief Maximum number of characters of network name
 static const uint8_t NODE_NAME_LENGTH = 33; ///< @brief Maximum number of characters of node name
+static const uint8_t BROADCAST_ADDRESS[] = { 0xff,0xff,0xff,0xff,0xff,0xff }; ///< @brief Broadcast address
 
 // Gateway configuration
 static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mode all data messages are ignored

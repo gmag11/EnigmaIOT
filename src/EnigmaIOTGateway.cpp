@@ -332,6 +332,17 @@ bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 	return true;
 }
 
+void EnigmaIOTGatewayClass::initBroadcastNode () {
+	node_t node;
+
+	memcpy (node.mac, BROADCAST_ADDRESS, ENIGMAIOT_ADDR_LEN);
+	node.nodeId = 0xffff;
+	node.status = UNREGISTERED;
+	node.sleepyNode = false;
+
+	broadcastNode = new Node (node);
+}
+
 bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding, char* nodeName) {
 	Node* node;
 	if (nodeName) {
@@ -686,8 +697,11 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	this->comm = comm;
 	this->useCounter = useDataCounter;
 
+	uint8_t broadcastKey[KEY_LENGTH];
+	initBroadcastNode ();
 	CryptModule::random (broadcastKey, KEY_LENGTH); // Generate random broadcast key
 	DEBUG_DBG ("Broadcast key: %s", printHexBuffer (broadcastKey, KEY_LENGTH));
+	broadcastNode->setEncryptionKey (broadcastKey);
 	
 	if (networkKey) {
 		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
@@ -1813,7 +1827,7 @@ bool EnigmaIOTGatewayClass::sendBroadcastKey (Node* node) {
 	CryptModule::random (broadcastKey_msg.iv, IV_LENGTH);
 	DEBUG_VERBOSE ("IV: %s", printHexBuffer (broadcastKey_msg.iv, IV_LENGTH));
 
-	memcpy (broadcastKey_msg.broadcastKey, broadcastKey, KEY_LENGTH);
+	memcpy (broadcastKey_msg.broadcastKey, broadcastNode->getEncriptionKey(), KEY_LENGTH);
 
 	uint16_t counter;
 	if (useCounter) {
