@@ -43,6 +43,8 @@ enum nodeMessageType {
 	CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
 	NODE_NAME_SET = 0x07, /**< Message from node to signal its own custom node name */
 	NODE_NAME_RESULT = 0x17, /**< Message from gateway to get result after set node name */
+	BROADCAST_KEY_REQUEST = 0x08, /**< Message from node to request broadcast key */
+	BROADCAST_KEY_RESPONSE = 0x18, /**< Message from gateway with broadcast key */
 	CLIENT_HELLO = 0xFF, /**< ClientHello message from node */
 	SERVER_HELLO = 0xFE, /**< ServerHello message from gateway */
 	INVALIDATE_KEY = 0xFB /**< InvalidateKey message from gateway */
@@ -248,6 +250,15 @@ protected:
 	  * @return Returns the reason because key is not valid anymore. Check possible values in nodeInvalidateReason_t
 	  */
 	nodeInvalidateReason_t processInvalidateKey (const uint8_t* mac, const uint8_t* buf, size_t count);
+
+	/**
+	  * @brief Gets a buffer containing a **BroadcastKey** message and process it. This key is used to send and receive broadcast messages
+	  * @param mac Address where this message was received from
+	  * @param buf Pointer to the buffer that contains the message
+	  * @param count Message length in number of bytes of ServerHello message
+	  * @return Returns `true` if message could be correcly processed
+	  */
+	bool processBroadcastKeyMessage (const uint8_t* mac, const uint8_t* buf, size_t count);
 
 	/**
 	  * @brief Builds, encrypts and sends a **Data** message.

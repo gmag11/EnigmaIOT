@@ -687,7 +687,7 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	this->useCounter = useDataCounter;
 
 	CryptModule::random (broadcastKey, KEY_LENGTH); // Generate random broadcast key
-	DEBUG_WARN ("Broadcast key: %s", printHexBuffer (broadcastKey, KEY_LENGTH));
+	DEBUG_DBG ("Broadcast key: %s", printHexBuffer (broadcastKey, KEY_LENGTH));
 	
 	if (networkKey) {
 		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
@@ -916,7 +916,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 							DEBUG_WARN ("Error sending broadcast key to node");
 						} else {
 							node->setBroadcastKeyRequested (false);
-							DEBUG_WARN ("Broadcast key sent to node");
+							DEBUG_INFO ("Broadcast key sent to node");
 						}
 					}
 				} else {
@@ -1627,7 +1627,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[ENIGMAIOT_ADDR
 	broadcast = (clientHello_msg.random & 0x00000003U) == 3;
 	node->enableBroadcast (broadcast);
 	node->setBroadcastKeyRequested (broadcast);
-	DEBUG_WARN ("This node has broadcast mode %s", broadcast ? "enabled" : "disabled");
+	DEBUG_INFO ("This node has broadcast mode %s", broadcast ? "enabled" : "disabled");
 
 	return true;
 }
@@ -1843,7 +1843,7 @@ bool EnigmaIOTGatewayClass::sendBroadcastKey (Node* node) {
 		return false;
 	}
 
-	DEBUG_VERBOSE ("Encrypted Clock Response message: %s", printHexBuffer ((uint8_t*)&broadcastKey_msg, BRKMSG_LEN));
+	DEBUG_VERBOSE ("Encrypted Broadcast Key message: %s", printHexBuffer ((uint8_t*)&broadcastKey_msg, BRKMSG_LEN));
 
 	DEBUG_INFO (" -------> BROADCAST KEY");
 #ifdef DEBUG_ESP_PORT

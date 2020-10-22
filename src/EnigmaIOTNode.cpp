@@ -83,6 +83,8 @@ void clearRtcData (rtcmem_data_t* data) {
 	data->nodeRegisterStatus = UNREGISTERED;
 	data->sleepy = false;
 	data->nodeKeyValid = false;
+	data->broadcastKeyRequested = false;
+	data->broadcastKeyValid = false;
 	DEBUG_DBG ("RTC Cleared");
 }
 
@@ -108,6 +110,10 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
 			Serial.printf (" -- Gateway address: %s\n", mac2str (gateway, gwAddress));
 		Serial.printf (" -- Network Key: %s\n", printHexBuffer (data->networkKey, KEY_LENGTH));
 		Serial.printf (" -- Mode: %s\n", data->sleepy ? "sleepy" : "non sleepy");
+		Serial.printf (" -- Broadcast key: %s\n", printHexBuffer (data->broadcastKey, KEY_LENGTH));
+		Serial.printf (" -- Broadcast key is %s and %s requested\n", 
+					   data->broadcastKeyValid ? "valid" : "not valid",
+					   data->broadcastKeyRequested ? "is" : "is not");
 	} else {
 		Serial.println ("rtcmem_data pointer is NULL");
 	}
@@ -2271,6 +2277,69 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
 	return false;
 }
 
+bool EnigmaIOTNodeClass::processBroadcastKeyMessage (const uint8_t* mac, const uint8_t* buf, size_t count) {
+   /*
+	* --------------------------------------------------------------------
+	*| msgType (1) | IV (12) | Counter (2) | BroadcastKey (32) | Tag (16) |
+	* --------------------------------------------------------------------
+	*/
+
+	uint8_t iv_idx = 1;
+	uint8_t counter_idx = iv_idx + IV_LENGTH;
+	uint8_t broadcastKey_idx = counter_idx + sizeof (int16_t);
+	uint8_t tag_idx = count - TAG_LENGTH;
+
+	uint16_t counter;
+
+	uint8_t addDataLen = 1 + IV_LENGTH;
+	uint8_t aad[AAD_LENGTH + addDataLen];
+
+	memcpy (aad, buf, addDataLen); // Copy message upto iv
+
+	// Copy 8 last bytes from Node Key
+	memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
+
+	uint8_t packetLen = count - TAG_LENGTH;
+
+	if (!CryptModule::decryptBuffer (buf + counter_idx, packetLen - 1 - IV_LENGTH, // Decrypt from counter
+									 buf + iv_idx, IV_LENGTH,
+									 node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+									 aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
+		DEBUG_ERROR ("Error during decryption");
+		return false;
+	}
+
+	DEBUG_VERBOSE ("Decripted broadcast key message: %s", printHexBuffer (buf, count - TAG_LENGTH));
+
+	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));
+	DEBUG_INFO ("Downlink msg #%d", counter);
+
+	if (useCounter) {
+		if (counter > node.getLastDownlinkMsgCounter ()) {
+			DEBUG_INFO ("Accepted");
+			node.setLastDownlinkMsgCounter (counter);
+			rtcmem_data.lastDownlinkMsgCounter = counter;
+		} else {
+			DEBUG_WARN ("Downlink msg rejected");
+			return false;
+		}
+	}
+
+	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
+		if (!saveRTCData ()) {
+			DEBUG_ERROR ("Error saving data on RTC");
+		}
+	}
+
+	DEBUG_VERBOSE ("Broadcast key: %s", printHexBuffer (&buf[broadcastKey_idx], KEY_LENGTH));
+
+	memcpy (rtcmem_data.broadcastKey, &buf[broadcastKey_idx], KEY_LENGTH);
+	rtcmem_data.broadcastKeyRequested = false;
+	rtcmem_data.broadcastKeyValid = true;
+
+	return true;
+}
+
 bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_t* buf, size_t count, bool control) {
 	/*
 	* --------------------------------------------------------------------------
@@ -2401,7 +2470,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 				rtcmem_data.lastDownlinkMsgCounter = 0;
 				rtcmem_data.lastControlCounter = 0;
 				rtcmem_data.nodeId = node.getNodeId ();
-				DEBUG_INFO("Reset counters");
+				DEBUG_INFO ("Reset counters");
 				if (!saveRTCData ()) {
 					DEBUG_ERROR ("Error saving data on RTC");
 				}
@@ -2491,9 +2560,16 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		if (processSetNameResponse (mac, buf, count)) {
 			DEBUG_INFO ("Set Node Name OK");
 		}
+		break;
+	case BROADCAST_KEY_RESPONSE:
+		DEBUG_INFO (" <------- BROADCAST KEY MESSAGE");
+		//DEBUG_WARN ("%s", printHexBuffer (buf, count));
+		if (processBroadcastKeyMessage (mac, buf, count)) {
+			DEBUG_INFO ("Broadcast Key OK");
+		}
+		break;
 	}
 }
-
 
 void EnigmaIOTNodeClass::getStatus (uint8_t* mac_addr, uint8_t status) {
 	gatewaySearchStarted = false;
