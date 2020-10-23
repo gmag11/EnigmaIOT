@@ -1627,7 +1627,7 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[ENIGMAIOT_ADDR
 	node->setSleepy (sleepyNode);
 	DEBUG_VERBOSE ("This is a %s node", sleepyNode ? "sleepy" : "always awaken");
 
-	broadcast = (clientHello_msg.random & 0x00000003U) == 3;
+	broadcast = (clientHello_msg.random & 0x00000002U) == 2;
 	node->enableBroadcast (broadcast);
 	node->setBroadcastKeyRequested (broadcast);
 	DEBUG_INFO ("This node has broadcast mode %s", broadcast ? "enabled" : "disabled");

@@ -1171,7 +1171,7 @@ bool EnigmaIOTNodeClass::clientHello () {
 	}
 
 	if (node.broadcastIsEnabled ()) {
-		random = random | 0x00000003U; // Signal broadcast mode enabled to request broadcast key
+		random = random | 0x00000002U; // Signal broadcast mode enabled to request broadcast key
 		rtcmem_data.broadcastKeyRequested = true;
 		DEBUG_DBG ("Signal sleepy node");
 	} else {
