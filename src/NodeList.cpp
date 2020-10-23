@@ -154,7 +154,7 @@ void NodeList::initBroadcastNode () {
 
 	memcpy (node.mac, BROADCAST_ADDRESS, ENIGMAIOT_ADDR_LEN);
 	node.nodeId = 0xffff;
-	node.status = UNREGISTERED;
+	node.status = REGISTERED;
 	node.sleepyNode = false;
 
 	broadcastNode = new Node (node);
@@ -165,7 +165,7 @@ Node* NodeList::getNodeFromName (const char* name) {
 	uint16_t index = 0;
 
 	// check if destination is broadcast
-	if (!strncmp (nodes[index].nodeName, BROADCAST_NONE_NAME, NODE_NAME_LENGTH)) {
+	if (!strncmp (name, broadcastNode->getNodeName(), NODE_NAME_LENGTH)) {
 		return broadcastNode;
 	}
 
