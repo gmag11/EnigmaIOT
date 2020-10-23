@@ -250,7 +250,7 @@ public:
       * @brief Sets node address
       * @param macAddress Node address
       */
-    void setMacAddress (uint8_t *macAddress) {
+    void setMacAddress (const uint8_t *macAddress) {
         if (macAddress) {
             memcpy (mac, macAddress, 6);
         }

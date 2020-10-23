@@ -74,6 +74,26 @@ void Espnow_halClass::begin (uint8_t* gateway, uint8_t channel, peerType_t peerT
 		this->channel = channel;
 	}
 	initComms (peerType);
+	addPeer (BROADCAST_ADDRESS);
+}
+
+bool Espnow_halClass::addPeer (const uint8_t* da) {
+#ifdef ESP32
+	esp_now_peer_info_t peer;
+	memcpy (peer.peer_addr, da, COMMS_HAL_ADDR_LEN);
+	uint8_t ch;
+	wifi_second_chan_t secondCh;
+	esp_wifi_get_channel (&ch, &secondCh);
+	peer.channel = ch;
+	peer.ifidx = ESP_IF_WIFI_AP;
+	peer.encrypt = false;
+	esp_err_t error = esp_now_add_peer (&peer);
+	char addrStr[ENIGMAIOT_ADDR_LEN * 3];
+	DEBUG_WARN ("Peer " MACSTR " added on channel %u. Result %d", MAC2STR (da), ch, error);
+	return error == ESP_OK;
+#else 
+	return true;
+#endif
 }
 
 void Espnow_halClass::stop () {
@@ -84,12 +104,14 @@ void Espnow_halClass::stop () {
 }
 
 int32_t Espnow_halClass::send (uint8_t* da, uint8_t* data, int len) {
-#ifdef ESP32
+	int32_t error;
+//#ifdef ESP32
 	char buffer[18];
 	mac2str (da, buffer);
 	DEBUG_DBG ("ESP-NOW message to %s", buffer);
 	if (_ownPeerType == COMM_GATEWAY) {
-		esp_now_peer_info_t peer;
+		addPeer (da);
+		/*esp_now_peer_info_t peer;
 		memcpy (peer.peer_addr, da, COMMS_HAL_ADDR_LEN);
 		uint8_t ch;
 		wifi_second_chan_t secondCh;
@@ -98,16 +120,16 @@ int32_t Espnow_halClass::send (uint8_t* da, uint8_t* data, int len) {
 		peer.ifidx = ESP_IF_WIFI_AP;
 		peer.encrypt = false;
 		esp_err_t error = esp_now_add_peer (&peer);
-		DEBUG_DBG ("Peer added on channel %u. Result %d", ch, error);
+		DEBUG_DBG ("Peer added on channel %u. Result %d", ch, error);*/
 
 		//wifi_bandwidth_t bw;
 		//esp_wifi_get_bandwidth (ESP_IF_WIFI_AP, &bw);
 		//ESP_LOGD (TAG, "WiFi bandwidth: %s", bw == WIFI_BW_HT20 ? "20 MHz" : "40 MHz");
 	}
-#endif
+//#endif
 
 	// Serial.printf ("Phy Mode ---> %d\n", (int)wifi_get_phy_mode ());
-	int32_t error = esp_now_send (da, data, len);
+	error = esp_now_send (da, data, len);
 #ifdef ESP32
 	DEBUG_DBG ("esp now send result = %d", error);
 	if (_ownPeerType == COMM_GATEWAY) {

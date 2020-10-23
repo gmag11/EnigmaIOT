@@ -85,7 +85,8 @@ Node::Node (node_t nodeData) :
 	status (nodeData.status),
 	lastMessageCounter (nodeData.lastMessageCounter),
 	nodeId (nodeData.nodeId),
-	keyValidFrom (nodeData.keyValidFrom)
+	keyValidFrom (nodeData.keyValidFrom),
+	sleepyNode (nodeData.sleepyNode)
 	//packetNumber (0),
 	//packetErrors (0),
 	//per (0.0)
@@ -150,14 +151,15 @@ Node* NodeList::getNodeFromMAC (const uint8_t* mac) {
 }
 
 void NodeList::initBroadcastNode () {
+	broadcastNode = new Node ();
 	node_t node;
 
-	memcpy (node.mac, BROADCAST_ADDRESS, ENIGMAIOT_ADDR_LEN);
-	node.nodeId = 0xffff;
-	node.status = REGISTERED;
-	node.sleepyNode = false;
-
-	broadcastNode = new Node (node);
+	//uint8_t broadcastAddress[ENIGMAIOT_ADDR_LEN];
+	//memcpy (broadcastAddress, BROADCAST_ADDRESS, ENIGMAIOT_ADDR_LEN);
+	broadcastNode->setMacAddress (BROADCAST_ADDRESS);
+	broadcastNode->setNodeId (0xffff);
+	broadcastNode->setStatus (REGISTERED);
+	broadcastNode->setSleepy (false);
 	broadcastNode->setNodeName (BROADCAST_NONE_NAME);
 }
 

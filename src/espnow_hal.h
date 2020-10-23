@@ -48,6 +48,12 @@ protected:
 	void initComms (peerType_t peerType);
 
 	/**
+	  * @brief Adds a peer to esp-now peer list
+	  * @param da Peer address to be added to peer list
+	  */
+	bool addPeer (const uint8_t* da);
+
+	/**
 	  * @brief Function that processes incoming messages and passes them to upper layer
 	  * @param mac_addr Destination address to send the message to
 	  * @param data Data buffer that contain the message to be sent

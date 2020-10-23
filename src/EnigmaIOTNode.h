@@ -543,7 +543,7 @@ public:
 	  * and receive encrypted broadcast messages.
 	  * @param broadcast `true` to enable broadcast mode on this node.
 	  */
-	void enableBroadcast (bool broadcast) {
+	void enableBroadcast (bool broadcast = true) {
 		node.enableBroadcast(broadcast);
 		rtcmem_data.broadcastKeyValid = false;
 		rtcmem_data.broadcastKeyRequested = false; // Key is not requested yet
