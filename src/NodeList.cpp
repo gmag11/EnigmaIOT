@@ -168,6 +168,7 @@ Node* NodeList::getNodeFromName (const char* name) {
 
 	// check if destination is broadcast
 	if (!strncmp (name, broadcastNode->getNodeName(), NODE_NAME_LENGTH)) {
+		DEBUG_DBG ("Address '%s' is broadcast node", name);
 		return broadcastNode;
 	}
 

@@ -1420,6 +1420,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 	uint8_t buffer[MAX_MESSAGE_LENGTH];
 	uint16_t packet_length;
+	bool broadcast = false;
 
 	if (!node->isRegistered ()) {
 		DEBUG_VERBOSE ("Error sending downstream. Node is not registered");
@@ -1455,6 +1456,11 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 		return false;
 	}
 
+	if (!memcmp (node->getMacAddress(), BROADCAST_ADDRESS, ENIGMAIOT_ADDR_LEN)) {
+		DEBUG_WARN ("Encoding broadcast message");
+		broadcast = true;
+	}
+
 	if (controlData == control_message_type::USERDATA_GET) {
 		buffer[0] = (uint8_t)DOWNSTREAM_DATA_GET;
 	} else if (controlData == control_message_type::USERDATA_SET) {
@@ -1467,11 +1473,20 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 	DEBUG_VERBOSE ("IV: %s", printHexBuffer (buffer + iv_idx, IV_LENGTH));
 
+	if (broadcast) {
+		nodeId = nodeId | 0x8000;
+	}
+
 	memcpy (buffer + nodeId_idx, &nodeId, sizeof (uint16_t));
 
 	if (useCounter) {
-		counter = node->getLastDownlinkMsgCounter () + 1;
-		node->setLastDownlinkMsgCounter (counter);
+		if (!broadcast) {
+			counter = node->getLastDownlinkMsgCounter () + 1;
+			node->setLastDownlinkMsgCounter (counter);
+		} else {
+			counter = nodelist.getLastBroadcastMsgCounter () + 1;
+			nodelist.incLastBroadcastMsgCounter ();
+		}
 	} else {
 		counter = (uint16_t)(Crypto.random ());
 	}

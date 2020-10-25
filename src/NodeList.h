@@ -540,9 +540,25 @@ public:
      */
     void initBroadcastNode ();
 
+    /**
+     * @brief Ask for last broadcast message counter state
+     * @return last broadcast message counter
+     */
+    uint16_t getLastBroadcastMsgCounter () {
+        return lastBroadcastMsgCounter;
+    }
+
+    /**
+     * @brief Increments last broadcast message counter stata by one
+     */
+    void incLastBroadcastMsgCounter () {
+        lastBroadcastMsgCounter++;
+    }
+
 protected:
     Node nodes[NUM_NODES]; ///< @brief Static Node array that holds maximum number of supported nodes 
-    Node* broadcastNode;
+    Node* broadcastNode; ///< @brief Node instance that holds data used for broadcast messages. This does not represent any individual node
+    uint16_t lastBroadcastMsgCounter; ///< @brief Last broadcast message counter state for all nodes, both for data and control messages
 
 };
 
