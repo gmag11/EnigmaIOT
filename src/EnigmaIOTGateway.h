@@ -33,11 +33,15 @@
   */
 enum gatewayMessageType_t {
 	SENSOR_DATA = 0x01, /**< Data message from sensor node */
+	SENSOR_BRCAST_DATA = 0x81, /**< Data broadcast message from sensor node */
 	UNENCRYPTED_NODE_DATA = 0x11, /**< Data message from sensor node. Unencrypted */
 	DOWNSTREAM_DATA_SET = 0x02, /**< Data message from gateway. Downstream data for user commands */
+	DOWNSTREAM_BRCAST_DATA_SET = 0x82, /**< Data broadcast message from gateway. Downstream data for user commands */
 	DOWNSTREAM_DATA_GET = 0x12, /**< Data message from gateway. Downstream data for user commands */
+	DOWNSTREAM_BRCAST_DATA_GET = 0x92, /**< Data broadcast message from gateway. Downstream data for user commands */
 	CONTROL_DATA = 0x03, /**< Internal control message from sensor to gateway. Used for OTA, settings configuration, etc */
 	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to sensor. Used for OTA, settings configuration, etc */
+	DOWNSTREAM_BRCAST_CTRL_DATA = 0x84, /**< Internal control broadcast message from gateway to sensor. Used for OTA, settings configuration, etc */
 	CLOCK_REQUEST = 0x05, /**< Clock request message from node */
 	CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
 	NODE_NAME_SET = 0x07, /**< Message from node to signal its own custom node name */

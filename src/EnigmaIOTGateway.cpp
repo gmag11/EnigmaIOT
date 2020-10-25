@@ -1469,13 +1469,14 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 		buffer[0] = (uint8_t)DOWNSTREAM_CTRL_DATA;
 	}
 
+	if (broadcast) {
+		buffer[0] = buffer[0] | 0x80; // Mark message as broadcast
+		DEBUG_WARN ("Broadcast message. Type: 0x%X", buffer[0]);
+	}
+
 	CryptModule::random (buffer + iv_idx, IV_LENGTH);
 
 	DEBUG_VERBOSE ("IV: %s", printHexBuffer (buffer + iv_idx, IV_LENGTH));
-
-	if (broadcast) {
-		nodeId = nodeId | 0x8000;
-	}
 
 	memcpy (buffer + nodeId_idx, &nodeId, sizeof (uint16_t));
 
