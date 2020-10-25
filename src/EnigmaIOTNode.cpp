@@ -2362,37 +2362,58 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 	uint8_t tag_idx = count - TAG_LENGTH;
 
 	uint16_t counter;
+	uint16_t nodeId;
+	bool broadcast = (buf[0] & 0x80);
 
-	uint8_t addDataLen = 1 + IV_LENGTH;
+	if (broadcast) {
+		DEBUG_DBG ("Broadcast message. Type: 0x%X", buf[0]);
+	} 
+
+	const uint8_t addDataLen = 1 + IV_LENGTH;
 	uint8_t aad[AAD_LENGTH + addDataLen];
 
 	memcpy (aad, buf, addDataLen); // Copy message upto iv
 
-	// Copy 8 last bytes from Node Key
-	memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
-
 	uint8_t packetLen = count - TAG_LENGTH;
 
-	if (!CryptModule::decryptBuffer (buf + length_idx, packetLen - 1 - IV_LENGTH, // Decrypt from nodeId
-									 buf + iv_idx, IV_LENGTH,
-									 node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
-									 aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
-		DEBUG_ERROR ("Error during decryption");
-		return false;
+	if (broadcast) {
+		memcpy (aad + addDataLen, rtcmem_data.broadcastKey + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH); 	// Copy 8 last bytes from Node Key
+		if (!CryptModule::decryptBuffer (buf + length_idx, packetLen - 1 - IV_LENGTH, // Decrypt from nodeId
+										 buf + iv_idx, IV_LENGTH,
+										 rtcmem_data.broadcastKey, KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+										 aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
+			DEBUG_ERROR ("Error during decryption of broadcast message");
+			return false;
+		}
+	} else {
+		memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);	// Copy 8 last bytes from Node Key
+		if (!CryptModule::decryptBuffer (buf + length_idx, packetLen - 1 - IV_LENGTH, // Decrypt from nodeId
+										 buf + iv_idx, IV_LENGTH,
+										 node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
+										 aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
+			DEBUG_ERROR ("Error during decryption");
+			return false;
+		}
 	}
 
 	DEBUG_VERBOSE ("Decripted downstream message: %s", printHexBuffer (buf, count - TAG_LENGTH));
 
+	memcpy (&nodeId, &(buf[nodeId_idx]), sizeof (uint16_t));
+
 	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));
 	DEBUG_INFO ("Downlink msg #%d", counter);
 	if (useCounter) {
-		if (counter > node.getLastDownlinkMsgCounter ()) {
-			DEBUG_INFO ("Accepted");
-			node.setLastDownlinkMsgCounter (counter);
-			rtcmem_data.lastDownlinkMsgCounter = counter;
+		if (broadcast) {
+			// TODO: process counter for broadcast
 		} else {
-			DEBUG_WARN ("Downlink msg rejected");
-			return false;
+		    if (counter > node.getLastDownlinkMsgCounter ()) {
+                DEBUG_INFO ("Accepted");
+				node.setLastDownlinkMsgCounter (counter);
+				rtcmem_data.lastDownlinkMsgCounter = counter;
+			} else {
+				DEBUG_WARN ("Downlink msg rejected");
+				return false;
+			}
 		}
 	}
 
@@ -2542,6 +2563,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		}
 		break;
 	case DOWNSTREAM_CTRL_DATA:
+	case DOWNSTREAM_BRCAST_CTRL_DATA:
 		DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
 		if (processDownstreamData (mac, buf, count, true)) {
 			DEBUG_INFO ("Downstream Data OK");
