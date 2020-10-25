@@ -1457,7 +1457,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 	}
 
 	if (!memcmp (node->getMacAddress(), BROADCAST_ADDRESS, ENIGMAIOT_ADDR_LEN)) {
-		DEBUG_WARN ("Encoding broadcast message");
+		DEBUG_DBG ("Encoding broadcast message");
 		broadcast = true;
 	}
 
@@ -1471,7 +1471,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 
 	if (broadcast) {
 		buffer[0] = buffer[0] | 0x80; // Mark message as broadcast
-		DEBUG_WARN ("Broadcast message. Type: 0x%X", buffer[0]);
+		DEBUG_DBG ("Broadcast message. Type: 0x%X", buffer[0]);
 	}
 
 	CryptModule::random (buffer + iv_idx, IV_LENGTH);
@@ -1524,6 +1524,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 		return false;
 	}
 
+	//DEBUG_WARN ("Encryption key: %s", printHexBuffer (node->getEncriptionKey (), KEY_LENGTH));
 	DEBUG_VERBOSE ("Encrypted downlink message: %s", printHexBuffer (buffer, packet_length + TAG_LENGTH));
 
 	if (node->getSleepy ()) { // Queue message if node may be sleeping
