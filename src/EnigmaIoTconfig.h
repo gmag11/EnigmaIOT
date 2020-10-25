@@ -16,6 +16,7 @@ static const char ENIGMAIOT_PROT_VERS[] = "0.9.4"; ///< @brief EnitmaIoT Version
 static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on ESP-NOW
 static const uint32_t FLASH_LED_TIME = 30; ///< @brief Time that led keeps on during flash in ms
 static const int RESET_PIN_DURATION = 5000; ///< @brief Number of milliseconds that reset pin has to be grounded to produce a configuration reset
+static const char* TZINFO = "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"; ///< @brief Time zone
 
 // Gateway configuration
 static const unsigned int MAX_KEY_VALIDITY = 86400000U; ///< @brief After this time (in ms) a node is unregistered. Setting this to 0 means imfinite

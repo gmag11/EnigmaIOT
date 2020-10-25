@@ -137,7 +137,6 @@ void setup () {
 
 void showTime () {
 	//const int time_freq = 10000;
-	const char* TZINFO = "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00";
 	
 	tm timeinfo;
 	static time_t displayTime;
