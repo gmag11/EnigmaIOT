@@ -63,18 +63,25 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 	char macstr[ENIGMAIOT_ADDR_LEN * 3];
 	String commandStr;
 	uint8_t tempBuffer[MAX_MESSAGE_LENGTH];
+	bool broadcast=false;
+	uint8_t _command = command;
+
+	if (_command & 0x80)
+		broadcast = true;
+
+	_command = (_command & 0x7F);
 
 	mac2str (mac, macstr);
 	Serial.println ();
 	Serial.printf ("Data from %s --> %s\n", macstr, printHexBuffer (buffer, length));
-	if (command == nodeMessageType_t::DOWNSTREAM_DATA_GET)
+	if (_command == nodeMessageType_t::DOWNSTREAM_DATA_GET)
 		commandStr = "GET";
-	else if (command == nodeMessageType_t::DOWNSTREAM_DATA_SET)
+	else if (_command == nodeMessageType_t::DOWNSTREAM_DATA_SET)
 		commandStr = "SET";
 	else
 		return;
 
-	Serial.printf ("Command %s\n", commandStr.c_str ());
+	Serial.printf ("%s Command %s\n", broadcast ? "Broadcast" : "Unicast", commandStr.c_str ());
 	Serial.printf ("Data: %s\n", printHexBuffer (buffer, length));
 	Serial.printf ("Encoding: 0x%02X\n", payloadEncoding);
 
@@ -92,6 +99,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 	case MSG_PACK:
 		deserializeMsgPack (doc, tempBuffer, length);
 		serializeJsonPretty (doc, Serial);
+		Serial.println ();
 		break;
 	default:
 		DEBUG_WARN ("Payload encoding %d is not (yet) supported", payloadEncoding);

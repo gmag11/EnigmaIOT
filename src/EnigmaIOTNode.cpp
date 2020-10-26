@@ -2365,9 +2365,9 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 	uint16_t nodeId;
 	bool broadcast = (buf[0] & 0x80);
 
-	if (broadcast) {
-		DEBUG_DBG ("Broadcast message. Type: 0x%X", buf[0]);
-	} 
+	//if (broadcast) {
+	//	DEBUG_WARN ("Broadcast message. Type: 0x%X", buf[0]);
+	//} 
 
 	const uint8_t addDataLen = 1 + IV_LENGTH;
 	uint8_t aad[AAD_LENGTH + addDataLen];
@@ -2550,20 +2550,22 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 			notifyDisconnection (invalidateReason);
 		}
 		break;
+	case DOWNSTREAM_BRCAST_DATA_SET:
 	case DOWNSTREAM_DATA_SET:
 		DEBUG_INFO (" <------- DOWNSTREAM DATA SET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
 		}
 		break;
+	case DOWNSTREAM_BRCAST_DATA_GET:
 	case DOWNSTREAM_DATA_GET:
 		DEBUG_INFO (" <------- DOWNSTREAM DATA GET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
 		}
 		break;
-	case DOWNSTREAM_CTRL_DATA:
 	case DOWNSTREAM_BRCAST_CTRL_DATA:
+	case DOWNSTREAM_CTRL_DATA:
 		DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
 		if (processDownstreamData (mac, buf, count, true)) {
 			DEBUG_INFO ("Downstream Data OK");
