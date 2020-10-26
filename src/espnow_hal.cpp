@@ -74,7 +74,9 @@ void Espnow_halClass::begin (uint8_t* gateway, uint8_t channel, peerType_t peerT
 		this->channel = channel;
 	}
 	initComms (peerType);
-	addPeer (BROADCAST_ADDRESS);
+	if (_ownPeerType == COMM_NODE) {
+		addPeer (BROADCAST_ADDRESS);
+	}
 }
 
 bool Espnow_halClass::addPeer (const uint8_t* da) {
@@ -89,7 +91,7 @@ bool Espnow_halClass::addPeer (const uint8_t* da) {
 	peer.encrypt = false;
 	esp_err_t error = esp_now_add_peer (&peer);
 	char addrStr[ENIGMAIOT_ADDR_LEN * 3];
-	DEBUG_WARN ("Peer " MACSTR " added on channel %u. Result %d", MAC2STR (da), ch, error);
+	DEBUG_DBG ("Peer " MACSTR " added on channel %u. Result 0x%X %s", MAC2STR (da), ch, error, esp_err_to_name(error));
 	return error == ESP_OK;
 #else 
 	return true;
