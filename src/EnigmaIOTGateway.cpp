@@ -507,9 +507,12 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 	if (result) {
 		if (shouldSave) {
 			bool regexResult;
-
+#ifdef ESP32
 			std::regex networkNameRegex ("^[^/\\\\]+$");
 			regexResult = std::regex_match (netNameParam.getValue (), networkNameRegex);
+#else
+			regexResult = true;
+#endif
 			if (regexResult) {
 				strncpy (this->gwConfig.networkName, netNameParam.getValue (), NETWORK_NAME_LENGTH - 1);
 				DEBUG_DBG ("Network name: %s", gwConfig.networkName);
@@ -518,8 +521,10 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 				result = false;
 			}
 
+#ifdef ESP32
 			std::regex netKeyRegex ("^.{8,32}$");
 			regexResult = std::regex_match (netKeyParam.getValue (), netKeyRegex);
+#endif
 			if (regexResult) {
 				uint8_t keySize = netKeyParam.getValueLength ();
 				if (keySize > KEY_LENGTH)
@@ -539,8 +544,10 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 				result = false;
 			}
 
+#ifdef ESP32
 			std::regex channelRegex ("^([0-9]|[0-1][0-3])$");
 			regexResult = std::regex_match (channelParam.getValue (), channelRegex);
+#endif
 			if (regexResult) {
 				this->gwConfig.channel = atoi (channelParam.getValue ());
 				DEBUG_DBG ("WiFi ESP-NOW channel: %d", this->gwConfig.channel);
@@ -1030,7 +1037,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		}
 		break;
 	default:
-		DEBUG_WARN ("Received unknown EnigmaIOT message 0x%02X");
+		DEBUG_INFO ("Received unknown EnigmaIOT message 0x%02X");
 	}
 }
 
