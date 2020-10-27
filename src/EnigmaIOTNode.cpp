@@ -16,6 +16,9 @@
 #include <MD5Builder.h>
 #ifdef ESP8266
 #include <Updater.h>
+// ESP8266 fails receiving broadcast messages in some situations. Check https://github.com/espressif/ESP8266_NONOS_SDK/issues/334
+// So, broadcast is disabled on ESP8266 platform
+#define DISABLE_BRCAST
 #elif defined ESP32
 #include <Update.h>
 #include <SPIFFS.h>
@@ -2555,31 +2558,37 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 			notifyDisconnection (invalidateReason);
 		}
 		break;
-	case DOWNSTREAM_BRCAST_DATA_SET:
 	case DOWNSTREAM_DATA_SET:
+#ifndef DISABLE_BRCAST
+	case DOWNSTREAM_BRCAST_DATA_SET:
 		if (buf[0]== DOWNSTREAM_BRCAST_DATA_SET && !node.broadcastIsEnabled ()) {
 			break;
 		}
+#endif
 		DEBUG_INFO (" <------- DOWNSTREAM DATA SET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
 		}
 		break;
-	case DOWNSTREAM_BRCAST_DATA_GET:
 	case DOWNSTREAM_DATA_GET:
+#ifndef DISABLE_BRCAST
+	case DOWNSTREAM_BRCAST_DATA_GET:
 		if (buf[0] == DOWNSTREAM_BRCAST_DATA_GET && !node.broadcastIsEnabled ()) {
 			break;
 		}
+#endif
 		DEBUG_INFO (" <------- DOWNSTREAM DATA GET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
 		}
 		break;
-	case DOWNSTREAM_BRCAST_CTRL_DATA:
 	case DOWNSTREAM_CTRL_DATA:
+#ifndef DISABLE_BRCAST
+	case DOWNSTREAM_BRCAST_CTRL_DATA:
 		if (buf[0] == DOWNSTREAM_BRCAST_CTRL_DATA && !node.broadcastIsEnabled ()) {
 			break;
 		}
+#endif
 		DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
 		if (processDownstreamData (mac, buf, count, true)) {
 			DEBUG_INFO ("Downstream Data OK");
@@ -2599,13 +2608,14 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 			DEBUG_INFO ("Set Node Name OK");
 		}
 		break;
+#ifndef DISABLE_BRCAST
 	case BROADCAST_KEY_RESPONSE:
 		DEBUG_INFO (" <------- BROADCAST KEY MESSAGE");
-		//DEBUG_WARN ("%s", printHexBuffer (buf, count));
 		if (processBroadcastKeyMessage (mac, buf, count)) {
 			DEBUG_INFO ("Broadcast Key OK");
 		}
 		break;
+#endif
 	}
 }
 
