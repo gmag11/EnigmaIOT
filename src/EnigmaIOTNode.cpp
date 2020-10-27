@@ -109,7 +109,7 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
 		if (gateway)
 			Serial.printf (" -- Gateway address: %s\n", mac2str (gateway, gwAddress));
 		Serial.printf (" -- Network Key: %s\n", printHexBuffer (data->networkKey, KEY_LENGTH));
-		Serial.printf (" -- Mode: %s\n", data->sleepy ? "sleepy" : "non sleepy");
+		Serial.printf (" -- Mode: %s. Sleep time %d s\n", data->sleepy ? "sleepy" : "non sleepy", data->sleepTime);
 		Serial.printf (" -- Broadcast key: %s\n", printHexBuffer (data->broadcastKey, KEY_LENGTH));
 		Serial.printf (" -- Broadcast key is %s and %s requested\n", 
 					   data->broadcastKeyValid ? "valid" : "not valid",
@@ -169,7 +169,9 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 				//channel = rtcmem_data.channel;
 				//memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
 				//memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
-				node.setSleepy (rtcmem_data.sleepy);
+				if (node.getInitAsSleepy()) {
+					node.setSleepy (rtcmem_data.sleepy);
+				}
 				node.setNodeName (rtcmem_data.nodeName);
 				// set default sleep time if it was not set
 				if (rtcmem_data.sleepy && rtcmem_data.sleepTime == 0) {
@@ -227,7 +229,9 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 		//channel = rtcmem_data.channel;
 		//memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
 		//memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
-		node.setSleepy (rtcmem_data.sleepy);
+		if (node.getInitAsSleepy()) {
+			node.setSleepy (rtcmem_data.sleepy);
+		}
 		node.setNodeName (rtcmem_data.nodeName);
 		// set default sleep time if it was not set
 		if (rtcmem_data.sleepy && rtcmem_data.sleepTime == 0) {
@@ -272,7 +276,7 @@ bool EnigmaIOTNodeClass::loadFlashData () {
 
 			strlcpy (rtcmem_data.networkName, doc["networkName"] | "", sizeof (rtcmem_data.networkName));
 			rtcmem_data.sleepTime = doc["sleepTime"].as<int> ();
-			rtcmem_data.sleepy = !(rtcmem_data.sleepTime == 0);
+			rtcmem_data.sleepy = !rtcmem_data.sleepTime && node.getInitAsSleepy();
 
 			memset (rtcmem_data.networkKey, 0, KEY_LENGTH);
 			JsonArray netKeyJson = doc["networkKey"];
@@ -416,7 +420,10 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 	memcpy ((uint8_t*)&rtcmem_data_storage, (uint8_t*)&rtcmem_data, sizeof (rtcmem_data));
 	rtcmem_data_storage.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data_storage.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-	DEBUG_VERBOSE ("----- Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
+	DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
+#if DEBUG_LEVEL >= VERBOSE
+	dumpRtcData (&rtcmem_data);
+#endif
 	return true;
 #endif
 	return false;
@@ -518,9 +525,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 #endif
 			DEBUG_DBG ("Sleep time check ok");
 			int sleepyVal = atoi (sleepyParam.getValue ());
-			if (sleepyVal > 0) {
-				data->sleepy = true;
-			}
+			data->sleepy = sleepyVal > 0 && node.getInitAsSleepy ();
 			data->sleepTime = sleepyVal;
 #ifdef ESP32
 		} else {
@@ -2552,6 +2557,9 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		break;
 	case DOWNSTREAM_BRCAST_DATA_SET:
 	case DOWNSTREAM_DATA_SET:
+		if (buf[0]== DOWNSTREAM_BRCAST_DATA_SET && !node.broadcastIsEnabled ()) {
+			break;
+		}
 		DEBUG_INFO (" <------- DOWNSTREAM DATA SET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
@@ -2559,6 +2567,9 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		break;
 	case DOWNSTREAM_BRCAST_DATA_GET:
 	case DOWNSTREAM_DATA_GET:
+		if (buf[0] == DOWNSTREAM_BRCAST_DATA_GET && !node.broadcastIsEnabled ()) {
+			break;
+		}
 		DEBUG_INFO (" <------- DOWNSTREAM DATA GET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
@@ -2566,6 +2577,9 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		break;
 	case DOWNSTREAM_BRCAST_CTRL_DATA:
 	case DOWNSTREAM_CTRL_DATA:
+		if (buf[0] == DOWNSTREAM_BRCAST_CTRL_DATA && !node.broadcastIsEnabled ()) {
+			break;
+		}
 		DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
 		if (processDownstreamData (mac, buf, count, true)) {
 			DEBUG_INFO ("Downstream Data OK");
