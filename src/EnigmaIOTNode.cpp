@@ -856,8 +856,6 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		}
 
 		WiFi.scanDelete ();
-		//WiFi.mode (WIFI_AP);
-		//WiFi.softAPdisconnect ();
 
 #ifdef ESP8266
 		wifi_set_channel (data->channel);
@@ -2292,7 +2290,7 @@ bool EnigmaIOTNodeClass::processBroadcastKeyMessage (const uint8_t* mac, const u
 	*| msgType (1) | IV (12) | Counter (2) | BroadcastKey (32) | Tag (16) |
 	* --------------------------------------------------------------------
 	*/
-#ifndef DISABLE_BRCAST
+
 	uint8_t iv_idx = 1;
 	uint8_t counter_idx = iv_idx + IV_LENGTH;
 	uint8_t broadcastKey_idx = counter_idx + sizeof (int16_t);
@@ -2345,7 +2343,7 @@ bool EnigmaIOTNodeClass::processBroadcastKeyMessage (const uint8_t* mac, const u
 	memcpy (rtcmem_data.broadcastKey, &buf[broadcastKey_idx], KEY_LENGTH);
 	rtcmem_data.broadcastKeyRequested = false;
 	rtcmem_data.broadcastKeyValid = true;
-#endif
+
 	return true;
 }
 
@@ -2560,36 +2558,30 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		}
 		break;
 	case DOWNSTREAM_DATA_SET:
-#ifndef DISABLE_BRCAST
 	case DOWNSTREAM_BRCAST_DATA_SET:
 		if (buf[0]== DOWNSTREAM_BRCAST_DATA_SET && !node.broadcastIsEnabled ()) {
 			break;
 		}
-#endif
 		DEBUG_INFO (" <------- DOWNSTREAM DATA SET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
 		}
 		break;
 	case DOWNSTREAM_DATA_GET:
-#ifndef DISABLE_BRCAST
 	case DOWNSTREAM_BRCAST_DATA_GET:
 		if (buf[0] == DOWNSTREAM_BRCAST_DATA_GET && !node.broadcastIsEnabled ()) {
 			break;
 		}
-#endif
 		DEBUG_INFO (" <------- DOWNSTREAM DATA GET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
 		}
 		break;
 	case DOWNSTREAM_CTRL_DATA:
-#ifndef DISABLE_BRCAST
 	case DOWNSTREAM_BRCAST_CTRL_DATA:
 		if (buf[0] == DOWNSTREAM_BRCAST_CTRL_DATA && !node.broadcastIsEnabled ()) {
 			break;
 		}
-#endif
 		DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
 		if (processDownstreamData (mac, buf, count, true)) {
 			DEBUG_INFO ("Downstream Data OK");
@@ -2609,14 +2601,12 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 			DEBUG_INFO ("Set Node Name OK");
 		}
 		break;
-#ifndef DISABLE_BRCAST
 	case BROADCAST_KEY_RESPONSE:
 		DEBUG_INFO (" <------- BROADCAST KEY MESSAGE");
 		if (processBroadcastKeyMessage (mac, buf, count)) {
 			DEBUG_INFO ("Broadcast Key OK");
 		}
 		break;
-#endif
 	}
 }
 

@@ -16,12 +16,6 @@
 #include "WProgram.h"
 #endif
 
-#ifdef ESP8266
-// ESP8266 fails receiving broadcast messages in some situations. Check https://github.com/espressif/ESP8266_NONOS_SDK/issues/334
-// So, broadcast is disabled on ESP8266 platform
-#define DISABLE_BRCAST
-#endif
-
 #include "EnigmaIoTconfig.h"
 #include "cryptModule.h"
 #include "helperFunctions.h"
