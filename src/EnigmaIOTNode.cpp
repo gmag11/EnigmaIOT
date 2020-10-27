@@ -823,6 +823,10 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		delay (50);
 #endif
 	}
+	WiFiMode_t mode = WiFi.getMode ();
+	DEBUG_DBG ("WiFi mode is %d. Restarting network interface after scan", mode);
+	WiFi.mode (WIFI_OFF);
+	WiFi.mode (mode);
 #elif defined ESP32
 	numWifi = scanGatewaySSID (data->networkName, wifiIndex);
 #endif // ESP8266
