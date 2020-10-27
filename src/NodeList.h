@@ -358,7 +358,11 @@ public:
       * @return `true` if node has broadcast mode enabled.
       */
     bool broadcastIsEnabled () {
+#ifndef DISABLE_BRCAST
         return broadcastEnabled;
+#else
+        return false;
+#endif
     }
 
     /**
@@ -367,7 +371,9 @@ public:
       * @param broadcast `true` to enable broadcast mode on this node.
       */
     void enableBroadcast (bool broadcast) {
+#ifndef DISABLE_BRCAST
         broadcastEnabled = broadcast;
+#endif
     }
 
     /**

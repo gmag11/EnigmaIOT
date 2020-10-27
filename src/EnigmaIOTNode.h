@@ -16,6 +16,12 @@
 #include "WProgram.h"
 #endif
 
+#ifdef ESP8266
+// ESP8266 fails receiving broadcast messages in some situations. Check https://github.com/espressif/ESP8266_NONOS_SDK/issues/334
+// So, broadcast is disabled on ESP8266 platform
+#define DISABLE_BRCAST
+#endif
+
 #include "EnigmaIoTconfig.h"
 #include "cryptModule.h"
 #include "helperFunctions.h"
@@ -548,9 +554,11 @@ public:
 	  * @param broadcast `true` to enable broadcast mode on this node.
 	  */
 	void enableBroadcast (bool broadcast = true) {
+#ifndef DISABLE_BRCAST
 		node.enableBroadcast(broadcast);
 		rtcmem_data.broadcastKeyValid = false;
 		rtcmem_data.broadcastKeyRequested = false; // Key is not requested yet
+#endif
 	}
 
 	/**

@@ -16,9 +16,6 @@
 #include <MD5Builder.h>
 #ifdef ESP8266
 #include <Updater.h>
-// ESP8266 fails receiving broadcast messages in some situations. Check https://github.com/espressif/ESP8266_NONOS_SDK/issues/334
-// So, broadcast is disabled on ESP8266 platform
-#define DISABLE_BRCAST
 #elif defined ESP32
 #include <Update.h>
 #include <SPIFFS.h>
@@ -2291,7 +2288,7 @@ bool EnigmaIOTNodeClass::processBroadcastKeyMessage (const uint8_t* mac, const u
 	*| msgType (1) | IV (12) | Counter (2) | BroadcastKey (32) | Tag (16) |
 	* --------------------------------------------------------------------
 	*/
-
+#ifndef DISABLE_BRCAST
 	uint8_t iv_idx = 1;
 	uint8_t counter_idx = iv_idx + IV_LENGTH;
 	uint8_t broadcastKey_idx = counter_idx + sizeof (int16_t);
@@ -2344,7 +2341,7 @@ bool EnigmaIOTNodeClass::processBroadcastKeyMessage (const uint8_t* mac, const u
 	memcpy (rtcmem_data.broadcastKey, &buf[broadcastKey_idx], KEY_LENGTH);
 	rtcmem_data.broadcastKeyRequested = false;
 	rtcmem_data.broadcastKeyValid = true;
-
+#endif
 	return true;
 }
 
