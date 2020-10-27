@@ -104,12 +104,12 @@ protected:
 	 * @return Returns `true` if save was successful. `false` otherwise
 	 */
 	bool saveConfig ();
-#ifdef SECURE_MQTT
+//#ifdef SECURE_MQTT
 	/**
 	  * @brief Synchronizes time over NTP to check certifitate expiration time
 	  */
 	void setClock ();
-#endif // SECURE_MQTT
+//#endif // SECURE_MQTT
 	/**
 	  * @brief This is called anytime MQTT client is disconnected.
 	  *

@@ -245,9 +245,9 @@ void GwOutput_MQTT::reconnect () {
 		}
 		// Create a random client ID
 		// Attempt to connect
-#ifdef SECURE_MQTT
+//#ifdef SECURE_MQTT
 		setClock ();
-#endif
+//#endif
 		DEBUG_DBG ("Clock set.");
 		DEBUG_DBG ("Connect to MQTT server: user %s, pass %s, topic %s",
 				   mqttgw_config.mqtt_user, mqttgw_config.mqtt_pass, gwTopic.c_str ());
@@ -310,6 +310,7 @@ char* getTopicAddress (char* topic, unsigned int& len) {
 }
 
 control_message_type_t checkMsgType (String data) {
+	DEBUG_DBG ("Type topic: %s", data.c_str ());
 	if (data == GET_VERSION) {
 		return control_message_type::VERSION;
 	} else if (data == GET_SLEEP) {
@@ -413,10 +414,11 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 	DEBUG_DBG ("MsgType 0x%02X", msgType);
 	DEBUG_DBG ("Data: %.*s\n", len, data);
 
-	if (msgType != control_message_type_t::INVALID)
+	if (msgType != control_message_type_t::INVALID) {
 		GwOutput.downlinkCb (addr, nodeName, msgType, (char*)data, len);
-	else
+	} else {
 		DEBUG_WARN ("Invalid message");
+	}
 
 	if (nodeName) {
 		free (nodeName);
@@ -456,7 +458,7 @@ bool GwOutput_MQTT::publishMQTT (const char* topic, const char* payload, size_t 
 	}
 }
 
-#ifdef SECURE_MQTT
+//#ifdef SECURE_MQTT
 void GwOutput_MQTT::setClock () {
 	configTime (1 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 #if DEBUG_LEVEL >= INFO
@@ -473,7 +475,7 @@ void GwOutput_MQTT::setClock () {
 	DEBUG_INFO ("Current time: %s", asctime (&timeinfo));
 #endif
 }
-#endif
+//#endif
 
 bool GwOutput_MQTT::addMQTTqueue (const char* topic, char* payload, size_t len, bool retain) {
 	mqtt_queue_item_t* message = new mqtt_queue_item_t;
