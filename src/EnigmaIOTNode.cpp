@@ -348,7 +348,6 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 		netKeyJson.add (rtcmem_data.networkKey[i]);
 	}
 	doc["sleepTime"] = rtcmem_data.sleepTime;
-	doc["sleepy"] = rtcmem_data.sleepy;
 	doc["gateway"] = gwAddrStr;
 	doc["nodeName"] = rtcmem_data.nodeName;
 
@@ -1181,11 +1180,11 @@ bool EnigmaIOTNodeClass::clientHello () {
 	if (node.broadcastIsEnabled ()) {
 		random = random | 0x00000002U; // Signal broadcast mode enabled to request broadcast key
 		rtcmem_data.broadcastKeyRequested = true;
-		DEBUG_DBG ("Signal broadcast node");
+		DEBUG_DBG ("Signal sleepy node");
 	} else {
 		random = random & 0xFFFFFFFDU; // Signal broadcast disabled
 		rtcmem_data.broadcastKeyRequested = false;
-		DEBUG_DBG ("Signal non broadcast node");
+		DEBUG_DBG ("Signal non sleepy node");
 	}
 
 	memcpy (&(clientHello_msg.random), &random, RANDOM_LENGTH);

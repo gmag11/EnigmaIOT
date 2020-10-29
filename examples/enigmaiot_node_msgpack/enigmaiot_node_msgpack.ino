@@ -37,11 +37,7 @@
 #include <FS.h>
 
 #ifndef LED_BUILTIN
-#ifdef ESP8266
 #define LED_BUILTIN 2 // ESP32 boards normally have a LED in GPIO2 or GPIO5
-#else
-#define LED_BUILTIN 5 // ESP32 boards normally have a LED in GPIO2 or GPIO5
-#endif // ESP8266
 #endif // !LED_BUILTIN
 
 #define BLUE_LED LED_BUILTIN
@@ -114,6 +110,7 @@ void setup () {
 	EnigmaIOTNode.onConnected (connectEventHandler);
 	EnigmaIOTNode.onDisconnected (disconnectEventHandler);
 	EnigmaIOTNode.onDataRx (processRxData);
+	EnigmaIOTNode.enableBroadcast ();
 
 	EnigmaIOTNode.begin (&Espnow_hal);
 	
