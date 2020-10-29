@@ -109,7 +109,7 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
 		if (gateway)
 			Serial.printf (" -- Gateway address: %s\n", mac2str (gateway, gwAddress));
 		Serial.printf (" -- Network Key: %s\n", printHexBuffer (data->networkKey, KEY_LENGTH));
-		Serial.printf (" -- Mode: %s. Sleep time %d s\n", data->sleepy ? "sleepy" : "non sleepy", data->sleepTime);
+		Serial.printf (" -- Mode: %s\n", data->sleepy ? "sleepy" : "non sleepy");
 		Serial.printf (" -- Broadcast key: %s\n", printHexBuffer (data->broadcastKey, KEY_LENGTH));
 		Serial.printf (" -- Broadcast key is %s and %s requested\n", 
 					   data->broadcastKeyValid ? "valid" : "not valid",
@@ -169,9 +169,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 				//channel = rtcmem_data.channel;
 				//memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
 				//memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
-				if (node.getInitAsSleepy()) {
-					node.setSleepy (rtcmem_data.sleepy);
-				}
+				node.setSleepy (rtcmem_data.sleepy);
 				node.setNodeName (rtcmem_data.nodeName);
 				// set default sleep time if it was not set
 				if (rtcmem_data.sleepy && rtcmem_data.sleepTime == 0) {
@@ -229,9 +227,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 		//channel = rtcmem_data.channel;
 		//memcpy (gateway, rtcmem_data.gateway, comm->getAddressLength ()); // setGateway
 		//memcpy (networkKey, rtcmem_data.networkKey, KEY_LENGTH);
-		if (node.getInitAsSleepy()) {
-			node.setSleepy (rtcmem_data.sleepy);
-		}
+		node.setSleepy (rtcmem_data.sleepy);
 		node.setNodeName (rtcmem_data.nodeName);
 		// set default sleep time if it was not set
 		if (rtcmem_data.sleepy && rtcmem_data.sleepTime == 0) {
@@ -276,7 +272,7 @@ bool EnigmaIOTNodeClass::loadFlashData () {
 
 			strlcpy (rtcmem_data.networkName, doc["networkName"] | "", sizeof (rtcmem_data.networkName));
 			rtcmem_data.sleepTime = doc["sleepTime"].as<int> ();
-			rtcmem_data.sleepy = !rtcmem_data.sleepTime && node.getInitAsSleepy();
+			rtcmem_data.sleepy = !(rtcmem_data.sleepTime == 0);
 
 			memset (rtcmem_data.networkKey, 0, KEY_LENGTH);
 			JsonArray netKeyJson = doc["networkKey"];
@@ -525,7 +521,9 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 #endif
 			DEBUG_DBG ("Sleep time check ok");
 			int sleepyVal = atoi (sleepyParam.getValue ());
-			data->sleepy = sleepyVal > 0 && node.getInitAsSleepy ();
+			if (sleepyVal > 0) {
+				data->sleepy = true;
+			}
 			data->sleepTime = sleepyVal;
 #ifdef ESP32
 		} else {
