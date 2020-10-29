@@ -416,7 +416,10 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 	memcpy ((uint8_t*)&rtcmem_data_storage, (uint8_t*)&rtcmem_data, sizeof (rtcmem_data));
 	rtcmem_data_storage.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data_storage.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-	DEBUG_VERBOSE ("----- Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
+	DEBUG_VERBOSE ("Write RTCData: %s", printHexBuffer ((uint8_t*)&rtcmem_data, sizeof (rtcmem_data)));
+#if DEBUG_LEVEL >= VERBOSE
+	dumpRtcData (&rtcmem_data);
+#endif
 	return true;
 #endif
 	return false;
@@ -2552,6 +2555,9 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		break;
 	case DOWNSTREAM_BRCAST_DATA_SET:
 	case DOWNSTREAM_DATA_SET:
+		if (buf[0]== DOWNSTREAM_BRCAST_DATA_SET && !node.broadcastIsEnabled ()) {
+			break;
+		}
 		DEBUG_INFO (" <------- DOWNSTREAM DATA SET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
@@ -2559,6 +2565,9 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		break;
 	case DOWNSTREAM_BRCAST_DATA_GET:
 	case DOWNSTREAM_DATA_GET:
+		if (buf[0] == DOWNSTREAM_BRCAST_DATA_GET && !node.broadcastIsEnabled ()) {
+			break;
+		}
 		DEBUG_INFO (" <------- DOWNSTREAM DATA GET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
@@ -2566,6 +2575,9 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		break;
 	case DOWNSTREAM_BRCAST_CTRL_DATA:
 	case DOWNSTREAM_CTRL_DATA:
+		if (buf[0] == DOWNSTREAM_BRCAST_CTRL_DATA && !node.broadcastIsEnabled ()) {
+			break;
+		}
 		DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
 		if (processDownstreamData (mac, buf, count, true)) {
 			DEBUG_INFO ("Downstream Data OK");
