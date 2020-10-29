@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOT-Json-Controller-Template.ino
-  * @version 0.9.4
-  * @date 31/07/2020
+  * @version 0.9.5
+  * @date 30/10/2020
   * @author German Martin
   * @brief Node template for easy custom node creation
   *
