@@ -1677,7 +1677,7 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 	} clockRequest_msg;
 	uint16_t counter;
 
-#define CRMSG_LEN sizeof(clockRequest_msg)
+	const unsigned int CRMSG_LEN = sizeof (clockRequest_msg);
 
 	if (count < CRMSG_LEN) {
 		DEBUG_WARN ("Message too short");
@@ -1700,7 +1700,7 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 
 	uint8_t packetLen = count - TAG_LENGTH;
 
-	if (!CryptModule::decryptBuffer ((uint8_t*)&(clockRequest_msg.t1), sizeof (clock_t), // Decrypt from t2, 8 bytes
+	if (!CryptModule::decryptBuffer ((uint8_t*)&(clockRequest_msg.counter), CRMSG_LEN - IV_LENGTH - TAG_LENGTH - 1, // Decrypt from counter, 10 bytes
 									 clockRequest_msg.iv, IV_LENGTH,
 									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
 									 aad, sizeof (aad), clockRequest_msg.tag, TAG_LENGTH)) {
@@ -1796,8 +1796,7 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 	// Copy 8 last bytes from NetworkKey
 	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-	// TODO: BUG: encryption should happen after counter
-	if (!CryptModule::encryptBuffer ((uint8_t*)&(clockResponse_msg.t2), sizeof (int64_t) << 1, // Encrypt only from t2, 16 bytes
+	if (!CryptModule::encryptBuffer ((uint8_t*)&(clockResponse_msg.counter), CRSMSG_LEN - IV_LENGTH - TAG_LENGTH - 1, // Encrypt only from counter, 18 bytes
 									 clockResponse_msg.iv, IV_LENGTH,
 									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
 									 aad, sizeof (aad), clockResponse_msg.tag, TAG_LENGTH)) {

@@ -1265,7 +1265,7 @@ bool EnigmaIOTNodeClass::clockRequest () {
 	// Copy 8 last bytes from Node Key
 	memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-	if (!CryptModule::encryptBuffer ((uint8_t*)&(clockRequest_msg.t1), sizeof (clock_t), // Encrypt only from public key
+	if (!CryptModule::encryptBuffer ((uint8_t*)&(clockRequest_msg.counter), CRMSG_LEN - IV_LENGTH - TAG_LENGTH - 1, // Encrypt only from counter
 									 clockRequest_msg.iv, IV_LENGTH,
 									 node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
 									 aad, sizeof (aad), clockRequest_msg.tag, TAG_LENGTH)) {
@@ -1303,7 +1303,7 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 
 	uint16_t counter;
 
-#define CRSMSG_LEN sizeof(clockResponse_msg)
+	const unsigned int CRSMSG_LEN = sizeof (clockResponse_msg);
 
 	memcpy (&clockResponse_msg, buf, count);
 
@@ -1317,7 +1317,7 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 
 	uint8_t packetLen = count - TAG_LENGTH;
 
-	if (!CryptModule::decryptBuffer ((uint8_t*)&(clockResponse_msg.t2), sizeof (int64_t) << 1, // Decrypt from t2, 16 bytes
+	if (!CryptModule::decryptBuffer ((uint8_t*)&(clockResponse_msg.counter), CRSMSG_LEN - IV_LENGTH - TAG_LENGTH - 1, // Decrypt from counter, 18 bytes
 									 clockResponse_msg.iv, IV_LENGTH,
 									 node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
 									 aad, sizeof (aad), clockResponse_msg.tag, TAG_LENGTH)) {
