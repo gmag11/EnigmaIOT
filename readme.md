@@ -333,7 +333,7 @@ Example gateway code expands data message to JSON data, to be used easily as pay
 
 In any case you can use your own format or even raw unencoded data. Take care of maximum message length that communications layer uses. For ESP-NOW, maximum payload length it is 217 bytes.
 
-Since version 0.9 payload encoding is signaled on user data messages (both uplink and downlink) so new formats are possible. Currently  [CayenneLPP](https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload) and [MessagePack](https://msgpack.org) formats, in addition to RAW data, are possible. Check examples for usage instruction.
+Since version 0.9 payload encoding is signaled on user data messages (both uplink and downlink) so new formats are possible. Currently  [CayenneLPP](https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload) and [MessagePack](https://msgpack.org) formats, in addition to RAW data, are possible. Check examples for usage instruction. MessagePack encoding and decoding are managed by ArduinoJSON library.
 
 This change may produce incompatibilities with older versions so make sure you update your gateway and all your nodes to latest library version.
 
