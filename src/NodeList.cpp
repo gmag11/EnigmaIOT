@@ -138,8 +138,12 @@ Node* NodeList::getNodeFromID (uint16_t nodeId) {
 Node* NodeList::getNodeFromMAC (const uint8_t* mac) {
 	uint16_t index = 0;
 
+	if (!memcmp (broadcastNode->getEncriptionKey (), mac, ENIGMAIOT_ADDR_LEN)) {
+		return broadcastNode;
+	}
+
 	while (index < NUM_NODES) {
-		if (!memcmp (nodes[index].mac, mac, 6)) {
+		if (!memcmp (nodes[index].mac, mac, ENIGMAIOT_ADDR_LEN)) {
 			if (nodes[index].status != UNREGISTERED) {
 				return &(nodes[index]);
 			}

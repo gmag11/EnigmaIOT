@@ -152,6 +152,19 @@ bool buildRestartNode (uint8_t* data, size_t& dataLen, const uint8_t* inputData,
 	return true;
 }
 
+bool buildSendBrcastKey (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+	DEBUG_VERBOSE ("Build 'Send Broadcast Key' message from: %s", printHexBuffer (inputData, inputLen));
+	if (inputData && inputLen == KEY_LENGTH) {
+		data[0]= (uint8_t)control_message_type::BRCAST_KEY;
+		memcpy (data + 1, inputData, inputLen);
+		dataLen = inputLen + 1;
+		return true;
+	} else {
+		return false;
+	}
+
+}
+
 int getNextNumber (char*& data, size_t& len/*, char* &position*/) {
 	char strNum[10];
 	int number;
@@ -425,6 +438,13 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 			return false;
 		}
 		DEBUG_VERBOSE ("Restart node message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+		break;
+	case control_message_type::BRCAST_KEY:
+		if (!buildSendBrcastKey (downstreamData, dataLen, nodelist.getBroadcastNode()->getEncriptionKey(), KEY_LENGTH)) {
+			DEBUG_ERROR ("Error building broadcast key message");
+			return false;
+		}
+		DEBUG_VERBOSE ("Broadcast key message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
 	case control_message_type::USERDATA_GET:
 		DEBUG_INFO ("Data message GET");
@@ -1825,71 +1845,9 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 }
 
 bool EnigmaIOTGatewayClass::sendBroadcastKey (Node* node) {
-   /*
-	* --------------------------------------------------------------------
-	*| msgType (1) | IV (12) | Counter (2) | BroadcastKey (32) | Tag (16) |
-	* --------------------------------------------------------------------
-	*/
 
-	struct __attribute__ ((packed, aligned (1))) {
-		uint8_t msgType;
-		uint8_t iv[IV_LENGTH];
-		uint16_t counter;
-		uint8_t broadcastKey[KEY_LENGTH];
-		uint8_t tag[TAG_LENGTH];
-	} broadcastKey_msg;
-
-#define BRKMSG_LEN sizeof(broadcastKey_msg)
-
-	broadcastKey_msg.msgType = BROADCAST_KEY_RESPONSE;
-
-	CryptModule::random (broadcastKey_msg.iv, IV_LENGTH);
-	DEBUG_VERBOSE ("IV: %s", printHexBuffer (broadcastKey_msg.iv, IV_LENGTH));
-	memcpy (broadcastKey_msg.broadcastKey, nodelist.getBroadcastNode ()->getEncriptionKey(), KEY_LENGTH);
-
-	uint16_t counter;
-	if (useCounter) {
-		counter = node->getLastDownlinkMsgCounter () + 1;
-		node->setLastDownlinkMsgCounter (counter);
-	} else {
-		counter = (uint16_t)(Crypto.random ());
-	}
-	memcpy (&(broadcastKey_msg.counter), &counter, sizeof (uint16_t));
-	DEBUG_INFO ("Downlink message #%d", counter);
-
-	DEBUG_VERBOSE ("Broadcast key message: %s", printHexBuffer ((uint8_t*)&broadcastKey_msg, BRKMSG_LEN - TAG_LENGTH));
-
-	const uint8_t addDataLen = 1 + IV_LENGTH;
-	uint8_t aad[AAD_LENGTH + addDataLen];
-
-	memcpy (aad, (uint8_t*)&broadcastKey_msg, addDataLen); // Copy message upto iv
-
-	// Copy 8 last bytes from Key
-	memcpy (aad + addDataLen, node->getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
-
-	if (!CryptModule::encryptBuffer ((uint8_t*)&(broadcastKey_msg.counter), BRKMSG_LEN - TAG_LENGTH - IV_LENGTH - 1, // Encrypt only counter, excluding tag, iv and message type
-									 broadcastKey_msg.iv, IV_LENGTH,
-									 node->getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of key
-									 aad, sizeof (aad), broadcastKey_msg.tag, TAG_LENGTH)) {
-		DEBUG_ERROR ("Error during encryption");
-		return false;
-	}
-
-	DEBUG_VERBOSE ("Encrypted Broadcast Key message: %s", printHexBuffer ((uint8_t*)&broadcastKey_msg, BRKMSG_LEN));
-
-	DEBUG_INFO (" -------> BROADCAST KEY");
-#ifdef DEBUG_ESP_PORT
-	char mac[ENIGMAIOT_ADDR_LEN * 3];
-	mac2str (node->getMacAddress (), mac);
-#endif
-	if (comm->send (node->getMacAddress (), (uint8_t*)&broadcastKey_msg, BRKMSG_LEN) == 0) {
-		DEBUG_INFO ("Broadcast Key message sent to %s", mac);
-		return true;
-	} else {
-		//nodelist.unregisterNode (node);
-		DEBUG_ERROR ("Error sending Broadcast Key message to %s", mac);
-		return false;
-	}
+	DEBUG_DBG ("Send broadcast key to " MACSTR, MAC2STR (node->getMacAddress()));
+	return sendDownstream (node->getMacAddress (), NULL, 0, control_message_type_t::BRCAST_KEY);
 
 }
 

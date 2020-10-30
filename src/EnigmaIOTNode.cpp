@@ -2275,6 +2275,8 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
 		break;
 	case control_message_type::RESTART_NODE:
 		return processSetRestartCommand (mac, data, len);
+	case control_message_type::BRCAST_KEY:
+		return processBroadcastKeyMessage (mac, data, len);
 	case control_message_type::OTA:
 		if (!broadcast) { // DO NOT PROCESS BROADCAST OTA MESSAGES
 			if (processOTACommand (mac, data, len)) {
@@ -2290,58 +2292,12 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
 }
 
 bool EnigmaIOTNodeClass::processBroadcastKeyMessage (const uint8_t* mac, const uint8_t* buf, size_t count) {
-   /*
-	* --------------------------------------------------------------------
-	*| msgType (1) | IV (12) | Counter (2) | BroadcastKey (32) | Tag (16) |
-	* --------------------------------------------------------------------
-	*/
-
-	uint8_t iv_idx = 1;
-	uint8_t counter_idx = iv_idx + IV_LENGTH;
-	uint8_t broadcastKey_idx = counter_idx + sizeof (int16_t);
-	uint8_t tag_idx = count - TAG_LENGTH;
-
-	uint16_t counter;
-
-	uint8_t addDataLen = 1 + IV_LENGTH;
-	uint8_t aad[AAD_LENGTH + addDataLen];
-
-	memcpy (aad, buf, addDataLen); // Copy message upto iv
-
-	// Copy 8 last bytes from Node Key
-	memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
-
-	uint8_t packetLen = count - TAG_LENGTH;
-
-	if (!CryptModule::decryptBuffer (buf + counter_idx, packetLen - 1 - IV_LENGTH, // Decrypt from counter
-									 buf + iv_idx, IV_LENGTH,
-									 node.getEncriptionKey (), KEY_LENGTH - AAD_LENGTH, // Use first 24 bytes of network key
-									 aad, sizeof (aad), buf + tag_idx, TAG_LENGTH)) {
-		DEBUG_ERROR ("Error during decryption");
+	if (!buf || count != KEY_LENGTH + 1) {
+		DEBUG_WARN ("Invalid broadcast key message. Incorrect length %d", count);
 		return false;
 	}
 
-	DEBUG_VERBOSE ("Decripted broadcast key message: %s", printHexBuffer (buf, count - TAG_LENGTH));
-
-	memcpy (&counter, &(buf[counter_idx]), sizeof (uint16_t));
-	DEBUG_INFO ("Downlink msg #%d", counter);
-
-	if (useCounter) {
-		if (counter > node.getLastDownlinkMsgCounter ()) {
-			DEBUG_INFO ("Accepted");
-			node.setLastDownlinkMsgCounter (counter);
-			rtcmem_data.lastDownlinkMsgCounter = counter;
-		} else {
-			DEBUG_WARN ("Downlink msg rejected");
-			return false;
-		}
-	}
-
-	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
-		if (!saveRTCData ()) {
-			DEBUG_ERROR ("Error saving data on RTC");
-		}
-	}
+	int broadcastKey_idx = 1;
 
 	DEBUG_VERBOSE ("Broadcast key: %s", printHexBuffer (&buf[broadcastKey_idx], KEY_LENGTH));
 

@@ -19,9 +19,11 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len) {
 
 	memset (tempStr, 0, MAX_STR_LEN);
 
-	for (int i = 0; i < len; i++) {
-		if (charIndex < MAX_STR_LEN - 2) {
-			charIndex += sprintf (tempStr + charIndex, "%02X ", buffer[i]);
+	if (buffer) {
+		for (int i = 0; i < len; i++) {
+			if (charIndex < MAX_STR_LEN - 2) {
+				charIndex += sprintf (tempStr + charIndex, "%02X ", buffer[i]);
+			}
 		}
 	}
 	return tempStr;
@@ -83,7 +85,7 @@ uint32_t calculateCRC32 (const uint8_t* data, size_t length) {
 char* mac2str (const uint8_t* mac, char* buffer) {
 	if (mac && buffer) {
 		//DEBUG_DBG ("mac2str %02x:%02x:%02x:%02x:%02x:%02x",mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-		snprintf (buffer, 18, MACSTR, MAC2STR (mac));
+		snprintf (buffer, ENIGMAIOT_ADDR_LEN * 3, MACSTR, MAC2STR (mac));
 		//DEBUG_DBG ("Address: %s", buffer);
 		return buffer;
 	}
