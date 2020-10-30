@@ -22,6 +22,7 @@
 #include <ESPAsyncWiFiManager.h>
 #include <DNSServer.h>
 #include <queue>
+#include "GatewayAPI.h"
 
 #include "helperFunctions.h"
 
@@ -237,6 +238,8 @@ protected:
 	AsyncWiFiManager* wifiManager; ///< @brief Wifi configuration portal
 	onWiFiManagerExit_t notifyWiFiManagerExit; ///< @brief Function called when configuration portal exits
 	onWiFiManagerStarted_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
+
+	friend class GatewayAPI;
 
 	/**
 	 * @brief Activates a flag that signals that configuration has to be saved

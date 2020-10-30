@@ -46,4 +46,7 @@ const uint8_t TAG_LENGTH = 16; ///< @brief Authentication tag length. For Poly13
 const uint8_t AAD_LENGTH = 8; ///< @brief Number of bytes from last part of key that will be used for additional authenticated data
 #define CYPHER_TYPE ChaChaPoly
 
+//Web API
+const int WEB_API_PORT = 80; ///< @brief TCP port where Web API will listen through
+
 #endif

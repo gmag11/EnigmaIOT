@@ -42,6 +42,9 @@ static const uint32_t PRE_REG_DELAY = 5000; ///< @brief Time to wait before regi
 static const uint32_t POST_REG_DELAY = 1500; ///< @brief Time to wait before sending data after registration so that other nodes have time to finish their registration. Real delay is a random lower than this value.
 static const uint8_t COMM_ERRORS_BEFORE_SCAN = 2; ///< @brief Node will search for a gateway if this number of communication errors have happened.
 
+//Web API
+#define ENABLE_WEB_API 1 ///< @brief Enable Web API support on gateway
+
 //Debug
 #define DEBUG_ESP_PORT Serial ///< @brief Stream to output debug info. It will normally be `Serial`
 #ifndef DEBUG_LEVEL

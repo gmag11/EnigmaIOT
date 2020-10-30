@@ -756,6 +756,8 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 		comm->begin (NULL, gwConfig.channel, COMM_GATEWAY);
 		comm->onDataRcvd (rx_cb);
 		comm->onDataSent (tx_cb);
+
+		GwAPI.begin ();
 	}
 }
 
