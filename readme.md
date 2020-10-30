@@ -46,19 +46,38 @@ During this project conception I decided that it should fulfil this list of requ
 Notice that network key used to implement this feature is stored on flash. ESP8266 do not allow flash encryption so network key may be recovered reading flash.
 
 - [x] Pluggable physical layer communication. Right now only ESP-NOW protocol is developed but you can easily add more communication alternatives
+
 - [x] When using ESP-NOW only ESP8266 or ESP32 is needed. No more electronics apart from sensor
+
 - [x] Data message counter to detect lost or repeated messages
+
 - [x] Designed as two libraries (one for gateway, one for node) for easier use
+
 - [x] Crypto algorithm could be changed with low effort
+
 - [x] Node and Gateway do store shared keys only on RAM. They are lost on power cycle. This protects system against flash reading attack. All nodes attach automatically with a new shared key after gateway is switched on
+
 - [x] Downlink available. If deep sleep is used on sensor nodes, it is queued and sent just after node send a data message
-- [x] Optional sleep mode management. In this case key has to be stored temporally. Normally RTC memory is the recommended place, and it is the one currently implemented
+
+- [x] Optional sleep mode management. In this case key and context has to be stored temporally. Normally RTC memory is the recommended place, and it is the one currently implemented. 
+**Note**: There is the alternative to store context on flash memory so that node can be completely switched off between massages without requiring a new registering. Notice that on every received or sent message node updates this context  so consider that a high number of writes in flash may degrade it in the medium term. If messages counters are disabled in configuration the number of writes is decreased drastically but this reduces security level as it makes possible to repeat messages.
+
 - [x] Initial configuration over WiFi portal on each device
+
 - [x] Node configuration while in service using control downlink commands
-- [ ] OTA over WiFi
+
+- [ ] OTA over WiFi. Question: Is it really useful? Place an issue explaining an use case.
+
 - [x] OTA over MQTT/ESP-NOW
+
 - [x] Node identification by using a flashing LED. This is useful when you have a bunch of nodes together :D
-- [ ] Broadcast messages that go to all nodes. Under study
+
+- [x] Broadcast messages that go to all nodes. This is implemented by sending messages to broadcast address (ff:ff:ff:ff:ff:ff in esp-now). Only nodes that are always listening are able to receive these messages, they are not queued. In order to send a broadcast message using EnigmaIOTGatewayMQTT you may use `<network name>/broadcast/...` as topi beginning. Any control or data message will arrive all nodes that have broadcast enabled. Control messages are processed normally except OTA and SET NAME, which are ignored. Data messages are passed to user code for processing.
+
+  A shared encryption key is used to encrypt broadcast messages. It is generated automatically by Gateway on every restart. Nodes that announce as broadcast receivers during registration will receive broadcast key in a specific message. All this process is transparent of course.
+
+  A node may not send broadcast messages, only gateway can.
+
 - [x] Both gateway or nodes may run on ESP32 or ESP8266
 
 ## Design
@@ -153,11 +172,23 @@ Gateway can send commands to an individual node in a similar way as sensor data 
 
 Only last message is queued. In case Gateway tries to send a new message, old one gets deleted and overridden by the new one.
 
+Possible values of first byte means:
+
+02:  SET command (unicast)
+
+82: SET command (broadcast)
+
+12: GET command (unicast)
+
+92: GET command (broadcast)
+
 ### Control message
 
 ##### Downlink Control Message
 
 ![DL Control Command message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/ControlComand-Downlink.png)
+
+Broadcast messages of this type start with `0x84`.
 
 ##### Uplink Control Message
 
@@ -316,7 +347,7 @@ This information is stored in flash so node will use it to communicate in all fo
 
 In the case that gateway has changed its channel (for instance due to a reconfiguration) node will not be able to communicate again.
 
-If several transmission errors are detected by node, it starts searching for gateway again. When found it keeps sending messages normally.
+If several (2 by default) transmission errors are detected by node, it starts searching for gateway again. When found it keeps sending messages normally and new channel is updated in configuration persistently.
 
 So, node will always follow the channel configuration that gateway is working in.
 

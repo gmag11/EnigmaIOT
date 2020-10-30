@@ -1560,6 +1560,13 @@ bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t rea
 	* --------------------------
 	*/
 
+	// TODO: Encrypt using network key, adding some random data.This is to avoid DoS attack.
+	// I have to investigate if this may really work.
+	// Other options: 
+	//    - mark message using timestamp. May not work with gateways not connected to Internet.
+	//    - Adding a number calculated from node message (a byte should be sufficient).
+	//           For instance nth byte + 3. Most probable candidate
+	
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t reason;

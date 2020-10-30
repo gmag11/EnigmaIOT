@@ -2455,6 +2455,14 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 
 
 nodeInvalidateReason_t EnigmaIOTNodeClass::processInvalidateKey (const uint8_t* mac, const uint8_t* buf, size_t count) {
+
+	// TODO: Encrypt using network key, adding some random data.This is to avoid DoS attack.
+	// I have to investigate if this may really work.
+	// Other options: 
+	//    - mark message using timestamp. May not work with gateways not connected to Internet.
+	//    - Adding a number calculated from node message (a byte should be sufficient).
+	//           For instance nth byte + 3. Most probable candidate
+
 #define IKMSG_LEN 2
 	if (buf && count < IKMSG_LEN) {
 		return UNKNOWN_ERROR;
