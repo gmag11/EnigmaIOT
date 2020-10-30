@@ -203,9 +203,6 @@ $(function() {
 <p>In order to make node messages more readable for humans, this implements a way to let Gateway to translate EnigmaIOT addresses to custom names (for instance, "RoomBlindControl"). This eases node replacement in case of failure.</p>
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> names can be up to 32 characters long and should avoid characters different of letters and numbers. <b>Characters #,+ and / are specially forbidden</b>.</p>
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> name is configured by user during first configuration in WiFi Web portal.</p>
-<h2>Broadcast Key message</h2>
-<p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/SendBroadcastKey.png" alt="Set Node Name" class="inline"/></p>
-<p>If a node registers with broadcast flag active, gateway sends broadcast key using this message just after successful registration. Broadcast key is automatically generated on gateway on boot, so it will be different after every restart. Nodes will be synchronized as soon they register again.</p>
 <h2>Invalidate Key message</h2>
 <p><img src="https://github.com/gmag11/EnigmaIOT/raw/master/img/InvalidateKey.png" alt="Invalidate Key message format" class="inline"/></p>
 <p>After every data message from nodes, gateway evaluates key integrity and validity. In case of any error decoding the packet gateways ignores data and reply with this message indicating the reason that caused error. <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> must start a new registration procedure in order to send data again. After this new registration node resends the last data message.</p>

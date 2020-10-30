@@ -238,12 +238,6 @@ Node names can be up to 32 characters long and should avoid characters different
 
 Node name is configured by user during first configuration in WiFi Web portal.
 
-### Broadcast Key message
-
-![Set Node Name](https://github.com/gmag11/EnigmaIOT/raw/master/img/SendBroadcastKey.png)
-
-If a node registers with broadcast flag active, gateway sends broadcast key using this message just after successful registration. Broadcast key is automatically generated on gateway on boot, so it will be different after every restart. Nodes will be synchronized as soon they register again.
-
 ### Invalidate Key message
 
 ![Invalidate Key message format](https://github.com/gmag11/EnigmaIOT/raw/master/img/InvalidateKey.png)
