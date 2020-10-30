@@ -152,12 +152,12 @@ bool buildRestartNode (uint8_t* data, size_t& dataLen, const uint8_t* inputData,
 	return true;
 }
 
-bool buildSendBrcastKey (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
-	DEBUG_VERBOSE ("Build 'Send Broadcast Key' message from: %s", printHexBuffer (inputData, inputLen));
-	if (inputData && inputLen == KEY_LENGTH) {
+bool buildSendBrcastKey (uint8_t* data, size_t& dataLen, const uint8_t* key, size_t keyLen) {
+	DEBUG_VERBOSE ("Build 'Send Broadcast Key' message from: %s", printHexBuffer (key, keyLen));
+	if (key && keyLen == KEY_LENGTH) {
 		data[0]= (uint8_t)control_message_type::BRCAST_KEY;
-		memcpy (data + 1, inputData, inputLen);
-		dataLen = inputLen + 1;
+		memcpy (data + 1, key, keyLen);
+		dataLen = keyLen + 1;
 		return true;
 	} else {
 		return false;

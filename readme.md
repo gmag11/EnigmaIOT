@@ -74,7 +74,9 @@ Notice that network key used to implement this feature is stored on flash. ESP82
 
 - [x] Broadcast messages that go to all nodes. This is implemented by sending messages to broadcast address (ff:ff:ff:ff:ff:ff in esp-now). Only nodes that are always listening are able to receive these messages, they are not queued. In order to send a broadcast message using EnigmaIOTGatewayMQTT you may use `<network name>/broadcast/...` as topi beginning. Any control or data message will arrive all nodes that have broadcast enabled. Control messages are processed normally except OTA and SET NAME, which are ignored. Data messages are passed to user code for processing.
 
-  A shared encryption key is used to encrypt broadcast messages. It is generated automatically by Gateway on every restart. Nodes that announce as broadcast receivers during registration will receive broadcast key in a specific message. All this process is transparent of course.
+  A shared encryption key is used to encrypt broadcast messages. It is generated automatically by Gateway on every restart. 
+
+  If a node registers with broadcast flag active, gateway sends broadcast key using this message just after successful registration. Broadcast key is automatically generated on gateway on boot, so it will be different after every restart. Nodes will be synchronized as soon they register again.
 
   A node may not send broadcast messages, only gateway can.
 
@@ -497,6 +499,7 @@ Messages are encoded to reduce the amount of bytes to be sent over internal prot
 | Report node name | `0x87` | Node name as string |
 | Set node name | `0x08` | Node name as string |
 | Restart node MCU | `0x09` | None |
+| Send Broadcast Key | `0x10` | 32 byte key |
 
 ## OTA Update
 
