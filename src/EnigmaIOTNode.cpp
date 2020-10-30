@@ -2249,9 +2249,10 @@ void EnigmaIOTNodeClass::restart (bool reboot) {
 		ESP.restart (); // Reboot to recover normal status
 }
 
-bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len) {
+bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len, bool broadcast) {
 
 	DEBUG_VERBOSE ("Data: %s", printHexBuffer (data, len));
+	DEBUG_DBG ("%s control command", broadcast ? "Broadcast" : "Unicast");
 	switch (data[0]) {
 	case control_message_type::VERSION:
 		return processVersionCommand (mac, data, len);
@@ -2268,16 +2269,22 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
 	case control_message_type::NAME_GET:
 		return processGetNameCommand (mac, data, len);
 	case control_message_type::NAME_SET:
-		return processSetNameCommand (mac, data, len);
+		if (!broadcast) { // DO NOT PROCESS BROADCAST NAME SET 
+			return processSetNameCommand (mac, data, len);
+		}
+		break;
 	case control_message_type::RESTART_NODE:
 		return processSetRestartCommand (mac, data, len);
 	case control_message_type::OTA:
-		if (processOTACommand (mac, data, len)) {
-			return true;
-		} else {
-			DEBUG_ERROR ("Error processing OTA");
-			restart ();
+		if (!broadcast) { // DO NOT PROCESS BROADCAST OTA MESSAGES
+			if (processOTACommand (mac, data, len)) {
+				return true;
+			} else {
+				DEBUG_ERROR ("Error processing OTA");
+				restart ();
+			}
 		}
+		break;
 	}
 	return false;
 }
@@ -2434,7 +2441,7 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 	if (control) {
 		DEBUG_INFO ("Control command");
 		DEBUG_VERBOSE ("Data: %s", printHexBuffer (&buf[data_idx], tag_idx - data_idx));
-		return processControlCommand (mac, &buf[data_idx], tag_idx - data_idx);
+		return processControlCommand (mac, &buf[data_idx], tag_idx - data_idx, broadcast);
 	}
 
 	DEBUG_VERBOSE ("Sending data notification. Payload length: %d", tag_idx - data_idx);

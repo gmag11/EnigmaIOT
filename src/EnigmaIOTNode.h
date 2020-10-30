@@ -302,7 +302,7 @@ protected:
 	  * @param len Length of payload data
 	  * @return Returns `true` if message could be correcly decoded and processed
 	  */
-	bool processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len);
+	bool processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len, bool broadcast);
 
 	/**
 	  * @brief Processes downstream data from gateway
