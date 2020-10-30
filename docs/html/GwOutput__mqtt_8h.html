@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.4</span>
+   &#160;<span id="projectnumber">0.9.5</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -143,9 +143,13 @@ Macros</h2></td></tr>
 <tr class="separator:a82ea7d9552d7d2c2d977c578587e94dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13c1b13340e4cfcf8fa233d3f941853e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GwOutput__mqtt_8h.html#a13c1b13340e4cfcf8fa233d3f941853e">GW_STATUS</a>&#160;&#160;&#160;&quot;/gateway/<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>&quot;</td></tr>
 <tr class="separator:a13c1b13340e4cfcf8fa233d3f941853e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e46d7b49d143e76a290f06fc6892aa3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GwOutput__mqtt_8h.html#a2e46d7b49d143e76a290f06fc6892aa3">SET_RESTART_MCU</a>&#160;&#160;&#160;&quot;set/restart&quot;</td></tr>
+<tr class="separator:a2e46d7b49d143e76a290f06fc6892aa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a0c2feee288af6e6c9d13de8804a94128"><td class="memItemLeft" align="right" valign="top">const time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GwOutput__mqtt_8h.html#a0c2feee288af6e6c9d13de8804a94128">STATUS_SEND_PERIOD</a> = 300000</td></tr>
+<tr class="separator:a0c2feee288af6e6c9d13de8804a94128"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a5b20c0a44622656e3028948ca20a47"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GwOutput__mqtt_8h.html#a0a5b20c0a44622656e3028948ca20a47">CONFIG_FILE</a> = &quot;/mqtt.json&quot;</td></tr>
 <tr class="memdesc:a0a5b20c0a44622656e3028948ca20a47"><td class="mdescLeft">&#160;</td><td class="mdescRight">MQTT outout configuration file name.  <a href="GwOutput__mqtt_8h.html#a0a5b20c0a44622656e3028948ca20a47">More...</a><br /></td></tr>
 <tr class="separator:a0a5b20c0a44622656e3028948ca20a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,8 +158,8 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>MQTT Gateway output module. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.4 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>31/07/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.5 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>30/10/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin Module to send and receive EnigmaIOT information from MQTT broker </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
@@ -464,6 +468,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a2e46d7b49d143e76a290f06fc6892aa3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e46d7b49d143e76a290f06fc6892aa3">&#9670;&nbsp;</a></span>SET_RESTART_MCU</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SET_RESTART_MCU&#160;&#160;&#160;&quot;set/restart&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00056">56</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+
+</div>
+</div>
 <a id="a0ffae85da5eb98e796fd818c50ac147a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0ffae85da5eb98e796fd818c50ac147a">&#9670;&nbsp;</a></span>SET_SLEEP</h2>
 
@@ -519,7 +539,7 @@ Variables</h2></td></tr>
 
 <p>MQTT outout configuration file name. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00056">56</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00059">59</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -536,6 +556,22 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="GwOutput__dummy_8cpp_source.html#l00029">29</a> of file <a class="el" href="GwOutput__dummy_8cpp_source.html">GwOutput_dummy.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0c2feee288af6e6c9d13de8804a94128"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c2feee288af6e6c9d13de8804a94128">&#9670;&nbsp;</a></span>STATUS_SEND_PERIOD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const time_t STATUS_SEND_PERIOD = 300000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00057">57</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>

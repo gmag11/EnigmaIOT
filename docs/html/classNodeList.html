@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.4</span>
+   &#160;<span id="projectnumber">0.9.5</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -119,16 +119,34 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a239930df15810784dab9a3284730a35f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNodeList.html#a239930df15810784dab9a3284730a35f">printToSerial</a> (Stream *port)</td></tr>
 <tr class="memdesc:a239930df15810784dab9a3284730a35f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dumps node list data to a Stream object.  <a href="classNodeList.html#a239930df15810784dab9a3284730a35f">More...</a><br /></td></tr>
 <tr class="separator:a239930df15810784dab9a3284730a35f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0020539e3b49df3706fe66a44bbf3700"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classNode.html">Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNodeList.html#a0020539e3b49df3706fe66a44bbf3700">getBroadcastNode</a> ()</td></tr>
+<tr class="memdesc:a0020539e3b49df3706fe66a44bbf3700"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets broadcas node instance.  <a href="classNodeList.html#a0020539e3b49df3706fe66a44bbf3700">More...</a><br /></td></tr>
+<tr class="separator:a0020539e3b49df3706fe66a44bbf3700"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a956635fa60412a9a026ea64245dd4443"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNodeList.html#a956635fa60412a9a026ea64245dd4443">initBroadcastNode</a> ()</td></tr>
+<tr class="memdesc:a956635fa60412a9a026ea64245dd4443"><td class="mdescLeft">&#160;</td><td class="mdescRight">Init broadcast node data.  <a href="classNodeList.html#a956635fa60412a9a026ea64245dd4443">More...</a><br /></td></tr>
+<tr class="separator:a956635fa60412a9a026ea64245dd4443"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfff6ed812a219b7b7514989da7fc34e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNodeList.html#acfff6ed812a219b7b7514989da7fc34e">getLastBroadcastMsgCounter</a> ()</td></tr>
+<tr class="memdesc:acfff6ed812a219b7b7514989da7fc34e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ask for last broadcast message counter state.  <a href="classNodeList.html#acfff6ed812a219b7b7514989da7fc34e">More...</a><br /></td></tr>
+<tr class="separator:acfff6ed812a219b7b7514989da7fc34e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab822a0ab8cb5fbdfc582dd7fc5c73042"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNodeList.html#ab822a0ab8cb5fbdfc582dd7fc5c73042">incLastBroadcastMsgCounter</a> ()</td></tr>
+<tr class="memdesc:ab822a0ab8cb5fbdfc582dd7fc5c73042"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increments last broadcast message counter stata by one.  <a href="classNodeList.html#ab822a0ab8cb5fbdfc582dd7fc5c73042">More...</a><br /></td></tr>
+<tr class="separator:ab822a0ab8cb5fbdfc582dd7fc5c73042"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a57a69c9dde4327beeb404c83defdbdaa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classNode.html">Node</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNodeList.html#a57a69c9dde4327beeb404c83defdbdaa">nodes</a> [<a class="el" href="EnigmaIoTconfig_8h.html#a71ee5004618cb61a934f136d7c2f45e2">NUM_NODES</a>]</td></tr>
 <tr class="memdesc:a57a69c9dde4327beeb404c83defdbdaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> array that holds maximum number of supported nodes.  <a href="classNodeList.html#a57a69c9dde4327beeb404c83defdbdaa">More...</a><br /></td></tr>
 <tr class="separator:a57a69c9dde4327beeb404c83defdbdaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a825478b578e7178101d0a14435755691"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classNode.html">Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNodeList.html#a825478b578e7178101d0a14435755691">broadcastNode</a></td></tr>
+<tr class="memdesc:a825478b578e7178101d0a14435755691"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> instance that holds data used for broadcast messages. This does not represent any individual node.  <a href="classNodeList.html#a825478b578e7178101d0a14435755691">More...</a><br /></td></tr>
+<tr class="separator:a825478b578e7178101d0a14435755691"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c8a5c30939520843eda50fcee7a41a7"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNodeList.html#a0c8a5c30939520843eda50fcee7a41a7">lastBroadcastMsgCounter</a></td></tr>
+<tr class="memdesc:a0c8a5c30939520843eda50fcee7a41a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last broadcast message counter state for all nodes, both for data and control messages.  <a href="classNodeList.html#a0c8a5c30939520843eda50fcee7a41a7">More...</a><br /></td></tr>
+<tr class="separator:a0c8a5c30939520843eda50fcee7a41a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00395">395</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00439">439</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7cf92e8316f291e0a4e4ad608756887f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7cf92e8316f291e0a4e4ad608756887f">&#9670;&nbsp;</a></span>NodeList()</h2>
@@ -147,7 +165,7 @@ Protected Attributes</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> list constructor. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00122">122</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00125">125</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -188,7 +206,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Error code to show name correctness. 0 = OK, -1 = Name already used, -2 = Name is too long, -3 = Name is empty </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00165">165</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00187">187</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -210,7 +228,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets the number of active nodes (registered or registering) </p>
 <dl class="section return"><dt>Returns</dt><dd>Number of active nodes </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00211">211</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00233">233</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -232,7 +250,67 @@ Protected Attributes</h2></td></tr>
 <p>Searches for a free place for a new <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> instance. </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> instance to hold new instance </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00198">198</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00220">220</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0020539e3b49df3706fe66a44bbf3700"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0020539e3b49df3706fe66a44bbf3700">&#9670;&nbsp;</a></span>getBroadcastNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNode.html">Node</a>* NodeList::getBroadcastNode </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets broadcas node instance. </p>
+<dl class="section return"><dt>Returns</dt><dd>Broadcas node instance </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00540">540</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+
+</div>
+</div>
+<a id="acfff6ed812a219b7b7514989da7fc34e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfff6ed812a219b7b7514989da7fc34e">&#9670;&nbsp;</a></span>getLastBroadcastMsgCounter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t NodeList::getLastBroadcastMsgCounter </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Ask for last broadcast message counter state. </p>
+<dl class="section return"><dt>Returns</dt><dd>last broadcast message counter </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00553">553</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -261,7 +339,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> instance. NULL if it <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> store is full </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00277">277</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00299">299</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -290,7 +368,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to node or NULL if it was not found </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00268">268</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00290">290</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -319,7 +397,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to node or NULL if it was not found </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00259">259</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00281">281</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -348,7 +426,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> instance that has given nodeId. NULL if it was not found </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00128">128</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00131">131</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -377,7 +455,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> instance that has given address. NULL if it was not found </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00135">135</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00138">138</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -406,7 +484,57 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> instance that has given name. NULL if it was not found </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00150">150</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00166">166</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ab822a0ab8cb5fbdfc582dd7fc5c73042"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab822a0ab8cb5fbdfc582dd7fc5c73042">&#9670;&nbsp;</a></span>incLastBroadcastMsgCounter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NodeList::incLastBroadcastMsgCounter </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Increments last broadcast message counter stata by one. </p>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00560">560</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+
+</div>
+</div>
+<a id="a956635fa60412a9a026ea64245dd4443"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a956635fa60412a9a026ea64245dd4443">&#9670;&nbsp;</a></span>initBroadcastNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NodeList::initBroadcastNode </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Init broadcast node data. </p>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00153">153</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -434,7 +562,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00293">293</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00315">315</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -463,7 +591,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>'True' if it was deleted. 'False' if address was not found </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00234">234</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00256">256</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -492,7 +620,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>'True' if it was deleted. 'False' if it was already deleted </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00245">245</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00267">267</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
@@ -521,11 +649,63 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>'True' if it was deleted. 'False' if nodeId was not found </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00222">222</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8cpp_source.html#l00244">244</a> of file <a class="el" href="NodeList_8cpp_source.html">NodeList.cpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a825478b578e7178101d0a14435755691"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a825478b578e7178101d0a14435755691">&#9670;&nbsp;</a></span>broadcastNode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classNode.html">Node</a>* NodeList::broadcastNode</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> instance that holds data used for broadcast messages. This does not represent any individual node. </p>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00566">566</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+
+</div>
+</div>
+<a id="a0c8a5c30939520843eda50fcee7a41a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c8a5c30939520843eda50fcee7a41a7">&#9670;&nbsp;</a></span>lastBroadcastMsgCounter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t NodeList::lastBroadcastMsgCounter</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Last broadcast message counter state for all nodes, both for data and control messages. </p>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00567">567</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+
+</div>
+</div>
 <a id="a57a69c9dde4327beeb404c83defdbdaa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a57a69c9dde4327beeb404c83defdbdaa">&#9670;&nbsp;</a></span>nodes</h2>
 
@@ -548,7 +728,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Static <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> array that holds maximum number of supported nodes. </p>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00493">493</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00565">565</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>

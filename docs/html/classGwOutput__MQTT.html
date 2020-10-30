@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.4</span>
+   &#160;<span id="projectnumber">0.9.5</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -128,6 +128,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:aa085f629e0d58f053325f35c5ae6c2a1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#aa085f629e0d58f053325f35c5ae6c2a1">saveConfig</a> ()</td></tr>
 <tr class="memdesc:aa085f629e0d58f053325f35c5ae6c2a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves output module configuration.  <a href="classGwOutput__MQTT.html#aa085f629e0d58f053325f35c5ae6c2a1">More...</a><br /></td></tr>
 <tr class="separator:aa085f629e0d58f053325f35c5ae6c2a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4531996cc3ce965edfdd1ca3e6b85d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#ae4531996cc3ce965edfdd1ca3e6b85d7">setClock</a> ()</td></tr>
+<tr class="memdesc:ae4531996cc3ce965edfdd1ca3e6b85d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronizes time over NTP to check certifitate expiration time.  <a href="classGwOutput__MQTT.html#ae4531996cc3ce965edfdd1ca3e6b85d7">More...</a><br /></td></tr>
+<tr class="separator:ae4531996cc3ce965edfdd1ca3e6b85d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad225825796a387d127ccd3616ba96ec7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#ad225825796a387d127ccd3616ba96ec7">reconnect</a> ()</td></tr>
 <tr class="memdesc:ad225825796a387d127ccd3616ba96ec7"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called anytime MQTT client is disconnected.  <a href="classGwOutput__MQTT.html#ad225825796a387d127ccd3616ba96ec7">More...</a><br /></td></tr>
 <tr class="separator:ad225825796a387d127ccd3616ba96ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,7 +205,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00077">77</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00080">80</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a50976e1efb3c1570e3596672ffd83c56"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a50976e1efb3c1570e3596672ffd83c56">&#9670;&nbsp;</a></span>GwOutput_MQTT()</h2>
@@ -229,7 +232,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Constructor to initialize MQTT client. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00160">160</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00163">163</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -291,7 +294,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00460">460</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00480">480</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -429,7 +432,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Gets next item in the queue. </p>
 <dl class="section return"><dt>Returns</dt><dd>Next MQTT message to be sent </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00483">483</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00503">503</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -492,7 +495,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classGatewayOutput__generic.html#a12bceac925f871d3f95d06c4f4332343">GatewayOutput_generic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00414">414</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00429">429</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -542,7 +545,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classGatewayOutput__generic.html#a7e5626e20f3decbb28d85acbf14e106b">GatewayOutput_generic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00624">624</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00644">644</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -592,7 +595,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classGatewayOutput__generic.html#a0d3fe3f57535eb485910b5a460e6bb58">GatewayOutput_generic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00642">642</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00662">662</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -646,7 +649,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00364">364</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00378">378</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -703,7 +706,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classGatewayOutput__generic.html#a050f9bea35a220be645be5d99fbc3a07">GatewayOutput_generic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00533">533</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00553">553</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -767,7 +770,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classGatewayOutput__generic.html#a8a61150a6388caee08a1092def5bdce5">GatewayOutput_generic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00510">510</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00530">530</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -796,7 +799,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Deletes next item in the queue. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00491">491</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00511">511</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -857,7 +860,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00431">431</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00451">451</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -923,6 +926,35 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ae4531996cc3ce965edfdd1ca3e6b85d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4531996cc3ce965edfdd1ca3e6b85d7">&#9670;&nbsp;</a></span>setClock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GwOutput_MQTT::setClock </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Synchronizes time over NTP to check certifitate expiration time. </p>
+
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00462">462</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="ae1bac550738c7f1a92deb3450c1e929a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae1bac550738c7f1a92deb3450c1e929a">&#9670;&nbsp;</a></span>espClient</h2>
@@ -946,7 +978,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>TCP client. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00095">95</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00098">98</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -972,7 +1004,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>MQTT client. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00097">97</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00100">100</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -998,7 +1030,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Output MQTT messages queue. It acts as a FIFO queue. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00084">84</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00087">87</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1024,7 +1056,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>MQTT server configuration data. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00086">86</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00089">89</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1050,7 +1082,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configuration field for MQTT server password. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00082">82</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00085">85</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1076,7 +1108,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configuration field for MQTT server port. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00080">80</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00083">83</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1102,7 +1134,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configuration field for MQTT server address. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00079">79</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00082">82</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1128,7 +1160,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configuration field for MQTT server user name. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00081">81</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00084">84</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1154,7 +1186,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Flag to indicate if configuration should be saved. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00087">87</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00090">90</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>

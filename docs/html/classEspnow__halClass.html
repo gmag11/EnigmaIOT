@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.4</span>
+   &#160;<span id="projectnumber">0.9.5</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -135,6 +135,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a084026117f83985b7f7751aa9e9726a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a084026117f83985b7f7751aa9e9726a0">initComms</a> (<a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4">peerType_t</a> peerType)</td></tr>
 <tr class="memdesc:a084026117f83985b7f7751aa9e9726a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Communication subsistem initialization.  <a href="classEspnow__halClass.html#a084026117f83985b7f7751aa9e9726a0">More...</a><br /></td></tr>
 <tr class="separator:a084026117f83985b7f7751aa9e9726a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7c4c848bc0fc5b4f93f9b02dd10d986"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#aa7c4c848bc0fc5b4f93f9b02dd10d986">addPeer</a> (const uint8_t *da)</td></tr>
+<tr class="memdesc:aa7c4c848bc0fc5b4f93f9b02dd10d986"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a peer to esp-now peer list.  <a href="classEspnow__halClass.html#aa7c4c848bc0fc5b4f93f9b02dd10d986">More...</a><br /></td></tr>
+<tr class="separator:aa7c4c848bc0fc5b4f93f9b02dd10d986"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
@@ -181,6 +184,42 @@ Protected Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="espnow__hal_8h_source.html#l00031">31</a> of file <a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa7c4c848bc0fc5b4f93f9b02dd10d986"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7c4c848bc0fc5b4f93f9b02dd10d986">&#9670;&nbsp;</a></span>addPeer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Espnow_halClass::addPeer </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>da</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds a peer to esp-now peer list. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">da</td><td>Peer address to be added to peer list </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="espnow__hal_8cpp_source.html#l00082">82</a> of file <a class="el" href="espnow__hal_8cpp_source.html">espnow_hal.cpp</a>.</p>
+
+</div>
+</div>
 <a id="a4a115caab9605dd4e3d32eefb00f18db"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4a115caab9605dd4e3d32eefb00f18db">&#9670;&nbsp;</a></span>begin()</h2>
 
@@ -265,7 +304,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classComms__halClass.html#a6093fd7b0a9eedba72c3622977639d92">Comms_halClass</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="espnow__hal_8h_source.html#l00103">103</a> of file <a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="espnow__hal_8h_source.html#l00109">109</a> of file <a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>.</p>
 
 </div>
 </div>
@@ -295,7 +334,7 @@ Protected Attributes</h2></td></tr>
 <p>Get maximum message length on ESP-NOW subsystem. </p>
 <dl class="section return"><dt>Returns</dt><dd>Always returns a value equal to 250 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="espnow__hal_8h_source.html#l00111">111</a> of file <a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="espnow__hal_8h_source.html#l00117">117</a> of file <a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>.</p>
 
 </div>
 </div>
@@ -371,7 +410,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classComms__halClass.html#a0db88323996d12342a9c60143d90c51f">Comms_halClass</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="espnow__hal_8cpp_source.html#l00122">122</a> of file <a class="el" href="espnow__hal_8cpp_source.html">espnow_hal.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="espnow__hal_8cpp_source.html#l00146">146</a> of file <a class="el" href="espnow__hal_8cpp_source.html">espnow_hal.cpp</a>.</p>
 
 </div>
 </div>
@@ -409,7 +448,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classComms__halClass.html#a393acd5ba5c49031b3c827f7cbce37fa">Comms_halClass</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="espnow__hal_8cpp_source.html#l00126">126</a> of file <a class="el" href="espnow__hal_8cpp_source.html">espnow_hal.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="espnow__hal_8cpp_source.html#l00150">150</a> of file <a class="el" href="espnow__hal_8cpp_source.html">espnow_hal.cpp</a>.</p>
 
 </div>
 </div>
@@ -520,7 +559,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classComms__halClass.html#ac5a613a21aca12c2d2efbff02a2f0ff5">Comms_halClass</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="espnow__hal_8cpp_source.html#l00086">86</a> of file <a class="el" href="espnow__hal_8cpp_source.html">espnow_hal.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="espnow__hal_8cpp_source.html#l00108">108</a> of file <a class="el" href="espnow__hal_8cpp_source.html">espnow_hal.cpp</a>.</p>
 
 </div>
 </div>
@@ -551,7 +590,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classComms__halClass.html#aa69c265e65ce31580af6d5dd9b3cd40f">Comms_halClass</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="espnow__hal_8cpp_source.html#l00079">79</a> of file <a class="el" href="espnow__hal_8cpp_source.html">espnow_hal.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="espnow__hal_8cpp_source.html#l00101">101</a> of file <a class="el" href="espnow__hal_8cpp_source.html">espnow_hal.cpp</a>.</p>
 
 </div>
 </div>

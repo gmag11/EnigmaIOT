@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.4</span>
+   &#160;<span id="projectnumber">0.9.5</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -71,15 +71,21 @@ $(function() {
 
 <p>This is the complete list of members for <a class="el" href="classNodeList.html">NodeList</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#a6702f6b65634da0500f5e99ccf017178">checkNodeName</a>(const char *name, const uint8_t *address)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classNodeList.html#abb4895c5b9ae6b041c9102178de837c4">countActiveNodes</a>()</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#ad2f5b99eaeeb4f3b805acb0a019b6711">findEmptyNode</a>()</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classNodeList.html#a04851c9373e00d3c91c11a87d052f1f2">getNewNode</a>(const uint8_t *mac)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#a72dc59a4a4d32e2918b20038f2837ee2">getNextActiveNode</a>(uint16_t nodeId)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classNodeList.html#aa7a9a81224292702488ae98c5999bcc7">getNextActiveNode</a>(Node node)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#aab4a7f7971eeeb4c0fa3af8064006b79">getNodeFromID</a>(uint16_t nodeId)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classNodeList.html#a08530d06e81c160b346047e37839ee7d">getNodeFromMAC</a>(const uint8_t *mac)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#a08caf502661a3bf1b75ba6860eb1bebe">getNodeFromName</a>(const char *name)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#a825478b578e7178101d0a14435755691">broadcastNode</a></td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classNodeList.html#a6702f6b65634da0500f5e99ccf017178">checkNodeName</a>(const char *name, const uint8_t *address)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#abb4895c5b9ae6b041c9102178de837c4">countActiveNodes</a>()</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classNodeList.html#ad2f5b99eaeeb4f3b805acb0a019b6711">findEmptyNode</a>()</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#a0020539e3b49df3706fe66a44bbf3700">getBroadcastNode</a>()</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classNodeList.html#acfff6ed812a219b7b7514989da7fc34e">getLastBroadcastMsgCounter</a>()</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#a04851c9373e00d3c91c11a87d052f1f2">getNewNode</a>(const uint8_t *mac)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classNodeList.html#a72dc59a4a4d32e2918b20038f2837ee2">getNextActiveNode</a>(uint16_t nodeId)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#aa7a9a81224292702488ae98c5999bcc7">getNextActiveNode</a>(Node node)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classNodeList.html#aab4a7f7971eeeb4c0fa3af8064006b79">getNodeFromID</a>(uint16_t nodeId)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#a08530d06e81c160b346047e37839ee7d">getNodeFromMAC</a>(const uint8_t *mac)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classNodeList.html#a08caf502661a3bf1b75ba6860eb1bebe">getNodeFromName</a>(const char *name)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#ab822a0ab8cb5fbdfc582dd7fc5c73042">incLastBroadcastMsgCounter</a>()</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classNodeList.html#a956635fa60412a9a026ea64245dd4443">initBroadcastNode</a>()</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#a0c8a5c30939520843eda50fcee7a41a7">lastBroadcastMsgCounter</a></td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr><td class="entry"><a class="el" href="classNodeList.html#a7cf92e8316f291e0a4e4ad608756887f">NodeList</a>()</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classNodeList.html#a57a69c9dde4327beeb404c83defdbdaa">nodes</a></td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr><td class="entry"><a class="el" href="classNodeList.html#a239930df15810784dab9a3284730a35f">printToSerial</a>(Stream *port)</td><td class="entry"><a class="el" href="classNodeList.html">NodeList</a></td><td class="entry"></td></tr>
