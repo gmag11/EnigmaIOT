@@ -1695,7 +1695,7 @@ bool EnigmaIOTNodeClass::processGetSleepTimeCommand (const uint8_t* mac, const u
 	DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
 
 	buffer[0] = control_message_type::SLEEP_ANS;
-	// TODO get real sleep time
+
 	uint32_t sleepTime = getSleepTime ();
 	memcpy (buffer + 1, &sleepTime, sizeof (sleepTime));
 	bufLength = 5;
