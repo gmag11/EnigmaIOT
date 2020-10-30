@@ -2409,10 +2409,13 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 	DEBUG_INFO ("Downlink msg #%d", counter);
 	if (useCounter) {
 		if (broadcast) {
-			// TODO: process counter for broadcast
+			if (counter > lastBroadcastMsgCounter) {
+				DEBUG_INFO ("Accepted. Counter was %u", lastBroadcastMsgCounter);
+				lastBroadcastMsgCounter = counter;
+			}
 		} else {
 		    if (counter > node.getLastDownlinkMsgCounter ()) {
-                DEBUG_INFO ("Accepted");
+                DEBUG_INFO ("Accepted. Counter was %u", node.getLastDownlinkMsgCounter ());
 				node.setLastDownlinkMsgCounter (counter);
 				rtcmem_data.lastDownlinkMsgCounter = counter;
 			} else {
@@ -2549,42 +2552,47 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 		rtcmem_data.lastMessageCounter = 0;
 		rtcmem_data.lastControlCounter = 0;
 		rtcmem_data.lastDownlinkMsgCounter = 0;
+		lastBroadcastMsgCounter = 0;
 		TimeManager.reset ();
 		timeSyncPeriod = QUICK_SYNC_TIME;
 		if (notifyDisconnection) {
 			notifyDisconnection (invalidateReason);
 		}
 		break;
-	case DOWNSTREAM_DATA_SET:
+
 	case DOWNSTREAM_BRCAST_DATA_SET:
-		if (buf[0]== DOWNSTREAM_BRCAST_DATA_SET && !node.broadcastIsEnabled ()) {
+		if (!node.broadcastIsEnabled ()) {
 			break;
 		}
+	case DOWNSTREAM_DATA_SET:
 		DEBUG_INFO (" <------- DOWNSTREAM DATA SET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
 		}
 		break;
-	case DOWNSTREAM_DATA_GET:
+
 	case DOWNSTREAM_BRCAST_DATA_GET:
-		if (buf[0] == DOWNSTREAM_BRCAST_DATA_GET && !node.broadcastIsEnabled ()) {
+		if (!node.broadcastIsEnabled ()) {
 			break;
 		}
+	case DOWNSTREAM_DATA_GET:
 		DEBUG_INFO (" <------- DOWNSTREAM DATA GET");
 		if (processDownstreamData (mac, buf, count)) {
 			DEBUG_INFO ("Downstream Data set OK");
 		}
 		break;
-	case DOWNSTREAM_CTRL_DATA:
+
 	case DOWNSTREAM_BRCAST_CTRL_DATA:
-		if (buf[0] == DOWNSTREAM_BRCAST_CTRL_DATA && !node.broadcastIsEnabled ()) {
+		if (!node.broadcastIsEnabled ()) {
 			break;
 		}
-		DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
+	case DOWNSTREAM_CTRL_DATA:
+			DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
 		if (processDownstreamData (mac, buf, count, true)) {
 			DEBUG_INFO ("Downstream Data OK");
 		}
 		break;
+
 	case CLOCK_RESPONSE:
 		DEBUG_INFO (" <------- CLOCK RESPONSE");
 		if (clockSyncEnabled) {
