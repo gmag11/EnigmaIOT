@@ -23,6 +23,12 @@ protected:
 	AsyncWebServer* server;
 	//EnigmaIOTGatewayClass* gateway;
 
+	void getNodeNumber (AsyncWebServerRequest* request);
+	void getMaxNodes (AsyncWebServerRequest* request);
+	void getNodes (AsyncWebServerRequest* request);
+
+	void onNotFound (AsyncWebServerRequest* request);
+
 public:
 	void begin ();
 };
