@@ -298,10 +298,11 @@ Node* NodeList::getNextActiveNode (uint16_t nodeId) {
 }
 
 Node* NodeList::getNextActiveNode (Node *node) {
-	if (node == NULL) {
+	if (!node) {
 		if (nodes[0].status != UNREGISTERED) {
 			return &(nodes[0]);
 		}
+		node = &(nodes[0]);
 	}
 	for (int i = node->nodeId + 1; i < NUM_NODES; i++) {
 		if (nodes[i].status != UNREGISTERED) {
