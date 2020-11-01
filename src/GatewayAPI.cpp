@@ -39,7 +39,6 @@ void GatewayAPI::getMaxNodes (AsyncWebServerRequest* request) {
 
 void GatewayAPI::getNodes (AsyncWebServerRequest* request) {
 	Node* node = NULL;
-	uint16_t lastNode = -1;
 
 	AsyncResponseStream* response = request->beginResponseStream ("application/json");
 	response->setCode (200);
@@ -47,18 +46,20 @@ void GatewayAPI::getNodes (AsyncWebServerRequest* request) {
 	response->print ("{'nodes':[");
 	do {
 		bool first = (node == NULL);
-		node = EnigmaIOTGateway.nodelist.getNextActiveNode (lastNode);
+		node = EnigmaIOTGateway.nodelist.getNextActiveNode (node);
 		if (node && !first) {
-			DEBUG_WARN ("First is %s, node is %p", first ? "true" : "false", node);
+			DEBUG_DBG ("First is %s, node is %p", first ? "true" : "false", node);
 			response->print (',');
 		}
-		DEBUG_WARN ("LastNode: %u, node: %p", lastNode, node);
 		if (node) {
-			node_t nodeInfo = node->getNodeData ();
-			lastNode = nodeInfo.nodeId;
-			DEBUG_WARN ("Got node. NodeId -> %u", nodeInfo.nodeId);
-			response->printf ("{'nodeId':%u,'address':" MACSTR ",'name':%s}", nodeInfo.nodeId,
-							  MAC2STR (nodeInfo.mac), nodeInfo.nodeName);
+			DEBUG_DBG ("LastNode: %u, node: %p", node->getNodeId (), node);
+		}
+		if (node) {
+			DEBUG_DBG ("Got node. NodeId -> %u", node->getNodeId ());
+			response->printf ("{'nodeId':%u,'address':'" MACSTR "','name':'%s'}", 
+							  node->getNodeId (),
+							  MAC2STR (node->getMacAddress ()),
+							  node->getNodeName ());
 		}
 	} while (node != NULL);
 	response->print ("]}");
