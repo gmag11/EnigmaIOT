@@ -24,6 +24,7 @@ node_t Node::getNodeData () {
 	thisNode.nodeId = nodeId;
 	thisNode.lastMessageCounter = lastMessageCounter;
 	thisNode.status = status;
+	memcpy (thisNode.nodeName, getNodeName (), NODE_NAME_LENGTH);
 
 	return thisNode;
 }
@@ -283,6 +284,11 @@ bool NodeList::unregisterNode (Node* node) {
 }
 
 Node* NodeList::getNextActiveNode (uint16_t nodeId) {
+	if (nodeId == 0xFFFF) {
+		if (nodes[0].status != UNREGISTERED) {
+			return &(nodes[0]);
+		}
+	}
 	for (int i = nodeId + 1; i < NUM_NODES; i++) {
 		if (nodes[i].status != UNREGISTERED) {
 			return &(nodes[i]);
@@ -291,8 +297,13 @@ Node* NodeList::getNextActiveNode (uint16_t nodeId) {
 	return NULL;
 }
 
-Node* NodeList::getNextActiveNode (Node node) {
-	for (int i = node.nodeId + 1; i < NUM_NODES; i++) {
+Node* NodeList::getNextActiveNode (Node *node) {
+	if (node == NULL) {
+		if (nodes[0].status != UNREGISTERED) {
+			return &(nodes[0]);
+		}
+	}
+	for (int i = node->nodeId + 1; i < NUM_NODES; i++) {
 		if (nodes[i].status != UNREGISTERED) {
 			return &(nodes[i]);
 		}

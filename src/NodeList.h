@@ -87,6 +87,7 @@ struct node_instance {
     status_t status = UNREGISTERED; ///< @brief Node state
     bool keyValid = false; ///< @brief Node shared key valid
     bool sleepyNode = true; ///< @brief Node sleepy definition
+    char nodeName[NODE_NAME_LENGTH]; ///< @brief Node name. Use as a human friendly name to avoid use of numeric address
 };
 
 typedef struct node_instance node_t;
@@ -426,7 +427,7 @@ protected:
     uint8_t key[KEY_LENGTH]; ///< @brief Shared key
     timer_t lastMessageTime; ///< @brief Node state
     FilterClass* rateFilter; ///< @brief Filter for message rate smoothing
-    char nodeName[NODE_NAME_LENGTH]; ///< @brief Node name. Use as a human friendly name to avoid use of numeric address*/
+    char nodeName[NODE_NAME_LENGTH]; ///< @brief Node name. Use as a human friendly name to avoid use of numeric address
 
      /**
       * @brief Starts smoothing filter
@@ -519,7 +520,7 @@ public:
       * @param node Node which have the nodeId to find
       * @return Pointer to node or NULL if it was not found
       */
-    Node *getNextActiveNode (Node node);
+    Node *getNextActiveNode (Node* node);
 
      /**
       * @brief Finds a node that correspond with given address of creates a new one if it does not exist
