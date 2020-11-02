@@ -26,6 +26,7 @@ protected:
 	void getNodeNumber (AsyncWebServerRequest* request);
 	void getMaxNodes (AsyncWebServerRequest* request);
 	void getNodes (AsyncWebServerRequest* request);
+	void deleteNode (AsyncWebServerRequest* request);
 
 	void onNotFound (AsyncWebServerRequest* request);
 

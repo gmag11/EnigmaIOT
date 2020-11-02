@@ -74,7 +74,8 @@ enum gwInvalidateReason_t {
 	//WRONG_EXCHANGE_FINISHED = 0x02, /**< KeyExchangeFinished message received was invalid. Probably this means an error on shared key */
 	WRONG_DATA = 0x03, /**< Data message received could not be decrypted successfuly */
 	UNREGISTERED_NODE = 0x04, /**< Data received from an unregistered node*/
-	KEY_EXPIRED = 0x05 /**< Node key has reached maximum validity time */
+	KEY_EXPIRED = 0x05, /**< Node key has reached maximum validity time */
+	KICKED = 0x06 /**< Node key has been forcibly unregistered */
 };
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
