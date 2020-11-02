@@ -153,6 +153,44 @@ const char* IRAM_ATTR extractFileName (const char* path) {
 }
 #endif
 
+bool isNumber (const char* input) {
+	int index = 0;
+	size_t len = strlen (input);
+
+	while (index < len) {
+		if (!isDigit (input[index])) {
+			return false;
+		}
+		index++;
+	}
+	return true;
+}
+
+bool isNumber (const char* input, size_t len) {
+	int index = 0;
+
+	while (input[index] != '/0' && index < len) {
+		if (!isDigit (input[index])) {
+			return false;
+		}
+		index++;
+	}
+	return true;
+}
+
+bool isNumber (String input) {
+	int index = 0;
+	size_t len = input.length ();
+
+	while (index < len) {
+		if (!isDigit (input[index])) {
+			return false;
+		}
+		index++;
+	}
+	return true;
+}
+
 //int str2mac (const char* mac, uint8_t* values) {
 //	int error = std::sscanf (mac, "%02x:%02x:%02x:%02x:%02x:%02x", &values[0], &values[1], &values[2], &values[3], &values[4], &values[5]);
 //	Serial.printf ("Error: %d", error);

@@ -67,5 +67,27 @@ void initWiFi (uint8_t channel, const char* networkName, const char* networkKey 
   */
 uint32_t calculateCRC32 (const uint8_t* data, size_t length);
 
+/**
+  * @brief Checks if input string is numeric
+  * @param input String to check
+  * @return `true` if string is a number
+  */
+bool isNumber (const char* input);
+
+/**
+  * @brief Checks if input string is numeric
+  * @param input String to check
+  * @param len String length
+  * @return `true` if string is a number
+  */
+bool isNumber (const char* input, size_t len);
+
+/**
+  * @brief Checks if input string is numeric
+  * @param input String to check
+  * @return `true` if string is a number
+  */
+bool isNumber (String input);
+
 #endif
 
