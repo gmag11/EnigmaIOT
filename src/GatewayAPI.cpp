@@ -106,14 +106,15 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
 			time_t currentMillis = millis ();
 			snprintf (nodeInfo, len, "{'node_id':%d,'address':'" MACSTR "',"\
 				"'Name':'%s','keyValidSince':%d,'lastMessageTime':%d,'sleepy':%s,"\
-				"'Broadcast':%s}",
+				"'Broadcast':%s,'rssi':%d}",
 					  node->getNodeId (),
 					  MAC2STR (node->getMacAddress ()),
 					  node->getNodeName (),
 					  currentMillis-node->getKeyValidFrom(),
 					  currentMillis-node->getLastMessageTime(),
 					  node->getSleepy() ? "True" : "False",
-					  node->broadcastIsEnabled() ? "True" : "False"
+					  node->broadcastIsEnabled() ? "True" : "False",
+					  node->getRSSI()
 			);
 			DEBUG_DBG ("NodeInfo: %s", nodeInfo);
 			return nodeInfo;
