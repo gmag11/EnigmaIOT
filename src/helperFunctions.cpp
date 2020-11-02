@@ -161,6 +161,10 @@ bool isNumber (const char* input) {
 	int index = 0;
 	size_t len = strlen (input);
 
+	if (!len) {
+		return false;
+	}
+
 	while (index < len) {
 		if (!isDigit (input[index])) {
 			return false;
@@ -172,6 +176,10 @@ bool isNumber (const char* input) {
 
 bool isNumber (const char* input, size_t len) {
 	int index = 0;
+	
+	if (!len) {
+		return false;
+	}
 
 	while (input[index] != '/0' && index < len) {
 		if (!isDigit (input[index])) {
@@ -185,6 +193,10 @@ bool isNumber (const char* input, size_t len) {
 bool isNumber (String input) {
 	int index = 0;
 	size_t len = input.length ();
+	
+	if (!len) {
+		return false;
+	}
 
 	while (index < len) {
 		if (!isDigit (input[index])) {
