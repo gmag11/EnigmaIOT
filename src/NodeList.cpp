@@ -171,6 +171,12 @@ void NodeList::initBroadcastNode () {
 Node* NodeList::getNodeFromName (const char* name) {
 	uint16_t index = 0;
 
+	// Check if address is an address as an string
+	uint8_t netAddr[ENIGMAIOT_ADDR_LEN];
+	if (str2mac (name, netAddr)) {
+		return getNodeFromMAC (netAddr);
+	}
+
 	// check if destination is broadcast
 	if (!strncmp (name, broadcastNode->getNodeName(), NODE_NAME_LENGTH)) {
 		DEBUG_DBG ("Address '%s' is broadcast node", name);
