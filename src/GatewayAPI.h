@@ -18,6 +18,10 @@
 #include "WProgram.h"
 #endif
 
+const size_t RESPONSE_SIZE = 200;
+
+String methodToString (WebRequestMethodComposite method);
+
 class GatewayAPI {
 protected:
 	AsyncWebServer* server;
@@ -26,9 +30,14 @@ protected:
 	void getNodeNumber (AsyncWebServerRequest* request);
 	void getMaxNodes (AsyncWebServerRequest* request);
 	void getNodes (AsyncWebServerRequest* request);
-	void deleteNode (AsyncWebServerRequest* request);
+	void nodeOp (AsyncWebServerRequest* request);
 
 	void onNotFound (AsyncWebServerRequest* request);
+
+	Node* getNodeFromParam (AsyncWebServerRequest* request);
+
+	const char* deleteNode (Node* node, int& resultCode);
+	char* getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size_t len);
 
 public:
 	void begin ();
