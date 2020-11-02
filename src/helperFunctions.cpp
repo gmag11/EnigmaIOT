@@ -95,6 +95,10 @@ char* mac2str (const uint8_t* mac, char* buffer) {
 uint8_t* str2mac (const char* macAddrString, uint8_t* macBytes) {
 	const char cSep = ':';
 
+	if (!macBytes) {
+		return NULL;
+	}
+
 	for (int i = 0; i < 6; ++i) {
 		unsigned int iNumber = 0;
 		char ch;
