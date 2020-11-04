@@ -8,6 +8,7 @@ const char* getNodeNumberUri = "/gw/api/nodenumber";
 const char* getMaxNodesUri = "/gw/api/maxnodes";
 const char* getNodesUri = "/gw/api/nodes";
 const char* getNodeUri = "/gw/api/node";
+const char* getGwInfoUri = "/gw/api/gwinfo";
 const char* nodeIdParam = "nodeid";
 const char* nodeNameParam = "nodename";
 const char* nodeAddrParam = "nodeaddr";
@@ -22,6 +23,7 @@ void GatewayAPI::begin () {
 	server->on (getMaxNodesUri, HTTP_GET, std::bind (&GatewayAPI::getMaxNodes, this, _1));
 	server->on (getNodesUri, HTTP_GET, std::bind (&GatewayAPI::getNodes, this, _1));
 	server->on (getNodeUri, HTTP_GET | HTTP_DELETE, std::bind (&GatewayAPI::nodeOp, this, _1));
+	server->on (getGwInfoUri, HTTP_GET, std::bind (&GatewayAPI::getGwInfo, this, _1));
 	server->onNotFound (std::bind (&GatewayAPI::onNotFound, this, _1));
 	server->begin ();
 }
@@ -32,6 +34,35 @@ void GatewayAPI::getNodeNumber (AsyncWebServerRequest* request) {
 	snprintf (response, 25, "{'nodeNumber':%d}", EnigmaIOTGateway.getActiveNodesNumber ());
 	DEBUG_INFO ("Response: %s", response);
 	request->send (200, "application/json", response);
+}
+
+char* GatewayAPI::buildGwInfo (char* gwInfo, size_t len) {
+	DEBUG_INFO ("Build Gateway Info");
+	//resultCode = 200;
+	//time_t currentMillis = millis ();
+	snprintf (gwInfo, len, "{'network':'%s','addresses':{'AP':'%s','STA':'%s'},"\
+			  "'channel':%d,'ap':'%s','bssid':'%s','rssi':%d,'txpower':%.1f,'dns':'%s'}",
+			  EnigmaIOTGateway.getNetworkName (),
+			  WiFi.macAddress ().c_str (), WiFi.softAPmacAddress ().c_str (),
+			  WiFi.channel (), WiFi.SSID ().c_str(), WiFi.BSSIDstr ().c_str(), WiFi.RSSI(),
+			  (float)(WiFi.getTxPower ())/4, WiFi.dnsIP ().toString ().c_str ()
+	);
+	DEBUG_DBG ("GwInfo: %s", gwInfo);
+	return gwInfo;
+}
+
+void GatewayAPI::getGwInfo (AsyncWebServerRequest* request) {
+	int resultCode = 404;
+	char response[RESPONSE_SIZE];
+	const char* strTemp = buildGwInfo (response, RESPONSE_SIZE);
+	if (strTemp) {
+		resultCode = 200;
+	}
+	if (resultCode == 404) {
+		snprintf (response, RESPONSE_SIZE, "{'result':'not found'}");
+	}
+	DEBUG_DBG ("Response: %d --> %s", resultCode, response);
+	request->send (resultCode, "application/json", response);
 }
 
 Node* GatewayAPI::getNodeFromParam (AsyncWebServerRequest* request) {
@@ -106,7 +137,7 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
 			time_t currentMillis = millis ();
 			snprintf (nodeInfo, len, "{'node_id':%d,'address':'" MACSTR "',"\
 				"'Name':'%s','keyValidSince':%d,'lastMessageTime':%d,'sleepy':%s,"\
-				"'Broadcast':%s,'rssi':%d}",
+				"'Broadcast':%s,'rssi':%d,'packetsHour':%f,'per':%f}",
 					  node->getNodeId (),
 					  MAC2STR (node->getMacAddress ()),
 					  node->getNodeName (),
@@ -114,7 +145,9 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
 					  currentMillis-node->getLastMessageTime(),
 					  node->getSleepy() ? "True" : "False",
 					  node->broadcastIsEnabled() ? "True" : "False",
-					  node->getRSSI()
+					  node->getRSSI(),
+					  node->packetsHour,
+					  node->per
 			);
 			DEBUG_DBG ("NodeInfo: %s", nodeInfo);
 			return nodeInfo;

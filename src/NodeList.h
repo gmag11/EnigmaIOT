@@ -423,7 +423,7 @@ public:
     uint32_t packetNumber = 0; ///< @brief Number of packets received from node to gateway
     uint32_t packetErrors = 0; ///< @brief Number of errored packets
     double per = 0;  ///< @brief Current packet error rate of a specific node
-    double packetsHour = 0; ///< @brief Packet rate ffor a specific nope
+    double packetsHour = 0; ///< @brief Packet rate for a specific nope
     int64_t t1, t2, t3, t4;  ///< @brief Timestaps to calculate clock offset
 
 protected:

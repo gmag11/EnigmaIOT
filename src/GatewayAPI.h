@@ -18,7 +18,7 @@
 #include "WProgram.h"
 #endif
 
-const size_t RESPONSE_SIZE = 200;
+const size_t RESPONSE_SIZE = 250;
 
 String methodToString (WebRequestMethodComposite method);
 
@@ -31,6 +31,10 @@ protected:
 	void getMaxNodes (AsyncWebServerRequest* request);
 	void getNodes (AsyncWebServerRequest* request);
 	void nodeOp (AsyncWebServerRequest* request);
+	void getGwInfo (AsyncWebServerRequest* request);
+	// TODO: Server info (channel, network, rssi, networkname
+	// TODO: Reset & restart node
+	// TODO: Reset & restart Gw
 
 	void onNotFound (AsyncWebServerRequest* request);
 
@@ -38,6 +42,7 @@ protected:
 
 	const char* deleteNode (Node* node, int& resultCode);
 	char* getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size_t len);
+	char* buildGwInfo (char* gwInfo, size_t len);
 
 public:
 	void begin ();
