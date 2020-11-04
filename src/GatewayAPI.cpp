@@ -9,9 +9,11 @@ const char* getMaxNodesUri = "/gw/api/maxnodes";
 const char* getNodesUri = "/gw/api/nodes";
 const char* getNodeUri = "/gw/api/node";
 const char* getGwInfoUri = "/gw/api/gwinfo";
+const char* getGwRestartUri = "/gw/api/gwrestart";
 const char* nodeIdParam = "nodeid";
 const char* nodeNameParam = "nodename";
 const char* nodeAddrParam = "nodeaddr";
+const char* confirmParam = "confirm";
 
 void GatewayAPI::begin () {
 	//if (!gw) {
@@ -24,6 +26,7 @@ void GatewayAPI::begin () {
 	server->on (getNodesUri, HTTP_GET, std::bind (&GatewayAPI::getNodes, this, _1));
 	server->on (getNodeUri, HTTP_GET | HTTP_DELETE, std::bind (&GatewayAPI::nodeOp, this, _1));
 	server->on (getGwInfoUri, HTTP_GET, std::bind (&GatewayAPI::getGwInfo, this, _1));
+	server->on (getGwRestartUri, HTTP_PUT, std::bind (&GatewayAPI::restartGw, this, _1));
 	server->onNotFound (std::bind (&GatewayAPI::onNotFound, this, _1));
 	server->begin ();
 }
@@ -196,6 +199,42 @@ void GatewayAPI::getMaxNodes (AsyncWebServerRequest* request) {
 	snprintf (response, 25, "{'maxNodes':%d}", NUM_NODES);
 	DEBUG_INFO ("Response: %s", response);
 	request->send (200, "application/json", response);
+}
+
+void GatewayAPI::restartGw (AsyncWebServerRequest* request) {
+	char response[30];
+	bool confirm = false;
+	int resultCode = 404;
+	
+	int params = request->params ();
+
+	for (int i = 0; i < params; i++) {
+		AsyncWebParameter* p = request->getParam (i);
+		if (p->name () == confirmParam) {
+			if (p->value () == "1") {
+				confirm = true;
+				resultCode = 200;
+				break;
+			}
+		}
+	}
+
+	if (confirm) {
+		snprintf (response, 30, "{'gw_restart':'processed'}");
+		request->send (resultCode, "application/json", response);
+	} else {
+		snprintf (response, 25, "{'gw_restart':'fail'}");
+		request->send (resultCode, "application/json", response);
+	}
+
+	DEBUG_INFO ("Response: %s", response);
+	
+	// TODO: inform upper code about restart, letting it decide if restart is the right choice
+	// remove this VV
+	if (confirm) {
+		ESP.restart ();
+	}
+
 }
 
 void GatewayAPI::getNodes (AsyncWebServerRequest* request) {

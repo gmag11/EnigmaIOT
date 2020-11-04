@@ -32,9 +32,9 @@ protected:
 	void getNodes (AsyncWebServerRequest* request);
 	void nodeOp (AsyncWebServerRequest* request);
 	void getGwInfo (AsyncWebServerRequest* request);
-	// TODO: Server info (channel, network, rssi, networkname
+	void restartGw (AsyncWebServerRequest* request);
 	// TODO: Reset & restart node
-	// TODO: Reset & restart Gw
+	// TODO: Reset Gw
 
 	void onNotFound (AsyncWebServerRequest* request);
 
