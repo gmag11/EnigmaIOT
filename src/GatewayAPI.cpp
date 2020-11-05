@@ -4,12 +4,12 @@
 using namespace std;
 using namespace placeholders;
 
-const char* getNodeNumberUri = "/gw/api/nodenumber";
-const char* getMaxNodesUri = "/gw/api/maxnodes";
-const char* getNodesUri = "/gw/api/nodes";
-const char* getNodeUri = "/gw/api/node";
-const char* getGwInfoUri = "/gw/api/gwinfo";
-const char* getGwRestartUri = "/gw/api/gwrestart";
+const char* getNodeNumberUri = "/api/gw/nodenumber";
+const char* getMaxNodesUri = "/api/gw/maxnodes";
+const char* getNodesUri = "/api/gw/nodes";
+const char* getNodeUri = "/api/node/node";
+const char* getGwInfoUri = "/api/gw/info";
+const char* getGwRestartUri = "/api/gw/restart";
 const char* nodeIdParam = "nodeid";
 const char* nodeNameParam = "nodename";
 const char* nodeAddrParam = "nodeaddr";

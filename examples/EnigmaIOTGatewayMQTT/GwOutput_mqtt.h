@@ -52,7 +52,7 @@
 #define LOST_MESSAGES    "debug/lostmessages"
 #define NODE_STATUS      "status"
 #define GW_STATUS        "/gateway/status"
-#define SET_RESTART_MCU	     "set/restart"
+#define SET_RESTART_MCU	 "set/restart"
 
 const time_t STATUS_SEND_PERIOD = 300000;
 
