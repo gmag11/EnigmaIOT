@@ -229,12 +229,9 @@ void GatewayAPI::restartGw (AsyncWebServerRequest* request) {
 
 	DEBUG_INFO ("Response: %s", response);
 	
-	// TODO: inform upper code about restart, letting it decide if restart is the right choice
-	// remove this VV
-	if (confirm) {
-		ESP.restart ();
+	if (confirm && EnigmaIOTGateway.notifyRestartRequested) {
+		EnigmaIOTGateway.notifyRestartRequested();
 	}
-
 }
 
 void GatewayAPI::getNodes (AsyncWebServerRequest* request) {

@@ -89,7 +89,11 @@ ETSTimer connectionLedTimer;
 #endif // ESP32
 
 const int connectionLed = LED_BUILTIN;
-boolean connectionLedFlashing = false;
+bool connectionLedFlashing = false;
+
+bool restartRequested = false;
+time_t restartRequestTime;
+
 
 void flashConnectionLed (void* led) {
 	//digitalWrite (*(int*)led, !digitalRead (*(int*)led));
@@ -194,6 +198,28 @@ void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 	if (data) {
 		GwOutput.outputControlSend (macStr, data, length);
 	}
+}
+
+void doRestart () {
+	DEBUG_WARN ("Restart requested");
+	const size_t capacity = JSON_OBJECT_SIZE (1);
+	size_t len;
+	char* payload;
+	
+	DynamicJsonDocument doc (capacity);
+
+	doc["action"] = "restart";
+
+	len = measureJson (doc) + 1;
+	payload = (char*)malloc (len);
+	serializeJson (doc, (char*)payload, len);
+	char addr[] = "gateway";
+	GwOutput.outputDataSend (addr, payload, len - 1);
+	free (payload);
+
+	restartRequested = true;
+	restartRequestTime = millis();
+
 }
 
 void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type, char* nodeName = NULL) {
@@ -406,6 +432,8 @@ void setup () {
 	EnigmaIOTGateway.onWiFiManagerStarted (wifiManagerStarted);
 	EnigmaIOTGateway.onWiFiManagerExit (wifiManagerExit);
 	EnigmaIOTGateway.onDataRx (processRxData);
+	EnigmaIOTGateway.onGatewayRestartRequested (doRestart);
+
 	EnigmaIOTGateway.begin (&Espnow_hal);
 
 	WiFi.mode (WIFI_AP_STA);
@@ -485,4 +513,10 @@ void loop () {
 		}
 	}
 #endif // MEAS_TEMP
+
+	if (restartRequested) {
+		if (millis () - restartRequestTime > 100) {
+			ESP.restart ();
+		}
+	}
 }
