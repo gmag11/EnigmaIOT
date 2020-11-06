@@ -33,6 +33,7 @@ protected:
 	void nodeOp (AsyncWebServerRequest* request);
 	void getGwInfo (AsyncWebServerRequest* request);
 	void restartGw (AsyncWebServerRequest* request);
+	void restartNode (AsyncWebServerRequest* request);
 	// TODO: Reset & restart node
 	// TODO: Reset Gw
 
@@ -43,6 +44,7 @@ protected:
 	const char* deleteNode (Node* node, int& resultCode);
 	char* getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size_t len);
 	char* buildGwInfo (char* gwInfo, size_t len);
+	bool restartNodeRequest (Node* node);
 
 public:
 	void begin ();

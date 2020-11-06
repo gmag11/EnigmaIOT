@@ -10,6 +10,7 @@ const char* getNodesUri = "/api/gw/nodes";
 const char* getNodeUri = "/api/node/node";
 const char* getGwInfoUri = "/api/gw/info";
 const char* getGwRestartUri = "/api/gw/restart";
+const char* getNodeRestartUri = "/api/node/restart";
 const char* nodeIdParam = "nodeid";
 const char* nodeNameParam = "nodename";
 const char* nodeAddrParam = "nodeaddr";
@@ -27,6 +28,7 @@ void GatewayAPI::begin () {
 	server->on (getNodeUri, HTTP_GET | HTTP_DELETE, std::bind (&GatewayAPI::nodeOp, this, _1));
 	server->on (getGwInfoUri, HTTP_GET, std::bind (&GatewayAPI::getGwInfo, this, _1));
 	server->on (getGwRestartUri, HTTP_PUT, std::bind (&GatewayAPI::restartGw, this, _1));
+	server->on (getNodeRestartUri, HTTP_PUT, std::bind (&GatewayAPI::restartNode, this, _1));
 	server->onNotFound (std::bind (&GatewayAPI::onNotFound, this, _1));
 	server->begin ();
 }
@@ -166,6 +168,31 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
 		}
 	}
 	return NULL;
+}
+
+bool GatewayAPI::restartNodeRequest (Node* node) {
+	return EnigmaIOTGateway.sendDownstream (node->getMacAddress (), NULL, 0, RESTART_NODE);
+}
+
+void GatewayAPI::restartNode (AsyncWebServerRequest* request) {
+	Node* node;
+	int resultCode = 404;
+	char response[RESPONSE_SIZE];
+
+	node = getNodeFromParam (request);
+
+	DEBUG_WARN ("Send restart command to node %p", node);
+
+	bool result = restartNodeRequest (node);
+	if (result) {
+		snprintf (response, 30, "{'node_restart':'processed'}");
+		resultCode = 200;
+	}
+	if (resultCode == 404) {
+		snprintf (response, 25, "{'result':'not found'}");
+	}
+	DEBUG_WARN ("Response: %d --> %s", resultCode, response);
+	request->send (resultCode, "application/json", response);
 }
 
 void GatewayAPI::nodeOp (AsyncWebServerRequest* request) {
