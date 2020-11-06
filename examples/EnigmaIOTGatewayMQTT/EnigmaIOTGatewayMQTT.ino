@@ -11,7 +11,6 @@
 
 #include <Arduino.h>
 
-#define MQTT_MAX_PACKET_SIZE 2048
 #include <PubSubClient.h>
 
 #include <GwOutput_generic.h>

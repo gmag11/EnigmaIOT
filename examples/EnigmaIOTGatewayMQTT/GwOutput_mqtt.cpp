@@ -214,7 +214,7 @@ bool GwOutput_MQTT::begin () {
 #endif // SECURE_MQTT
 	mqtt_client.setServer (mqttgw_config.mqtt_server, mqttgw_config.mqtt_port);
 	DEBUG_INFO ("Set MQTT server %s - port %d", mqttgw_config.mqtt_server, mqttgw_config.mqtt_port);
-
+	mqtt_client.setBufferSize (MQTT_BUFFER_SIZE);
 	netName = String (EnigmaIOTGateway.getNetworkName ());
 
 #ifdef ESP32

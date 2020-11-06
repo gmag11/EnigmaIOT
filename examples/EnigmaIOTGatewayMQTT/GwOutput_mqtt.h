@@ -29,6 +29,7 @@
 #include <WiFiClient.h>
 #endif // SECURE_MQTT
 
+#define MQTT_BUFFER_SIZE 2048
 
 // DOWNLINK MESSAGES
 #define GET_VERSION      "get/version"
