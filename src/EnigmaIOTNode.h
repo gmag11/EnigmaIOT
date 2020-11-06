@@ -210,6 +210,8 @@ protected:
 	*/
 	bool configWiFiManager (rtcmem_data_t* data);
 
+	void sendRestart ();
+
 	/**
 	* @brief Sets connection as unregistered to force a resyncrhonisation after boot
 	* @param reboot True if a reboot should be triggered after unregistration

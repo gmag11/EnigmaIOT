@@ -43,6 +43,7 @@ RTC_DATA_ATTR rtcmem_data_t rtcmem_data_storage; ///< @brief Context data to be 
 
 
 void EnigmaIOTNodeClass::resetConfig () {
+	sendRestart ();
 	SPIFFS.begin ();
 	SPIFFS.remove (CONFIG_FILE);
 	SPIFFS.end ();
@@ -50,6 +51,28 @@ void EnigmaIOTNodeClass::resetConfig () {
 
 	clearRTC ();
 	ESP.restart ();
+}
+
+void EnigmaIOTNodeClass::sendRestart () {
+	const size_t capacity = JSON_OBJECT_SIZE (1);
+	DynamicJsonDocument json (capacity);
+	json["action"] = "restart";
+	int len = measureMsgPack (json) + 1;
+	uint8_t* buffer = (uint8_t*)malloc (len);
+	len = serializeMsgPack (json, (char*)buffer, len);
+	DEBUG_WARN ("Message Len %d\n", len);
+	DEBUG_WARN ("Trying to send: %s\n", printHexBuffer (buffer, len));
+	if (!EnigmaIOTNode.sendData (buffer, len, MSG_PACK)) {
+		DEBUG_WARN ("Error sending restart");
+	} else {
+		DEBUG_WARN ("Restart sent");
+	}
+	free (buffer);
+	time_t restartRequested = millis ();
+	while (millis () - restartRequested > 200) {
+		yield ();
+	}
+
 }
 
 uint32_t EnigmaIOTNodeClass::getSleepTime () {
@@ -1078,6 +1101,7 @@ void EnigmaIOTNodeClass::handle () {
 
 	// Check restart
 	if (shouldRestart) {
+		sendRestart ();
 		static unsigned long retartRequest = millis ();
 		if (millis () - retartRequest > 2500) {
 			DEBUG_WARN ("Restart");
@@ -1993,6 +2017,7 @@ bool EnigmaIOTNodeClass::processSetResetConfigCommand (const uint8_t* mac, const
 	} else {
 		DEBUG_WARN ("Error sending Reset Config response");
 	}
+	sendRestart ();
 
 	clearRTC ();
 	clearFlash ();
@@ -2239,6 +2264,9 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 }
 
 void EnigmaIOTNodeClass::restart (bool reboot) {
+	if (reboot) {
+		sendRestart ();
+	}
 	rtcmem_data.nodeRegisterStatus = UNREGISTERED;
 	rtcmem_data.nodeKeyValid = false; // Force resync
 	if (!saveRTCData ()) {
