@@ -195,6 +195,13 @@ void wifiManagerStarted () {
 
 void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 	if (data) {
+		if (data[0] == VERSION_ANS && length >= 4) {
+			DEBUG_INFO ("Version message: %d.%d.%d", data[1], data[2], data[3]);
+			Node* node = EnigmaIOTGateway.getNodes ()->getNodeFromName (macStr);
+			if (node) {
+				node->setVersion (data[1], data[2], data[3]);
+			}
+		}
 		GwOutput.outputControlSend (macStr, data, length);
 	}
 }

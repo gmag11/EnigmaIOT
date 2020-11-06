@@ -114,6 +114,9 @@ void Node::reset () {
 	lastDownlinkMsgCounter = 0;
 	keyValidFrom = 0;
 	status = UNREGISTERED;
+	enigmaIOTVersion[0] = 0;
+	enigmaIOTVersion[1] = 0;
+	enigmaIOTVersion[2] = 0;
 	//broadcastEnabled = false;
 	broadcastKeyRequested = false;
 	if (rateFilter) {

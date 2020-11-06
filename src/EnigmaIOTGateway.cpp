@@ -1656,6 +1656,8 @@ bool EnigmaIOTGatewayClass::processClientHello (const uint8_t mac[ENIGMAIOT_ADDR
 
 	DEBUG_VERBOSE ("Decrypted Client Hello message: %s", printHexBuffer ((uint8_t*)&clientHello_msg, CHMSG_LEN - TAG_LENGTH));
 
+	node->reset ();
+
 	node->setEncryptionKey (clientHello_msg.publicKey);
 
 	Crypto.getDH1 ();

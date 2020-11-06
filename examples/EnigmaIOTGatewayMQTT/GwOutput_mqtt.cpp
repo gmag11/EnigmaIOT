@@ -561,7 +561,9 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 	switch (data[0]) {
 	case control_message_type::VERSION_ANS:
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, GET_VERSION_ANS);
-		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"version\":\"%.*s\"}", length - 1, data + 1);
+		if (length >= 4) {
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"version\":\"%d.%d.%d\"}", data[1], data[2], data[3]);
+		}
 		if (addMQTTqueue (topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
 			result = true;

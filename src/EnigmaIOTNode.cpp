@@ -2101,8 +2101,8 @@ bool EnigmaIOTNodeClass::processVersionCommand (const uint8_t* mac, const uint8_
 	uint8_t bufLength;
 
 	buffer[0] = control_message_type::VERSION_ANS;
-	memcpy (buffer + 1, (uint8_t*)ENIGMAIOT_PROT_VERS, strlen (ENIGMAIOT_PROT_VERS));
-	bufLength = strlen (ENIGMAIOT_PROT_VERS) + 1;
+	memcpy (buffer + 1, ENIGMAIOT_PROT_VERS, sizeof(ENIGMAIOT_PROT_VERS));
+	bufLength = sizeof (ENIGMAIOT_PROT_VERS) + 1;
 	DEBUG_DBG ("Version command received");
 	if (sendData (buffer, bufLength, true)) {
 		DEBUG_DBG ("Version is %s", ENIGMAIOT_PROT_VERS);

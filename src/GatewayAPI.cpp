@@ -45,13 +45,14 @@ char* GatewayAPI::buildGwInfo (char* gwInfo, size_t len) {
 	DEBUG_INFO ("Build Gateway Info");
 	//resultCode = 200;
 	//time_t currentMillis = millis ();
-	snprintf (gwInfo, len, "{'version':'%s','network':'%s','addresses':{'AP':'%s','STA':'%s'},"
+	snprintf (gwInfo, len, "{'version':'%d.%d.%d','network':'%s','addresses':{'AP':'%s','STA':'%s'},"
 			  "'channel':%d,'ap':'%s','bssid':'%s','rssi':%d,"
 #ifdef ESP32
 			  "txpower':%.1f,"
 #endif
 			  "'dns':'%s'}",
-			  ENIGMAIOT_PROT_VERS, EnigmaIOTGateway.getNetworkName (),
+			  ENIGMAIOT_PROT_VERS[0],ENIGMAIOT_PROT_VERS[1],ENIGMAIOT_PROT_VERS[2],
+			  EnigmaIOTGateway.getNetworkName (),
 			  WiFi.macAddress ().c_str (), WiFi.softAPmacAddress ().c_str (),
 			  WiFi.channel (), WiFi.SSID ().c_str(), WiFi.BSSIDstr ().c_str(), WiFi.RSSI(),
 #ifdef ESP32
@@ -147,9 +148,11 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
 			DEBUG_INFO ("Node %d is registered", node->getNodeId ());
 			resultCode = 200;
 			time_t currentMillis = millis ();
-			snprintf (nodeInfo, len, "{'node_id':%d,'address':'" MACSTR "',"\
+			uint8_t* version = node->getVersion ();
+			snprintf (nodeInfo, len, "{'version':'%d.%d.%d','node_id':%d,'address':'" MACSTR "',"\
 				"'Name':'%s','keyValidSince':%d,'lastMessageTime':%d,'sleepy':%s,"\
 				"'Broadcast':%s,'rssi':%d,'packetsHour':%f,'per':%f}",
+					  version[0], version[1], version[2],
 					  node->getNodeId (),
 					  MAC2STR (node->getMacAddress ()),
 					  node->getNodeName (),

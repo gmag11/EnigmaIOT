@@ -426,6 +426,16 @@ public:
         this->rssi = rssi;
     }
 
+    uint8_t* getVersion () {
+        return enigmaIOTVersion;
+    }
+
+    void setVersion (uint8_t major, uint8_t minor, uint8_t incremental) {
+        enigmaIOTVersion[0] = major;
+        enigmaIOTVersion[1] = minor;
+        enigmaIOTVersion[2] = incremental;
+    }
+
     uint8_t queuedMessage[MAX_MESSAGE_LENGTH]; ///< @brief Message queued for sending to node in case of sleepy mode
     size_t qMessageLength;  ///< @brief Queued message length
     bool qMessagePending = false; ///< @brief `True` if message should be sent just after next data message
@@ -455,6 +465,7 @@ protected:
     FilterClass* rateFilter; ///< @brief Filter for message rate smoothing
     char nodeName[NODE_NAME_LENGTH]; ///< @brief Node name. Use as a human friendly name to avoid use of numeric address
     int8_t rssi; ///< @brief Stores last RSSI measurement
+    uint8_t enigmaIOTVersion[3]; ///< @brief Protocol version, filled when a version message is received
 
      /**
       * @brief Starts smoothing filter
