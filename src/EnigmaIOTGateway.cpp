@@ -244,7 +244,7 @@ bool buildOtaMsg (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size
 	size_t decodedLen = sizeof (uint8_t) + sizeof (uint16_t);
 	tempData += sizeof (uint16_t);
 
-	DEBUG_WARN ("OTA message number %u", msgIdx);
+	DEBUG_INFO ("OTA message number %u", msgIdx);
 	//DEBUG_INFO ("Payload len = %u", payloadLen);
 	//DEBUG_INFO ("Payload data: %s", payload);
 

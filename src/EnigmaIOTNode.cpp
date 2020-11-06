@@ -997,7 +997,7 @@ void EnigmaIOTNodeClass::handle () {
 	}
 
 	// Check if this should go to sleep
-	if (node.getSleepy ()) {
+	if (node.getSleepy () && !shouldRestart) {
 		if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered () && !indentifying) {
 			// Substract running time
 			int64_t sleep_t = sleepTime - ((millis () - cycleStartedTime) * 1000);
@@ -1072,6 +1072,7 @@ void EnigmaIOTNodeClass::handle () {
 				DEBUG_INFO ("OTA TIMEOUT");
 			}
 			otaRunning = false;
+			DEBUG_WARN ("Restart due to OTA timeout");
 			restart ();
 		}
 	}
@@ -1101,7 +1102,12 @@ void EnigmaIOTNodeClass::handle () {
 
 	// Check restart
 	if (shouldRestart) {
-		sendRestart ();
+		static bool restartSent = false;
+		if (!restartSent) {
+			DEBUG_WARN ("Send restart");
+			sendRestart ();
+			restartSent = true;
+		}
 		static unsigned long retartRequest = millis ();
 		if (millis () - retartRequest > 2500) {
 			DEBUG_WARN ("Restart");
@@ -1993,6 +1999,7 @@ bool EnigmaIOTNodeClass::processGetRSSICommand (const uint8_t* mac, const uint8_
 }
 
 bool EnigmaIOTNodeClass::processSetRestartCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+	DEBUG_WARN ("Restart due to command");
 	restart ();
 	return true;
 }
@@ -2017,12 +2024,14 @@ bool EnigmaIOTNodeClass::processSetResetConfigCommand (const uint8_t* mac, const
 	} else {
 		DEBUG_WARN ("Error sending Reset Config response");
 	}
+
+	DEBUG_WARN ("Send restart command before deleting config");
 	sendRestart ();
 
 	clearRTC ();
 	clearFlash ();
 
-	ESP.restart ();
+	restart ();
 
 	return result;
 }
@@ -2129,7 +2138,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 	memcpy (&msgIdx, dataPtr, sizeof (uint16_t));
 	dataPtr += sizeof (uint16_t);
 	dataLen -= sizeof (uint16_t);
-	DEBUG_WARN ("OTA message #%u", msgIdx);
+	DEBUG_INFO ("OTA message #%u", msgIdx);
 	if (msgIdx > 0 && otaRunning) {
 		if (msgIdx != (oldIdx + 1)) {
 			if (!otaRecoverRequested) {
@@ -2257,6 +2266,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			return false;
 		}
 		delay (500);
+		DEBUG_WARN ("Restart after OTA");
 		restart ();
 	}
 
@@ -2264,17 +2274,15 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 }
 
 void EnigmaIOTNodeClass::restart (bool reboot) {
-	if (reboot) {
-		sendRestart ();
-	}
 	rtcmem_data.nodeRegisterStatus = UNREGISTERED;
 	rtcmem_data.nodeKeyValid = false; // Force resync
 	if (!saveRTCData ()) {
 		DEBUG_ERROR ("Error saving data on RTC");
 	}
 	DEBUG_WARN ("Reset configuration data in RTC memory");
-	if (reboot)
-		ESP.restart (); // Reboot to recover normal status
+	// if (reboot)
+	shouldRestart = reboot;
+		//ESP.restart (); 
 }
 
 bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len, bool broadcast) {
