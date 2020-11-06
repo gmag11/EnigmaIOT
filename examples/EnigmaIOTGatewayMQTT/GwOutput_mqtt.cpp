@@ -603,6 +603,13 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 			result = true;
 		}
 		break;
+	case control_message_type::RESTART_CONFIRM:
+		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, RESTART_NOTIF);
+		if (addMQTTqueue (topic, NULL, 0)) {
+			DEBUG_INFO ("Published MQTT %s", topic);
+			result = true;
+		}
+		break;
 	case control_message_type::OTA_ANS:
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, SET_OTA_ANS);
 		switch (data[1]) {

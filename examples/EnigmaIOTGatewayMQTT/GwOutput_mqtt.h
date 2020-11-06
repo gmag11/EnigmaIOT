@@ -49,6 +49,7 @@
 #define GET_NAME_ANS     "result/name"
 #define SET_USER_DATA    "set/data"
 #define GET_USER_DATA    "get/data"
+#define RESTART_NOTIF    "restart"
 #define NODE_DATA        "data"
 #define LOST_MESSAGES    "debug/lostmessages"
 #define NODE_STATUS      "status"

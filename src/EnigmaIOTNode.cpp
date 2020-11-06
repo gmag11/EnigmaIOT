@@ -54,24 +54,22 @@ void EnigmaIOTNodeClass::resetConfig () {
 }
 
 void EnigmaIOTNodeClass::sendRestart () {
-	const size_t capacity = JSON_OBJECT_SIZE (1);
-	DynamicJsonDocument json (capacity);
-	json["action"] = "restart";
-	int len = measureMsgPack (json) + 1;
-	uint8_t* buffer = (uint8_t*)malloc (len);
-	len = serializeMsgPack (json, (char*)buffer, len);
+	uint8_t buffer[1];
+	size_t len = 1;
+
+	buffer[0] = RESTART_CONFIRM;
+	
 	DEBUG_WARN ("Message Len %d\n", len);
 	DEBUG_WARN ("Trying to send: %s\n", printHexBuffer (buffer, len));
-	if (!EnigmaIOTNode.sendData (buffer, len, MSG_PACK)) {
+	if (!EnigmaIOTNode.sendData(buffer,len,true)) {
 		DEBUG_WARN ("Error sending restart");
 	} else {
 		DEBUG_WARN ("Restart sent");
 	}
-	free (buffer);
-	time_t restartRequested = millis ();
-	while (millis () - restartRequested > 200) {
-		yield ();
-	}
+	//time_t restartRequested = millis ();
+	//while (millis () - restartRequested > 200) {
+	//	yield ();
+	//}
 
 }
 
