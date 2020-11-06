@@ -152,6 +152,7 @@ protected:
 	clock_t timeSyncPeriod = QUICK_SYNC_TIME; ///< @brief Clock synchronization period
 	bool clockSyncEnabled = false; ///< @brief If true clock is synchronized with Gateway
 	bool shouldRestart = false; ///< @brief Triggers a restart if true
+	restartReason_t restartReason; ///< @brief Reason of restart (OTA, restart requested, configuration reset)
 	bool gatewaySearchStarted = false; ///< @brief Avoids start a new gateway scan if it already started
 	bool requestSearchGateway = false; ///< @brief Flag to control updating gateway address, RSSI and channel
 	bool requestReportRSSI = false; ///< @brief Flag to control RSSI reporting
@@ -161,7 +162,7 @@ protected:
 	onWiFiManagerExit_t notifyWiFiManagerExit; ///< @brief Function called when configuration portal exits
 	onWiFiManagerStarted_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
 	time_t cycleStartedTime;
-	int16_t lastBroadcastMsgCounter; /**< Counter for broadcast messages from gateway */
+	int16_t lastBroadcastMsgCounter; ///< @brief Counter for broadcast messages from gateway */
 
 	/**
 	  * @brief Check that a given CRC matches to calulated value from a buffer
@@ -210,13 +211,17 @@ protected:
 	*/
 	bool configWiFiManager (rtcmem_data_t* data);
 
+   /**
+	* @brief Sends a restart notification control message
+	*/
 	void sendRestart ();
 
 	/**
 	* @brief Sets connection as unregistered to force a resyncrhonisation after boot
+	* @param reason Reason of the reboot (OTA, restart requested, configuration reset)
 	* @param reboot True if a reboot should be triggered after unregistration
 	*/
-	void restart (bool reboot = true);
+	void restart (restartReason_t reason, bool reboot = true);
 
 	/**
 	  * @brief Build a **ClientHello** messange and send it to gateway

@@ -38,6 +38,15 @@ typedef enum {
 
 typedef enum node_status status_t; ///< @brief Node state
 
+typedef enum {
+    RESTART_AFTER_OTA = 1,
+    OTA_ERROR_RESTART = 2,
+    RESTART_REQUESTED = 3,
+    CONFIG_RESET = 4,
+    IRRELEVANT = 10,
+    UNKNOWN_REASON = 0
+}restartReason_t;
+
 typedef enum control_message_type {
     VERSION = 0x01,
     VERSION_ANS = 0x81,

@@ -43,6 +43,7 @@ RTC_DATA_ATTR rtcmem_data_t rtcmem_data_storage; ///< @brief Context data to be 
 
 
 void EnigmaIOTNodeClass::resetConfig () {
+	restartReason = CONFIG_RESET;
 	sendRestart ();
 	SPIFFS.begin ();
 	SPIFFS.remove (CONFIG_FILE);
@@ -54,10 +55,11 @@ void EnigmaIOTNodeClass::resetConfig () {
 }
 
 void EnigmaIOTNodeClass::sendRestart () {
-	uint8_t buffer[1];
-	size_t len = 1;
+	const size_t len = 2;
+	uint8_t buffer[len];
 
 	buffer[0] = RESTART_CONFIRM;
+	buffer[1] = restartReason;
 	
 	DEBUG_WARN ("Message Len %d\n", len);
 	DEBUG_WARN ("Trying to send: %s\n", printHexBuffer (buffer, len));
@@ -1071,7 +1073,7 @@ void EnigmaIOTNodeClass::handle () {
 			}
 			otaRunning = false;
 			DEBUG_WARN ("Restart due to OTA timeout");
-			restart ();
+			restart (IRRELEVANT);
 		}
 	}
 
@@ -1998,7 +2000,7 @@ bool EnigmaIOTNodeClass::processGetRSSICommand (const uint8_t* mac, const uint8_
 
 bool EnigmaIOTNodeClass::processSetRestartCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
 	DEBUG_WARN ("Restart due to command");
-	restart ();
+	restart (RESTART_REQUESTED);
 	return true;
 }
 
@@ -2024,12 +2026,13 @@ bool EnigmaIOTNodeClass::processSetResetConfigCommand (const uint8_t* mac, const
 	}
 
 	DEBUG_WARN ("Send restart command before deleting config");
+	restartReason = CONFIG_RESET;
 	sendRestart ();
 
 	clearRTC ();
 	clearFlash ();
 
-	restart ();
+	restart (CONFIG_RESET);
 
 	return result;
 }
@@ -2180,7 +2183,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 		responseBuffer[1] = ota_status::OTA_STARTED;
 		if (sendData (responseBuffer, 2, true)) {
 			DEBUG_WARN ("OTA STARTED");
-			restart (false); // Force unregistration after boot so that sleepy status is synchronized
+			restart (IRRELEVANT, false); // Force unregistration after boot so that sleepy status is synchronized
 							 // on Gateway
 			if (!Update.begin (otaSize)) {
 				DEBUG_ERROR ("Error begginning OTA. OTA size: %u", otaSize);
@@ -2249,6 +2252,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			//ESP.restart ();
 			otaRunning = false;
 			shouldRestart = true;
+			restartReason = RESTART_AFTER_OTA;
 			//clearRTC ();
 			return true; // Restart does not happen inmediatelly, so code goes on
 		} else {
@@ -2261,17 +2265,20 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			DEBUG_ERROR ("OTA Failed");
 			DEBUG_WARN ("OTA eror code: %s", otaErrorStr.c_str ());
 			Serial.println ("OTA failed");
+			otaRunning = false;
+			shouldRestart = true;
+			restartReason = OTA_ERROR_RESTART;
 			return false;
 		}
 		delay (500);
 		DEBUG_WARN ("Restart after OTA");
-		restart ();
+		restart (RESTART_AFTER_OTA);
 	}
 
 	return true;
 }
 
-void EnigmaIOTNodeClass::restart (bool reboot) {
+void EnigmaIOTNodeClass::restart (restartReason_t reason, bool reboot) {
 	rtcmem_data.nodeRegisterStatus = UNREGISTERED;
 	rtcmem_data.nodeKeyValid = false; // Force resync
 	if (!saveRTCData ()) {
@@ -2280,7 +2287,10 @@ void EnigmaIOTNodeClass::restart (bool reboot) {
 	DEBUG_WARN ("Reset configuration data in RTC memory");
 	// if (reboot)
 	shouldRestart = reboot;
-		//ESP.restart (); 
+	if (reason != IRRELEVANT) {
+		restartReason = reason;
+	}
+	//ESP.restart (); 
 }
 
 bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len, bool broadcast) {
@@ -2317,7 +2327,7 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
 				return true;
 			} else {
 				DEBUG_ERROR ("Error processing OTA");
-				restart ();
+				restart (OTA_ERROR_RESTART);
 			}
 		}
 		break;

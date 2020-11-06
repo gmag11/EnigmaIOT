@@ -605,8 +605,11 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 		break;
 	case control_message_type::RESTART_CONFIRM:
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, RESTART_NOTIF);
-		if (addMQTTqueue (topic, NULL, 0)) {
-			DEBUG_INFO ("Published MQTT %s", topic);
+		if (length > 1) {
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"reason\":%d}", (int8_t)data[1]);
+		}
+		if (addMQTTqueue (topic, payload, pld_size)) {
+			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
 			result = true;
 		}
 		break;
