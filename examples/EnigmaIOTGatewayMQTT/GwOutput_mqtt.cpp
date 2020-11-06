@@ -607,27 +607,27 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, SET_OTA_ANS);
 		switch (data[1]) {
 		case ota_status::OTA_STARTED:
-			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA Started\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA Started\",\"status\":%u}", data[1]);
 			break;
 		case ota_status::OTA_START_ERROR:
-			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA Start error\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA Start error\",\"status\":%u}", data[1]);
 			break;
 		case ota_status::OTA_OUT_OF_SEQUENCE:
 			uint16_t lastGoodIdx;
 			memcpy ((uint8_t*)&lastGoodIdx, data + 2, sizeof (uint16_t));
-			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"last_chunk\":%d,\"result\":\"OTA out of sequence error\",\"status\":%u}\n", lastGoodIdx, data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"last_chunk\":%d,\"result\":\"OTA out of sequence error\",\"status\":%u}", lastGoodIdx, data[1]);
 			break;
 		case ota_status::OTA_CHECK_OK:
-			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA check OK\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA check OK\",\"status\":%u}", data[1]);
 			break;
 		case ota_status::OTA_CHECK_FAIL:
-			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA check failed\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA check failed\",\"status\":%u}", data[1]);
 			break;
 		case ota_status::OTA_TIMEOUT:
-			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA timeout\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA timeout\",\"status\":%u}", data[1]);
 			break;
 		case ota_status::OTA_FINISHED:
-			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA finished OK\",\"status\":%u}\n", data[1]);
+			pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OTA finished OK\",\"status\":%u}", data[1]);
 			break;
 		}
 		if (addMQTTqueue (topic, payload, pld_size)) {
