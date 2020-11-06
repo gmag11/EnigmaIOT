@@ -45,13 +45,13 @@ char* GatewayAPI::buildGwInfo (char* gwInfo, size_t len) {
 	DEBUG_INFO ("Build Gateway Info");
 	//resultCode = 200;
 	//time_t currentMillis = millis ();
-	snprintf (gwInfo, len, "{'network':'%s','addresses':{'AP':'%s','STA':'%s'},"
+	snprintf (gwInfo, len, "{'version':'%s','network':'%s','addresses':{'AP':'%s','STA':'%s'},"
 			  "'channel':%d,'ap':'%s','bssid':'%s','rssi':%d,"
 #ifdef ESP32
 			  "txpower':%.1f,"
 #endif
 			  "'dns':'%s'}",
-			  EnigmaIOTGateway.getNetworkName (),
+			  ENIGMAIOT_PROT_VERS, EnigmaIOTGateway.getNetworkName (),
 			  WiFi.macAddress ().c_str (), WiFi.softAPmacAddress ().c_str (),
 			  WiFi.channel (), WiFi.SSID ().c_str(), WiFi.BSSIDstr ().c_str(), WiFi.RSSI(),
 #ifdef ESP32
