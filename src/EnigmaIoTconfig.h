@@ -48,8 +48,8 @@ static const uint8_t COMM_ERRORS_BEFORE_SCAN = 2; ///< @brief Node will search f
 //Debug
 #define DEBUG_ESP_PORT Serial ///< @brief Stream to output debug info. It will normally be `Serial`
 #ifndef DEBUG_LEVEL
-#define DEBUG_LEVEL WARN ///< @brief Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE
 // DON'T ENABLE DEBUG IF YOU CAN ONLY DO OTA UPDATE. YOU MAY BE UNABLE TO DO OTA UPDATE ANYMORE UNTIL YOU FLASH THE NODE THROUGH WIRE
+#define DEBUG_LEVEL WARN ///< @brief Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE
 #endif //DEBUG_LEVEL
 
 #endif
