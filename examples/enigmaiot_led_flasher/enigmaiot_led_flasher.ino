@@ -114,6 +114,7 @@ void setup () {
 	EnigmaIOTNode.onDisconnected (disconnectEventHandler);
 	EnigmaIOTNode.onDataRx (processRxData);
 	EnigmaIOTNode.enableClockSync ();
+	EnigmaIOTNode.enableBroadcast ();
 
 	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, false);
 

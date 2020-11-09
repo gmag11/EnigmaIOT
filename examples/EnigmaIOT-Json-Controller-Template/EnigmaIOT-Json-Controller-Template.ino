@@ -85,7 +85,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 }
 
 // Do not modify
-void wifiManagerExit (boolean status) {
+void wifiManagerExit (bool status) {
 	controller->configManagerExit (status);
 }
 
@@ -112,6 +112,7 @@ void setup () {
 	EnigmaIOTNode.enableClockSync (false); // Set to true if you need this node to get its clock syncronized with gateway
 	EnigmaIOTNode.onWiFiManagerStarted (wifiManagerStarted);
 	EnigmaIOTNode.onWiFiManagerExit (wifiManagerExit);
+	EnigmaIOTNode.enableBroadcast ();
 
 	if (!controller->loadConfig ()) { // Trigger custom configuration loading
 		DEBUG_WARN ("Error reading config file");

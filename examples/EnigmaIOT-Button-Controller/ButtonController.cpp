@@ -18,7 +18,7 @@ constexpr auto CONFIG_FILE = "/customconf.json"; ///< @brief Custom configuratio
 
 bool CONTROLLER_CLASS_NAME::processRxCommand (const uint8_t* address, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding) {
 	// Process incoming messages here
-	// They are normally encoded as MsgPack so you can confert them to JSON very easily
+	// They are normally encoded as MsgPack so you can convert them to JSON very easily
 	return true;
 }
 
@@ -97,7 +97,7 @@ void CONTROLLER_CLASS_NAME::loop () {
 }
 
 CONTROLLER_CLASS_NAME::~CONTROLLER_CLASS_NAME () {
-	// It your class uses dynamic data free it up here
+	// If your class uses dynamic data free it up here
 	// This is normally not needed but it is a good practice
 }
 
