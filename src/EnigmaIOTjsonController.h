@@ -63,6 +63,11 @@ public:
 	}
 
 	/**
+	 * @brief Used to notify controller that it is registered on EnigmaIOT network
+	 */
+	virtual void connectInform ();
+
+	/**
 	 * @brief Called when wifi manager starts config portal
 	 * @param node Pointer to EnigmaIOT node instance
 	 */
