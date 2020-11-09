@@ -35,7 +35,7 @@ public:
 	 * @brief Initialize data structures
 	 * @param config Pointer to configuration structure. If it is `NULL` then it tries to load configuration from flash
 	 */
-	virtual void setup (void* config = NULL) = 0;
+	virtual void setup (EnigmaIOTNodeClass*node, void* config = NULL) = 0;
 
 	/**
 	 * @brief This should be called periodically for module handling
@@ -66,7 +66,7 @@ public:
 	 * @brief Called when wifi manager starts config portal
 	 * @param node Pointer to EnigmaIOT node instance
 	 */
-	virtual void configManagerStart (EnigmaIOTNodeClass* node) = 0;
+	virtual void configManagerStart () = 0;
 
 	/**
 	 * @brief Called when wifi manager exits config portal

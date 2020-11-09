@@ -146,6 +146,7 @@ protected:
 	nodeInvalidateReason_t invalidateReason = UNKNOWN_ERROR; ///< @brief Last key invalidation reason
 	bool otaRunning = false; ///< @brief True if OTA update has started
 	bool otaError = false; ///< @brief True if OTA update has failed. This normally produces a restart
+	bool protectOTA = false; ///< @brief True if OTA update was launched. OTA flag is stored on RTC so this disables writting.
 	time_t lastOTAmsg; ///< @brief Time when last OTA update message has received. This is used to control timeout
 	boolean indentifying = false; ///< @brief True if node has its led flashing to be identified
 	time_t identifyStart; ///< @brief Time when identification started flashing. Used to control identification timeout
@@ -215,13 +216,6 @@ protected:
 	* @brief Sends a restart notification control message
 	*/
 	void sendRestart ();
-
-	/**
-	* @brief Sets connection as unregistered to force a resyncrhonisation after boot
-	* @param reason Reason of the reboot (OTA, restart requested, configuration reset)
-	* @param reboot True if a reboot should be triggered after unregistration
-	*/
-	void restart (restartReason_t reason, bool reboot = true);
 
 	/**
 	  * @brief Build a **ClientHello** messange and send it to gateway
@@ -519,6 +513,13 @@ public:
 	void stop ();
 
 	/**
+	* @brief Sets connection as unregistered to force a resyncrhonisation after boot
+	* @param reason Reason of the reboot (OTA, restart requested, configuration reset)
+	* @param reboot True if a reboot should be triggered after unregistration
+	*/
+	void restart (restartReason_t reason, bool reboot = true);
+
+	/**
 	  * @brief Allows to configure a new sleep time period from user code
 	  * @param sleepTime Time in seconds. Final period is not espected to be exact. Its value
 	  *                  depends on communication process. If it is zero, disables deep sleep.
@@ -762,6 +763,14 @@ public:
 	 * @brief Deletes configuration file stored on SPIFFS. It makes neccessary to configure it again using WiFi Portal
 	 */
 	void resetConfig ();
+
+	/**
+	 * @brief Checks if OTA is running
+	 * @return OTA running state
+	 */
+	bool getOTArunning () {
+		return otaRunning;
+	}
 
 };
 

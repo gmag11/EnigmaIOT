@@ -43,6 +43,7 @@ typedef enum {
     OTA_ERROR_RESTART = 2,
     RESTART_REQUESTED = 3,
     CONFIG_RESET = 4,
+    USER_RESET = 5,
     IRRELEVANT = 10,
     UNKNOWN_REASON = 0
 }restartReason_t;

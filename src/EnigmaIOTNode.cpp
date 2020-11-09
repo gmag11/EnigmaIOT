@@ -425,6 +425,10 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 bool EnigmaIOTNodeClass::saveRTCData () {
 	if (configCleared)
 		return false;
+	if (protectOTA || otaRunning) {
+		DEBUG_WARN ("Cannot write to RTC memory");
+		return true;
+	}
 #ifdef ESP8266
 	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
 	if (ESP.rtcUserMemoryWrite (RTC_ADDRESS, (uint32_t*)&rtcmem_data, sizeof (rtcmem_data))) {
@@ -1708,7 +1712,7 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
 	DEBUG_DBG ("Destination address: %s", mac2str (rtcmem_data.gateway, macStr));
 #endif
 
-	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
+	if (useCounter) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
 		if (!saveRTCData ()) {
 			DEBUG_ERROR ("Error saving data on RTC");
 		}
@@ -2040,6 +2044,11 @@ bool EnigmaIOTNodeClass::processSetResetConfigCommand (const uint8_t* mac, const
 void EnigmaIOTNodeClass::clearRTC () {
 	uint8_t data[sizeof (rtcmem_data)];
 
+	if (protectOTA || otaRunning) {
+		DEBUG_WARN ("Cannot write to RTC memory");
+		return;
+	}
+
 	memset (data, 0, sizeof (rtcmem_data));
 
 #ifdef ESP8266
@@ -2250,6 +2259,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			DEBUG_WARN ("OTA Finished OK");
 			DEBUG_WARN ("OTA eror code: %d", otaErrorCode);
 			//ESP.restart ();
+			protectOTA = true;
 			otaRunning = false;
 			shouldRestart = true;
 			restartReason = RESTART_AFTER_OTA;
