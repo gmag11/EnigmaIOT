@@ -156,7 +156,6 @@ void FilterClass::quicksort (float* array, int start, int end) {
 
 float FilterClass::medianFilter (float value) {
 	float procValue;
-	char strValue[8];
 	int medianIdx;
 	int left, right, tempidx;
 	bool even;
