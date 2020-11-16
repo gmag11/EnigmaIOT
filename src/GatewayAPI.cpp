@@ -316,8 +316,8 @@ String methodToString (WebRequestMethodComposite method) {
 		return String ("HEAD");
 	case HTTP_OPTIONS:
 		return String ("OPTIONS");
-
 	}
+	return "";
 }
 
 void GatewayAPI::onNotFound (AsyncWebServerRequest* request) {
