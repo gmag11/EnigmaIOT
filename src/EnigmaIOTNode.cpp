@@ -503,7 +503,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	snprintf (apname, 64, "EnigmaIoTNode%06x", ESP.getChipId ());
 	//String apname = "EnigmaIoTNode" + String (ESP.getChipId (), 16);
 #elif defined ESP32
-	snprintf (apname, 64, "EnigmaIoTNode%06x", (uint32_t)(ESP.getEfuseMac ()) & (uint64_t)0x0000000000FFFFFF);
+	snprintf (apname, 64, "EnigmaIoTNode%06x", (uint32_t)(ESP.getEfuseMac () & (uint64_t)0x0000000000FFFFFF));
 	//String apname = "EnigmaIoTNode" + String (ESP.getEfuseMac (), 16);
 #endif
 	DEBUG_VERBOSE ("Start AP: %s", apname);
