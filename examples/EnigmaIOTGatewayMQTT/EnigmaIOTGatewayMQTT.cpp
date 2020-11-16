@@ -25,7 +25,7 @@
 
 #ifdef ESP32
 #include <WiFi.h>
-#include <AsyncTCP.h> // Comment to compile for ESP8266
+//#include <AsyncTCP.h> // Comment to compile for ESP8266
 #include <Update.h>
 #include <SPIFFS.h>
 #include "esp_system.h"
@@ -36,7 +36,7 @@
 #include "soc/rtc_cntl_reg.h"  // Disable brownout problems
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
-//#include <ESPAsyncTCP.h> // Comment to compile for ESP32
+#include <ESPAsyncTCP.h> // Comment to compile for ESP32
 #include <ESP8266mDNS.h>
 #include <Hash.h>
 #include <SPI.h>

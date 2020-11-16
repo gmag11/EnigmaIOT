@@ -1,9 +1,13 @@
 /**
-  * @file EnigmaIOT-Button-Controller.ino
+  * @file EnigmaIOT-Json-Controller-Template.ino
   * @version 0.9.5
   * @date 30/10/2020
   * @author German Martin
   * @brief Node template for easy custom node creation
+  *
+  * Using this template you may create custom nodes in minutes by adding your code in a class.
+  * You only need to edit BasicController.h and BasicController.cpp with your code.
+  * All EnigmaIOT management is done internally
   */
 
 #if !defined ESP8266 && !defined ESP32
@@ -12,7 +16,9 @@
 
 #include <Arduino.h>
 #include <EnigmaIOTjsonController.h>
-#include "ButtonController.h" // <-- Include here your controller class header
+#include "ds18b20Controller.h" // <-- Include here your controller class header
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
@@ -41,7 +47,7 @@
 #include <DNSServer.h>
 #include <FS.h>
 
-#define SLEEPY 0 // Set it to 1 if your node should sleep after sending data
+#define SLEEPY 1 // Set it to 1 if your node should sleep after sending data
 
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 2 // ESP32 boards normally have a LED in GPIO3 or GPIO5
@@ -87,7 +93,7 @@ void wifiManagerExit (boolean status) {
 
 // Do not modify
 void wifiManagerStarted () {
-	controller->configManagerStart (&EnigmaIOTNode);
+	controller->configManagerStart ();
 }
 
 void setup () {
@@ -108,7 +114,6 @@ void setup () {
 	EnigmaIOTNode.enableClockSync (false); // Set to true if you need this node to get its clock syncronized with gateway
 	EnigmaIOTNode.onWiFiManagerStarted (wifiManagerStarted);
 	EnigmaIOTNode.onWiFiManagerExit (wifiManagerExit);
-	EnigmaIOTNode.enableBroadcast ();
 
 	if (!controller->loadConfig ()) { // Trigger custom configuration loading
 		DEBUG_WARN ("Error reading config file");
@@ -134,7 +139,7 @@ void setup () {
 	}
 
 	controller->sendDataCallback (sendUplinkData); // Listen for data from controller class
-	controller->setup (); // Start controller class
+	controller->setup (&EnigmaIOTNode);			   // Start controller class
 
 #if SLEEPY == 1
 	EnigmaIOTNode.sleep ();

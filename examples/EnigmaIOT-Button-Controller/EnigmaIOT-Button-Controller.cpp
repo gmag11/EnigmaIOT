@@ -1,13 +1,9 @@
 /**
-  * @file EnigmaIOT-Json-Controller-Template.ino
+  * @file EnigmaIOT-Button-Controller.ino
   * @version 0.9.5
   * @date 30/10/2020
   * @author German Martin
   * @brief Node template for easy custom node creation
-  *
-  * Using this template you may create custom nodes in minutes by adding your code in a class.
-  * You only need to edit BasicController.h and BasicController.cpp with your code.
-  * All EnigmaIOT management is done internally
   */
 
 #if !defined ESP8266 && !defined ESP32
@@ -16,7 +12,7 @@
 
 #include <Arduino.h>
 #include <EnigmaIOTjsonController.h>
-#include "BasicController.h" // <-- Include here your controller class header
+#include "ButtonController.h" // <-- Include here your controller class header
 
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
@@ -61,7 +57,8 @@ EnigmaIOTjsonController* controller; // Generic controller is refferenced here. 
 #define RESET_PIN 13 // You can set a different configuration reset pin here. Check for conflicts with used pins.
 
 // Called when node is connected to gateway. You don't need to do anything here usually
-void connectEventHandler () { 
+void connectEventHandler () {
+	controller->connectInform();
 	DEBUG_WARN ("Connected");
 }
 
@@ -85,13 +82,13 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 }
 
 // Do not modify
-void wifiManagerExit (bool status) {
+void wifiManagerExit (boolean status) {
 	controller->configManagerExit (status);
 }
 
 // Do not modify
 void wifiManagerStarted () {
-	controller->configManagerStart (&EnigmaIOTNode);
+	controller->configManagerStart ();
 }
 
 void setup () {
@@ -138,7 +135,7 @@ void setup () {
 	}
 
 	controller->sendDataCallback (sendUplinkData); // Listen for data from controller class
-	controller->setup (); // Start controller class
+	controller->setup (&EnigmaIOTNode);			   // Start controller class
 
 #if SLEEPY == 1
 	EnigmaIOTNode.sleep ();
