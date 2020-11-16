@@ -4,9 +4,9 @@
 #define _BASICCONTROLLER_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
+#include "Arduino.h"
 #else
-	#include "WProgram.h"
+#include "WProgram.h"
 #endif
 
 //#define DEBUG_SERIAL
@@ -17,7 +17,7 @@
 
 #include <EnigmaIOTjsonController.h>
 #define CONTROLLER_CLASS_NAME LedController
-static const char *CONTROLLER_NAME = "LED controller";
+static const char* CONTROLLER_NAME = "LED controller";
 
 // --------------------------------------------------
 // You may define data structures and constants here
@@ -34,12 +34,12 @@ protected:
 	int led = LED_OFF;
 
 public:
-	void setup(EnigmaIOTNodeClass *node, void *data = NULL);
+	void setup (EnigmaIOTNodeClass* node, void* data = NULL);
 
 	bool processRxCommand (const uint8_t* address, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding);
-	
+
 	void loop ();
-	
+
 	~CONTROLLER_CLASS_NAME ();
 
 	/**
@@ -70,9 +70,9 @@ protected:
 	  * @return Returns `true` if save was successful. `false` otherwise
 	  */
 	bool saveConfig ();
-	
+
 	bool sendCommandResp (const char* command, bool result);
-	
+
 	bool sendStartAnouncement ();
 
 	// ------------------------------------------------------------

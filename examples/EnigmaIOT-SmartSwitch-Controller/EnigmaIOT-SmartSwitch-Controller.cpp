@@ -57,7 +57,7 @@ EnigmaIOTjsonController* controller; // Generic controller is refferenced here. 
 #define RESET_PIN 4 // You can set a different configuration reset pin here. Check for conflicts with used pins.
 
 // Called when node is connected to gateway. You don't need to do anything here usually
-void connectEventHandler () { 
+void connectEventHandler () {
 	DEBUG_WARN ("Connected");
 }
 
@@ -116,7 +116,7 @@ void setup () {
 			DEBUG_WARN ("SPIFFS Formatted");
 	}
 
-	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY==1); // Start EnigmaIOT communication
+	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY == 1); // Start EnigmaIOT communication
 
 	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
 	// Set Address using internal MAC Address. Do not modify

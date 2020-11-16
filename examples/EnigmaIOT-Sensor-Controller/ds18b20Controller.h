@@ -4,9 +4,9 @@
 #define _DS18B20CONTROLLER_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
+#include "Arduino.h"
 #else
-	#include "WProgram.h"
+#include "WProgram.h"
 #endif
 
 //#define DEBUG_SERIAL
@@ -17,7 +17,7 @@
 
 #include <EnigmaIOTjsonController.h>
 #define CONTROLLER_CLASS_NAME ds18b20Controller
-static const char *CONTROLLER_NAME = "DS18B20 controller";
+static const char* CONTROLLER_NAME = "DS18B20 controller";
 
 // --------------------------------------------------
 // You may define data structures and constants here
@@ -30,17 +30,17 @@ protected:
 	// --------------------------------------------------
 	// add all parameters that your project needs here
 	// --------------------------------------------------
-	OneWire *oneWire;
-	DallasTemperature *sensors;
+	OneWire* oneWire;
+	DallasTemperature* sensors;
 	DeviceAddress insideThermometer;
 
 public:
-	void setup (EnigmaIOTNodeClass *node, void *data = NULL);
+	void setup (EnigmaIOTNodeClass* node, void* data = NULL);
 
 	bool processRxCommand (const uint8_t* address, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding);
-	
+
 	void loop ();
-	
+
 	~CONTROLLER_CLASS_NAME ();
 
 	/**
@@ -61,7 +61,7 @@ public:
 	 */
 	bool loadConfig ();
 
-	void connectInform (){
+	void connectInform () {
 		sendStartAnouncement ();
 	}
 
@@ -71,9 +71,9 @@ protected:
 	  * @return Returns `true` if save was successful. `false` otherwise
 	  */
 	bool saveConfig ();
-	
+
 	bool sendCommandResp (const char* command, bool result);
-	
+
 	bool sendStartAnouncement ();
 
 	bool sendTemperature (float temp);

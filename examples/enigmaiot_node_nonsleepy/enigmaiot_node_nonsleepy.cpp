@@ -67,7 +67,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 	char macstr[ENIGMAIOT_ADDR_LEN * 3];
 	String commandStr;
 	uint8_t tempBuffer[MAX_MESSAGE_LENGTH];
-	bool broadcast=false;
+	bool broadcast = false;
 	uint8_t _command = command;
 
 	if (_command & 0x80)
@@ -149,11 +149,11 @@ void setup () {
 
 void showTime () {
 	//const int time_freq = 10000;
-	
+
 	tm timeinfo;
 	static time_t displayTime;
-	
-	if (EnigmaIOTNode.hasClockSync()) {
+
+	if (EnigmaIOTNode.hasClockSync ()) {
 		setenv ("TZ", TZINFO, 1);
 		displayTime = millis ();
 		time_t local_time_ms = EnigmaIOTNode.clock ();

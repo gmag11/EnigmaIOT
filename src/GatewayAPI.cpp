@@ -51,12 +51,12 @@ char* GatewayAPI::buildGwInfo (char* gwInfo, size_t len) {
 			  "txpower':%.1f,"
 #endif
 			  "'dns':'%s'}",
-			  ENIGMAIOT_PROT_VERS[0],ENIGMAIOT_PROT_VERS[1],ENIGMAIOT_PROT_VERS[2],
+			  ENIGMAIOT_PROT_VERS[0], ENIGMAIOT_PROT_VERS[1], ENIGMAIOT_PROT_VERS[2],
 			  EnigmaIOTGateway.getNetworkName (),
 			  WiFi.macAddress ().c_str (), WiFi.softAPmacAddress ().c_str (),
-			  WiFi.channel (), WiFi.SSID ().c_str(), WiFi.BSSIDstr ().c_str(), WiFi.RSSI(),
+			  WiFi.channel (), WiFi.SSID ().c_str (), WiFi.BSSIDstr ().c_str (), WiFi.RSSI (),
 #ifdef ESP32
-			  (float)(WiFi.getTxPower ())/4, 
+			  (float)(WiFi.getTxPower ()) / 4,
 #endif
 			  WiFi.dnsIP ().toString ().c_str ()
 	);
@@ -137,7 +137,7 @@ const char* GatewayAPI::deleteNode (Node* node, int& resultCode) {
 		} else {
 			DEBUG_INFO ("Node %d is not registered", node->getNodeId ());
 		}
-	} 
+	}
 	return NULL;
 }
 
@@ -150,17 +150,17 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
 			time_t currentMillis = millis ();
 			uint8_t* version = node->getVersion ();
 			snprintf (nodeInfo, len, "{'version':'%d.%d.%d','node_id':%d,'address':'" MACSTR "',"\
-				"'Name':'%s','keyValidSince':%d,'lastMessageTime':%d,'sleepy':%s,"\
-				"'Broadcast':%s,'rssi':%d,'packetsHour':%f,'per':%f}",
+					  "'Name':'%s','keyValidSince':%d,'lastMessageTime':%d,'sleepy':%s,"\
+					  "'Broadcast':%s,'rssi':%d,'packetsHour':%f,'per':%f}",
 					  version[0], version[1], version[2],
 					  node->getNodeId (),
 					  MAC2STR (node->getMacAddress ()),
 					  node->getNodeName (),
-					  currentMillis-node->getKeyValidFrom(),
-					  currentMillis-node->getLastMessageTime(),
-					  node->getSleepy() ? "True" : "False",
-					  node->broadcastIsEnabled() ? "True" : "False",
-					  node->getRSSI(),
+					  currentMillis - node->getKeyValidFrom (),
+					  currentMillis - node->getLastMessageTime (),
+					  node->getSleepy () ? "True" : "False",
+					  node->broadcastIsEnabled () ? "True" : "False",
+					  node->getRSSI (),
 					  node->packetsHour,
 					  node->per
 			);
@@ -207,8 +207,8 @@ void GatewayAPI::nodeOp (AsyncWebServerRequest* request) {
 
 	WebRequestMethodComposite method = request->method ();
 	DEBUG_INFO ("Method: %s", methodToString (request->method ()).c_str ());
-	
-	if (method == HTTP_DELETE){
+
+	if (method == HTTP_DELETE) {
 		DEBUG_INFO ("Delete node %p", node);
 		const char* strTemp = deleteNode (node, resultCode);
 		if (strTemp) {
@@ -242,7 +242,7 @@ void GatewayAPI::restartGw (AsyncWebServerRequest* request) {
 	char response[30];
 	bool confirm = false;
 	int resultCode = 404;
-	
+
 	int params = request->params ();
 
 	for (int i = 0; i < params; i++) {
@@ -265,9 +265,9 @@ void GatewayAPI::restartGw (AsyncWebServerRequest* request) {
 	}
 
 	DEBUG_INFO ("Response: %s", response);
-	
+
 	if (confirm && EnigmaIOTGateway.notifyRestartRequested) {
-		EnigmaIOTGateway.notifyRestartRequested();
+		EnigmaIOTGateway.notifyRestartRequested ();
 	}
 }
 

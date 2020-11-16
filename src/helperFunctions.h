@@ -24,14 +24,14 @@
 #include "debug.h"
 
   /**
-	* @brief Debug helper function that generates a string that represent a buffer hexadecimal values
-	* @param buffer Pointer to the buffer
-	* @param len Buffer length in number of bytes
-	* @return Returns a pointer to the generated string.
-	*
-	* String has to be used inmediatelly. At least before calling `printHexBuffer()` again as it uses a static buffer to hold string.
-	* It will be overwritten on next call.
-	*/
+  * @brief Debug helper function that generates a string that represent a buffer hexadecimal values
+  * @param buffer Pointer to the buffer
+  * @param len Buffer length in number of bytes
+  * @return Returns a pointer to the generated string.
+  *
+  * String has to be used inmediatelly. At least before calling `printHexBuffer()` again as it uses a static buffer to hold string.
+  * It will be overwritten on next call.
+  */
 char* printHexBuffer (const uint8_t* buffer, uint16_t len);
 
 /**

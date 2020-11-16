@@ -37,7 +37,7 @@ bool CONTROLLER_CLASS_NAME::sendStartAnouncement () {
 	return sendJson (json);
 }
 
-void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass *node, void *data) {
+void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	enigmaIotNode = node;
 
 	// You do node setup here. Use it as it was the normal setup() Arduino function

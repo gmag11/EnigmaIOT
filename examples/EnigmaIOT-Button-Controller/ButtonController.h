@@ -4,9 +4,9 @@
 #define _BUTTONCONTROLLER_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
+#include "Arduino.h"
 #else
-	#include "WProgram.h"
+#include "WProgram.h"
 #endif
 
 #ifdef ESP32
@@ -23,8 +23,7 @@
 #define CONTROLLER_CLASS_NAME ButtonController
 static const char* CONTROLLER_NAME = "Button controller";
 
-class CONTROLLER_CLASS_NAME : EnigmaIOTjsonController
-{
+class CONTROLLER_CLASS_NAME : EnigmaIOTjsonController {
 protected:
 	// --------------------------------------------------
 	// add all parameters that your project needs here
@@ -33,12 +32,12 @@ protected:
 	bool pushReleased = true;
 
 public:
-	void setup(EnigmaIOTNodeClass *node, void *data = NULL);
+	void setup (EnigmaIOTNodeClass* node, void* data = NULL);
 
 	bool processRxCommand (const uint8_t* address, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding);
-	
+
 	void loop ();
-	
+
 	~CONTROLLER_CLASS_NAME ();
 
 	/**
@@ -69,9 +68,9 @@ protected:
 	  * @return Returns `true` if save was successful. `false` otherwise
 	  */
 	bool saveConfig ();
-	
+
 	bool sendCommandResp (const char* command, bool result);
-	
+
 	bool sendStartAnouncement ();
 
 	// ------------------------------------------------------------

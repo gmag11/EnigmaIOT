@@ -145,18 +145,18 @@ void arduinoOTAConfigure () {
 	// MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
 	// ArduinoOTA.setPasswordHash("21232f297a57a5a743894a0e4a801fc3");
 
-	ArduinoOTA.onStart ([]() {
+	ArduinoOTA.onStart ([] () {
 		if (ArduinoOTA.getCommand () == U_FLASH) {
 			DEBUG_WARN ("Start updating sketch");
 		} else {// U_SPIFFS
 			DEBUG_WARN ("Start updating filesystem");
 			// NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
 		}
-	});
-	ArduinoOTA.onEnd ([]() {
+						});
+	ArduinoOTA.onEnd ([] () {
 		DEBUG_WARN ("OTA Finished");
-	});
-	ArduinoOTA.onProgress ([](unsigned int progress, unsigned int total) {
+					  });
+	ArduinoOTA.onProgress ([] (unsigned int progress, unsigned int total) {
 		static bool printed = false;
 		unsigned int percent = progress / (total / 100);
 		digitalWrite (BLUE_LED, !digitalRead (BLUE_LED));
@@ -172,14 +172,10 @@ void arduinoOTAConfigure () {
 		if (progress == total) {
 			DEBUG_WARN ("OTA transfer finished");
 		}
-	});
-	ArduinoOTA.onError ([](ota_error_t error) {
+						   });
+	ArduinoOTA.onError ([] (ota_error_t error) {
 		DEBUG_WARN ("OTA Error[%u]: ", error);
-		if (error == OTA_AUTH_ERROR) { DEBUG_WARN ("OTA Auth Failed"); }
-		else if (error == OTA_BEGIN_ERROR) { DEBUG_WARN ("OTA Begin Failed"); }
-		else if (error == OTA_CONNECT_ERROR) { DEBUG_WARN ("OTA Connect Failed"); }
-		else if (error == OTA_RECEIVE_ERROR) { DEBUG_WARN ("OTA Receive Failed"); }
-		else if (error == OTA_END_ERROR) { DEBUG_WARN ("OTA End Failed"); }
+		if (error == OTA_AUTH_ERROR) { DEBUG_WARN ("OTA Auth Failed"); } 		else if (error == OTA_BEGIN_ERROR) { DEBUG_WARN ("OTA Begin Failed"); } 		else if (error == OTA_CONNECT_ERROR) { DEBUG_WARN ("OTA Connect Failed"); } 		else if (error == OTA_RECEIVE_ERROR) { DEBUG_WARN ("OTA Receive Failed"); } 		else if (error == OTA_END_ERROR) { DEBUG_WARN ("OTA End Failed"); }
 						});
 
 	ArduinoOTA.begin ();
@@ -211,7 +207,7 @@ void doRestart () {
 	const size_t capacity = JSON_OBJECT_SIZE (1);
 	size_t len;
 	char* payload;
-	
+
 	DynamicJsonDocument doc (capacity);
 
 	doc["action"] = "restart";
@@ -224,7 +220,7 @@ void doRestart () {
 	free (payload);
 
 	restartRequested = true;
-	restartRequestTime = millis();
+	restartRequestTime = millis ();
 
 }
 
@@ -486,9 +482,9 @@ void sendStatus (float temperature) {
 
 	len = measureJson (doc) + 1;
 	payload = (char*)malloc (len);
-	serializeJson (doc,(char*)payload,len);
+	serializeJson (doc, (char*)payload, len);
 	char addr[] = "gateway";
-	GwOutput.outputDataSend (addr, payload, len-1);
+	GwOutput.outputDataSend (addr, payload, len - 1);
 	free (payload);
 }
 #endif // MEAS_TEMP
@@ -497,7 +493,7 @@ void loop () {
 	GwOutput.loop ();
 	EnigmaIOTGateway.handle ();
 	ArduinoOTA.handle ();
-	
+
 #ifdef MEAS_TEMP
 	static bool tempRequested = false;
 	static time_t lastTempTime;

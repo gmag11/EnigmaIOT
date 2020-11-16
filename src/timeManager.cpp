@@ -14,17 +14,17 @@ int64_t TimeManagerClass::setOrigin () {
 	//Serial.printf ("offset: %d\n", offset);
 	//Serial.printf ("clock:  %u %u\n", millis () + offset, clock());
 
-    return clock ();
+	return clock ();
 }
 
 int64_t TimeManagerClass::clock () {
-    if (timeIsAdjusted) {
+	if (timeIsAdjusted) {
 		int64_t clk = offset + (time_t)(millis ());
 		DEBUG_DBG ("Clock: %lld", clk);
 		return clk;
-    } else {
+	} else {
 		return millis ();
-    }
+	}
 }
 
 int64_t TimeManagerClass::adjustTime (int64_t t1r, int64_t t2r, int64_t t3r, int64_t t4r) {
@@ -36,14 +36,14 @@ int64_t TimeManagerClass::adjustTime (int64_t t1r, int64_t t2r, int64_t t3r, int
 	DEBUG_DBG ("T1: %lld, T2: %lld, T3: %lld, T4: %lld", t1, t2, t3, t4);
 	int64_t delay = ((t2 - t1) + (t3 - t4)) / 2;
 	DEBUG_DBG ("Delay: %lld", delay);
-    offset += delay;
+	offset += delay;
 	DEBUG_DBG ("New offset: %lld", offset);
-    roundTripDelay = (t4 - t1) - (t3 - t2);
+	roundTripDelay = (t4 - t1) - (t3 - t2);
 	DEBUG_DBG ("Round trip delay: %lld", roundTripDelay);
 
-    timeIsAdjusted = true;
+	timeIsAdjusted = true;
 
-    return delay;
+	return delay;
 }
 
 

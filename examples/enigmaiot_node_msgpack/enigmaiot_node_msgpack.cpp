@@ -94,7 +94,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 		serializeJsonPretty (doc, Serial);
 		break;
 	default:
-		DEBUG_WARN("Non supported encoding; %d", encoding);
+		DEBUG_WARN ("Non supported encoding; %d", encoding);
 	}
 }
 
@@ -116,7 +116,7 @@ void setup () {
 	EnigmaIOTNode.onDataRx (processRxData);
 
 	EnigmaIOTNode.begin (&Espnow_hal);
-	
+
 	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
 #ifdef ESP8266
 	if (wifi_get_macaddr (STATION_IF, macAddress))

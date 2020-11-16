@@ -143,9 +143,9 @@ void setup () {
 	msg.addCurrent (4, 2.43);
 
 #ifdef ESP8266
-	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ())/ 1000);
+	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
 #elif defined ESP32
-	Serial.printf ("Vcc: %f\n", (float)(analogRead(ADC1_CHANNEL_0_GPIO_NUM) * 3.6 / 4096));
+	Serial.printf ("Vcc: %f\n", (float)(analogRead (ADC1_CHANNEL_0_GPIO_NUM) * 3.6 / 4096));
 #endif
 	// End of user code
 

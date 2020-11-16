@@ -9,24 +9,23 @@
 #include "Filter.h"
 #include "debug.h"
 
-float FilterClass::addValue(float value)
-{
+float FilterClass::addValue (float value) {
 	switch (_filterType) {
-		case AVERAGE_FILTER:
-			return aveFilter(value);
-			break;
-		case MEDIAN_FILTER:
-			return medianFilter(value);
-			break;
-		default:
-			return value;
+	case AVERAGE_FILTER:
+		return aveFilter (value);
+		break;
+	case MEDIAN_FILTER:
+		return medianFilter (value);
+		break;
+	default:
+		return value;
 	}
 }
 
 float FilterClass::addWeigth (float coeff) {
 	float sumWeight = 0;
 
-	for (int i = _order - 1; i > 0 ; i--) {
+	for (int i = _order - 1; i > 0; i--) {
 		_weightValues[i] = _weightValues[i - 1];
 	}
 	_weightValues[0] = coeff;
@@ -34,15 +33,14 @@ float FilterClass::addWeigth (float coeff) {
 	for (int i = 0; i < _order; i++) {
 		sumWeight += _weightValues[i];
 	}
-	
+
 	//DEBUG_VERBOSE ("SumWeight: %f", sumWeight);
 
 	return sumWeight;
 }
 
 
-float FilterClass::aveFilter(float value)
-{
+float FilterClass::aveFilter (float value) {
 	float sumValue = 0;
 	float sumWeight = 0;
 	float procValue;
@@ -52,7 +50,7 @@ float FilterClass::aveFilter(float value)
 		_rawValues[i] = _rawValues[i + 1];
 	}
 	_rawValues[_order - 1] = value;
-	
+
 	DEBUG_VERBOSE ("Value: %f\n", value);
 
 	DEBUG_VERBOSE ("Raw values:");
@@ -69,8 +67,7 @@ float FilterClass::aveFilter(float value)
 		_index++;
 		left = _order - _index;
 		right = _order - 1;
-	}
-	else {
+	} 	else {
 		left = 0;
 		right = _order - 1;
 	}
@@ -91,7 +88,7 @@ float FilterClass::aveFilter(float value)
 	return procValue;
 }
 
-int FilterClass::divide(float *array, int start, int end) {
+int FilterClass::divide (float* array, int start, int end) {
 	int left;
 	int right;
 	float pivot;
@@ -143,29 +140,27 @@ FilterClass::~FilterClass () {
 	free (_weightValues);
 }
 
-void FilterClass::quicksort(float *array, int start, int end)
-{
+void FilterClass::quicksort (float* array, int start, int end) {
 	float pivot;
 
 	if (start < end) {
-		pivot = divide(array, start, end);
+		pivot = divide (array, start, end);
 
 		// Ordeno la lista de los menores
-		quicksort(array, start, pivot - 1);
+		quicksort (array, start, pivot - 1);
 
 		// Ordeno la lista de los mayores
-		quicksort(array, pivot + 1, end);
+		quicksort (array, pivot + 1, end);
 	}
 }
 
-float FilterClass::medianFilter(float value)
-{
+float FilterClass::medianFilter (float value) {
 	float procValue;
 	char strValue[8];
 	int medianIdx;
 	int left, right, tempidx;
 	bool even;
-	
+
 	if (_index < _order) {
 		_index++;
 		left = _order - _index;
@@ -175,14 +170,12 @@ float FilterClass::medianFilter(float value)
 		if (even) {
 			tempidx = (right - left - 1) / 2;
 			DEBUG_VERBOSE ("even\n");
-		}
-		else {
+		} 		else {
 			tempidx = (right - left) / 2;
 			DEBUG_VERBOSE ("odd\n");
 		}
 		medianIdx = right - _index + 1 + tempidx;
-	}
-	else {
+	} 	else {
 		left = 0;
 		right = _order - 1;
 		even = (_order % 2) == 0;
@@ -212,8 +205,8 @@ float FilterClass::medianFilter(float value)
 	}
 
 	// order values
-	quicksort(_orderedValues, left, right);
-	
+	quicksort (_orderedValues, left, right);
+
 	DEBUG_VERBOSE ("Ordered values:");
 	for (int i = 0; i < _order; i++) {
 		DEBUG_VERBOSE (" %f", _orderedValues[i]);
@@ -222,17 +215,15 @@ float FilterClass::medianFilter(float value)
 	// select median value
 	if (!even) {
 		procValue = _orderedValues[medianIdx];
-	}
-	else { // there is no center value
-		procValue = (_orderedValues[medianIdx] + _orderedValues[medianIdx+1]) / 2.0F;
+	} 	else { // there is no center value
+		procValue = (_orderedValues[medianIdx] + _orderedValues[medianIdx + 1]) / 2.0F;
 	}
 
 	DEBUG_VERBOSE ("Median: %f\n", procValue);
 	return procValue; // return mid value
 }
 
-FilterClass::FilterClass(FilterType_t type, uint8_t order)
-{
+FilterClass::FilterClass (FilterType_t type, uint8_t order) {
 	_filterType = type;
 
 	if (order < MAX_ORDER)
@@ -243,17 +234,17 @@ FilterClass::FilterClass(FilterType_t type, uint8_t order)
 	else
 		_order = MAX_ORDER;
 
-	_rawValues = (float *)malloc(_order * sizeof(float));
+	_rawValues = (float*)malloc (_order * sizeof (float));
 	for (int i = 0; i < _order; i++) {
 		_rawValues[i] = 0;
 	}
 
-	_orderedValues = (float *)malloc(_order * sizeof(float));
+	_orderedValues = (float*)malloc (_order * sizeof (float));
 	for (int i = 0; i < _order; i++) {
 		_orderedValues[i] = 0;
 	}
-	
-	_weightValues = (float *)malloc(_order * sizeof(float));
+
+	_weightValues = (float*)malloc (_order * sizeof (float));
 	for (int i = 0; i < _order; i++) {
 		_weightValues[i] = 1;
 	}

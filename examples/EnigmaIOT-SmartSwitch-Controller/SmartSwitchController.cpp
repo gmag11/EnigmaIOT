@@ -181,7 +181,7 @@ bool CONTROLLER_CLASS_NAME::sendStartAnouncement () {
 	return sendJson (json);
 }
 
-void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass *node, void *data) {
+void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	enigmaIotNode = node;
 
 	// You do node setup here. Use it as it was the normal setup() Arduino function
@@ -312,9 +312,9 @@ void CONTROLLER_CLASS_NAME::configManagerStart () {
 	// If you need to add custom configuration parameters do it here
 
 	static char buttonPinParamStr[4];
-	itoa (DEFAULT_BUTTON_PIN, buttonPinParamStr,10);
+	itoa (DEFAULT_BUTTON_PIN, buttonPinParamStr, 10);
 	static char relayPinParamStr[4];
-	itoa (DEFAULT_RELAY_PIN, relayPinParamStr,10);
+	itoa (DEFAULT_RELAY_PIN, relayPinParamStr, 10);
 	buttonPinParam = new AsyncWiFiManagerParameter ("buttonPin", "Button Pin", buttonPinParamStr, 3, "required type=\"text\" pattern=\"^1[2-5]$|^[0-5]$\"");
 	relayPinParam = new AsyncWiFiManagerParameter ("relayPin", "Relay Pin", relayPinParamStr, 3, "required type=\"text\" pattern=\"^1[2-5]$|^[0-5]$\"");
 	bootStatusParam = new AsyncWiFiManagerParameter ("bootStatus", "Boot Relay Status", "", 6, "required type=\"text\" list=\"bootStatusList\" pattern=\"^ON$|^OFF$|^SAVE$\"");
@@ -354,7 +354,7 @@ void CONTROLLER_CLASS_NAME::configManagerExit (bool status) {
 		if (config.relayPin > 15 || config.relayPin < 0) {
 			config.relayPin = DEFAULT_BUTTON_PIN;
 		}
-		if (!strncmp(bootStatusParam->getValue (),"ON", 6)) {
+		if (!strncmp (bootStatusParam->getValue (), "ON", 6)) {
 			config.bootStatus = RELAY_ON;
 		} else if (!strncmp (bootStatusParam->getValue (), "SAVE", 6)) {
 			config.bootStatus = SAVE_RELAY_STATUS;

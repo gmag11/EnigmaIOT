@@ -181,7 +181,7 @@ Node* NodeList::getNodeFromName (const char* name) {
 	}
 
 	// check if destination is broadcast
-	if (!strncmp (name, broadcastNode->getNodeName(), NODE_NAME_LENGTH)) {
+	if (!strncmp (name, broadcastNode->getNodeName (), NODE_NAME_LENGTH)) {
 		DEBUG_DBG ("Address '%s' is broadcast node", name);
 		return broadcastNode;
 	}
@@ -306,7 +306,7 @@ Node* NodeList::getNextActiveNode (uint16_t nodeId) {
 	return NULL;
 }
 
-Node* NodeList::getNextActiveNode (Node *node) {
+Node* NodeList::getNextActiveNode (Node* node) {
 	if (!node) {
 		if (nodes[0].status != UNREGISTERED) {
 			return &(nodes[0]);

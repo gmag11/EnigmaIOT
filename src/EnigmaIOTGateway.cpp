@@ -155,7 +155,7 @@ bool buildRestartNode (uint8_t* data, size_t& dataLen, const uint8_t* inputData,
 bool buildSendBrcastKey (uint8_t* data, size_t& dataLen, const uint8_t* key, size_t keyLen) {
 	DEBUG_VERBOSE ("Build 'Send Broadcast Key' message from: %s", printHexBuffer (key, keyLen));
 	if (key && keyLen == KEY_LENGTH) {
-		data[0]= (uint8_t)control_message_type::BRCAST_KEY;
+		data[0] = (uint8_t)control_message_type::BRCAST_KEY;
 		memcpy (data + 1, key, keyLen);
 		dataLen = keyLen + 1;
 		return true;
@@ -440,7 +440,7 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 		DEBUG_VERBOSE ("Restart node message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
 	case control_message_type::BRCAST_KEY:
-		if (!buildSendBrcastKey (downstreamData, dataLen, nodelist.getBroadcastNode()->getEncriptionKey(), KEY_LENGTH)) {
+		if (!buildSendBrcastKey (downstreamData, dataLen, nodelist.getBroadcastNode ()->getEncriptionKey (), KEY_LENGTH)) {
 			DEBUG_ERROR ("Error building broadcast key message");
 			return false;
 		}
@@ -639,7 +639,7 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 
 #if DEBUG_LEVEL >= DBG
 			char* output;
-			size_t json_len = measureJsonPretty (doc)+1;
+			size_t json_len = measureJsonPretty (doc) + 1;
 			output = (char*)malloc (json_len);
 			serializeJsonPretty (doc, output, json_len);
 
@@ -717,8 +717,8 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	nodelist.initBroadcastNode ();
 	CryptModule::random (broadcastKey, KEY_LENGTH); // Generate random broadcast key
 	DEBUG_DBG ("Broadcast key: %s", printHexBuffer (broadcastKey, KEY_LENGTH));
-	nodelist.getBroadcastNode()->setEncryptionKey (broadcastKey);
-	
+	nodelist.getBroadcastNode ()->setEncryptionKey (broadcastKey);
+
 	if (networkKey) {
 		memcpy (this->gwConfig.networkKey, networkKey, KEY_LENGTH);
 		strncpy (plainNetKey, (char*)networkKey, KEY_LENGTH);
@@ -837,7 +837,7 @@ void EnigmaIOTGatewayClass::getStatus (uint8_t* mac_addr, uint8_t status) {
 }
 
 void EnigmaIOTGatewayClass::handle () {
-//#ifdef ESP8266
+	//#ifdef ESP8266
 	static unsigned long rxOntime;
 	static unsigned long txOntime;
 
@@ -868,9 +868,9 @@ void EnigmaIOTGatewayClass::handle () {
 	if (/*!digitalRead (txled) &&*/ millis () - txOntime > txLedOnTime) {
 		digitalWrite (txled, LED_OFF);
 	}
-//#endif
+	//#endif
 
-	// Clean up dead nodes
+		// Clean up dead nodes
 	for (int i = 0; i < NUM_NODES; i++) {
 		Node* node = nodelist.getNodeFromID (i);
 		if (MAX_NODE_INACTIVITY > 0) {
@@ -1092,13 +1092,13 @@ bool EnigmaIOTGatewayClass::nodeNameSetRespose (Node* node, int8_t error) {
 	DEBUG_INFO ("Downlink message #%d", counter);
 
 	memcpy (&(nodeNameSetResponse_msg.counter), &counter, sizeof (uint16_t));
-		
+
 	DEBUG_DBG ("Set node name Response. Error code: %d", error);
 
 	CryptModule::random (nodeNameSetResponse_msg.iv, IV_LENGTH);
 
 	DEBUG_VERBOSE ("IV: %s", printHexBuffer (nodeNameSetResponse_msg.iv, IV_LENGTH));
-	
+
 	nodeNameSetResponse_msg.errorCode = error;
 
 	const uint8_t addDataLen = 1 + IV_LENGTH;
@@ -1123,7 +1123,7 @@ bool EnigmaIOTGatewayClass::nodeNameSetRespose (Node* node, int8_t error) {
 	uint8_t* addr = node->getMacAddress ();
 	char addrStr[ENIGMAIOT_ADDR_LEN * 3];
 	if (comm->send (addr, (uint8_t*)&nodeNameSetResponse_msg, NNSRMSG_LEN) == 0) {
-		DEBUG_INFO ("Set Node Name Response message sent to %s", mac2str(addr,addrStr));
+		DEBUG_INFO ("Set Node Name Response message sent to %s", mac2str (addr, addrStr));
 		return true;
 	} else {
 		nodelist.unregisterNode (node);
@@ -1485,7 +1485,7 @@ bool EnigmaIOTGatewayClass::downstreamDataMessage (Node* node, const uint8_t* da
 		return false;
 	}
 
-	if (!memcmp (node->getMacAddress(), BROADCAST_ADDRESS, ENIGMAIOT_ADDR_LEN)) {
+	if (!memcmp (node->getMacAddress (), BROADCAST_ADDRESS, ENIGMAIOT_ADDR_LEN)) {
 		DEBUG_DBG ("Encoding broadcast message");
 		broadcast = true;
 	}
@@ -1588,7 +1588,7 @@ bool  EnigmaIOTGatewayClass::invalidateKey (Node* node, gwInvalidateReason_t rea
 	//    - mark message using timestamp. May not work with gateways not connected to Internet.
 	//    - Adding a number calculated from node message (a byte should be sufficient).
 	//           For instance nth byte + 3. Most probable candidate
-	
+
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t reason;
@@ -1698,7 +1698,7 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 	*/
 	struct timeval tv;
 	struct timezone tz;
-	
+
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
@@ -1850,7 +1850,7 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 
 bool EnigmaIOTGatewayClass::sendBroadcastKey (Node* node) {
 
-	DEBUG_DBG ("Send broadcast key to " MACSTR, MAC2STR (node->getMacAddress()));
+	DEBUG_DBG ("Send broadcast key to " MACSTR, MAC2STR (node->getMacAddress ()));
 	return sendDownstream (node->getMacAddress (), NULL, 0, control_message_type_t::BRCAST_KEY);
 
 }

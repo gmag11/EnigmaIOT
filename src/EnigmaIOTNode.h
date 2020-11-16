@@ -39,7 +39,7 @@ enum nodeMessageType {
 	DOWNSTREAM_DATA_SET = 0x02, /**< Data message from gateway. Downstream data for commands */
 	DOWNSTREAM_BRCAST_DATA_SET = 0x82, /**< Data broadcast message from gateway. Downstream data for user commands */
 	DOWNSTREAM_DATA_GET = 0x12, /**< Data message from gateway. Downstream data for user commands */
-	DOWNSTREAM_BRCAST_DATA_GET = 0x92, /**< Data broadcast message from gateway. Downstream data for user commands */	
+	DOWNSTREAM_BRCAST_DATA_GET = 0x92, /**< Data broadcast message from gateway. Downstream data for user commands */
 	CONTROL_DATA = 0x03, /**< Internal control message from node to gateway. Used for OTA, settings configuration, etc */
 	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to node. Used for OTA, settings configuration, etc */
 	DOWNSTREAM_BRCAST_CTRL_DATA = 0x84, /**< Internal control broadcast message from gateway to sensor. Used for OTA, settings configuration, etc */
@@ -523,8 +523,7 @@ public:
 	  * @brief Allows to configure a new sleep time period from user code
 	  * @param sleepTime Time in seconds. Final period is not espected to be exact. Its value
 	  *                  depends on communication process. If it is zero, disables deep sleep.
-	  * @param forceSleepForever Ignored if `sleepTime` is not zero. If it has zero value forces
-	                             deepSleep command to sleep indifinitely.
+	  * @param forceSleepForever Ignored if `sleepTime` is not zero. If it has zero value forces deepSleep command to sleep indifinitely.
 	  */
 	void setSleepTime (uint32_t sleepTime, bool forceSleepForever = false);
 
@@ -548,7 +547,7 @@ public:
 	  * @return `true` if node has broadcast mode enabled.
 	  */
 	bool broadcastIsEnabled () {
-		return node.broadcastIsEnabled();
+		return node.broadcastIsEnabled ();
 	}
 
 	/**
@@ -558,7 +557,7 @@ public:
 	  */
 	void enableBroadcast (bool broadcast = true) {
 #ifndef DISABLE_BRCAST
-		node.enableBroadcast(broadcast);
+		node.enableBroadcast (broadcast);
 		rtcmem_data.broadcastKeyValid = false;
 		rtcmem_data.broadcastKeyRequested = false; // Key is not requested yet
 #endif

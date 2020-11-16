@@ -60,10 +60,10 @@ void EnigmaIOTNodeClass::sendRestart () {
 
 	buffer[0] = RESTART_CONFIRM;
 	buffer[1] = restartReason;
-	
+
 	DEBUG_WARN ("Message Len %d\n", len);
 	DEBUG_WARN ("Trying to send: %s\n", printHexBuffer (buffer, len));
-	if (!EnigmaIOTNode.sendData(buffer,len,true)) {
+	if (!EnigmaIOTNode.sendData (buffer, len, true)) {
 		DEBUG_WARN ("Error sending restart");
 	} else {
 		DEBUG_WARN ("Restart sent");
@@ -134,7 +134,7 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
 		Serial.printf (" -- Network Key: %s\n", printHexBuffer (data->networkKey, KEY_LENGTH));
 		Serial.printf (" -- Mode: %s\n", data->sleepy ? "sleepy" : "non sleepy");
 		Serial.printf (" -- Broadcast key: %s\n", printHexBuffer (data->broadcastKey, KEY_LENGTH));
-		Serial.printf (" -- Broadcast key is %s and %s requested\n", 
+		Serial.printf (" -- Broadcast key is %s and %s requested\n",
 					   data->broadcastKeyValid ? "valid" : "not valid",
 					   data->broadcastKeyRequested ? "is" : "is not");
 	} else {
@@ -149,7 +149,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 	//bool file_correct = false;
 	time_t start_load = millis ();
 	SPIFFS.begin ();
-	
+
 	rtcmem_data_t context;
 
 	if (SPIFFS.exists (RTC_DATA_FILE)) {
@@ -2110,7 +2110,7 @@ bool EnigmaIOTNodeClass::processVersionCommand (const uint8_t* mac, const uint8_
 	uint8_t bufLength;
 
 	buffer[0] = control_message_type::VERSION_ANS;
-	memcpy (buffer + 1, ENIGMAIOT_PROT_VERS, sizeof(ENIGMAIOT_PROT_VERS));
+	memcpy (buffer + 1, ENIGMAIOT_PROT_VERS, sizeof (ENIGMAIOT_PROT_VERS));
 	bufLength = sizeof (ENIGMAIOT_PROT_VERS) + 1;
 	DEBUG_DBG ("Version command received");
 	if (sendData (buffer, bufLength, true)) {
@@ -2431,8 +2431,8 @@ bool EnigmaIOTNodeClass::processDownstreamData (const uint8_t* mac, const uint8_
 				lastBroadcastMsgCounter = counter;
 			}
 		} else {
-		    if (counter > node.getLastDownlinkMsgCounter ()) {
-                DEBUG_INFO ("Accepted. Counter was %u", node.getLastDownlinkMsgCounter ());
+			if (counter > node.getLastDownlinkMsgCounter ()) {
+				DEBUG_INFO ("Accepted. Counter was %u", node.getLastDownlinkMsgCounter ());
 				node.setLastDownlinkMsgCounter (counter);
 				rtcmem_data.lastDownlinkMsgCounter = counter;
 			} else {
@@ -2612,7 +2612,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 			break;
 		}
 	case DOWNSTREAM_CTRL_DATA:
-			DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
+		DEBUG_INFO (" <------- DOWNSTREAM CONTROL DATA");
 		if (processDownstreamData (mac, buf, count, true)) {
 			DEBUG_INFO ("Downstream Data OK");
 		}

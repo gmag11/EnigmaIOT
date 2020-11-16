@@ -168,17 +168,17 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 		//DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
 	}
 	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}",
-							EnigmaIOTGateway.getPER ((uint8_t*)mac),
-							EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
-							EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
-							EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
+						 EnigmaIOTGateway.getPER ((uint8_t*)mac),
+						 EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
+						 EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
+						 EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
 	GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::status);
 	//DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
 	free (payload);
 }
 
-void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t msgType, char* data, unsigned int len){
-	char *buffer;
+void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t msgType, char* data, unsigned int len) {
+	char* buffer;
 	unsigned int bufferLen = len;
 
 	if (nodeName) {
@@ -190,7 +190,7 @@ void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t ms
 
 	buffer = (char*)malloc (len + 1);
 	sprintf (buffer, "%.*s", len, data);
-	bufferLen ++;
+	bufferLen++;
 
 	if (!EnigmaIOTGateway.sendDownstream (address, (uint8_t*)buffer, bufferLen, msgType)) {
 		DEBUG_ERROR ("Error sending esp_now message to " MACSTR, MAC2STR (address));
@@ -201,7 +201,7 @@ void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t ms
 	free (buffer);
 }
 
-void newNodeConnected (uint8_t * mac, uint16_t node_id, char* nodeName = NULL) {
+void newNodeConnected (uint8_t* mac, uint16_t node_id, char* nodeName = NULL) {
 	if (nodeName) {
 		if (!GwOutput.newNodeSend (nodeName, node_id)) {
 			DEBUG_WARN ("Error sending new node %s", nodeName);
@@ -220,7 +220,7 @@ void newNodeConnected (uint8_t * mac, uint16_t node_id, char* nodeName = NULL) {
 
 }
 
-void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
+void nodeDisconnected (uint8_t* mac, gwInvalidateReason_t reason) {
 	char macstr[ENIGMAIOT_ADDR_LEN * 3];
 	mac2str (mac, macstr);
 	//Serial.printf ("Node %s disconnected. Reason %u\n", macstr, reason);
@@ -232,7 +232,7 @@ void nodeDisconnected (uint8_t * mac, gwInvalidateReason_t reason) {
 }
 
 #ifdef ESP32
-void EnigmaIOTGateway_handle (void * param) {
+void EnigmaIOTGateway_handle (void* param) {
 	for (;;) {
 		EnigmaIOTGateway.handle ();
 		vTaskDelay (0);
@@ -262,7 +262,7 @@ void setup () {
 #ifdef ESP8266
 	ets_timer_setfn (&connectionLedTimer, flashConnectionLed, (void*)&connectionLed);
 #elif defined ESP32
-	
+
 #endif
 	pinMode (BUILTIN_LED, OUTPUT);
 	digitalWrite (BUILTIN_LED, HIGH);
@@ -291,13 +291,13 @@ void setup () {
 #endif // CONNECT_TO_WIFI_AP
 
 
-	WiFi.softAP (EnigmaIOTGateway.getNetworkName (), EnigmaIOTGateway.getNetworkKey());
+	WiFi.softAP (EnigmaIOTGateway.getNetworkName (), EnigmaIOTGateway.getNetworkKey ());
 	stopConnectionFlash ();
 
-	DEBUG_INFO ("STA MAC Address: %s", WiFi.macAddress ().c_str());
-	DEBUG_INFO ("AP MAC Address: %s", WiFi.softAPmacAddress().c_str ());
-	DEBUG_INFO ("BSSID Address: %s", WiFi.BSSIDstr().c_str ());
-	   
+	DEBUG_INFO ("STA MAC Address: %s", WiFi.macAddress ().c_str ());
+	DEBUG_INFO ("AP MAC Address: %s", WiFi.softAPmacAddress ().c_str ());
+	DEBUG_INFO ("BSSID Address: %s", WiFi.BSSIDstr ().c_str ());
+
 	DEBUG_INFO ("IP address: %s", WiFi.localIP ().toString ().c_str ());
 	DEBUG_INFO ("AP IP address: %s", WiFi.softAPIP ().toString ().c_str ());
 	DEBUG_INFO ("WiFi Channel: %d", WiFi.channel ());
@@ -313,7 +313,7 @@ void setup () {
 	//xTaskCreatePinnedToCore (EnigmaIOTGateway_handle, "handle", 4096, NULL, 0, &xEnigmaIOTGateway_handle, 1);
 	//xTaskCreatePinnedToCore (GwOutput_handle, "gwoutput", 10000, NULL, 2, &gwoutput_handle, 1);
 #endif
-	}
+}
 
 void loop () {
 

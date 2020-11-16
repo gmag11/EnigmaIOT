@@ -176,7 +176,7 @@ bool isNumber (const char* input) {
 
 bool isNumber (const char* input, size_t len) {
 	int index = 0;
-	
+
 	if (!len) {
 		return false;
 	}
@@ -193,7 +193,7 @@ bool isNumber (const char* input, size_t len) {
 bool isNumber (String input) {
 	int index = 0;
 	size_t len = input.length ();
-	
+
 	if (!len) {
 		return false;
 	}

@@ -65,22 +65,22 @@ typedef enum control_message_type {
     RESTART_NODE = 0x09,
     RESTART_CONFIRM = 0x89,
     BRCAST_KEY = 0x10,
-	OTA = 0xEF,
-	OTA_ANS = 0xFF,
-	USERDATA_GET = 0x00,
-	USERDATA_SET = 0x20,
+	  OTA = 0xEF,
+	  OTA_ANS = 0xFF,
+	  USERDATA_GET = 0x00,
+	  USERDATA_SET = 0x20,
     INVALID = 0xF0
 	//USERDATA_ANS = 0x90
 } control_message_type_t;
 
 typedef enum ota_status {
-	OTA_STARTED = 0,
-	OTA_START_ERROR = 1,
-	OTA_CHECK_OK = 2,
-	OTA_CHECK_FAIL = 3,
-	OTA_OUT_OF_SEQUENCE =4 ,
-	OTA_TIMEOUT = 5,
-	OTA_FINISHED = 6
+	  OTA_STARTED = 0,
+	  OTA_START_ERROR = 1,
+	  OTA_CHECK_OK = 2,
+	  OTA_CHECK_FAIL = 3,
+	  OTA_OUT_OF_SEQUENCE =4 ,
+	  OTA_TIMEOUT = 5,
+	  OTA_FINISHED = 6
 } ota_status_t;
 
 /**

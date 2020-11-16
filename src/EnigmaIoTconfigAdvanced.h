@@ -5,11 +5,11 @@
   * @author German Martin
   * @brief Parameter configuration
   */
-  
+
  /****************************************************************************
-	DO NOT MODIFY THESE SETTINGS UNLESS YOU KNOW WHAT YOU ARE DOING
-	---------------------------------------------------------------
-	NO MODIFIQUES ESTOS AJUSTES SI NO SABES LO QUE ESTÁS HACIENDO
+  DO NOT MODIFY THESE SETTINGS UNLESS YOU KNOW WHAT YOU ARE DOING
+  ---------------------------------------------------------------
+  NO MODIFIQUES ESTOS AJUSTES SI NO SABES LO QUE ESTÁS HACIENDO
   ****************************************************************************/
 
 #ifndef _CONFIG_ADVANCED_h

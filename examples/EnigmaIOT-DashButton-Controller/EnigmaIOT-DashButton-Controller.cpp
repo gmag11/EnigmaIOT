@@ -58,7 +58,7 @@ EnigmaIOTjsonController* controller; // Generic controller is refferenced here. 
 
 // Called when node is connected to gateway. You don't need to do anything here usually
 void connectEventHandler () {
-	controller->connectInform();
+	controller->connectInform ();
 	DEBUG_WARN ("Connected");
 }
 
@@ -116,7 +116,7 @@ void setup () {
 			DEBUG_WARN ("SPIFFS Formatted");
 	}
 
-	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY==1); // Start EnigmaIOT communication
+	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY == 1); // Start EnigmaIOT communication
 	EnigmaIOTNode.setSleepTime (0, true);
 
 	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
