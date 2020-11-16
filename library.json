@@ -23,10 +23,12 @@
       "exclude":
       [
         "docs/*",
+        "include/*",
+        "lib/*",
         "img/*",
         "logo/*",
         "LowPower measurements/*",
-        "Case/*"
+        "test/*"
       ]
     },
     "dependencies": 
