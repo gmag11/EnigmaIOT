@@ -19,3 +19,6 @@ platformio.ini
 **/__vm/
 **/Debug/
 **/Release/
+include/
+lib/
+test/

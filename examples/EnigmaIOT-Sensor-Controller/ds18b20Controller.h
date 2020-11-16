@@ -17,6 +17,7 @@
 
 #include <EnigmaIOTjsonController.h>
 #define CONTROLLER_CLASS_NAME ds18b20Controller
+static const char *CONTROLLER_NAME = "DS18B20 controller";
 
 // --------------------------------------------------
 // You may define data structures and constants here
@@ -34,8 +35,8 @@ protected:
 	DeviceAddress insideThermometer;
 
 public:
-	void setup (void* data = NULL);
-	
+	void setup (EnigmaIOTNodeClass *node, void *data = NULL);
+
 	bool processRxCommand (const uint8_t* address, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding);
 	
 	void loop ();
@@ -46,7 +47,7 @@ public:
 	 * @brief Called when wifi manager starts config portal
 	 * @param node Pointer to EnigmaIOT gateway instance
 	 */
-	void configManagerStart (EnigmaIOTNodeClass* node);
+	void configManagerStart ();
 
 	/**
 	 * @brief Called when wifi manager exits config portal
@@ -59,6 +60,10 @@ public:
 	 * @return Returns `true` if load was successful. `false` otherwise
 	 */
 	bool loadConfig ();
+
+	void connectInform (){
+		sendStartAnouncement ();
+	}
 
 protected:
 	/**
