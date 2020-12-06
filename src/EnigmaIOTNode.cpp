@@ -2260,7 +2260,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			DEBUG_WARN ("OTA eror code: %d", otaErrorCode);
 			//ESP.restart ();
 			protectOTA = true;
-			otaRunning = false;
+			//otaRunning = false;
 			shouldRestart = true;
 			restartReason = RESTART_AFTER_OTA;
 			//clearRTC ();
