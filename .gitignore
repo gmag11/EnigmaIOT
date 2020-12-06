@@ -9,7 +9,6 @@ Libraries/
 .pio
 .vscode
 **/config.json
-platformio.ini
 *.json
 .vs/
 *.sln
