@@ -1,7 +1,7 @@
 /**
-  * @file EnigmaIOT-SmartSwitch-Controller.ino
-  * @version 0.9.5
-  * @date 30/10/2020
+  * @file EnigmaIOT-Button-Controller.ino
+  * @version 0.9.6
+  * @date 10/12/2020
   * @author German Martin
   * @brief Node template for easy custom node creation
   */
@@ -12,7 +12,7 @@
 
 #include <Arduino.h>
 #include <EnigmaIOTjsonController.h>
-#include "SmartSwitchController.h" // <-- Include here your controller class header
+#include "ButtonController.h" // <-- Include here your controller class header
 
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
@@ -54,10 +54,11 @@
 
 EnigmaIOTjsonController* controller; // Generic controller is refferenced here. You do not need to modify it
 
-#define RESET_PIN 4 // You can set a different configuration reset pin here. Check for conflicts with used pins.
+#define RESET_PIN 13 // You can set a different configuration reset pin here. Check for conflicts with used pins.
 
 // Called when node is connected to gateway. You don't need to do anything here usually
 void connectEventHandler () {
+	controller->connectInform ();
 	DEBUG_WARN ("Connected");
 }
 
@@ -105,7 +106,7 @@ void setup () {
 	EnigmaIOTNode.onConnected (connectEventHandler); // Configure registration handler
 	EnigmaIOTNode.onDisconnected (disconnectEventHandler); // Configure unregistration handler
 	EnigmaIOTNode.onDataRx (processRxData); // Configure incoming data handler
-	EnigmaIOTNode.enableClockSync (true); // Set to true if you need this node to get its clock syncronized with gateway
+	EnigmaIOTNode.enableClockSync (false); // Set to true if you need this node to get its clock syncronized with gateway
 	EnigmaIOTNode.onWiFiManagerStarted (wifiManagerStarted);
 	EnigmaIOTNode.onWiFiManagerExit (wifiManagerExit);
 	EnigmaIOTNode.enableBroadcast ();

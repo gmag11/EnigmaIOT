@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIoTconfigAdvanced.h
-  * @version 0.9.5
-  * @date 30/10/2020
+  * @version 0.9.6
+  * @date 10/12/2020
   * @author German Martin
   * @brief Parameter configuration
   */
@@ -36,7 +36,7 @@ static const int MAX_DATA_PAYLOAD_SIZE = 214; ///< @brief Maximun payload size f
 #ifndef CHECK_COMM_ERRORS
 static const bool CHECK_COMM_ERRORS = true; ///< @brief Try to reconnect in case of communication errors
 #endif // !1
-static const uint32_t RTC_ADDRESS = 8; ///< @brief RTC memory address where to store context. Modify it if you need place to store your own data during deep sleep. Take care not to overwrite above that address.
+static const uint32_t RTC_ADDRESS = 8; ///< @brief RTC memory address where to store context. Modify it if you need place to store your own data during deep sleep. Take care not to overwrite above that address. It is 8 to give space for FailSafeMode library
 #define USE_FLASH_INSTEAD_RTC 0 ///< @brief Use flash instead RTC for temporary context data. ATTENTION: This allows connection to survive power off cycles but may damage flash memory persistently.
 
 //Crypto configuration

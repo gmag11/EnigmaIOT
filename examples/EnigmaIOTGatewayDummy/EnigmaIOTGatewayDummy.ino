@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIOTGatewayDummy.ino
-  * @version 0.9.5
-  * @date 30/10/2020
+  * @version 0.9.6
+  * @date 10/12/2020
   * @author German Martin
   * @brief Gateway based on EnigmaIoT over ESP-NOW with dummy output module to serve as start for new gateways
   */

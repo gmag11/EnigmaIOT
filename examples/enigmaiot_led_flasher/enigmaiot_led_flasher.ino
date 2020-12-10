@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_led_flasher.ino
-  * @version 0.9.5
-  * @date 30/10/2020
+  * @version 0.9.6
+  * @date 10/12/2020
   * @author German Martin
   * @brief Node based on EnigmaIoT over ESP-NOW using non sleeping mode. Demonstrate clock synchronisation function
   *

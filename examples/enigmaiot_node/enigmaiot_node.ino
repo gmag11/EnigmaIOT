@@ -1,9 +1,9 @@
 /**
   * @file enigmaiot_node.ino
-  * @version 0.9.5
-  * @date 30/10/2020
+  * @version 0.9.6
+  * @date 10/12/2020
   * @author German Martin
-  * @brief Node based on EnigmaIoT over ESP-NOW that uses MessagePack as payload encoding
+  * @brief Node based on EnigmaIoT over ESP-NOW
   *
   * Sensor reading code is mocked on this example. You can implement any other code you need for your specific need
   */
@@ -21,7 +21,7 @@
 #include <Hash.h>
 #elif defined ESP32
 #include <WiFi.h>
-//#include <AsyncTCP.h> // Comment to compile for ESP8266
+#include <AsyncTCP.h> // Comment to compile for ESP8266
 #include <SPIFFS.h>
 #include <Update.h>
 #include <driver/adc.h>
@@ -37,11 +37,7 @@
 #include <FS.h>
 
 #ifndef LED_BUILTIN
-#ifdef ESP8266
-#define LED_BUILTIN 2 // ESP8266 boards normally have a LED in GPIO2
-#else
-#define LED_BUILTIN 5 // ESP32 boards normally have a LED in GPIO2 or GPIO5
-#endif
+#define LED_BUILTIN 2 // ESP32 boards normally have a LED in GPIO2 or GPIO5
 #endif // !LED_BUILTIN
 
 #define BLUE_LED LED_BUILTIN
@@ -59,7 +55,7 @@ void disconnectEventHandler (nodeInvalidateReason_t reason) {
 	Serial.printf ("Unregistered. Reason: %d\n", reason);
 }
 
-void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t encoding) {
+void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding) {
 	char macstr[ENIGMAIOT_ADDR_LEN * 3];
 	String commandStr;
 	uint8_t tempBuffer[MAX_MESSAGE_LENGTH];
@@ -76,14 +72,14 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 
 	Serial.printf ("Command %s\n", commandStr.c_str ());
 	Serial.printf ("Data: %s\n", printHexBuffer (buffer, length));
-	Serial.printf ("Encoding: 0x%02X\n", encoding);
+	Serial.printf ("Encoding: 0x%02X\n", payloadEncoding);
 
 	CayenneLPP lpp (MAX_DATA_PAYLOAD_SIZE);
 	DynamicJsonDocument doc (1000);
 	JsonArray root;
 	memcpy (tempBuffer, buffer, length);
 
-	switch (encoding) {
+	switch (payloadEncoding) {
 	case CAYENNELPP:
 		root = doc.createNestedArray ();
 		lpp.decode (tempBuffer, length, root);
@@ -94,7 +90,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 		serializeJsonPretty (doc, Serial);
 		break;
 	default:
-		DEBUG_WARN ("Non supported encoding; %d", encoding);
+		DEBUG_WARN ("Payload encoding %d is not (yet) supported", payloadEncoding);
 	}
 }
 
@@ -109,6 +105,7 @@ void setup () {
 	WRITE_PERI_REG (RTC_CNTL_BROWN_OUT_REG, 0);
 #endif
 
+
 	EnigmaIOTNode.setLed (BLUE_LED);
 	EnigmaIOTNode.setResetPin (RESET_PIN);
 	EnigmaIOTNode.onConnected (connectEventHandler);
@@ -116,6 +113,7 @@ void setup () {
 	EnigmaIOTNode.onDataRx (processRxData);
 
 	EnigmaIOTNode.begin (&Espnow_hal);
+
 
 	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
 #ifdef ESP8266
@@ -132,42 +130,34 @@ void setup () {
 	}
 
 	// Put here your code to read sensor and compose buffer
-	const size_t capacity = JSON_OBJECT_SIZE (5);
-	DynamicJsonDocument json (capacity);
+	CayenneLPP msg (MAX_DATA_PAYLOAD_SIZE);
 
 #ifdef ESP8266
-	json["V"] = (float)(ESP.getVcc ()) / 1000;
+	msg.addAnalogInput (0, (float)(ESP.getVcc ()) / 1000);
 #elif defined ESP32
-	json["V"] = (float)(analogRead (ADC1_CHANNEL_0_GPIO_NUM) * 3.6 / 4096);
+	msg.addAnalogInput (0, (float)(analogRead (ADC1_CHANNEL_0_GPIO_NUM) * 3.6 / 4096));
 #endif
-	json["tem"] = 203;
-	json["din"] = 123;
-	json["pres"] = 1007;
-	json["curr"] = 2.43;
-
-	int len = measureMsgPack (json) + 1;
-	uint8_t* buffer = (uint8_t*)malloc (len);
-	len = serializeMsgPack (json, (char*)buffer, len);
+	msg.addTemperature (1, 20.34);
+	msg.addDigitalInput (2, 123);
+	msg.addBarometricPressure (3, 1007.25);
+	msg.addCurrent (4, 2.43);
 
 #ifdef ESP8266
 	Serial.printf ("Vcc: %f\n", (float)(ESP.getVcc ()) / 1000);
 #elif defined ESP32
 	Serial.printf ("Vcc: %f\n", (float)(analogRead (ADC1_CHANNEL_0_GPIO_NUM) * 3.6 / 4096));
 #endif
-	Serial.printf ("Message Len %d\n", len);
 	// End of user code
 
-	Serial.printf ("Trying to send: %s\n", printHexBuffer (buffer, len));
+	Serial.printf ("Trying to send: %s\n", printHexBuffer (msg.getBuffer (), msg.getSize ()));
 
 	// Send buffer data
-	if (!EnigmaIOTNode.sendData (buffer, len, MSG_PACK)) {
+	if (!EnigmaIOTNode.sendData (msg.getBuffer (), msg.getSize ())) {
 		Serial.println ("---- Error sending data");
 	} else {
 		Serial.println ("---- Data sent");
 	}
 	Serial.printf ("Total time: %lu ms\n", millis () - start);
-
-	free (buffer);
 
 	// Go to sleep
 	EnigmaIOTNode.sleep ();

@@ -1,7 +1,7 @@
 /**
-  * @file EnigmaIOT-Button-Controller.ino
-  * @version 0.9.5
-  * @date 30/10/2020
+  * @file EnigmaIOT-Led-Controller.ino
+  * @version 0.9.6
+  * @date 10/12/2020
   * @author German Martin
   * @brief Node template for easy custom node creation
   */
@@ -12,7 +12,7 @@
 
 #include <Arduino.h>
 #include <EnigmaIOTjsonController.h>
-#include "ButtonController.h" // <-- Include here your controller class header
+#include "LedController.h" // <-- Include here your controller class header
 
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
@@ -106,10 +106,10 @@ void setup () {
 	EnigmaIOTNode.onConnected (connectEventHandler); // Configure registration handler
 	EnigmaIOTNode.onDisconnected (disconnectEventHandler); // Configure unregistration handler
 	EnigmaIOTNode.onDataRx (processRxData); // Configure incoming data handler
-	EnigmaIOTNode.enableClockSync (false); // Set to true if you need this node to get its clock syncronized with gateway
+	EnigmaIOTNode.enableClockSync (true); // Set to true if you need this node to get its clock syncronized with gateway
+										  // You should enable it if your node noes not send any periodic data
 	EnigmaIOTNode.onWiFiManagerStarted (wifiManagerStarted);
 	EnigmaIOTNode.onWiFiManagerExit (wifiManagerExit);
-	EnigmaIOTNode.enableBroadcast ();
 
 	if (!controller->loadConfig ()) { // Trigger custom configuration loading
 		DEBUG_WARN ("Error reading config file");
