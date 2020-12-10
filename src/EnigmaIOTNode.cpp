@@ -2083,7 +2083,7 @@ bool EnigmaIOTNodeClass::processSetSleepTimeCommand (const uint8_t* mac, const u
 	sleepTime = getSleepTime ();
 	if (sleepTime > 0) {
 		if (result) {
-			if (result = saveFlashData ()) {
+			if ((result = saveFlashData ())) {
 				DEBUG_DBG ("Saved config data after set sleep time command");
 			} else {
 				DEBUG_WARN ("Error saving data after set sleep time command");

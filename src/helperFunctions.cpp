@@ -158,7 +158,7 @@ const char* IRAM_ATTR extractFileName (const char* path) {
 #endif
 
 bool isNumber (const char* input) {
-	int index = 0;
+	unsigned int index = 0;
 	size_t len = strlen (input);
 
 	if (!len) {
@@ -175,13 +175,13 @@ bool isNumber (const char* input) {
 }
 
 bool isNumber (const char* input, size_t len) {
-	int index = 0;
+	unsigned int index = 0;
 
 	if (!len) {
 		return false;
 	}
 
-	while (input[index] != '/0' && index < len) {
+	while (input[index] != '\0' && index < len) {
 		if (!isDigit (input[index])) {
 			return false;
 		}
@@ -191,7 +191,7 @@ bool isNumber (const char* input, size_t len) {
 }
 
 bool isNumber (String input) {
-	int index = 0;
+	unsigned int index = 0;
 	size_t len = input.length ();
 
 	if (!len) {
