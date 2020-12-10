@@ -82,6 +82,8 @@ Notice that network key used to implement this feature is stored on flash. ESP82
 
 - [x] Both gateway or nodes may run on ESP32 or ESP8266
 
+- [x] Simple REST API to get information and send commands to gateway and nodes. Check [api.md](docs/api.md)
+
 ## Design
 
 ### System Design
