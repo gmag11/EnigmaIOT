@@ -69,7 +69,19 @@ protected:
 
 	bool sendCommandResp (const char* command, bool result);
 
-	bool sendStartAnouncement ();
+    bool sendStartAnouncement () {
+        // You can send a 'hello' message when your node starts. Useful to detect unexpected reboot
+        const size_t capacity = JSON_OBJECT_SIZE (10);
+        DynamicJsonDocument json (capacity);
+        json["status"] = "start";
+        json["device"] = CONTROLLER_NAME;
+        char version_buf[10];
+        snprintf (version_buf, 10, "%d.%d.%d",
+                  ENIGMAIOT_PROT_VERS[0], ENIGMAIOT_PROT_VERS[1], ENIGMAIOT_PROT_VERS[2]);
+        json["version"] = String (version_buf);
+
+        return sendJson (json);
+    }
 
 	// ------------------------------------------------------------
 	// You may add additional method definitions that you need here

@@ -16,6 +16,7 @@
 
 #include <Arduino.h>
 #include <EnigmaIOTjsonController.h>
+#include <FailSafe.h>
 #include "BasicController.h" // <-- Include here your controller class header
 
 #include <EnigmaIOTNode.h>
@@ -60,6 +61,11 @@ EnigmaIOTjsonController* controller; // Generic controller is refferenced here. 
 
 #define RESET_PIN 13 // You can set a different configuration reset pin here. Check for conflicts with used pins.
 
+const time_t BOOT_FLAG_TIMEOUT = 10000; // Time in ms to reset flag
+const int MAX_CONSECUTIVE_BOOT = 3; // Number of rapid boot cycles before enabling fail safe mode
+const int LED = LED_BUILTIN; // Number of rapid boot cycles before enabling fail safe mode
+const int FAILSAFE_RTC_ADDRESS = 0; // If you use RTC memory adjust offset to not overwrite other data
+
 // Called when node is connected to gateway. You don't need to do anything here usually
 void connectEventHandler () {
 	controller->connectInform ();
@@ -102,6 +108,11 @@ void setup () {
 	delay (1000);
 	Serial.println ();
 #endif
+
+    FailSafe.checkBoot (MAX_CONSECUTIVE_BOOT, LED, FAILSAFE_RTC_ADDRESS); // Parameters are optional
+    if (FailSafe.isActive ()) { // Skip all user setup if fail safe mode is activated
+        return;
+    }
 
 	controller = (EnigmaIOTjsonController*)new CONTROLLER_CLASS_NAME (); // Use your class name here
 
@@ -149,6 +160,12 @@ void setup () {
 }
 
 void loop () {
-	controller->loop (); // Loop controller class
+    FailSafe.loop (BOOT_FLAG_TIMEOUT); // Use always this line
+
+    if (FailSafe.isActive ()) { // Skip all user loop code if Fail Safe mode is active
+        return;
+    }
+
+    controller->loop (); // Loop controller class
 	EnigmaIOTNode.handle (); // Mantain EnigmaIOT connection
 }
