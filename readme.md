@@ -2,6 +2,9 @@
 
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/logo/logo%20text%20under.svg?sanitize=true" alt="EnigmaIoT Logo" width="50%"/>
 
+[![ESP8266](https://github.com/gmag11/EnigmaIOT/workflows/EnigmaIOT-ESP8266/badge.svg)](https://github.com/gmag11/EnigmaIOT/actions/)
+[![ESP32](https://github.com/gmag11/EnigmaIOT/workflows/EnigmaIOT-ESP32/badge.svg)](https://github.com/gmag11/EnigmaIOT/actions/)
+
 ## Introduction
 
 **EnigmaIoT** is an open source solution for wireless multi sensor systems. It has two main components, multiple **nodes** and one **gateway**.
