@@ -33,7 +33,7 @@
 #elif defined ESP32
 #include <WiFi.h>
 #include <SPIFFS.h>
-//#include <AsyncTCP.h> // Comment to compile for ESP8266
+#include <AsyncTCP.h> // Comment to compile for ESP8266
 #include <SPIFFS.h>
 #include <Update.h>
 #include <driver/adc.h>

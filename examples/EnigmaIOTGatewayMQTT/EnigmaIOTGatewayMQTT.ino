@@ -25,7 +25,7 @@
 
 #ifdef ESP32
 #include <WiFi.h>
-//#include <AsyncTCP.h> // Comment to compile for ESP8266
+#include <AsyncTCP.h> // Comment to compile for ESP8266
 #include <Update.h>
 #include <SPIFFS.h>
 #include "esp_system.h"

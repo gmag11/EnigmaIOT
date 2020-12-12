@@ -24,7 +24,7 @@
 #include "soc/rtc_cntl_reg.h"  // Disable brownout problems
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
-//#include <ESPAsyncTCP.h> // Comment to compile for ESP32
+#include <ESPAsyncTCP.h> // Comment to compile for ESP32
 #include <Hash.h>
 #include <SPI.h>
 #endif // ESP32

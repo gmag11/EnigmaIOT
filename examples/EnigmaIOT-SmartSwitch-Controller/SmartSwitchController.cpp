@@ -171,24 +171,14 @@ bool CONTROLLER_CLASS_NAME::sendCommandResp (const char* command, bool result) {
 	return true;
 }
 
-bool CONTROLLER_CLASS_NAME::sendStartAnouncement () {
-	// You can send a 'hello' message when your node starts. Useful to detect unexpected reboot
-	const size_t capacity = JSON_OBJECT_SIZE (2);
-	DynamicJsonDocument json (capacity);
-	json["status"] = "start";
-	json["device"] = CONTROLLER_NAME;
-
-	return sendJson (json);
-}
-
 void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	enigmaIotNode = node;
 
 	// You do node setup here. Use it as it was the normal setup() Arduino function
 	pinMode (config.buttonPin, INPUT_PULLUP);
 	pinMode (config.relayPin, OUTPUT);
-	bool relayStatus;
-	if (config.bootStatus != SAVE_RELAY_STATUS) {
+
+    if (config.bootStatus != SAVE_RELAY_STATUS) {
 		config.relayStatus = (bool)config.bootStatus;
 		DEBUG_WARN ("Relay status set to Boot Status %d -> %d", config.bootStatus, config.relayStatus);
 	}

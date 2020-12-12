@@ -30,16 +30,6 @@ bool CONTROLLER_CLASS_NAME::sendCommandResp (const char* command, bool result) {
 	return true;
 }
 
-bool CONTROLLER_CLASS_NAME::sendStartAnouncement () {
-	// You can send a 'hello' message when your node starts. Useful to detect unexpected reboot
-	const size_t capacity = JSON_OBJECT_SIZE (2);
-	DynamicJsonDocument json (capacity);
-	json["status"] = "start";
-	json["device"] = CONTROLLER_NAME;
-
-	return sendJson (json);
-}
-
 bool CONTROLLER_CLASS_NAME::sendTemperature (float temp) {
 	const size_t capacity = JSON_OBJECT_SIZE (2);
 	DynamicJsonDocument json (capacity);
