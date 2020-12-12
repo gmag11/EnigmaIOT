@@ -1,4 +1,4 @@
-name: EnigmaIOT-ESP8266
+name: ESP8266
 
 on:
   push:
