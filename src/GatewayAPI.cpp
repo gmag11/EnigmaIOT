@@ -1,3 +1,11 @@
+/**
+  * @file GatewayAPI.cpp
+  * @version 0.9.6
+  * @date 10/12/2020
+  * @author German Martin
+  * @brief API web server to control EnigmaIOT Gateway
+  */
+
 #include "GatewayAPI.h"
 #include <functional>
 
