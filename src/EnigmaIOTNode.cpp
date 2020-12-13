@@ -1284,9 +1284,9 @@ bool EnigmaIOTNodeClass::clockRequest () {
 
 	memcpy (&(clockRequest_msg.counter), &counter, sizeof (uint16_t));
 
-	node.t1 = TimeManager.setOrigin ();
+	uint64_t t1 = TimeManager.clock ();
 
-	memcpy (&(clockRequest_msg.t1), &(node.t1), sizeof (int64_t));
+	memcpy (&(clockRequest_msg.t1), &t1, sizeof (int64_t));
 
 	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)&clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
 	DEBUG_DBG ("T1: %llu", node.t1);
@@ -1330,10 +1330,13 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
 		uint16_t counter;
+        int64_t t1;
 		int64_t t2;
 		int64_t t3;
 		uint8_t tag[TAG_LENGTH];
 	} clockResponse_msg;
+    
+    uint64_t t1, t2, t3, t4;
 
 	uint16_t counter;
 
@@ -1374,10 +1377,10 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 		}
 	}
 
-
-	node.t2 = clockResponse_msg.t2;
-	node.t3 = clockResponse_msg.t3;
-	node.t4 = TimeManager.clock ();
+    t1 = clockResponse_msg.t1;
+	t2 = clockResponse_msg.t2;
+	t3 = clockResponse_msg.t3;
+	t4 = TimeManager.clock ();
 
 	if (count < CRSMSG_LEN) {
 		DEBUG_WARN ("Message too short");
@@ -1386,7 +1389,7 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 
 	memcpy (&clockResponse_msg, buf, count);
 
-	int64_t offset = TimeManager.adjustTime (node.t1, node.t2, node.t3, node.t4);
+	int64_t offset = TimeManager.adjustTime (t1, t2, t3, t4);
 
 	if (offset < MIN_SYNC_ACCURACY && offset > (MIN_SYNC_ACCURACY * -1)) {
 		timeSyncPeriod = TIME_SYNC_PERIOD;
@@ -1411,20 +1414,12 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 }
 
 int64_t EnigmaIOTNodeClass::clock () {
-	if (node.getInitAsSleepy ()) {
-		return millis ();
-	} else {
-		return TimeManager.clock ();
-	}
+	return TimeManager.clock ();
 
 }
 
 time_t EnigmaIOTNodeClass::unixtime () {
-	if (node.getInitAsSleepy ()) {
-		return millis () / 1000;
-	} else {
-		return TimeManager.unixtime ();
-	}
+	return TimeManager.unixtime ();
 }
 
 bool EnigmaIOTNodeClass::hasClockSync () {

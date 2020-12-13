@@ -31,7 +31,7 @@ static const bool DISCONNECT_ON_DATA_ERROR = true; ///< @brief Activates node in
 
 // Node configuration
 static const uint32_t OTA_TIMEOUT_TIME = 10000; ///< @brief Timeout between OTA messages. In milliseconds
-static const int MIN_SYNC_ACCURACY = 5; ///< @brief If calculated offset absolute value is higher than this value resync is done more often
+static const int MIN_SYNC_ACCURACY = 5000; ///< @brief If calculated offset absolute value is higher than this value resync is done more often. us units
 static const int MAX_DATA_PAYLOAD_SIZE = 214; ///< @brief Maximun payload size for data packets
 #ifndef CHECK_COMM_ERRORS
 static const bool CHECK_COMM_ERRORS = true; ///< @brief Try to reconnect in case of communication errors

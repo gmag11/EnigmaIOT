@@ -223,6 +223,11 @@ bool GwOutput_MQTT::begin () {
 #elif defined(ESP8266)
 	clientId = netName + String (ESP.getChipId (), HEX);
 #endif // ESP32
+    
+    configTime (0, 0, NTP_SERVER_1, NTP_SERVER_2);
+    setenv ("TZ", TZINFO, 1);
+    tzset ();
+
 	gwTopic = netName + GW_STATUS;
 	reconnect ();
 	return true;
@@ -460,7 +465,6 @@ bool GwOutput_MQTT::publishMQTT (const char* topic, const char* payload, size_t 
 
 //#ifdef SECURE_MQTT
 void GwOutput_MQTT::setClock () {
-	configTime (1 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 #if DEBUG_LEVEL >= INFO
 	DEBUG_INFO ("\nWaiting for NTP time sync: ");
 	time_t now = time (nullptr);

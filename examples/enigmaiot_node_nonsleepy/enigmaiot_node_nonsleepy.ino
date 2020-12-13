@@ -154,9 +154,8 @@ void showTime () {
 	static time_t displayTime;
 
 	if (EnigmaIOTNode.hasClockSync ()) {
-		setenv ("TZ", TZINFO, 1);
 		displayTime = millis ();
-		time_t local_time_ms = EnigmaIOTNode.clock ();
+		//time_t local_time_ms = EnigmaIOTNode.clock ();
 		//local_time_ms /= 1000;
 		time_t local_time = EnigmaIOTNode.unixtime ();
 		localtime_r (&local_time, &timeinfo);

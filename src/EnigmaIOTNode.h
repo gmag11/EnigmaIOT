@@ -575,6 +575,8 @@ public:
 	  * @param clockSync If true clock will be synchronized with gateway
 	  */
 	void enableClockSync (bool clockSync = true) {
+        setenv ("TZ", TZINFO, 1);
+        tzset ();
 		clockSyncEnabled = clockSync;
 	}
 

@@ -1697,7 +1697,7 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 	* ---------------------------------------------------------
 	*/
 	struct timeval tv;
-	struct timezone tz;
+	//struct timezone tz;
 
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
@@ -1714,6 +1714,13 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 		DEBUG_WARN ("Message too short");
 		return false;
 	}
+    
+    // Get current time. If Gateway is synchronized to NTP server it sends real world time.
+    gettimeofday (&tv, NULL);
+    int64_t t2 = tv.tv_sec;
+    t2 *= 1000000L;
+    t2 += tv.tv_usec;
+
 
 	//CryptModule::random (clockRequest_msg.iv, IV_LENGTH);
 
@@ -1753,30 +1760,26 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 		}
 	}
 
-	node->t1 = clockRequest_msg.t1;
+	//node->t1 = clockRequest_msg.t1;
 
-	// Get current time. If Gateway is synchronized to NTP server it sends real world time.
-	gettimeofday (&tv, &tz);
-	int64_t time_ms = tv.tv_sec;
-	time_ms *= 1000;
-	time_ms += tv.tv_usec / 1000;
-	node->t2 = time_ms;
+	//node->t2 = time_us;
 
-	DEBUG_DBG ("T1: %llu", node->t1);
-	DEBUG_DBG ("T2: %llu", node->t2);
+    DEBUG_DBG ("T1: %llu", clockRequest_msg.t1);
+	DEBUG_DBG ("T2: %llu", t2);
 	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)&clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
 
-	return clockResponse (node);
+    return clockResponse (node, clockRequest_msg.t1, t2);
 }
 
-bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
+bool EnigmaIOTGatewayClass::clockResponse (Node* node, uint64_t t1, uint64_t t2) {
 	struct timeval tv;
-	struct timezone tz;
+	//struct timezone tz;
 
 	struct __attribute__ ((packed, aligned (1))) {
 		uint8_t msgType;
 		uint8_t iv[IV_LENGTH];
 		uint16_t counter;
+        int64_t t1;
 		int64_t t2;
 		int64_t t3;
 		uint8_t tag[TAG_LENGTH];
@@ -1797,17 +1800,18 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 	DEBUG_INFO ("Downlink message #%d", counter);
 
 	memcpy (&(clockResponse_msg.counter), &counter, sizeof (uint16_t));
+    
+    memcpy (&(clockResponse_msg.t1), &t1, sizeof (int64_t));
 
-	memcpy (&(clockResponse_msg.t2), &(node->t2), sizeof (int64_t));
+	memcpy (&(clockResponse_msg.t2), &t2, sizeof (int64_t));
 
 	// Get current time. If Gateway is synchronized to NTP server it sends real world time.
-	gettimeofday (&tv, &tz);
-	int64_t time_ms = tv.tv_sec;
-	time_ms *= 1000;
-	time_ms += tv.tv_usec / 1000;
-	node->t3 = time_ms;
+	gettimeofday (&tv, NULL);
+	int64_t t3 = tv.tv_sec;
+	t3 *= 1000000L;
+	t3 += tv.tv_usec;
 
-	memcpy (&(clockResponse_msg.t3), &(node->t3), sizeof (int64_t));
+	memcpy (&(clockResponse_msg.t3), &t3, sizeof (int64_t));
 
 	DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)&clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
 
@@ -1815,9 +1819,9 @@ bool EnigmaIOTGatewayClass::clockResponse (Node* node) {
 	char mac[ENIGMAIOT_ADDR_LEN * 3];
 	mac2str (node->getMacAddress (), mac);
 #endif
-	DEBUG_DBG ("T1: %llu", node->t1);
-	DEBUG_DBG ("T2: %llu", node->t2);
-	DEBUG_DBG ("T3: %llu", node->t3);
+	DEBUG_DBG ("T1: %llu", t1);
+	DEBUG_DBG ("T2: %llu", t2);
+	DEBUG_DBG ("T3: %llu", t3);
 
 	const uint8_t addDataLen = 1 + IV_LENGTH;
 	uint8_t aad[AAD_LENGTH + addDataLen];

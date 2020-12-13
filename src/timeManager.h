@@ -10,6 +10,7 @@
 #define _TIMEMANAGER_h
 
 #include <Arduino.h>
+#include "sys/time.h"
 
 class TimeManagerClass {
 protected:
@@ -19,11 +20,11 @@ protected:
     int64_t roundTripDelay; ///< @brief Propagation delay between Node and Gateway
 
 public:
-    /**
-      * @brief Inits time synchronization getting local clock to be assigned to T1
-      * @return Value of T1
-      */
-    int64_t setOrigin ();
+    // /**
+    //   * @brief Inits time synchronization getting local clock to be assigned to T1
+    //   * @return Value of T1
+    //   */
+    //int64_t setOrigin ();
 
     /**
       * @brief Gets local clock. It returns `millis()` if not synchronized, local clock otherwise.
@@ -37,7 +38,7 @@ public:
       * @return Clock value in seconds. It uses UnixTime format
       */
     time_t unixtime () {
-        uint64_t time_sec = clock () / 1000;
+        uint64_t time_sec = clock () / 1000000L;
         return time_sec;
     }
 

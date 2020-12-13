@@ -288,9 +288,11 @@ protected:
 	/**
 	 * @brief Returns timestaps needed so that node can calculate time difference
 	 * @param node Pointer to data that corresponds to originating node
+     * @param t1 Origin clock
+     * @param t2 Received clock
 	 * @return Returns `true` if message could be correcly processed
 	 */
-	bool clockResponse (Node* node);
+    bool clockResponse (Node* node, uint64_t t1, uint64_t t2);
 
 	/**
 	 * @brief Creates an **InvalidateKey** message and sned it. This trigger a new key agreement to start on related node
