@@ -2,8 +2,9 @@
 
 <img src="https://github.com/gmag11/EnigmaIOT/raw/master/logo/logo%20text%20under.svg?sanitize=true" alt="EnigmaIoT Logo" width="50%"/>
 
-[![ESP8266](https://github.com/gmag11/EnigmaIOT/workflows/EnigmaIOT-ESP8266/badge.svg)](https://github.com/gmag11/EnigmaIOT/actions/)
-[![ESP32](https://github.com/gmag11/EnigmaIOT/workflows/EnigmaIOT-ESP32/badge.svg)](https://github.com/gmag11/EnigmaIOT/actions/)
+[![ESP8266](https://github.com/gmag11/EnigmaIOT/workflows/ESP8266/badge.svg)](https://github.com/gmag11/EnigmaIOT/actions?query=workflow%3AESP8266)
+
+[![ESP32](https://github.com/gmag11/EnigmaIOT/workflows/ESP32/badge.svg)](https://github.com/gmag11/EnigmaIOT/actions?query=workflow%3AESP32)
 
 ## Introduction
 
