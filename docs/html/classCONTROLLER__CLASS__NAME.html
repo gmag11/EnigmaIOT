@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -87,9 +87,9 @@ Inheritance diagram for CONTROLLER_CLASS_NAME:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">setup</a> (void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
-<tr class="memdesc:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">More...</a><br /></td></tr>
-<tr class="separator:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">setup</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node, void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
+<tr class="memdesc:a826124fa1f5c24d99cc8e4f49c555bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">More...</a><br /></td></tr>
+<tr class="separator:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a584fb205957a7b3ca83fb76066af5268"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">processRxCommand</a> (const uint8_t *address, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
 <tr class="memdesc:a584fb205957a7b3ca83fb76066af5268"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to process a downlink command.  <a href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">More...</a><br /></td></tr>
 <tr class="separator:a584fb205957a7b3ca83fb76066af5268"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -98,18 +98,21 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4848555c02bbbddd9af9f3f60a9117f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6ef186cd6f5518739ef722213151284"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#af6ef186cd6f5518739ef722213151284">~CONTROLLER_CLASS_NAME</a> ()</td></tr>
 <tr class="separator:af6ef186cd6f5518739ef722213151284"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbb80e1a17105116617b0f24a8f965f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">configManagerStart</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node)</td></tr>
-<tr class="memdesc:acbb80e1a17105116617b0f24a8f965f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">More...</a><br /></td></tr>
-<tr class="separator:acbb80e1a17105116617b0f24a8f965f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">configManagerStart</a> ()</td></tr>
+<tr class="memdesc:aa6218f8b72b75932946bb5ca74b5bc14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">More...</a><br /></td></tr>
+<tr class="separator:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">configManagerExit</a> (bool <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
 <tr class="memdesc:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager exits config portal.  <a href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">More...</a><br /></td></tr>
 <tr class="separator:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afad5a8415e36756b812a53bc889fcd4b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">loadConfig</a> ()</td></tr>
 <tr class="memdesc:afad5a8415e36756b812a53bc889fcd4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads output module configuration.  <a href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">More...</a><br /></td></tr>
 <tr class="separator:afad5a8415e36756b812a53bc889fcd4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">setup</a> (void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
-<tr class="memdesc:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">More...</a><br /></td></tr>
-<tr class="separator:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">connectInform</a> ()</td></tr>
+<tr class="memdesc:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to notify controller that it is registered on EnigmaIOT network.  <a href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">More...</a><br /></td></tr>
+<tr class="separator:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">setup</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node, void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
+<tr class="memdesc:a826124fa1f5c24d99cc8e4f49c555bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">More...</a><br /></td></tr>
+<tr class="separator:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a584fb205957a7b3ca83fb76066af5268"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">processRxCommand</a> (const uint8_t *address, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
 <tr class="memdesc:a584fb205957a7b3ca83fb76066af5268"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to process a downlink command.  <a href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">More...</a><br /></td></tr>
 <tr class="separator:a584fb205957a7b3ca83fb76066af5268"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,18 +121,44 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4848555c02bbbddd9af9f3f60a9117f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6ef186cd6f5518739ef722213151284"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#af6ef186cd6f5518739ef722213151284">~CONTROLLER_CLASS_NAME</a> ()</td></tr>
 <tr class="separator:af6ef186cd6f5518739ef722213151284"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbb80e1a17105116617b0f24a8f965f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">configManagerStart</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node)</td></tr>
-<tr class="memdesc:acbb80e1a17105116617b0f24a8f965f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">More...</a><br /></td></tr>
-<tr class="separator:acbb80e1a17105116617b0f24a8f965f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">configManagerStart</a> ()</td></tr>
+<tr class="memdesc:aa6218f8b72b75932946bb5ca74b5bc14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">More...</a><br /></td></tr>
+<tr class="separator:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">configManagerExit</a> (bool <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
 <tr class="memdesc:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager exits config portal.  <a href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">More...</a><br /></td></tr>
 <tr class="separator:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afad5a8415e36756b812a53bc889fcd4b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">loadConfig</a> ()</td></tr>
 <tr class="memdesc:afad5a8415e36756b812a53bc889fcd4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads output module configuration.  <a href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">More...</a><br /></td></tr>
 <tr class="separator:afad5a8415e36756b812a53bc889fcd4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">setup</a> (void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
-<tr class="memdesc:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">More...</a><br /></td></tr>
-<tr class="separator:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">connectInform</a> ()</td></tr>
+<tr class="memdesc:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to notify controller that it is registered on EnigmaIOT network.  <a href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">More...</a><br /></td></tr>
+<tr class="separator:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">setup</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node, void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
+<tr class="memdesc:a826124fa1f5c24d99cc8e4f49c555bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes controller structures.  <a href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">More...</a><br /></td></tr>
+<tr class="separator:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a584fb205957a7b3ca83fb76066af5268"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">processRxCommand</a> (const uint8_t *address, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
+<tr class="memdesc:a584fb205957a7b3ca83fb76066af5268"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes received GET or SET commands.  <a href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">More...</a><br /></td></tr>
+<tr class="separator:a584fb205957a7b3ca83fb76066af5268"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4848555c02bbbddd9af9f3f60a9117f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a4848555c02bbbddd9af9f3f60a9117f5">loop</a> ()</td></tr>
+<tr class="memdesc:a4848555c02bbbddd9af9f3f60a9117f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes repetitive tasks on controller.  <a href="classCONTROLLER__CLASS__NAME.html#a4848555c02bbbddd9af9f3f60a9117f5">More...</a><br /></td></tr>
+<tr class="separator:a4848555c02bbbddd9af9f3f60a9117f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6ef186cd6f5518739ef722213151284"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#af6ef186cd6f5518739ef722213151284">~CONTROLLER_CLASS_NAME</a> ()</td></tr>
+<tr class="separator:af6ef186cd6f5518739ef722213151284"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">configManagerStart</a> ()</td></tr>
+<tr class="memdesc:aa6218f8b72b75932946bb5ca74b5bc14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">More...</a><br /></td></tr>
+<tr class="separator:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">configManagerExit</a> (bool <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
+<tr class="memdesc:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager exits config portal.  <a href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">More...</a><br /></td></tr>
+<tr class="separator:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afad5a8415e36756b812a53bc889fcd4b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">loadConfig</a> ()</td></tr>
+<tr class="memdesc:afad5a8415e36756b812a53bc889fcd4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads output module configuration.  <a href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">More...</a><br /></td></tr>
+<tr class="separator:afad5a8415e36756b812a53bc889fcd4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">connectInform</a> ()</td></tr>
+<tr class="memdesc:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executed as soon as node is registered on EnigmaIOT network.  <a href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">More...</a><br /></td></tr>
+<tr class="separator:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">setup</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node, void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
+<tr class="memdesc:a826124fa1f5c24d99cc8e4f49c555bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">More...</a><br /></td></tr>
+<tr class="separator:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a584fb205957a7b3ca83fb76066af5268"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">processRxCommand</a> (const uint8_t *address, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
 <tr class="memdesc:a584fb205957a7b3ca83fb76066af5268"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to process a downlink command.  <a href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">More...</a><br /></td></tr>
 <tr class="separator:a584fb205957a7b3ca83fb76066af5268"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,18 +167,21 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4848555c02bbbddd9af9f3f60a9117f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6ef186cd6f5518739ef722213151284"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#af6ef186cd6f5518739ef722213151284">~CONTROLLER_CLASS_NAME</a> ()</td></tr>
 <tr class="separator:af6ef186cd6f5518739ef722213151284"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbb80e1a17105116617b0f24a8f965f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">configManagerStart</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node)</td></tr>
-<tr class="memdesc:acbb80e1a17105116617b0f24a8f965f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">More...</a><br /></td></tr>
-<tr class="separator:acbb80e1a17105116617b0f24a8f965f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">configManagerStart</a> ()</td></tr>
+<tr class="memdesc:aa6218f8b72b75932946bb5ca74b5bc14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">More...</a><br /></td></tr>
+<tr class="separator:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">configManagerExit</a> (bool <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
 <tr class="memdesc:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager exits config portal.  <a href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">More...</a><br /></td></tr>
 <tr class="separator:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afad5a8415e36756b812a53bc889fcd4b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">loadConfig</a> ()</td></tr>
 <tr class="memdesc:afad5a8415e36756b812a53bc889fcd4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads output module configuration.  <a href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">More...</a><br /></td></tr>
 <tr class="separator:afad5a8415e36756b812a53bc889fcd4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">setup</a> (void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
-<tr class="memdesc:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">More...</a><br /></td></tr>
-<tr class="separator:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">connectInform</a> ()</td></tr>
+<tr class="memdesc:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to notify controller that it is registered on EnigmaIOT network.  <a href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">More...</a><br /></td></tr>
+<tr class="separator:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">setup</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node, void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
+<tr class="memdesc:a826124fa1f5c24d99cc8e4f49c555bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">More...</a><br /></td></tr>
+<tr class="separator:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a584fb205957a7b3ca83fb76066af5268"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">processRxCommand</a> (const uint8_t *address, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
 <tr class="memdesc:a584fb205957a7b3ca83fb76066af5268"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to process a downlink command.  <a href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">More...</a><br /></td></tr>
 <tr class="separator:a584fb205957a7b3ca83fb76066af5268"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,18 +190,21 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4848555c02bbbddd9af9f3f60a9117f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6ef186cd6f5518739ef722213151284"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#af6ef186cd6f5518739ef722213151284">~CONTROLLER_CLASS_NAME</a> ()</td></tr>
 <tr class="separator:af6ef186cd6f5518739ef722213151284"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbb80e1a17105116617b0f24a8f965f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">configManagerStart</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node)</td></tr>
-<tr class="memdesc:acbb80e1a17105116617b0f24a8f965f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">More...</a><br /></td></tr>
-<tr class="separator:acbb80e1a17105116617b0f24a8f965f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">configManagerStart</a> ()</td></tr>
+<tr class="memdesc:aa6218f8b72b75932946bb5ca74b5bc14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">More...</a><br /></td></tr>
+<tr class="separator:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">configManagerExit</a> (bool <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
 <tr class="memdesc:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager exits config portal.  <a href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">More...</a><br /></td></tr>
 <tr class="separator:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afad5a8415e36756b812a53bc889fcd4b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">loadConfig</a> ()</td></tr>
 <tr class="memdesc:afad5a8415e36756b812a53bc889fcd4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads output module configuration.  <a href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">More...</a><br /></td></tr>
 <tr class="separator:afad5a8415e36756b812a53bc889fcd4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">setup</a> (void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
-<tr class="memdesc:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">More...</a><br /></td></tr>
-<tr class="separator:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">connectInform</a> ()</td></tr>
+<tr class="memdesc:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to notify controller that it is registered on EnigmaIOT network.  <a href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">More...</a><br /></td></tr>
+<tr class="separator:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">setup</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node, void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
+<tr class="memdesc:a826124fa1f5c24d99cc8e4f49c555bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">More...</a><br /></td></tr>
+<tr class="separator:a826124fa1f5c24d99cc8e4f49c555bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a584fb205957a7b3ca83fb76066af5268"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">processRxCommand</a> (const uint8_t *address, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
 <tr class="memdesc:a584fb205957a7b3ca83fb76066af5268"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to process a downlink command.  <a href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">More...</a><br /></td></tr>
 <tr class="separator:a584fb205957a7b3ca83fb76066af5268"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -178,35 +213,18 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4848555c02bbbddd9af9f3f60a9117f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6ef186cd6f5518739ef722213151284"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#af6ef186cd6f5518739ef722213151284">~CONTROLLER_CLASS_NAME</a> ()</td></tr>
 <tr class="separator:af6ef186cd6f5518739ef722213151284"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbb80e1a17105116617b0f24a8f965f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">configManagerStart</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node)</td></tr>
-<tr class="memdesc:acbb80e1a17105116617b0f24a8f965f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">More...</a><br /></td></tr>
-<tr class="separator:acbb80e1a17105116617b0f24a8f965f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">configManagerStart</a> ()</td></tr>
+<tr class="memdesc:aa6218f8b72b75932946bb5ca74b5bc14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#aa6218f8b72b75932946bb5ca74b5bc14">More...</a><br /></td></tr>
+<tr class="separator:aa6218f8b72b75932946bb5ca74b5bc14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">configManagerExit</a> (bool <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
 <tr class="memdesc:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager exits config portal.  <a href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">More...</a><br /></td></tr>
 <tr class="separator:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afad5a8415e36756b812a53bc889fcd4b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">loadConfig</a> ()</td></tr>
 <tr class="memdesc:afad5a8415e36756b812a53bc889fcd4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads output module configuration.  <a href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">More...</a><br /></td></tr>
 <tr class="separator:afad5a8415e36756b812a53bc889fcd4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">setup</a> (void *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>=NULL)</td></tr>
-<tr class="memdesc:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data structures.  <a href="classCONTROLLER__CLASS__NAME.html#a5eaefc13c6d487caadd7ab8cc53006f8">More...</a><br /></td></tr>
-<tr class="separator:a5eaefc13c6d487caadd7ab8cc53006f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a584fb205957a7b3ca83fb76066af5268"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">processRxCommand</a> (const uint8_t *address, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
-<tr class="memdesc:a584fb205957a7b3ca83fb76066af5268"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to process a downlink command.  <a href="classCONTROLLER__CLASS__NAME.html#a584fb205957a7b3ca83fb76066af5268">More...</a><br /></td></tr>
-<tr class="separator:a584fb205957a7b3ca83fb76066af5268"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4848555c02bbbddd9af9f3f60a9117f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a4848555c02bbbddd9af9f3f60a9117f5">loop</a> ()</td></tr>
-<tr class="memdesc:a4848555c02bbbddd9af9f3f60a9117f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">This should be called periodically for module handling.  <a href="classCONTROLLER__CLASS__NAME.html#a4848555c02bbbddd9af9f3f60a9117f5">More...</a><br /></td></tr>
-<tr class="separator:a4848555c02bbbddd9af9f3f60a9117f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6ef186cd6f5518739ef722213151284"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#af6ef186cd6f5518739ef722213151284">~CONTROLLER_CLASS_NAME</a> ()</td></tr>
-<tr class="separator:af6ef186cd6f5518739ef722213151284"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbb80e1a17105116617b0f24a8f965f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">configManagerStart</a> (<a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *node)</td></tr>
-<tr class="memdesc:acbb80e1a17105116617b0f24a8f965f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classCONTROLLER__CLASS__NAME.html#acbb80e1a17105116617b0f24a8f965f7">More...</a><br /></td></tr>
-<tr class="separator:acbb80e1a17105116617b0f24a8f965f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">configManagerExit</a> (bool <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
-<tr class="memdesc:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager exits config portal.  <a href="classCONTROLLER__CLASS__NAME.html#a92a9cd1826a1a8aaca06c6e208928cdc">More...</a><br /></td></tr>
-<tr class="separator:a92a9cd1826a1a8aaca06c6e208928cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afad5a8415e36756b812a53bc889fcd4b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">loadConfig</a> ()</td></tr>
-<tr class="memdesc:afad5a8415e36756b812a53bc889fcd4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads output module configuration.  <a href="classCONTROLLER__CLASS__NAME.html#afad5a8415e36756b812a53bc889fcd4b">More...</a><br /></td></tr>
-<tr class="separator:afad5a8415e36756b812a53bc889fcd4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">connectInform</a> ()</td></tr>
+<tr class="memdesc:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to notify controller that it is registered on EnigmaIOT network.  <a href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">More...</a><br /></td></tr>
+<tr class="separator:ad5a5b5eb5068a97a6e41c74d264707eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -232,10 +250,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:ae572fe1f0d2bb7b4fb99067d815d5807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves output module configuration.  <a href="classCONTROLLER__CLASS__NAME.html#ae572fe1f0d2bb7b4fb99067d815d5807">More...</a><br /></td></tr>
 <tr class="separator:ae572fe1f0d2bb7b4fb99067d815d5807"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0965ba804f4f0d1533f888fa9011aa86"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a0965ba804f4f0d1533f888fa9011aa86">sendCommandResp</a> (const char *command, bool result)</td></tr>
-<tr class="memdesc:a0965ba804f4f0d1533f888fa9011aa86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends command processing response acknowledge.  <a href="classCONTROLLER__CLASS__NAME.html#a0965ba804f4f0d1533f888fa9011aa86">More...</a><br /></td></tr>
+<tr class="memdesc:a0965ba804f4f0d1533f888fa9011aa86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send response to commands to gateway.  <a href="classCONTROLLER__CLASS__NAME.html#a0965ba804f4f0d1533f888fa9011aa86">More...</a><br /></td></tr>
 <tr class="separator:a0965ba804f4f0d1533f888fa9011aa86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2af1a99bb4a2d7b83125861f127279e8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#a2af1a99bb4a2d7b83125861f127279e8">sendStartAnouncement</a> ()</td></tr>
-<tr class="memdesc:a2af1a99bb4a2d7b83125861f127279e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a message to notify node has started running.  <a href="classCONTROLLER__CLASS__NAME.html#a2af1a99bb4a2d7b83125861f127279e8">More...</a><br /></td></tr>
+<tr class="memdesc:a2af1a99bb4a2d7b83125861f127279e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a notification message including configurable controller name and protocol version.  <a href="classCONTROLLER__CLASS__NAME.html#a2af1a99bb4a2d7b83125861f127279e8">More...</a><br /></td></tr>
 <tr class="separator:a2af1a99bb4a2d7b83125861f127279e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae572fe1f0d2bb7b4fb99067d815d5807"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCONTROLLER__CLASS__NAME.html#ae572fe1f0d2bb7b4fb99067d815d5807">saveConfig</a> ()</td></tr>
 <tr class="memdesc:ae572fe1f0d2bb7b4fb99067d815d5807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves output module configuration.  <a href="classCONTROLLER__CLASS__NAME.html#ae572fe1f0d2bb7b4fb99067d815d5807">More...</a><br /></td></tr>
@@ -327,7 +345,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ButtonController_8h_source.html#l00025">25</a> of file <a class="el" href="ButtonController_8h_source.html">ButtonController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ButtonController_8h_source.html#l00026">26</a> of file <a class="el" href="ButtonController_8h_source.html">ButtonController.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af6ef186cd6f5518739ef722213151284"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af6ef186cd6f5518739ef722213151284">&#9670;&nbsp;</a></span>~CONTROLLER_CLASS_NAME() <span class="overload">[1/6]</span></h2>
@@ -344,7 +362,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00099">99</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00089">89</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
 
 </div>
 </div>
@@ -468,7 +486,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a844043532561398d54fa45cd7f0cf4ed">EnigmaIOTjsonController</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00110">110</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00100">100</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
 
 </div>
 </div>
@@ -652,8 +670,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="acbb80e1a17105116617b0f24a8f965f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbb80e1a17105116617b0f24a8f965f7">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[1/6]</span></h2>
+<a id="aa6218f8b72b75932946bb5ca74b5bc14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6218f8b72b75932946bb5ca74b5bc14">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -664,8 +682,96 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void CONTROLLER_CLASS_NAME::configManagerStart </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
-          <td class="paramname"><em>node</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when wifi manager starts config portal. </p>
+
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a9d83f8376a37624a551421a2c8a90c5f">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00094">94</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aa6218f8b72b75932946bb5ca74b5bc14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6218f8b72b75932946bb5ca74b5bc14">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[2/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CONTROLLER_CLASS_NAME::configManagerStart </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when wifi manager starts config portal. </p>
+
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a9d83f8376a37624a551421a2c8a90c5f">EnigmaIOTjsonController</a>.</p>
+
+</div>
+</div>
+<a id="aa6218f8b72b75932946bb5ca74b5bc14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6218f8b72b75932946bb5ca74b5bc14">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[3/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CONTROLLER_CLASS_NAME::configManagerStart </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when wifi manager starts config portal. </p>
+
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a9d83f8376a37624a551421a2c8a90c5f">EnigmaIOTjsonController</a>.</p>
+
+</div>
+</div>
+<a id="aa6218f8b72b75932946bb5ca74b5bc14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6218f8b72b75932946bb5ca74b5bc14">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[4/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CONTROLLER_CLASS_NAME::configManagerStart </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -684,14 +790,12 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a1800c685a75bdb951009749e62b19dbb">EnigmaIOTjsonController</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00104">104</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a9d83f8376a37624a551421a2c8a90c5f">EnigmaIOTjsonController</a>.</p>
 
 </div>
 </div>
-<a id="acbb80e1a17105116617b0f24a8f965f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbb80e1a17105116617b0f24a8f965f7">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[2/6]</span></h2>
+<a id="aa6218f8b72b75932946bb5ca74b5bc14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6218f8b72b75932946bb5ca74b5bc14">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -702,8 +806,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void CONTROLLER_CLASS_NAME::configManagerStart </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
-          <td class="paramname"><em>node</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -722,12 +825,12 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a1800c685a75bdb951009749e62b19dbb">EnigmaIOTjsonController</a>.</p>
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a9d83f8376a37624a551421a2c8a90c5f">EnigmaIOTjsonController</a>.</p>
 
 </div>
 </div>
-<a id="acbb80e1a17105116617b0f24a8f965f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbb80e1a17105116617b0f24a8f965f7">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[3/6]</span></h2>
+<a id="aa6218f8b72b75932946bb5ca74b5bc14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6218f8b72b75932946bb5ca74b5bc14">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -738,116 +841,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void CONTROLLER_CLASS_NAME::configManagerStart </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
-          <td class="paramname"><em>node</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Called when wifi manager starts config portal. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">node</td><td>Pointer to EnigmaIOT gateway instance </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a1800c685a75bdb951009749e62b19dbb">EnigmaIOTjsonController</a>.</p>
-
-</div>
-</div>
-<a id="acbb80e1a17105116617b0f24a8f965f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbb80e1a17105116617b0f24a8f965f7">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[4/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CONTROLLER_CLASS_NAME::configManagerStart </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
-          <td class="paramname"><em>node</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Called when wifi manager starts config portal. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">node</td><td>Pointer to EnigmaIOT gateway instance </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a1800c685a75bdb951009749e62b19dbb">EnigmaIOTjsonController</a>.</p>
-
-</div>
-</div>
-<a id="acbb80e1a17105116617b0f24a8f965f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbb80e1a17105116617b0f24a8f965f7">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[5/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CONTROLLER_CLASS_NAME::configManagerStart </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
-          <td class="paramname"><em>node</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Called when wifi manager starts config portal. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">node</td><td>Pointer to EnigmaIOT gateway instance </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a1800c685a75bdb951009749e62b19dbb">EnigmaIOTjsonController</a>.</p>
-
-</div>
-</div>
-<a id="acbb80e1a17105116617b0f24a8f965f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbb80e1a17105116617b0f24a8f965f7">&#9670;&nbsp;</a></span>configManagerStart() <span class="overload">[6/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CONTROLLER_CLASS_NAME::configManagerStart </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
-          <td class="paramname"><em>node</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -866,7 +860,193 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a1800c685a75bdb951009749e62b19dbb">EnigmaIOTjsonController</a>.</p>
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a9d83f8376a37624a551421a2c8a90c5f">EnigmaIOTjsonController</a>.</p>
+
+</div>
+</div>
+<a id="ad5a5b5eb5068a97a6e41c74d264707eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5a5b5eb5068a97a6e41c74d264707eb">&#9670;&nbsp;</a></span>connectInform() <span class="overload">[1/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CONTROLLER_CLASS_NAME::connectInform </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used to notify controller that it is registered on EnigmaIOT network. </p>
+
+<p>Reimplemented from <a class="el" href="classEnigmaIOTjsonController.html#ac9fda7397114e169164bc6ee390f0e2d">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="ButtonController_8h_source.html#l00060">60</a> of file <a class="el" href="ButtonController_8h_source.html">ButtonController.h</a>.</p>
+
+</div>
+</div>
+<a id="ad5a5b5eb5068a97a6e41c74d264707eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5a5b5eb5068a97a6e41c74d264707eb">&#9670;&nbsp;</a></span>connectInform() <span class="overload">[2/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CONTROLLER_CLASS_NAME::connectInform </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used to notify controller that it is registered on EnigmaIOT network. </p>
+
+<p>Reimplemented from <a class="el" href="classEnigmaIOTjsonController.html#ac9fda7397114e169164bc6ee390f0e2d">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="DashButtonController_8h_source.html#l00058">58</a> of file <a class="el" href="DashButtonController_8h_source.html">DashButtonController.h</a>.</p>
+
+</div>
+</div>
+<a id="ad5a5b5eb5068a97a6e41c74d264707eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5a5b5eb5068a97a6e41c74d264707eb">&#9670;&nbsp;</a></span>connectInform() <span class="overload">[3/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CONTROLLER_CLASS_NAME::connectInform </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Executed as soon as node is registered on EnigmaIOT network. </p>
+
+<p>Reimplemented from <a class="el" href="classEnigmaIOTjsonController.html#ac9fda7397114e169164bc6ee390f0e2d">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="BasicController_8h_source.html#l00077">77</a> of file <a class="el" href="BasicController_8h_source.html">BasicController.h</a>.</p>
+
+</div>
+</div>
+<a id="ad5a5b5eb5068a97a6e41c74d264707eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5a5b5eb5068a97a6e41c74d264707eb">&#9670;&nbsp;</a></span>connectInform() <span class="overload">[4/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CONTROLLER_CLASS_NAME::connectInform </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used to notify controller that it is registered on EnigmaIOT network. </p>
+
+<p>Reimplemented from <a class="el" href="classEnigmaIOTjsonController.html#ac9fda7397114e169164bc6ee390f0e2d">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="LedController_8h_source.html#l00063">63</a> of file <a class="el" href="LedController_8h_source.html">LedController.h</a>.</p>
+
+</div>
+</div>
+<a id="ad5a5b5eb5068a97a6e41c74d264707eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5a5b5eb5068a97a6e41c74d264707eb">&#9670;&nbsp;</a></span>connectInform() <span class="overload">[5/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CONTROLLER_CLASS_NAME::connectInform </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used to notify controller that it is registered on EnigmaIOT network. </p>
+
+<p>Reimplemented from <a class="el" href="classEnigmaIOTjsonController.html#ac9fda7397114e169164bc6ee390f0e2d">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="ds18b20Controller_8h_source.html#l00064">64</a> of file <a class="el" href="ds18b20Controller_8h_source.html">ds18b20Controller.h</a>.</p>
+
+</div>
+</div>
+<a id="ad5a5b5eb5068a97a6e41c74d264707eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5a5b5eb5068a97a6e41c74d264707eb">&#9670;&nbsp;</a></span>connectInform() <span class="overload">[6/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CONTROLLER_CLASS_NAME::connectInform </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used to notify controller that it is registered on EnigmaIOT network. </p>
+
+<p>Reimplemented from <a class="el" href="classEnigmaIOTjsonController.html#ac9fda7397114e169164bc6ee390f0e2d">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00085">85</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
 
 </div>
 </div>
@@ -893,7 +1073,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8cpp_source.html#l00377">377</a> of file <a class="el" href="SmartSwitchController_8cpp_source.html">SmartSwitchController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8cpp_source.html#l00367">367</a> of file <a class="el" href="SmartSwitchController_8cpp_source.html">SmartSwitchController.cpp</a>.</p>
 
 </div>
 </div>
@@ -925,7 +1105,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a48bf137d2f77f2167f2c2d56cdf26c10">EnigmaIOTjsonController</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00115">115</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00105">105</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
 
 </div>
 </div>
@@ -1106,7 +1286,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a7d1e90a75f4b1b5abd5480d00102debf">EnigmaIOTjsonController</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00054">54</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00044">44</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
 
 </div>
 </div>
@@ -1162,7 +1342,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>This should be called periodically for module handling. </p>
+<p>Executes repetitive tasks on controller. </p>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a7d1e90a75f4b1b5abd5480d00102debf">EnigmaIOTjsonController</a>.</p>
 
@@ -1408,7 +1588,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">bool CONTROLLER_CLASS_NAME::processRxCommand </td>
           <td>(</td>
           <td class="paramtype">const uint8_t *&#160;</td>
-          <td class="paramname"><em>mac</em>, </td>
+          <td class="paramname"><em>address</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1447,18 +1627,17 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Called to process a downlink command. </p>
+<p>Processes received GET or SET commands. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mac</td><td>Address of sender </td></tr>
-    <tr><td class="paramname">buffer</td><td>Message bytes </td></tr>
-    <tr><td class="paramname">length</td><td>Message length </td></tr>
-    <tr><td class="paramname">command</td><td>Type of command. nodeMessageType_t </td></tr>
-    <tr><td class="paramname">payloadEncoding</td><td>Payload encoding of type nodePayloadEncoding_t </td></tr>
+    <tr><td class="paramname">address</td><td>Origin MAC address </td></tr>
+    <tr><td class="paramname">buffer</td><td>Command payload </td></tr>
+    <tr><td class="paramname">length</td><td>Payload length in bytes </td></tr>
+    <tr><td class="paramname">command</td><td>Command type. nodeMessageType_t::DOWNSTREAM_DATA_GET or nodeMessageType_t::DOWNSTREAM_DATA_SET </td></tr>
+    <tr><td class="paramname">payloadEncoding</td><td>Payload encoding. MSG_PACK is recommended </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> on success </dd></dl>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#ab2f0dacf8b11038d862eb9fa3f1254ca">EnigmaIOTjsonController</a>.</p>
 
@@ -1699,7 +1878,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a83069acbd6d2b8c1c9b36974fdb35b1e">EnigmaIOTjsonController</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00120">120</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00110">110</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
 
 </div>
 </div>
@@ -2012,15 +2191,14 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Sends command processing response acknowledge. </p>
+<p>Send response to commands to gateway. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">command</td><td>Command name </td></tr>
-    <tr><td class="paramname">result</td><td>Command execution success </td></tr>
+    <tr><td class="paramname">command</td><td>Refered command </td></tr>
+    <tr><td class="paramname">result</td><td><code>true</code> if command was correctly executed, <code>false</code> otherwise </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message sending was successful. <code>false</code> otherwise </dd></dl>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#acfcc6e0243941ac00830f848cc8315eb">EnigmaIOTjsonController</a>.</p>
 
@@ -2269,7 +2447,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2279,7 +2457,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8156ca47dce60feaff56f2b819a87c58">EnigmaIOTjsonController</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00031">31</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ButtonController_8h_source.html#l00073">73</a> of file <a class="el" href="ButtonController_8h_source.html">ButtonController.h</a>.</p>
 
 </div>
 </div>
@@ -2301,7 +2479,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2310,6 +2488,8 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message sending was successful. <code>false</code> otherwise </dd></dl>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8156ca47dce60feaff56f2b819a87c58">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="DashButtonController_8h_source.html#l00071">71</a> of file <a class="el" href="DashButtonController_8h_source.html">DashButtonController.h</a>.</p>
 
 </div>
 </div>
@@ -2331,15 +2511,16 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Send a message to notify node has started running. </p>
-<dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message sending was successful. <code>false</code> otherwise </dd></dl>
+<p>Sends a notification message including configurable controller name and protocol version. </p>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8156ca47dce60feaff56f2b819a87c58">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="BasicController_8h_source.html#l00098">98</a> of file <a class="el" href="BasicController_8h_source.html">BasicController.h</a>.</p>
 
 </div>
 </div>
@@ -2361,7 +2542,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2370,6 +2551,8 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message sending was successful. <code>false</code> otherwise </dd></dl>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8156ca47dce60feaff56f2b819a87c58">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="LedController_8h_source.html#l00076">76</a> of file <a class="el" href="LedController_8h_source.html">LedController.h</a>.</p>
 
 </div>
 </div>
@@ -2391,7 +2574,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2400,6 +2583,8 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message sending was successful. <code>false</code> otherwise </dd></dl>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8156ca47dce60feaff56f2b819a87c58">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="ds18b20Controller_8h_source.html#l00077">77</a> of file <a class="el" href="ds18b20Controller_8h_source.html">ds18b20Controller.h</a>.</p>
 
 </div>
 </div>
@@ -2421,7 +2606,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2430,6 +2615,8 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message sending was successful. <code>false</code> otherwise </dd></dl>
 
 <p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8156ca47dce60feaff56f2b819a87c58">EnigmaIOTjsonController</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00098">98</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
 
 </div>
 </div>
@@ -2457,7 +2644,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ds18b20Controller_8cpp_source.html#l00042">42</a> of file <a class="el" href="ds18b20Controller_8cpp_source.html">ds18b20Controller.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ds18b20Controller_8cpp_source.html#l00033">33</a> of file <a class="el" href="ds18b20Controller_8cpp_source.html">ds18b20Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -2485,7 +2672,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8cpp_source.html#l00245">245</a> of file <a class="el" href="SmartSwitchController_8cpp_source.html">SmartSwitchController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8cpp_source.html#l00236">236</a> of file <a class="el" href="SmartSwitchController_8cpp_source.html">SmartSwitchController.cpp</a>.</p>
 
 </div>
 </div>
@@ -2513,7 +2700,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8cpp_source.html#l00235">235</a> of file <a class="el" href="SmartSwitchController_8cpp_source.html">SmartSwitchController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8cpp_source.html#l00226">226</a> of file <a class="el" href="SmartSwitchController_8cpp_source.html">SmartSwitchController.cpp</a>.</p>
 
 </div>
 </div>
@@ -2541,12 +2728,12 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8cpp_source.html#l00222">222</a> of file <a class="el" href="SmartSwitchController_8cpp_source.html">SmartSwitchController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8cpp_source.html#l00213">213</a> of file <a class="el" href="SmartSwitchController_8cpp_source.html">SmartSwitchController.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a5eaefc13c6d487caadd7ab8cc53006f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eaefc13c6d487caadd7ab8cc53006f8">&#9670;&nbsp;</a></span>setup() <span class="overload">[1/6]</span></h2>
+<a id="a826124fa1f5c24d99cc8e4f49c555bee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a826124fa1f5c24d99cc8e4f49c555bee">&#9670;&nbsp;</a></span>setup() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2557,9 +2744,19 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void CONTROLLER_CLASS_NAME::setup </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>config</em> = <code>NULL</code></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>config</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -2572,19 +2769,20 @@ Additional Inherited Members</h2></td></tr>
 <p>Initialize data structures. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">node</td><td>Pointer to EnigmaIOT node instance </td></tr>
     <tr><td class="paramname">config</td><td>Pointer to configuration structure. If it is <code>NULL</code> then it tries to load configuration from flash </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8bda5dc0df3fd994b126ce701303ca2f">EnigmaIOTjsonController</a>.</p>
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a56e99497e68b8f6f9d31822c4ecaf3ea">EnigmaIOTjsonController</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00040">40</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ButtonController_8cpp_source.html#l00031">31</a> of file <a class="el" href="ButtonController_8cpp_source.html">ButtonController.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a5eaefc13c6d487caadd7ab8cc53006f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eaefc13c6d487caadd7ab8cc53006f8">&#9670;&nbsp;</a></span>setup() <span class="overload">[2/6]</span></h2>
+<a id="a826124fa1f5c24d99cc8e4f49c555bee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a826124fa1f5c24d99cc8e4f49c555bee">&#9670;&nbsp;</a></span>setup() <span class="overload">[2/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2595,9 +2793,19 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void CONTROLLER_CLASS_NAME::setup </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>config</em> = <code>NULL</code></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>config</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -2610,17 +2818,18 @@ Additional Inherited Members</h2></td></tr>
 <p>Initialize data structures. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">node</td><td>Pointer to EnigmaIOT node instance </td></tr>
     <tr><td class="paramname">config</td><td>Pointer to configuration structure. If it is <code>NULL</code> then it tries to load configuration from flash </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8bda5dc0df3fd994b126ce701303ca2f">EnigmaIOTjsonController</a>.</p>
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a56e99497e68b8f6f9d31822c4ecaf3ea">EnigmaIOTjsonController</a>.</p>
 
 </div>
 </div>
-<a id="a5eaefc13c6d487caadd7ab8cc53006f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eaefc13c6d487caadd7ab8cc53006f8">&#9670;&nbsp;</a></span>setup() <span class="overload">[3/6]</span></h2>
+<a id="a826124fa1f5c24d99cc8e4f49c555bee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a826124fa1f5c24d99cc8e4f49c555bee">&#9670;&nbsp;</a></span>setup() <span class="overload">[3/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2631,9 +2840,66 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void CONTROLLER_CLASS_NAME::setup </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>config</em> = <code>NULL</code></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initializes controller structures. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>Pointer to EnigmaIOT gateway instance </td></tr>
+    <tr><td class="paramname">data</td><td>Parameter data for controller </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a56e99497e68b8f6f9d31822c4ecaf3ea">EnigmaIOTjsonController</a>.</p>
+
+</div>
+</div>
+<a id="a826124fa1f5c24d99cc8e4f49c555bee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a826124fa1f5c24d99cc8e4f49c555bee">&#9670;&nbsp;</a></span>setup() <span class="overload">[4/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CONTROLLER_CLASS_NAME::setup </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>config</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -2646,17 +2912,18 @@ Additional Inherited Members</h2></td></tr>
 <p>Initialize data structures. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">node</td><td>Pointer to EnigmaIOT node instance </td></tr>
     <tr><td class="paramname">config</td><td>Pointer to configuration structure. If it is <code>NULL</code> then it tries to load configuration from flash </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8bda5dc0df3fd994b126ce701303ca2f">EnigmaIOTjsonController</a>.</p>
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a56e99497e68b8f6f9d31822c4ecaf3ea">EnigmaIOTjsonController</a>.</p>
 
 </div>
 </div>
-<a id="a5eaefc13c6d487caadd7ab8cc53006f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eaefc13c6d487caadd7ab8cc53006f8">&#9670;&nbsp;</a></span>setup() <span class="overload">[4/6]</span></h2>
+<a id="a826124fa1f5c24d99cc8e4f49c555bee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a826124fa1f5c24d99cc8e4f49c555bee">&#9670;&nbsp;</a></span>setup() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2667,9 +2934,19 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void CONTROLLER_CLASS_NAME::setup </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>config</em> = <code>NULL</code></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>config</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -2682,17 +2959,18 @@ Additional Inherited Members</h2></td></tr>
 <p>Initialize data structures. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">node</td><td>Pointer to EnigmaIOT node instance </td></tr>
     <tr><td class="paramname">config</td><td>Pointer to configuration structure. If it is <code>NULL</code> then it tries to load configuration from flash </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8bda5dc0df3fd994b126ce701303ca2f">EnigmaIOTjsonController</a>.</p>
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a56e99497e68b8f6f9d31822c4ecaf3ea">EnigmaIOTjsonController</a>.</p>
 
 </div>
 </div>
-<a id="a5eaefc13c6d487caadd7ab8cc53006f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eaefc13c6d487caadd7ab8cc53006f8">&#9670;&nbsp;</a></span>setup() <span class="overload">[5/6]</span></h2>
+<a id="a826124fa1f5c24d99cc8e4f49c555bee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a826124fa1f5c24d99cc8e4f49c555bee">&#9670;&nbsp;</a></span>setup() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2703,9 +2981,19 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void CONTROLLER_CLASS_NAME::setup </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>config</em> = <code>NULL</code></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a> *&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>config</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -2718,48 +3006,13 @@ Additional Inherited Members</h2></td></tr>
 <p>Initialize data structures. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">node</td><td>Pointer to EnigmaIOT node instance </td></tr>
     <tr><td class="paramname">config</td><td>Pointer to configuration structure. If it is <code>NULL</code> then it tries to load configuration from flash </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8bda5dc0df3fd994b126ce701303ca2f">EnigmaIOTjsonController</a>.</p>
-
-</div>
-</div>
-<a id="a5eaefc13c6d487caadd7ab8cc53006f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eaefc13c6d487caadd7ab8cc53006f8">&#9670;&nbsp;</a></span>setup() <span class="overload">[6/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CONTROLLER_CLASS_NAME::setup </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>config</em> = <code>NULL</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Initialize data structures. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">config</td><td>Pointer to configuration structure. If it is <code>NULL</code> then it tries to load configuration from flash </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a8bda5dc0df3fd994b126ce701303ca2f">EnigmaIOTjsonController</a>.</p>
+<p>Implements <a class="el" href="classEnigmaIOTjsonController.html#a56e99497e68b8f6f9d31822c4ecaf3ea">EnigmaIOTjsonController</a>.</p>
 
 </div>
 </div>
@@ -2786,7 +3039,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8cpp_source.html#l00208">208</a> of file <a class="el" href="SmartSwitchController_8cpp_source.html">SmartSwitchController.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8cpp_source.html#l00199">199</a> of file <a class="el" href="SmartSwitchController_8cpp_source.html">SmartSwitchController.cpp</a>.</p>
 
 </div>
 </div>
@@ -2811,7 +3064,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00055">55</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00056">56</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
 
 </div>
 </div>
@@ -2835,7 +3088,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00054">54</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00055">55</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
 
 </div>
 </div>
@@ -2859,7 +3112,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00052">52</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00053">53</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
 
 </div>
 </div>
@@ -2883,7 +3136,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00051">51</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00052">52</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
 
 </div>
 </div>
@@ -2907,7 +3160,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ds18b20Controller_8h_source.html#l00034">34</a> of file <a class="el" href="ds18b20Controller_8h_source.html">ds18b20Controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ds18b20Controller_8h_source.html#l00035">35</a> of file <a class="el" href="ds18b20Controller_8h_source.html">ds18b20Controller.h</a>.</p>
 
 </div>
 </div>
@@ -2931,7 +3184,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LedController_8h_source.html#l00033">33</a> of file <a class="el" href="LedController_8h_source.html">LedController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LedController_8h_source.html#l00034">34</a> of file <a class="el" href="LedController_8h_source.html">LedController.h</a>.</p>
 
 </div>
 </div>
@@ -2955,7 +3208,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ds18b20Controller_8h_source.html#l00032">32</a> of file <a class="el" href="ds18b20Controller_8h_source.html">ds18b20Controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ds18b20Controller_8h_source.html#l00033">33</a> of file <a class="el" href="ds18b20Controller_8h_source.html">ds18b20Controller.h</a>.</p>
 
 </div>
 </div>
@@ -2979,7 +3232,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ButtonController_8h_source.html#l00031">31</a> of file <a class="el" href="ButtonController_8h_source.html">ButtonController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ButtonController_8h_source.html#l00032">32</a> of file <a class="el" href="ButtonController_8h_source.html">ButtonController.h</a>.</p>
 
 </div>
 </div>
@@ -3003,7 +3256,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ButtonController_8h_source.html#l00030">30</a> of file <a class="el" href="ButtonController_8h_source.html">ButtonController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ButtonController_8h_source.html#l00031">31</a> of file <a class="el" href="ButtonController_8h_source.html">ButtonController.h</a>.</p>
 
 </div>
 </div>
@@ -3027,7 +3280,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00053">53</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SmartSwitchController_8h_source.html#l00054">54</a> of file <a class="el" href="SmartSwitchController_8h_source.html">SmartSwitchController.h</a>.</p>
 
 </div>
 </div>
@@ -3051,7 +3304,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ds18b20Controller_8h_source.html#l00033">33</a> of file <a class="el" href="ds18b20Controller_8h_source.html">ds18b20Controller.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ds18b20Controller_8h_source.html#l00034">34</a> of file <a class="el" href="ds18b20Controller_8h_source.html">ds18b20Controller.h</a>.</p>
 
 </div>
 </div>

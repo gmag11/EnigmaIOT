@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -100,8 +100,14 @@ $(function() {
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;uint32_t <a class="code" href="helperFunctions_8h.html#a81e44efba216f1a0a981219616eeb8f3">calculateCRC32</a> (<span class="keyword">const</span> uint8_t* <a class="code" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, <span class="keywordtype">size_t</span> length);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="helperFunctions_8h.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* input);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="helperFunctions_8h.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* input, <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="helperFunctions_8h.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a> (String input);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aEnigmaIoTconfig_8h_html"><div class="ttname"><a href="EnigmaIoTconfig_8h.html">EnigmaIoTconfig.h</a></div><div class="ttdoc">Parameter configuration.</div></div>
 <div class="ttc" id="ahelperFunctions_8h_html_a5efcbae54fb852b8a9b23a25931e3f7a"><div class="ttname"><a href="helperFunctions_8h.html#a5efcbae54fb852b8a9b23a25931e3f7a">initWiFi</a></div><div class="ttdeci">void initWiFi(uint8_t channel, const char *networkName, const char *networkKey=NULL, uint8_t role=0)</div><div class="ttdoc">Initalizes WiFi interfaces on ESP8266 or ESP32.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00032">helperFunctions.cpp:32</a></div></div>
@@ -109,6 +115,7 @@ $(function() {
 <div class="ttc" id="ahelperFunctions_8h_html_a34002f0936dac45b08bba5436ddc8a09"><div class="ttname"><a href="helperFunctions_8h.html#a34002f0936dac45b08bba5436ddc8a09">printHexBuffer</a></div><div class="ttdeci">char * printHexBuffer(const uint8_t *buffer, uint16_t len)</div><div class="ttdoc">Debug helper function that generates a string that represent a buffer hexadecimal values.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00016">helperFunctions.cpp:16</a></div></div>
 <div class="ttc" id="ahelperFunctions_8h_html_a0fdf837000194d53f0d019f024e0f4a1"><div class="ttname"><a href="helperFunctions_8h.html#a0fdf837000194d53f0d019f024e0f4a1">str2mac</a></div><div class="ttdeci">uint8_t * str2mac(const char *mac, uint8_t *values)</div><div class="ttdoc">Debug helper function that creates MAC address byte array from text representation.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00095">helperFunctions.cpp:95</a></div></div>
 <div class="ttc" id="aGwOutput__generic_8h_html_a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b"><div class="ttname"><a href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a></div><div class="ttdeci">@ data</div><div class="ttdef"><b>Definition:</b> <a href="GwOutput__generic_8h_source.html#l00023">GwOutput_generic.h:23</a></div></div>
+<div class="ttc" id="ahelperFunctions_8h_html_aa76d044529f5f932eb6014b50047c02b"><div class="ttname"><a href="helperFunctions_8h.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a></div><div class="ttdeci">bool isNumber(const char *input)</div><div class="ttdoc">Checks if input string is numeric.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00160">helperFunctions.cpp:160</a></div></div>
 <div class="ttc" id="ahelperFunctions_8h_html_a4a09e49bdb6c6cc3bfb9a22dac47f551"><div class="ttname"><a href="helperFunctions_8h.html#a4a09e49bdb6c6cc3bfb9a22dac47f551">mac2str</a></div><div class="ttdeci">char * mac2str(const uint8_t *mac, char *buffer)</div><div class="ttdoc">Debug helper function that generates a string that represent a MAC address.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00085">helperFunctions.cpp:85</a></div></div>
 <div class="ttc" id="adebug_8h_html"><div class="ttname"><a href="debug_8h.html">debug.h</a></div><div class="ttdoc">Auxiliary functions for debugging over Serial.</div></div>
 <!-- start footer part -->

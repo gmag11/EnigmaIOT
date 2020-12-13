@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -69,6 +69,8 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_readme"></a> <img src="https://github.com/gmag11/EnigmaIOT/raw/master/logo/logo%20text%20under.svg?sanitize=true" alt="EnigmaIoT Logo" style="pointer-events: none;" width="50%" class="inline"/></p>
+<p><a href="https://github.com/gmag11/EnigmaIOT/actions?query=workflow%3AESP8266"><img src="https://github.com/gmag11/EnigmaIOT/workflows/ESP8266/badge.svg" alt="ESP8266" style="pointer-events: none;" class="inline"/></a></p>
+<p><a href="https://github.com/gmag11/EnigmaIOT/actions?query=workflow%3AESP32"><img src="https://github.com/gmag11/EnigmaIOT/workflows/ESP32/badge.svg" alt="ESP32" style="pointer-events: none;" class="inline"/></a></p>
 <h1>Introduction</h1>
 <p><b>EnigmaIoT</b> is an open source solution for wireless multi sensor systems. It has two main components, multiple <b>nodes</b> and one <b>gateway</b>.</p>
 <p>A number of nodes with one or more sensors each one communicate in a <b>secure</b> way to a central gateway in a star network using EnigmaIoT protocol.</p>
@@ -122,6 +124,7 @@ $(function() {
 <p class="startli">A node may not send broadcast messages, only gateway can.</p>
 </li>
 <li>[x] Both gateway or nodes may run on ESP32 or ESP8266</li>
+<li>[x] Simple REST API to get information and send commands to gateway and nodes. Check <a class="el" href="md_docs_api.html">api.md</a></li>
 </ul>
 <h1>Design</h1>
 <h2>System Design</h2>

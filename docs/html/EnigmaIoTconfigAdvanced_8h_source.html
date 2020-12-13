@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -74,9 +74,9 @@ $(function() {
 <div class="contents">
 <a href="EnigmaIoTconfigAdvanced_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> /****************************************************************************</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">    DO NOT MODIFY THESE SETTINGS UNLESS YOU KNOW WHAT YOU ARE DOING</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">    ---------------------------------------------------------------</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">    NO MODIFIQUES ESTOS AJUSTES SI NO SABES LO QUE ESTÁS HACIENDO</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">  DO NOT MODIFY THESE SETTINGS UNLESS YOU KNOW WHAT YOU ARE DOING</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">  ---------------------------------------------------------------</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">  NO MODIFIQUES ESTOS AJUSTES SI NO SABES LO QUE ESTÁS HACIENDO</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">  ****************************************************************************/</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef _CONFIG_ADVANCED_h</span></div>
@@ -103,7 +103,7 @@ $(function() {
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef CHECK_COMM_ERRORS</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="EnigmaIoTconfigAdvanced_8h.html#a27b8cf1e2d300318f7102b8bc0facef9">   37</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="EnigmaIoTconfigAdvanced_8h.html#a27b8cf1e2d300318f7102b8bc0facef9">CHECK_COMM_ERRORS</a> = <span class="keyword">true</span>; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#endif // !1</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="EnigmaIoTconfigAdvanced_8h.html#a68fd5dd70eb1fa10fa1878e044d14cb0">   39</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> uint32_t <a class="code" href="EnigmaIoTconfigAdvanced_8h.html#a68fd5dd70eb1fa10fa1878e044d14cb0">RTC_ADDRESS</a> = 0; </div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="EnigmaIoTconfigAdvanced_8h.html#a68fd5dd70eb1fa10fa1878e044d14cb0">   39</a></span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> uint32_t <a class="code" href="EnigmaIoTconfigAdvanced_8h.html#a68fd5dd70eb1fa10fa1878e044d14cb0">RTC_ADDRESS</a> = 8; </div>
 <div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="EnigmaIoTconfigAdvanced_8h.html#a3adc46611e76e71d60021e6c87d11dcc">   40</a></span>&#160;<span class="preprocessor">#define USE_FLASH_INSTEAD_RTC 0 </span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor"></span> </div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">//Crypto configuration</span></div>
@@ -113,7 +113,10 @@ $(function() {
 <div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="EnigmaIoTconfigAdvanced_8h.html#a3a00052a511fa3b63de7e280320b1ef9">   46</a></span>&#160;<span class="keyword">const</span> uint8_t <a class="code" href="EnigmaIoTconfigAdvanced_8h.html#a3a00052a511fa3b63de7e280320b1ef9">AAD_LENGTH</a> = 8; </div>
 <div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="EnigmaIoTconfigAdvanced_8h.html#a60424869b9d0955e8745158aadcd95b0">   47</a></span>&#160;<span class="preprocessor">#define CYPHER_TYPE ChaChaPoly</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">//Web API</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="EnigmaIoTconfigAdvanced_8h.html#a75ba0ac6d6287a6b8d580cd65038a77a">   50</a></span>&#160;<span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="EnigmaIoTconfigAdvanced_8h.html#a75ba0ac6d6287a6b8d580cd65038a77a">WEB_API_PORT</a> = 80; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aEnigmaIoTconfigAdvanced_8h_html_a6aa9a1bf5b534f017d6c1c7bec100d1d"><div class="ttname"><a href="EnigmaIoTconfigAdvanced_8h.html#a6aa9a1bf5b534f017d6c1c7bec100d1d">DISCONNECT_ON_DATA_ERROR</a></div><div class="ttdeci">static const bool DISCONNECT_ON_DATA_ERROR</div><div class="ttdoc">Activates node invalidation in case of data error.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIoTconfigAdvanced_8h_source.html#l00029">EnigmaIoTconfigAdvanced.h:29</a></div></div>
 <div class="ttc" id="aEnigmaIoTconfigAdvanced_8h_html_aeb4681294ade5149d1db83df99744f6e"><div class="ttname"><a href="EnigmaIoTconfigAdvanced_8h.html#aeb4681294ade5149d1db83df99744f6e">OTA_TIMEOUT_TIME</a></div><div class="ttdeci">static const uint32_t OTA_TIMEOUT_TIME</div><div class="ttdoc">Timeout between OTA messages. In milliseconds.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIoTconfigAdvanced_8h_source.html#l00033">EnigmaIoTconfigAdvanced.h:33</a></div></div>
@@ -131,6 +134,7 @@ $(function() {
 <div class="ttc" id="aEnigmaIoTconfigAdvanced_8h_html_a863ca9be67da8cdc5fb9447378021e07"><div class="ttname"><a href="EnigmaIoTconfigAdvanced_8h.html#a863ca9be67da8cdc5fb9447378021e07">KEY_LENGTH</a></div><div class="ttdeci">const uint8_t KEY_LENGTH</div><div class="ttdoc">Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know...</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIoTconfigAdvanced_8h_source.html#l00043">EnigmaIoTconfigAdvanced.h:43</a></div></div>
 <div class="ttc" id="aEnigmaIoTconfigAdvanced_8h_html_a4e22033bdc1560ca309e9a14073c2282"><div class="ttname"><a href="EnigmaIoTconfigAdvanced_8h.html#a4e22033bdc1560ca309e9a14073c2282">BROADCAST_ADDRESS</a></div><div class="ttdeci">static const uint8_t BROADCAST_ADDRESS[]</div><div class="ttdoc">Broadcast address.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIoTconfigAdvanced_8h_source.html#l00023">EnigmaIoTconfigAdvanced.h:23</a></div></div>
 <div class="ttc" id="aEnigmaIoTconfigAdvanced_8h_html_a68fd5dd70eb1fa10fa1878e044d14cb0"><div class="ttname"><a href="EnigmaIoTconfigAdvanced_8h.html#a68fd5dd70eb1fa10fa1878e044d14cb0">RTC_ADDRESS</a></div><div class="ttdeci">static const uint32_t RTC_ADDRESS</div><div class="ttdoc">RTC memory address where to store context. Modify it if you need place to store your own data during ...</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIoTconfigAdvanced_8h_source.html#l00039">EnigmaIoTconfigAdvanced.h:39</a></div></div>
+<div class="ttc" id="aEnigmaIoTconfigAdvanced_8h_html_a75ba0ac6d6287a6b8d580cd65038a77a"><div class="ttname"><a href="EnigmaIoTconfigAdvanced_8h.html#a75ba0ac6d6287a6b8d580cd65038a77a">WEB_API_PORT</a></div><div class="ttdeci">const int WEB_API_PORT</div><div class="ttdoc">TCP port where Web API will listen through.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIoTconfigAdvanced_8h_source.html#l00050">EnigmaIoTconfigAdvanced.h:50</a></div></div>
 <div class="ttc" id="aEnigmaIoTconfigAdvanced_8h_html_a0ae6c4c749724e380b6e717a6535bed6"><div class="ttname"><a href="EnigmaIoTconfigAdvanced_8h.html#a0ae6c4c749724e380b6e717a6535bed6">IV_LENGTH</a></div><div class="ttdeci">const uint8_t IV_LENGTH</div><div class="ttdoc">Initalization vector length used by selected crypto algorythm.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIoTconfigAdvanced_8h_source.html#l00044">EnigmaIoTconfigAdvanced.h:44</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

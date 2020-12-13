@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['timemanager_2ecpp_810',['timeManager.cpp',['../timeManager_8cpp.html',1,'']]],
-  ['timemanager_2eh_811',['timeManager.h',['../timeManager_8h.html',1,'']]]
+  ['smartswitchcontroller_2ecpp_876',['SmartSwitchController.cpp',['../SmartSwitchController_8cpp.html',1,'']]],
+  ['smartswitchcontroller_2eh_877',['SmartSwitchController.h',['../SmartSwitchController_8h.html',1,'']]]
 ];

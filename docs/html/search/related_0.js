@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nodelist_1412',['NodeList',['../classNode.html#a796dbbcdb4e627658df143380ddb88fa',1,'Node']]]
+  ['gatewayapi_1537',['GatewayAPI',['../classEnigmaIOTGatewayClass.html#a0b1bb7ec1dc2b4a244c77ffd04786a0c',1,'EnigmaIOTGatewayClass']]]
 ];

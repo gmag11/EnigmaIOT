@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -100,11 +100,20 @@ Functions</h2></td></tr>
 <tr class="memitem:a81e44efba216f1a0a981219616eeb8f3"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8h.html#a81e44efba216f1a0a981219616eeb8f3">calculateCRC32</a> (const uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, size_t length)</td></tr>
 <tr class="memdesc:a81e44efba216f1a0a981219616eeb8f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates CRC32 of a buffer.  <a href="helperFunctions_8h.html#a81e44efba216f1a0a981219616eeb8f3">More...</a><br /></td></tr>
 <tr class="separator:a81e44efba216f1a0a981219616eeb8f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa76d044529f5f932eb6014b50047c02b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8h.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a> (const char *input)</td></tr>
+<tr class="memdesc:aa76d044529f5f932eb6014b50047c02b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if input string is numeric.  <a href="helperFunctions_8h.html#aa76d044529f5f932eb6014b50047c02b">More...</a><br /></td></tr>
+<tr class="separator:aa76d044529f5f932eb6014b50047c02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26eaeecca0f44f0e5cf47b1f044a1306"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8h.html#a26eaeecca0f44f0e5cf47b1f044a1306">isNumber</a> (const char *input, size_t len)</td></tr>
+<tr class="memdesc:a26eaeecca0f44f0e5cf47b1f044a1306"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if input string is numeric.  <a href="helperFunctions_8h.html#a26eaeecca0f44f0e5cf47b1f044a1306">More...</a><br /></td></tr>
+<tr class="separator:a26eaeecca0f44f0e5cf47b1f044a1306"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d64848792adcc6a1094ea0eef6bed51"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8h.html#a8d64848792adcc6a1094ea0eef6bed51">isNumber</a> (String input)</td></tr>
+<tr class="memdesc:a8d64848792adcc6a1094ea0eef6bed51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if input string is numeric.  <a href="helperFunctions_8h.html#a8d64848792adcc6a1094ea0eef6bed51">More...</a><br /></td></tr>
+<tr class="separator:a8d64848792adcc6a1094ea0eef6bed51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Auxiliary function definition. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.5 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>30/10/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.6 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>10/12/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="helperFunctions_8h_source.html">helperFunctions.h</a>.</p>
@@ -199,6 +208,104 @@ Functions</h2></td></tr>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00032">32</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aa76d044529f5f932eb6014b50047c02b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa76d044529f5f932eb6014b50047c02b">&#9670;&nbsp;</a></span>isNumber() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isNumber </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>input</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks if input string is numeric. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>String to check </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if string is a number </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00160">160</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a26eaeecca0f44f0e5cf47b1f044a1306"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26eaeecca0f44f0e5cf47b1f044a1306">&#9670;&nbsp;</a></span>isNumber() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isNumber </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks if input string is numeric. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>String to check </td></tr>
+    <tr><td class="paramname">len</td><td>String length </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if string is a number </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00177">177</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a8d64848792adcc6a1094ea0eef6bed51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d64848792adcc6a1094ea0eef6bed51">&#9670;&nbsp;</a></span>isNumber() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isNumber </td>
+          <td>(</td>
+          <td class="paramtype">String&#160;</td>
+          <td class="paramname"><em>input</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks if input string is numeric. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>String to check </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if string is a number </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00193">193</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
 
 </div>
 </div>

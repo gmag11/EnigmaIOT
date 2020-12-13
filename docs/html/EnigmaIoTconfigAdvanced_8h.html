@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -127,8 +127,8 @@ Variables</h2></td></tr>
 <tr class="memitem:a27b8cf1e2d300318f7102b8bc0facef9"><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfigAdvanced_8h.html#a27b8cf1e2d300318f7102b8bc0facef9">CHECK_COMM_ERRORS</a> = true</td></tr>
 <tr class="memdesc:a27b8cf1e2d300318f7102b8bc0facef9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to reconnect in case of communication errors.  <a href="EnigmaIoTconfigAdvanced_8h.html#a27b8cf1e2d300318f7102b8bc0facef9">More...</a><br /></td></tr>
 <tr class="separator:a27b8cf1e2d300318f7102b8bc0facef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68fd5dd70eb1fa10fa1878e044d14cb0"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfigAdvanced_8h.html#a68fd5dd70eb1fa10fa1878e044d14cb0">RTC_ADDRESS</a> = 0</td></tr>
-<tr class="memdesc:a68fd5dd70eb1fa10fa1878e044d14cb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">RTC memory address where to store context. Modify it if you need place to store your own data during deep sleep. Take care not to overwrite above that address.  <a href="EnigmaIoTconfigAdvanced_8h.html#a68fd5dd70eb1fa10fa1878e044d14cb0">More...</a><br /></td></tr>
+<tr class="memitem:a68fd5dd70eb1fa10fa1878e044d14cb0"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfigAdvanced_8h.html#a68fd5dd70eb1fa10fa1878e044d14cb0">RTC_ADDRESS</a> = 8</td></tr>
+<tr class="memdesc:a68fd5dd70eb1fa10fa1878e044d14cb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">RTC memory address where to store context. Modify it if you need place to store your own data during deep sleep. Take care not to overwrite above that address. It is 8 to give space for FailSafeMode library.  <a href="EnigmaIoTconfigAdvanced_8h.html#a68fd5dd70eb1fa10fa1878e044d14cb0">More...</a><br /></td></tr>
 <tr class="separator:a68fd5dd70eb1fa10fa1878e044d14cb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a863ca9be67da8cdc5fb9447378021e07"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfigAdvanced_8h.html#a863ca9be67da8cdc5fb9447378021e07">KEY_LENGTH</a> = 32</td></tr>
 <tr class="memdesc:a863ca9be67da8cdc5fb9447378021e07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing.  <a href="EnigmaIoTconfigAdvanced_8h.html#a863ca9be67da8cdc5fb9447378021e07">More...</a><br /></td></tr>
@@ -142,11 +142,14 @@ Variables</h2></td></tr>
 <tr class="memitem:a3a00052a511fa3b63de7e280320b1ef9"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfigAdvanced_8h.html#a3a00052a511fa3b63de7e280320b1ef9">AAD_LENGTH</a> = 8</td></tr>
 <tr class="memdesc:a3a00052a511fa3b63de7e280320b1ef9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of bytes from last part of key that will be used for additional authenticated data.  <a href="EnigmaIoTconfigAdvanced_8h.html#a3a00052a511fa3b63de7e280320b1ef9">More...</a><br /></td></tr>
 <tr class="separator:a3a00052a511fa3b63de7e280320b1ef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75ba0ac6d6287a6b8d580cd65038a77a"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfigAdvanced_8h.html#a75ba0ac6d6287a6b8d580cd65038a77a">WEB_API_PORT</a> = 80</td></tr>
+<tr class="memdesc:a75ba0ac6d6287a6b8d580cd65038a77a"><td class="mdescLeft">&#160;</td><td class="mdescRight">TCP port where Web API will listen through.  <a href="EnigmaIoTconfigAdvanced_8h.html#a75ba0ac6d6287a6b8d580cd65038a77a">More...</a><br /></td></tr>
+<tr class="separator:a75ba0ac6d6287a6b8d580cd65038a77a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Parameter configuration. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.5 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>30/10/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.6 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>10/12/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="EnigmaIoTconfigAdvanced_8h_source.html">EnigmaIoTconfigAdvanced.h</a>.</p>
@@ -562,7 +565,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const uint32_t RTC_ADDRESS = 0</td>
+          <td class="memname">const uint32_t RTC_ADDRESS = 8</td>
         </tr>
       </table>
   </td>
@@ -572,7 +575,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>RTC memory address where to store context. Modify it if you need place to store your own data during deep sleep. Take care not to overwrite above that address. </p>
+<p>RTC memory address where to store context. Modify it if you need place to store your own data during deep sleep. Take care not to overwrite above that address. It is 8 to give space for FailSafeMode library. </p>
 
 <p class="definition">Definition at line <a class="el" href="EnigmaIoTconfigAdvanced_8h_source.html#l00039">39</a> of file <a class="el" href="EnigmaIoTconfigAdvanced_8h_source.html">EnigmaIoTconfigAdvanced.h</a>.</p>
 
@@ -593,6 +596,24 @@ Variables</h2></td></tr>
 <p>Authentication tag length. For Poly1305 it is always 16. </p>
 
 <p class="definition">Definition at line <a class="el" href="EnigmaIoTconfigAdvanced_8h_source.html#l00045">45</a> of file <a class="el" href="EnigmaIoTconfigAdvanced_8h_source.html">EnigmaIoTconfigAdvanced.h</a>.</p>
+
+</div>
+</div>
+<a id="a75ba0ac6d6287a6b8d580cd65038a77a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75ba0ac6d6287a6b8d580cd65038a77a">&#9670;&nbsp;</a></span>WEB_API_PORT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int WEB_API_PORT = 80</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>TCP port where Web API will listen through. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfigAdvanced_8h_source.html#l00050">50</a> of file <a class="el" href="EnigmaIoTconfigAdvanced_8h_source.html">EnigmaIoTconfigAdvanced.h</a>.</p>
 
 </div>
 </div>

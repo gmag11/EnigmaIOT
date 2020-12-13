@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -104,8 +104,6 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ae09b594688a59f1427c7e45259e039b9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#ae09b594688a59f1427c7e45259e039b9">MQTT_MAX_PACKET_SIZE</a>&#160;&#160;&#160;2048</td></tr>
-<tr class="separator:ae09b594688a59f1427c7e45259e039b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a450a7c16ead7b3c7b882536b08f30a00"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a>&#160;&#160;&#160;5</td></tr>
 <tr class="separator:a450a7c16ead7b3c7b882536b08f30a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">BLUE_LED</a>&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td></tr>
@@ -129,6 +127,8 @@ Functions</h2></td></tr>
 <tr class="separator:ad151c02682f80a13429640710b842160"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acecaff385e13802f95e84d1ece4f6322"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#acecaff385e13802f95e84d1ece4f6322">processRxControlData</a> (char *macStr, uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, uint8_t length)</td></tr>
 <tr class="separator:acecaff385e13802f95e84d1ece4f6322"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e0b35257234db80b4d6771ec42153a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a4e0b35257234db80b4d6771ec42153a3">doRestart</a> ()</td></tr>
+<tr class="separator:a4e0b35257234db80b4d6771ec42153a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fd7dd2cafc98a62e99242dd11968a7c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a5fd7dd2cafc98a62e99242dd11968a7c">processRxData</a> (uint8_t *mac, uint8_t *buffer, uint8_t length, uint16_t lostMessages, bool control, <a class="el" href="EnigmaIOTGateway_8h.html#a404510882576d212315fd2ed67280d8d">gatewayPayloadEncoding_t</a> payload_type, char *nodeName=NULL)</td></tr>
 <tr class="separator:a5fd7dd2cafc98a62e99242dd11968a7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad84b439af2caa4fa2b92ba383b9513a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#ad84b439af2caa4fa2b92ba383b9513a8">onDownlinkData</a> (uint8_t *address, char *nodeName, <a class="el" href="NodeList_8h.html#ac5c28a5827b5a3b34222c13589adeba7">control_message_type_t</a> msgType, char *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, unsigned int len)</td></tr>
@@ -146,13 +146,17 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a86bc66f6ecbde6ad8502d0cefb1a67f0"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a86bc66f6ecbde6ad8502d0cefb1a67f0">connectionLed</a> = <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td></tr>
 <tr class="separator:a86bc66f6ecbde6ad8502d0cefb1a67f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54adb71fcf29bc72c8a829133e425d80"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a54adb71fcf29bc72c8a829133e425d80">connectionLedFlashing</a> = false</td></tr>
-<tr class="separator:a54adb71fcf29bc72c8a829133e425d80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed1b30f3a8b90f8c59e6372f7641ba17"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#aed1b30f3a8b90f8c59e6372f7641ba17">connectionLedFlashing</a> = false</td></tr>
+<tr class="separator:aed1b30f3a8b90f8c59e6372f7641ba17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a827c388d92651f51d34097598a52a92a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a827c388d92651f51d34097598a52a92a">restartRequested</a> = false</td></tr>
+<tr class="separator:a827c388d92651f51d34097598a52a92a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37e5a736d8dfa2198aa9607a61ff1695"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a37e5a736d8dfa2198aa9607a61ff1695">restartRequestTime</a></td></tr>
+<tr class="separator:a37e5a736d8dfa2198aa9607a61ff1695"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>MQTT Gateway based on EnigmaIoT over ESP-NOW. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.5 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>30/10/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.6 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>10/12/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin</dd></dl>
 <p>EnigmaIOT Gateway to connect nodes to MQTT broker </p>
 
@@ -170,7 +174,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00082">82</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00081">81</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -186,23 +190,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00079">79</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
-
-</div>
-</div>
-<a id="ae09b594688a59f1427c7e45259e039b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae09b594688a59f1427c7e45259e039b9">&#9670;&nbsp;</a></span>MQTT_MAX_PACKET_SIZE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define MQTT_MAX_PACKET_SIZE&#160;&#160;&#160;2048</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00014">14</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00078">78</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -218,7 +206,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00083">83</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00082">82</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -238,7 +226,26 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00131">131</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00134">134</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+
+</div>
+</div>
+<a id="a4e0b35257234db80b4d6771ec42153a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e0b35257234db80b4d6771ec42153a3">&#9670;&nbsp;</a></span>doRestart()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void doRestart </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00205">205</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -258,7 +265,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00094">94</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00097">97</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -277,7 +284,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00462">462</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00492">492</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -313,7 +320,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00314">314</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00342">342</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -343,7 +350,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00336">336</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00364">364</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -391,7 +398,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00265">265</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00293">293</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -427,7 +434,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00193">193</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00192">192</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -487,7 +494,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00199">199</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00227">227</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -506,7 +513,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00366">366</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00394">394</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -526,7 +533,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00099">99</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00102">102</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -545,7 +552,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00115">115</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00118">118</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -565,7 +572,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00185">185</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00184">184</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -584,7 +591,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00189">189</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00188">188</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
@@ -601,23 +608,55 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00091">91</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00090">90</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>
-<a id="a54adb71fcf29bc72c8a829133e425d80"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54adb71fcf29bc72c8a829133e425d80">&#9670;&nbsp;</a></span>connectionLedFlashing</h2>
+<a id="aed1b30f3a8b90f8c59e6372f7641ba17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed1b30f3a8b90f8c59e6372f7641ba17">&#9670;&nbsp;</a></span>connectionLedFlashing</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boolean connectionLedFlashing = false</td>
+          <td class="memname">bool connectionLedFlashing = false</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00092">92</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00091">91</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+
+</div>
+</div>
+<a id="a827c388d92651f51d34097598a52a92a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a827c388d92651f51d34097598a52a92a">&#9670;&nbsp;</a></span>restartRequested</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool restartRequested = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00093">93</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
+
+</div>
+</div>
+<a id="a37e5a736d8dfa2198aa9607a61ff1695"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37e5a736d8dfa2198aa9607a61ff1695">&#9670;&nbsp;</a></span>restartRequestTime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">time_t restartRequestTime</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html#l00094">94</a> of file <a class="el" href="EnigmaIOTGatewayMQTT_8ino_source.html">EnigmaIOTGatewayMQTT.ino</a>.</p>
 
 </div>
 </div>

@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -128,6 +128,18 @@ Enumerations</h2></td></tr>
 <a class="el" href="NodeList_8h.html#a1c9a1577fe153d9fa2548bd7c0b04b9aa1e7470fde4a4906c98bc6f18a5d6c51f">TOO_LONG</a> = -3
  }</td></tr>
 <tr class="separator:a1c9a1577fe153d9fa2548bd7c0b04b9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a410abac5350706d6651d4e9242730601"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601">restartReason_t</a> { <br />
+&#160;&#160;<a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601afd0bff819d68cc36c4af673885b864d6">RESTART_AFTER_OTA</a> = 1, 
+<a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601a519d98e7a592355e986f3b51d3c30434">OTA_ERROR_RESTART</a> = 2, 
+<a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601a932eb5aa1dade183bbb8c0fd123f1e06">RESTART_REQUESTED</a> = 3, 
+<a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601af4b7eabf7d198b2f9b47d8c7a36c7d0f">CONFIG_RESET</a> = 4, 
+<br />
+&#160;&#160;<a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601ad1616fcb099e2febf3ffc5d115a99441">USER_RESET</a> = 5, 
+<a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601a7ab4f74994f981fa208cb6bd567fe087">IRRELEVANT</a> = 10, 
+<a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601ab309433c1c035ba010b3aff8756d1637">UNKNOWN_REASON</a> = 0
+<br />
+ }</td></tr>
+<tr class="separator:a410abac5350706d6651d4e9242730601"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7c3a73e42834705926eba633e55daa4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4">control_message_type</a> { <br />
 &#160;&#160;<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a52f49aba124a600ad9581caabe6a099a">VERSION</a> = 0x01, 
 <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4add26dcee8bcd784582e3cc6bfcf988fe">VERSION_ANS</a> = 0x81, 
@@ -146,13 +158,15 @@ Enumerations</h2></td></tr>
 <br />
 &#160;&#160;<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a83de809daf9debe54298977470c4cb17">NAME_SET</a> = 0x87, 
 <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a097f6e05e093104ec6784476d88639b4">RESTART_NODE</a> = 0x09, 
+<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a003a4c40de03d7e675a62ee0ce3c4e23">RESTART_CONFIRM</a> = 0x89, 
 <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4aec211b6bccb5a92d2d8012ffdb2b53f6">BRCAST_KEY</a> = 0x10, 
-<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4af80e473af8c30c1a5b46b31b16a98d71">OTA</a> = 0xEF, 
 <br />
-&#160;&#160;<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4acae0d211be2418b0658ab3434b84835e">OTA_ANS</a> = 0xFF, 
+&#160;&#160;<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4af80e473af8c30c1a5b46b31b16a98d71">OTA</a> = 0xEF, 
+<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4acae0d211be2418b0658ab3434b84835e">OTA_ANS</a> = 0xFF, 
 <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a6f9d7725dd746da9da11c3ffb962ad27">USERDATA_GET</a> = 0x00, 
 <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a3dd9efceb547a4ec14bdb1d58c4844be">USERDATA_SET</a> = 0x20, 
-<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4aef2863a469df3ea6871d640e3669a2f2">INVALID</a> = 0xF0
+<br />
+&#160;&#160;<a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4aef2863a469df3ea6871d640e3669a2f2">INVALID</a> = 0xF0
 <br />
  }</td></tr>
 <tr class="separator:af7c3a73e42834705926eba633e55daa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,8 +185,8 @@ Enumerations</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>EnigmaIoT sensor node management structures. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.5 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>30/10/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.6 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>10/12/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
@@ -266,6 +280,7 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4ac8f0b49ac90edfbfa5d65d1a7eb72bdb"></a>NAME_ANS&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4a83de809daf9debe54298977470c4cb17"></a>NAME_SET&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4a097f6e05e093104ec6784476d88639b4"></a>RESTART_NODE&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4a003a4c40de03d7e675a62ee0ce3c4e23"></a>RESTART_CONFIRM&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4aec211b6bccb5a92d2d8012ffdb2b53f6"></a>BRCAST_KEY&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4af80e473af8c30c1a5b46b31b16a98d71"></a>OTA&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4acae0d211be2418b0658ab3434b84835e"></a>OTA_ANS&#160;</td><td class="fielddoc"></td></tr>
@@ -274,7 +289,7 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="af7c3a73e42834705926eba633e55daa4aef2863a469df3ea6871d640e3669a2f2"></a>INVALID&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00041">41</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00051">51</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>
@@ -353,7 +368,32 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="adf9286a280a40f6ac98ad07d0ba308c4a2b1864027e692829ee112bf2bd42b88a"></a>OTA_FINISHED&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00065">65</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00076">76</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
+
+</div>
+</div>
+<a id="a410abac5350706d6651d4e9242730601"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a410abac5350706d6651d4e9242730601">&#9670;&nbsp;</a></span>restartReason_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601">restartReason_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a410abac5350706d6651d4e9242730601afd0bff819d68cc36c4af673885b864d6"></a>RESTART_AFTER_OTA&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a410abac5350706d6651d4e9242730601a519d98e7a592355e986f3b51d3c30434"></a>OTA_ERROR_RESTART&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a410abac5350706d6651d4e9242730601a932eb5aa1dade183bbb8c0fd123f1e06"></a>RESTART_REQUESTED&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a410abac5350706d6651d4e9242730601af4b7eabf7d198b2f9b47d8c7a36c7d0f"></a>CONFIG_RESET&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a410abac5350706d6651d4e9242730601ad1616fcb099e2febf3ffc5d115a99441"></a>USER_RESET&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a410abac5350706d6651d4e9242730601a7ab4f74994f981fa208cb6bd567fe087"></a>IRRELEVANT&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a410abac5350706d6651d4e9242730601ab309433c1c035ba010b3aff8756d1637"></a>UNKNOWN_REASON&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="NodeList_8h_source.html#l00041">41</a> of file <a class="el" href="NodeList_8h_source.html">NodeList.h</a>.</p>
 
 </div>
 </div>

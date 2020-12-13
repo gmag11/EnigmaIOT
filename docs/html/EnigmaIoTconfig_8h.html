@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -87,6 +87,9 @@ Macros</h2></td></tr>
 <tr class="memitem:a3be8ceb481b00916205f536e6028e2f5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a3be8ceb481b00916205f536e6028e2f5">CONNECT_TO_WIFI_AP</a>&#160;&#160;&#160;1</td></tr>
 <tr class="memdesc:a3be8ceb481b00916205f536e6028e2f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">In projects where gateway should not be connected to WiFi (for instance a data logger to SD) it may be useful to disable WiFi setting this to 0. Set it to 1 otherwise.  <a href="EnigmaIoTconfig_8h.html#a3be8ceb481b00916205f536e6028e2f5">More...</a><br /></td></tr>
 <tr class="separator:a3be8ceb481b00916205f536e6028e2f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad736e65e20072f63bc4d21d745949962"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#ad736e65e20072f63bc4d21d745949962">ENABLE_WEB_API</a>&#160;&#160;&#160;1</td></tr>
+<tr class="memdesc:ad736e65e20072f63bc4d21d745949962"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable Web API support on gateway.  <a href="EnigmaIoTconfig_8h.html#ad736e65e20072f63bc4d21d745949962">More...</a><br /></td></tr>
+<tr class="separator:ad736e65e20072f63bc4d21d745949962"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59484fb7e3490df6600b5add60badbb7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a59484fb7e3490df6600b5add60badbb7">DEBUG_ESP_PORT</a>&#160;&#160;&#160;Serial</td></tr>
 <tr class="memdesc:a59484fb7e3490df6600b5add60badbb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stream to output debug info. It will normally be <code>Serial</code>  <a href="EnigmaIoTconfig_8h.html#a59484fb7e3490df6600b5add60badbb7">More...</a><br /></td></tr>
 <tr class="separator:a59484fb7e3490df6600b5add60badbb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -96,9 +99,9 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ac00fc04374b3c61f75a7f0f2f4eb60f9"><td class="memItemLeft" align="right" valign="top">static const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#ac00fc04374b3c61f75a7f0f2f4eb60f9">ENIGMAIOT_PROT_VERS</a> [] = &quot;0.9.5&quot;</td></tr>
-<tr class="memdesc:ac00fc04374b3c61f75a7f0f2f4eb60f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">EnitmaIoT Version.  <a href="EnigmaIoTconfig_8h.html#ac00fc04374b3c61f75a7f0f2f4eb60f9">More...</a><br /></td></tr>
-<tr class="separator:ac00fc04374b3c61f75a7f0f2f4eb60f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c45ffb63a64a645032b9c132f86c821"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#a9c45ffb63a64a645032b9c132f86c821">ENIGMAIOT_PROT_VERS</a> [3] = { 0,9,6 }</td></tr>
+<tr class="memdesc:a9c45ffb63a64a645032b9c132f86c821"><td class="mdescLeft">&#160;</td><td class="mdescRight">EnitmaIoT Version.  <a href="EnigmaIoTconfig_8h.html#a9c45ffb63a64a645032b9c132f86c821">More...</a><br /></td></tr>
+<tr class="separator:a9c45ffb63a64a645032b9c132f86c821"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af561a36a9d4be8596b2187252342ffdf"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIoTconfig_8h.html#af561a36a9d4be8596b2187252342ffdf">DEFAULT_CHANNEL</a> = 3</td></tr>
 <tr class="memdesc:af561a36a9d4be8596b2187252342ffdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">WiFi channel to be used on ESP-NOW.  <a href="EnigmaIoTconfig_8h.html#af561a36a9d4be8596b2187252342ffdf">More...</a><br /></td></tr>
 <tr class="separator:af561a36a9d4be8596b2187252342ffdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,8 +162,8 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Parameter configuration. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.5 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>30/10/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.6 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>10/12/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
@@ -197,7 +200,7 @@ Variables</h2></td></tr>
 
 <p>Stream to output debug info. It will normally be <code>Serial</code> </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00046">46</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00049">49</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -215,7 +218,25 @@ Variables</h2></td></tr>
 
 <p>Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00048">48</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00052">52</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
+
+</div>
+</div>
+<a id="ad736e65e20072f63bc4d21d745949962"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad736e65e20072f63bc4d21d745949962">&#9670;&nbsp;</a></span>ENABLE_WEB_API</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ENABLE_WEB_API&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable Web API support on gateway. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIoTconfig_8h_source.html#l00046">46</a> of file <a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>.</p>
 
 </div>
 </div>
@@ -324,8 +345,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac00fc04374b3c61f75a7f0f2f4eb60f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac00fc04374b3c61f75a7f0f2f4eb60f9">&#9670;&nbsp;</a></span>ENIGMAIOT_PROT_VERS</h2>
+<a id="a9c45ffb63a64a645032b9c132f86c821"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c45ffb63a64a645032b9c132f86c821">&#9670;&nbsp;</a></span>ENIGMAIOT_PROT_VERS</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -334,7 +355,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char ENIGMAIOT_PROT_VERS[] = &quot;0.9.5&quot;</td>
+          <td class="memname">const uint8_t ENIGMAIOT_PROT_VERS[3] = { 0,9,6 }</td>
         </tr>
       </table>
   </td>

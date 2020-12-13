@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -122,6 +122,9 @@ $(function() {
 <li>COMM_NODE
 : <a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4a460e495e522978c8c19f3904a623c5c5">Comms_hal.h</a>
 </li>
+<li>CONFIG_RESET
+: <a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601af4b7eabf7d198b2f9b47d8c7a36c7d0f">NodeList.h</a>
+</li>
 <li>CONTROL_DATA
 : <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a6b9b36c3722a1256ac7fa097bf10f4de">EnigmaIOTGateway.h</a>
 , <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa6b9b36c3722a1256ac7fa097bf10f4de">EnigmaIOTNode.h</a>
@@ -184,6 +187,9 @@ $(function() {
 : <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a32637f9c9b67f884990ed21097ebc543">EnigmaIOTGateway.h</a>
 , <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa32637f9c9b67f884990ed21097ebc543">EnigmaIOTNode.h</a>
 </li>
+<li>IRRELEVANT
+: <a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601a7ab4f74994f981fa208cb6bd567fe087">NodeList.h</a>
+</li>
 </ul>
 
 
@@ -191,6 +197,9 @@ $(function() {
 <li>KEY_EXPIRED
 : <a class="el" href="EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977a09a1d3d5daa36af5469fa79c12a027fe">EnigmaIOTGateway.h</a>
 , <a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6a09a1d3d5daa36af5469fa79c12a027fe">EnigmaIOTNode.h</a>
+</li>
+<li>KICKED
+: <a class="el" href="EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977aae112b2131f8b1534ffbb23597e440e6">EnigmaIOTGateway.h</a>
 </li>
 </ul>
 
@@ -250,6 +259,9 @@ $(function() {
 <li>OTA_CHECK_OK
 : <a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a07aff2a31f86d97f94267367f78113dc">NodeList.h</a>
 </li>
+<li>OTA_ERROR_RESTART
+: <a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601a519d98e7a592355e986f3b51d3c30434">NodeList.h</a>
+</li>
 <li>OTA_FINISHED
 : <a class="el" href="NodeList_8h.html#adf9286a280a40f6ac98ad07d0ba308c4a2b1864027e692829ee112bf2bd42b88a">NodeList.h</a>
 </li>
@@ -296,8 +308,17 @@ $(function() {
 <li>RESET_ANS
 : <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4aff67e54361d4815a1ecdb3824986f445">NodeList.h</a>
 </li>
+<li>RESTART_AFTER_OTA
+: <a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601afd0bff819d68cc36c4af673885b864d6">NodeList.h</a>
+</li>
+<li>RESTART_CONFIRM
+: <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a003a4c40de03d7e675a62ee0ce3c4e23">NodeList.h</a>
+</li>
 <li>RESTART_NODE
 : <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a097f6e05e093104ec6784476d88639b4">NodeList.h</a>
+</li>
+<li>RESTART_REQUESTED
+: <a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601a932eb5aa1dade183bbb8c0fd123f1e06">NodeList.h</a>
 </li>
 <li>RSSI_ANS
 : <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a11a1e8fc74a27e4e59a430903fad58f1">NodeList.h</a>
@@ -362,12 +383,18 @@ $(function() {
 : <a class="el" href="EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977a8216aa4b3a817cdf8c15ed32aa946e83">EnigmaIOTGateway.h</a>
 , <a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6a8216aa4b3a817cdf8c15ed32aa946e83">EnigmaIOTNode.h</a>
 </li>
+<li>UNKNOWN_REASON
+: <a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601ab309433c1c035ba010b3aff8756d1637">NodeList.h</a>
+</li>
 <li>UNREGISTERED
 : <a class="el" href="NodeList_8h.html#a8dd9280b6a6e53e65414115f47b0df6aa4604ee350e74a53cf89697c7513d939b">NodeList.h</a>
 </li>
 <li>UNREGISTERED_NODE
 : <a class="el" href="EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977a975e594ca3839a0687f31cfbbdb6c90f">EnigmaIOTGateway.h</a>
 , <a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6a975e594ca3839a0687f31cfbbdb6c90f">EnigmaIOTNode.h</a>
+</li>
+<li>USER_RESET
+: <a class="el" href="NodeList_8h.html#a410abac5350706d6651d4e9242730601ad1616fcb099e2febf3ffc5d115a99441">NodeList.h</a>
 </li>
 <li>USERDATA_GET
 : <a class="el" href="NodeList_8h.html#af7c3a73e42834705926eba633e55daa4a6f9d7725dd746da9da11c3ffb962ad27">NodeList.h</a>

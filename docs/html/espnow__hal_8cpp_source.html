@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -104,7 +104,7 @@ $(function() {
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        networkGw.ifidx = ESP_IF_WIFI_STA;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        networkGw.encrypt = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        esp_err_t result = esp_now_add_peer (&amp;networkGw);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        DEBUG_INFO (<span class="stringliteral">&quot;Gateway peer Added in channel %d. Result = %s&quot;</span>, <a class="code" href="classEspnow__halClass.html#a21c29d9dc5643cebaa975302058a8694">channel</a>, esp_err_to_name(result));</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        DEBUG_INFO (<span class="stringliteral">&quot;Gateway peer Added in channel %d. Result = %s&quot;</span>, <a class="code" href="classEspnow__halClass.html#a21c29d9dc5643cebaa975302058a8694">channel</a>, esp_err_to_name (result));</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        DEBUG_DBG (<span class="stringliteral">&quot;WIFI channel is %d&quot;</span>, WiFi.channel ());</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
@@ -158,7 +158,7 @@ $(function() {
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    peer.encrypt = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    esp_err_t error = esp_now_add_peer (&amp;peer);</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">char</span> addrStr[<a class="code" href="EnigmaIoTconfigAdvanced_8h.html#a479714978e5c2a44dce41ae3be800ffd">ENIGMAIOT_ADDR_LEN</a> * 3];</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    DEBUG_DBG (<span class="stringliteral">&quot;Peer &quot;</span> <a class="code" href="helperFunctions_8cpp.html#ad6e69a2870c8f219cc679677af110849">MACSTR</a> <span class="stringliteral">&quot; added on channel %u. Result 0x%X %s&quot;</span>, MAC2STR (da), ch, error, esp_err_to_name(error));</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    DEBUG_DBG (<span class="stringliteral">&quot;Peer &quot;</span> <a class="code" href="helperFunctions_8cpp.html#ad6e69a2870c8f219cc679677af110849">MACSTR</a> <span class="stringliteral">&quot; added on channel %u. Result 0x%X %s&quot;</span>, MAC2STR (da), ch, error, esp_err_to_name (error));</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">return</span> error == ESP_OK;</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#else </span></div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>

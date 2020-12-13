@@ -301,6 +301,7 @@ protected:
 	  * @param mac Gateway address
 	  * @param data Buffer to store received message
 	  * @param len Length of payload data
+      * @param broadcast `true`if this is a broadcast addressed message
 	  * @return Returns `true` if message could be correcly decoded and processed
 	  */
 	bool processControlCommand (const uint8_t* mac, const uint8_t* data, size_t len, bool broadcast);

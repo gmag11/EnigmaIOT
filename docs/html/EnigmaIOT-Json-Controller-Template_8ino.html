@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -81,6 +81,7 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>&gt;</code><br />
+<code>#include &lt;FailSafe.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="BasicController_8h_source.html">BasicController.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>&gt;</code><br />
@@ -117,8 +118,8 @@ Functions</h2></td></tr>
 <tr class="separator:a91ea72c09dd2fcbfbc7bae67e4ae625e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81397ad933b5a8b902d6161f702838fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#a81397ad933b5a8b902d6161f702838fc">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
 <tr class="separator:a81397ad933b5a8b902d6161f702838fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a960401606ecc83efdb2e45646619f277"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#a960401606ecc83efdb2e45646619f277">wifiManagerExit</a> (boolean <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
-<tr class="separator:a960401606ecc83efdb2e45646619f277"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d022fc715d83a4b69c587df0201b63d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#a4d022fc715d83a4b69c587df0201b63d">wifiManagerExit</a> (bool <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
+<tr class="separator:a4d022fc715d83a4b69c587df0201b63d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad151c02682f80a13429640710b842160"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#ad151c02682f80a13429640710b842160">wifiManagerStarted</a> ()</td></tr>
 <tr class="separator:ad151c02682f80a13429640710b842160"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
@@ -130,11 +131,19 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a6005c1a520c4bd733e221d70e642ebcd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEnigmaIOTjsonController.html">EnigmaIOTjsonController</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#a6005c1a520c4bd733e221d70e642ebcd">controller</a></td></tr>
 <tr class="separator:a6005c1a520c4bd733e221d70e642ebcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00c12add296f0d83ff8d3437e23651c9"><td class="memItemLeft" align="right" valign="top">const time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#a00c12add296f0d83ff8d3437e23651c9">BOOT_FLAG_TIMEOUT</a> = 10000</td></tr>
+<tr class="separator:a00c12add296f0d83ff8d3437e23651c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4fae2891cab0e7811bb5f339d57d213"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#ae4fae2891cab0e7811bb5f339d57d213">MAX_CONSECUTIVE_BOOT</a> = 3</td></tr>
+<tr class="separator:ae4fae2891cab0e7811bb5f339d57d213"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a734029c5fc6508cd75bf19cd7f52b66d"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#a734029c5fc6508cd75bf19cd7f52b66d">LED</a> = <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td></tr>
+<tr class="separator:a734029c5fc6508cd75bf19cd7f52b66d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d64e953651e420d91f95bacd3078b4e"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#a4d64e953651e420d91f95bacd3078b4e">FAILSAFE_RTC_ADDRESS</a> = 0</td></tr>
+<tr class="separator:a4d64e953651e420d91f95bacd3078b4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> template for easy custom node creation. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.5 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>30/10/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.6 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>10/12/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin</dd></dl>
 <p>Using this template you may create custom nodes in minutes by adding your code in a class. You only need to edit <a class="el" href="BasicController_8h.html">BasicController.h</a> and <a class="el" href="BasicController_8cpp.html">BasicController.cpp</a> with your code. All EnigmaIOT management is done internally </p>
 
@@ -152,7 +161,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00057">57</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00058">58</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
@@ -168,7 +177,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00051">51</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00052">52</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
@@ -184,7 +193,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00061">61</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00062">62</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
@@ -200,7 +209,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00048">48</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00049">49</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
@@ -216,7 +225,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00055">55</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00056">56</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
@@ -236,7 +245,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00064">64</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00070">70</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
@@ -256,7 +265,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00069">69</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00076">76</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
@@ -275,7 +284,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00149">149</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00162">162</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
@@ -323,7 +332,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00079">79</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00086">86</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
@@ -359,7 +368,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00074">74</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00081">81</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
@@ -378,12 +387,12 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00097">97</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00104">104</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
-<a id="a960401606ecc83efdb2e45646619f277"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a960401606ecc83efdb2e45646619f277">&#9670;&nbsp;</a></span>wifiManagerExit()</h2>
+<a id="a4d022fc715d83a4b69c587df0201b63d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d022fc715d83a4b69c587df0201b63d">&#9670;&nbsp;</a></span>wifiManagerExit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -391,14 +400,14 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">void wifiManagerExit </td>
           <td>(</td>
-          <td class="paramtype">boolean&#160;</td>
+          <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>status</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00088">88</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00095">95</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
@@ -417,11 +426,27 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00093">93</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00100">100</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="a00c12add296f0d83ff8d3437e23651c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00c12add296f0d83ff8d3437e23651c9">&#9670;&nbsp;</a></span>BOOT_FLAG_TIMEOUT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const time_t BOOT_FLAG_TIMEOUT = 10000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00064">64</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+
+</div>
+</div>
 <a id="a6005c1a520c4bd733e221d70e642ebcd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6005c1a520c4bd733e221d70e642ebcd">&#9670;&nbsp;</a></span>controller</h2>
 
@@ -434,7 +459,55 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00059">59</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00060">60</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+
+</div>
+</div>
+<a id="a4d64e953651e420d91f95bacd3078b4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d64e953651e420d91f95bacd3078b4e">&#9670;&nbsp;</a></span>FAILSAFE_RTC_ADDRESS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int FAILSAFE_RTC_ADDRESS = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00067">67</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+
+</div>
+</div>
+<a id="a734029c5fc6508cd75bf19cd7f52b66d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a734029c5fc6508cd75bf19cd7f52b66d">&#9670;&nbsp;</a></span>LED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int LED = <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00066">66</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
+
+</div>
+</div>
+<a id="ae4fae2891cab0e7811bb5f339d57d213"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4fae2891cab0e7811bb5f339d57d213">&#9670;&nbsp;</a></span>MAX_CONSECUTIVE_BOOT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int MAX_CONSECUTIVE_BOOT = 3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html#l00065">65</a> of file <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino_source.html">EnigmaIOT-Json-Controller-Template.ino</a>.</p>
 
 </div>
 </div>

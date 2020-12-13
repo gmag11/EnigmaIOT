@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.5</span>
+   &#160;<span id="projectnumber">0.9.6</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -69,6 +69,7 @@ $(function() {
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classEnigmaIOTGatewayClass-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">EnigmaIOTGatewayClass Class Reference</div>  </div>
@@ -139,6 +140,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a975c9b549e113deebe5581d5107d34b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTGatewayClass.html#a975c9b549e113deebe5581d5107d34b2">onNodeDisconnected</a> (<a class="el" href="EnigmaIOTGateway_8h.html#a17b8c1861e099264b904a9f20ee69666">onNodeDisconnected_t</a> handler)</td></tr>
 <tr class="memdesc:a975c9b549e113deebe5581d5107d34b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a function callback that will be called every time a node is disconnected.  <a href="classEnigmaIOTGatewayClass.html#a975c9b549e113deebe5581d5107d34b2">More...</a><br /></td></tr>
 <tr class="separator:a975c9b549e113deebe5581d5107d34b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1e1a4a7d0ac28ccdc127812ecc01645"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTGatewayClass.html#ae1e1a4a7d0ac28ccdc127812ecc01645">onGatewayRestartRequested</a> (<a class="el" href="EnigmaIOTGateway_8h.html#a13fd0589380955dca8a52f95058e8c6e">onRestartRequested_t</a> handler)</td></tr>
+<tr class="memdesc:ae1e1a4a7d0ac28ccdc127812ecc01645"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a function callback that will process a gateway restart request.  <a href="classEnigmaIOTGatewayClass.html#ae1e1a4a7d0ac28ccdc127812ecc01645">More...</a><br /></td></tr>
+<tr class="separator:ae1e1a4a7d0ac28ccdc127812ecc01645"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43043a36c73d7de2ffe49e551cc6ae43"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTGatewayClass.html#a43043a36c73d7de2ffe49e551cc6ae43">addInputMsgQueue</a> (const uint8_t *addr, const uint8_t *msg, size_t len)</td></tr>
 <tr class="memdesc:a43043a36c73d7de2ffe49e551cc6ae43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add message to input queue.  <a href="classEnigmaIOTGatewayClass.html#a43043a36c73d7de2ffe49e551cc6ae43">More...</a><br /></td></tr>
 <tr class="separator:a43043a36c73d7de2ffe49e551cc6ae43"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -259,6 +263,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ac311b64885137edaab70f3692e47f061"><td class="memItemLeft" align="right" valign="top"><a class="el" href="EnigmaIOTGateway_8h.html#a17b8c1861e099264b904a9f20ee69666">onNodeDisconnected_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTGatewayClass.html#ac311b64885137edaab70f3692e47f061">notifyNodeDisconnection</a></td></tr>
 <tr class="memdesc:ac311b64885137edaab70f3692e47f061"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function that will be invoked when a node gets disconnected.  <a href="classEnigmaIOTGatewayClass.html#ac311b64885137edaab70f3692e47f061">More...</a><br /></td></tr>
 <tr class="separator:ac311b64885137edaab70f3692e47f061"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ded7e5543f2a615b204900343c49435"><td class="memItemLeft" align="right" valign="top"><a class="el" href="EnigmaIOTGateway_8h.html#a13fd0589380955dca8a52f95058e8c6e">onRestartRequested_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTGatewayClass.html#a9ded7e5543f2a615b204900343c49435">notifyRestartRequested</a></td></tr>
+<tr class="memdesc:a9ded7e5543f2a615b204900343c49435"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function that will be invoked when a hardware restart is requested.  <a href="classEnigmaIOTGatewayClass.html#a9ded7e5543f2a615b204900343c49435">More...</a><br /></td></tr>
+<tr class="separator:a9ded7e5543f2a615b204900343c49435"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24cc18886d923df0320b6ac4eac19028"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTGatewayClass.html#a24cc18886d923df0320b6ac4eac19028">useCounter</a> = true</td></tr>
 <tr class="memdesc:a24cc18886d923df0320b6ac4eac19028"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>true</code> if counter is used to check data messages order  <a href="classEnigmaIOTGatewayClass.html#a24cc18886d923df0320b6ac4eac19028">More...</a><br /></td></tr>
 <tr class="separator:a24cc18886d923df0320b6ac4eac19028"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -288,11 +295,16 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ae9c6988dba886bf5b3e6540e60c9658c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="EnigmaIOTNode_8h.html#aeafba3e3725226cdcb14a23c4e57c97a">onWiFiManagerStarted_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTGatewayClass.html#ae9c6988dba886bf5b3e6540e60c9658c">notifyWiFiManagerStarted</a></td></tr>
 <tr class="memdesc:ae9c6988dba886bf5b3e6540e60c9658c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function called when configuration portal is started.  <a href="classEnigmaIOTGatewayClass.html#ae9c6988dba886bf5b3e6540e60c9658c">More...</a><br /></td></tr>
 <tr class="separator:ae9c6988dba886bf5b3e6540e60c9658c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a0b1bb7ec1dc2b4a244c77ffd04786a0c"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTGatewayClass.html#a0b1bb7ec1dc2b4a244c77ffd04786a0c">GatewayAPI</a></td></tr>
+<tr class="separator:a0b1bb7ec1dc2b4a244c77ffd04786a0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main gateway class. Manages communication with nodes and sends data to upper layer. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00210">210</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00214">214</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a43043a36c73d7de2ffe49e551cc6ae43"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a43043a36c73d7de2ffe49e551cc6ae43">&#9670;&nbsp;</a></span>addInputMsgQueue()</h2>
@@ -336,7 +348,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00762">762</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00764">764</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -372,7 +384,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00431">431</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00438">438</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -455,7 +467,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01768">1768</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01772">1772</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -576,7 +588,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly sent or scheduled </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01441">1441</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01443">1443</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -606,7 +618,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets number of active nodes. </p>
 <dl class="section return"><dt>Returns</dt><dd>Number of registered nodes </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00637">637</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00652">652</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -635,7 +647,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> errored packets </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01428">1428</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01430">1430</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -658,7 +670,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets next item in the queue. </p>
 <dl class="section return"><dt>Returns</dt><dd>Next message to be processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00785">785</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00787">787</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -689,7 +701,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets hashed EnigmaIOT network key. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns hashed EnigmaIOT network key </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00420">420</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00427">427</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -719,7 +731,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets EnigmaIOT network name. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns EnigmaIOT network name </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00412">412</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00419">419</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -749,7 +761,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets nodes data structure. </p>
 <dl class="section return"><dt>Returns</dt><dd>All nodes data structure </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00645">645</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00660">660</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -778,7 +790,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> packet rate </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01434">1434</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01436">1436</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -807,7 +819,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Packet error rate </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01412">1412</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01414">1414</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -876,7 +888,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00828">828</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00830">830</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -905,7 +917,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> total sent packets </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01422">1422</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01424">1424</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -928,7 +940,7 @@ Protected Attributes</h2></td></tr>
 <p>digitalRead (rxled) &amp;&amp;</p>
 <p>digitalRead (txled) &amp;&amp;</p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00837">837</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00839">839</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -976,7 +988,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly sent </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01576">1576</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01578">1578</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1060,7 +1072,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00905">905</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00907">907</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1108,7 +1120,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01064">1064</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01066">1066</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1161,7 +1173,43 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00512">512</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00519">519</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+
+</div>
+</div>
+<a id="ae1e1a4a7d0ac28ccdc127812ecc01645"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1e1a4a7d0ac28ccdc127812ecc01645">&#9670;&nbsp;</a></span>onGatewayRestartRequested()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EnigmaIOTGatewayClass::onGatewayRestartRequested </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="EnigmaIOTGateway_8h.html#a13fd0589380955dca8a52f95058e8c6e">onRestartRequested_t</a>&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Defines a function callback that will process a gateway restart request. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler</td><td>Pointer to the function </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00625">625</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -1214,7 +1262,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00581">581</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00588">588</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -1267,7 +1315,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00610">610</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00617">617</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -1303,7 +1351,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00441">441</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00448">448</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -1339,7 +1387,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00449">449</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00456">456</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -1360,7 +1408,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Deletes next item in the queue. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00813">813</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00815">815</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1422,7 +1470,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01612">1612</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01614">1614</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1484,7 +1532,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly processed </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01689">1689</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01693">1693</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1546,7 +1594,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01208">1208</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01210">1210</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1615,7 +1663,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01335">1335</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01337">1337</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1677,7 +1725,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01133">1133</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01135">1135</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1739,7 +1787,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message could be correcly decoded </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01282">1282</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01284">1284</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1793,7 +1841,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00819">819</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00821">821</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1860,7 +1908,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message was successfully sent. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01847">1847</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01851">1851</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -1976,7 +2024,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if ServerHello message was successfully sent. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01854">1854</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01858">1858</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>
@@ -2101,7 +2149,32 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00824">824</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l00826">826</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Function Documentation</h2>
+<a id="a0b1bb7ec1dc2b4a244c77ffd04786a0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b1bb7ec1dc2b4a244c77ffd04786a0c">&#9670;&nbsp;</a></span>GatewayAPI</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classGatewayAPI.html">GatewayAPI</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00246">246</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2128,7 +2201,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Instance of physical communication layer. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00217">217</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00221">221</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2154,7 +2227,7 @@ Protected Attributes</h2></td></tr>
 
 <p>DNS server used by configuration portal. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00236">236</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00241">241</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2180,7 +2253,7 @@ Protected Attributes</h2></td></tr>
 
 <p><code>true</code> if Rx LED should flash </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00214">214</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00218">218</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2206,7 +2279,7 @@ Protected Attributes</h2></td></tr>
 
 <p><code>true</code> if Tx LED should flash </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00213">213</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00217">217</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2232,7 +2305,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Gateway specific configuration to be stored on flash memory. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00226">226</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00231">231</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2258,7 +2331,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Input messages buffer. It acts as a FIFO queue. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00233">233</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00238">238</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2284,7 +2357,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Temporary public key store used during key agreement. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00212">212</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00216">216</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2310,7 +2383,7 @@ Protected Attributes</h2></td></tr>
 
 <p>temporary store to keep node data while processing a message </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00215">215</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00219">219</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2336,7 +2409,7 @@ Protected Attributes</h2></td></tr>
 
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> database that keeps status and shared keys. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00216">216</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00220">220</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2362,7 +2435,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Callback function that will be invoked when data is received fron a node. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00222">222</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00226">226</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2388,7 +2461,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Callback function that will be invoked when a new node is connected. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00223">223</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00227">227</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2414,7 +2487,33 @@ Protected Attributes</h2></td></tr>
 
 <p>Callback function that will be invoked when a node gets disconnected. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00224">224</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00228">228</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+
+</div>
+</div>
+<a id="a9ded7e5543f2a615b204900343c49435"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ded7e5543f2a615b204900343c49435">&#9670;&nbsp;</a></span>notifyRestartRequested</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="EnigmaIOTGateway_8h.html#a13fd0589380955dca8a52f95058e8c6e">onRestartRequested_t</a> EnigmaIOTGatewayClass::notifyRestartRequested</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Callback function that will be invoked when a hardware restart is requested. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00229">229</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2440,7 +2539,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Function called when configuration portal exits. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00238">238</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00243">243</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2466,7 +2565,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Function called when configuration portal is started. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00239">239</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00244">244</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2490,7 +2589,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00227">227</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00232">232</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2516,7 +2615,7 @@ Protected Attributes</h2></td></tr>
 
 <p>I/O pin to connect a led that flashes when gateway receives data. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00219">219</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00223">223</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2542,7 +2641,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Flash duration for Rx LED. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00221">221</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00225">225</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2568,7 +2667,7 @@ Protected Attributes</h2></td></tr>
 
 <p>WebServer that holds configuration portal. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00235">235</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00240">240</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2594,7 +2693,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Temporary storage for input message got from buffer. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00231">231</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00236">236</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2620,7 +2719,7 @@ Protected Attributes</h2></td></tr>
 
 <p>I/O pin to connect a led that flashes when gateway transmits data. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00218">218</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00222">222</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2646,7 +2745,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Flash duration for Tx LED. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00220">220</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00224">224</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2672,7 +2771,7 @@ Protected Attributes</h2></td></tr>
 
 <p><code>true</code> if counter is used to check data messages order </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00225">225</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00230">230</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2698,7 +2797,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Wifi configuration portal. </p>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00237">237</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00242">242</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
 
 </div>
 </div>
@@ -2707,18 +2806,18 @@ Protected Attributes</h2></td></tr>
 <li>src/<a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<div class="ttc" id="aEnigmaIOT-Button-Controller_8ino_html_a4fc01d736fe50cf5b977f755b675f11d"><div class="ttname"><a href="EnigmaIOT-Button-Controller_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a></div><div class="ttdeci">void setup()</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOT-Button-Controller_8ino_source.html#l00093">EnigmaIOT-Button-Controller.ino:93</a></div></div>
-<div class="ttc" id="aclassEnigmaIOTGatewayClass_html_a975c9b549e113deebe5581d5107d34b2"><div class="ttname"><a href="classEnigmaIOTGatewayClass.html#a975c9b549e113deebe5581d5107d34b2">EnigmaIOTGatewayClass::onNodeDisconnected</a></div><div class="ttdeci">void onNodeDisconnected(onNodeDisconnected_t handler)</div><div class="ttdoc">Defines a function callback that will be called every time a node is disconnected.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGateway_8h_source.html#l00610">EnigmaIOTGateway.h:610</a></div></div>
-<div class="ttc" id="aclassEnigmaIOTNodeClass_html_a53bbbb07409315ada40ad53d00344252"><div class="ttname"><a href="classEnigmaIOTNodeClass.html#a53bbbb07409315ada40ad53d00344252">EnigmaIOTNodeClass::handle</a></div><div class="ttdeci">void handle()</div><div class="ttdoc">This method should be called periodically for instance inside loop() function. It is used for interna...</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8cpp_source.html#l00945">EnigmaIOTNode.cpp:945</a></div></div>
-<div class="ttc" id="aEnigmaIOT-Button-Controller_8ino_html_afe461d27b9c48d5921c00d521181f12f"><div class="ttname"><a href="EnigmaIOT-Button-Controller_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a></div><div class="ttdeci">void loop()</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOT-Button-Controller_8ino_source.html#l00145">EnigmaIOT-Button-Controller.ino:145</a></div></div>
-<div class="ttc" id="aEnigmaIOTNode_8cpp_html_aad0a67af9b0ad60557652e3170f8a2af"><div class="ttname"><a href="EnigmaIOTNode_8cpp.html#aad0a67af9b0ad60557652e3170f8a2af">EnigmaIOTNode</a></div><div class="ttdeci">EnigmaIOTNodeClass EnigmaIOTNode</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8cpp_source.html#l02605">EnigmaIOTNode.cpp:2605</a></div></div>
-<div class="ttc" id="aEnigmaIOTGatewayDummy_8ino_html_ade106fbc95d08320451d9b901aafd230"><div class="ttname"><a href="EnigmaIOTGatewayDummy_8ino.html#ade106fbc95d08320451d9b901aafd230">nodeDisconnected</a></div><div class="ttdeci">void nodeDisconnected(uint8_t *mac, gwInvalidateReason_t reason)</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGatewayDummy_8ino_source.html#l00222">EnigmaIOTGatewayDummy.ino:222</a></div></div>
-<div class="ttc" id="aclassEnigmaIOTGatewayClass_html_a1726020bc65217b9ec4d01bb0216a526"><div class="ttname"><a href="classEnigmaIOTGatewayClass.html#a1726020bc65217b9ec4d01bb0216a526">EnigmaIOTGatewayClass::onNewNode</a></div><div class="ttdeci">void onNewNode(onNewNode_t handler)</div><div class="ttdoc">Defines a function callback that will be called every time a node gets connected or reconnected.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGateway_8h_source.html#l00581">EnigmaIOTGateway.h:581</a></div></div>
-<div class="ttc" id="aEnigmaIOTGateway_8cpp_html_abcd4985de3ef6fbe1994af85093ca034"><div class="ttname"><a href="EnigmaIOTGateway_8cpp.html#abcd4985de3ef6fbe1994af85093ca034">EnigmaIOTGateway</a></div><div class="ttdeci">EnigmaIOTGatewayClass EnigmaIOTGateway</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGateway_8cpp_source.html#l01932">EnigmaIOTGateway.cpp:1932</a></div></div>
-<div class="ttc" id="aEnigmaIOT-Button-Controller_8ino_html_a81397ad933b5a8b902d6161f702838fc"><div class="ttname"><a href="EnigmaIOT-Button-Controller_8ino.html#a81397ad933b5a8b902d6161f702838fc">processRxData</a></div><div class="ttdeci">void processRxData(const uint8_t *mac, const uint8_t *buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding)</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOT-Button-Controller_8ino_source.html#l00075">EnigmaIOT-Button-Controller.ino:75</a></div></div>
-<div class="ttc" id="aEnigmaIOTGateway_8h_html_a4272866ccf327ab11a97c334d16cf977"><div class="ttname"><a href="EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977">gwInvalidateReason_t</a></div><div class="ttdeci">gwInvalidateReason_t</div><div class="ttdoc">Key invalidation reason definition.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGateway_8h_source.html#l00070">EnigmaIOTGateway.h:70</a></div></div>
-<div class="ttc" id="aEnigmaIOTGatewayDummy_8ino_html_a60e672b8465063bff29ed39899e15948"><div class="ttname"><a href="EnigmaIOTGatewayDummy_8ino.html#a60e672b8465063bff29ed39899e15948">newNodeConnected</a></div><div class="ttdeci">void newNodeConnected(uint8_t *mac, uint16_t node_id, char *nodeName=NULL)</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGatewayDummy_8ino_source.html#l00203">EnigmaIOTGatewayDummy.ino:203</a></div></div>
-<div class="ttc" id="aclassEnigmaIOTNodeClass_html_a2c8523627fb660441dbdcbc8a796c3b4"><div class="ttname"><a href="classEnigmaIOTNodeClass.html#a2c8523627fb660441dbdcbc8a796c3b4">EnigmaIOTNodeClass::onDataRx</a></div><div class="ttdeci">void onDataRx(onNodeDataRx_t handler)</div><div class="ttdoc">Defines a function callback that will be called on every downlink data message that is received from ...</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00629">EnigmaIOTNode.h:629</a></div></div>
+<div class="ttc" id="aEnigmaIOT-Button-Controller_8ino_html_a4fc01d736fe50cf5b977f755b675f11d"><div class="ttname"><a href="EnigmaIOT-Button-Controller_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a></div><div class="ttdeci">void setup()</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOT-Button-Controller_8ino_source.html#l00100">EnigmaIOT-Button-Controller.ino:100</a></div></div>
+<div class="ttc" id="aclassEnigmaIOTGatewayClass_html_a975c9b549e113deebe5581d5107d34b2"><div class="ttname"><a href="classEnigmaIOTGatewayClass.html#a975c9b549e113deebe5581d5107d34b2">EnigmaIOTGatewayClass::onNodeDisconnected</a></div><div class="ttdeci">void onNodeDisconnected(onNodeDisconnected_t handler)</div><div class="ttdoc">Defines a function callback that will be called every time a node is disconnected.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGateway_8h_source.html#l00617">EnigmaIOTGateway.h:617</a></div></div>
+<div class="ttc" id="aclassEnigmaIOTNodeClass_html_a53bbbb07409315ada40ad53d00344252"><div class="ttname"><a href="classEnigmaIOTNodeClass.html#a53bbbb07409315ada40ad53d00344252">EnigmaIOTNodeClass::handle</a></div><div class="ttdeci">void handle()</div><div class="ttdoc">This method should be called periodically for instance inside loop() function. It is used for interna...</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8cpp_source.html#l00972">EnigmaIOTNode.cpp:972</a></div></div>
+<div class="ttc" id="aEnigmaIOT-Button-Controller_8ino_html_afe461d27b9c48d5921c00d521181f12f"><div class="ttname"><a href="EnigmaIOT-Button-Controller_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a></div><div class="ttdeci">void loop()</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOT-Button-Controller_8ino_source.html#l00158">EnigmaIOT-Button-Controller.ino:158</a></div></div>
+<div class="ttc" id="aEnigmaIOTNode_8cpp_html_aad0a67af9b0ad60557652e3170f8a2af"><div class="ttname"><a href="EnigmaIOTNode_8cpp.html#aad0a67af9b0ad60557652e3170f8a2af">EnigmaIOTNode</a></div><div class="ttdeci">EnigmaIOTNodeClass EnigmaIOTNode</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8cpp_source.html#l02659">EnigmaIOTNode.cpp:2659</a></div></div>
+<div class="ttc" id="aEnigmaIOTGatewayDummy_8ino_html_ade106fbc95d08320451d9b901aafd230"><div class="ttname"><a href="EnigmaIOTGatewayDummy_8ino.html#ade106fbc95d08320451d9b901aafd230">nodeDisconnected</a></div><div class="ttdeci">void nodeDisconnected(uint8_t *mac, gwInvalidateReason_t reason)</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGatewayDummy_8ino_source.html#l00223">EnigmaIOTGatewayDummy.ino:223</a></div></div>
+<div class="ttc" id="aclassEnigmaIOTGatewayClass_html_a1726020bc65217b9ec4d01bb0216a526"><div class="ttname"><a href="classEnigmaIOTGatewayClass.html#a1726020bc65217b9ec4d01bb0216a526">EnigmaIOTGatewayClass::onNewNode</a></div><div class="ttdeci">void onNewNode(onNewNode_t handler)</div><div class="ttdoc">Defines a function callback that will be called every time a node gets connected or reconnected.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGateway_8h_source.html#l00588">EnigmaIOTGateway.h:588</a></div></div>
+<div class="ttc" id="aEnigmaIOTGateway_8cpp_html_abcd4985de3ef6fbe1994af85093ca034"><div class="ttname"><a href="EnigmaIOTGateway_8cpp.html#abcd4985de3ef6fbe1994af85093ca034">EnigmaIOTGateway</a></div><div class="ttdeci">EnigmaIOTGatewayClass EnigmaIOTGateway</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGateway_8cpp_source.html#l01936">EnigmaIOTGateway.cpp:1936</a></div></div>
+<div class="ttc" id="aEnigmaIOT-Button-Controller_8ino_html_a81397ad933b5a8b902d6161f702838fc"><div class="ttname"><a href="EnigmaIOT-Button-Controller_8ino.html#a81397ad933b5a8b902d6161f702838fc">processRxData</a></div><div class="ttdeci">void processRxData(const uint8_t *mac, const uint8_t *buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding)</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOT-Button-Controller_8ino_source.html#l00082">EnigmaIOT-Button-Controller.ino:82</a></div></div>
+<div class="ttc" id="aEnigmaIOTGateway_8h_html_a4272866ccf327ab11a97c334d16cf977"><div class="ttname"><a href="EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977">gwInvalidateReason_t</a></div><div class="ttdeci">gwInvalidateReason_t</div><div class="ttdoc">Key invalidation reason definition.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGateway_8h_source.html#l00071">EnigmaIOTGateway.h:71</a></div></div>
+<div class="ttc" id="aEnigmaIOTGatewayDummy_8ino_html_a60e672b8465063bff29ed39899e15948"><div class="ttname"><a href="EnigmaIOTGatewayDummy_8ino.html#a60e672b8465063bff29ed39899e15948">newNodeConnected</a></div><div class="ttdeci">void newNodeConnected(uint8_t *mac, uint16_t node_id, char *nodeName=NULL)</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTGatewayDummy_8ino_source.html#l00204">EnigmaIOTGatewayDummy.ino:204</a></div></div>
+<div class="ttc" id="aclassEnigmaIOTNodeClass_html_a2c8523627fb660441dbdcbc8a796c3b4"><div class="ttname"><a href="classEnigmaIOTNodeClass.html#a2c8523627fb660441dbdcbc8a796c3b4">EnigmaIOTNodeClass::onDataRx</a></div><div class="ttdeci">void onDataRx(onNodeDataRx_t handler)</div><div class="ttdoc">Defines a function callback that will be called on every downlink data message that is received from ...</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00637">EnigmaIOTNode.h:637</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20
