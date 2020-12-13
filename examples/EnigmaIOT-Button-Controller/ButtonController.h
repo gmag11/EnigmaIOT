@@ -42,7 +42,6 @@ public:
 
 	/**
 	 * @brief Called when wifi manager starts config portal
-	 * @param node Pointer to EnigmaIOT gateway instance
 	 */
 	void configManagerStart ();
 

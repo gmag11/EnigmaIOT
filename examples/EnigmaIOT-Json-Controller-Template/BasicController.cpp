@@ -32,7 +32,8 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 
 	// You do node setup here. Use it as it was the normal setup() Arduino function
 
-
+    // Send a 'hello' message when initalizing is finished
+    sendStartAnouncement ();  // Disable this if node is sleepy
 	DEBUG_DBG ("Finish begin");
 
 	// If your node should sleep after sending data do all remaining tasks here

@@ -30,17 +30,32 @@ protected:
 	// --------------------------------------------------
 
 public:
+    /**
+     * @brief Initializes controller structures
+     * @param node Pointer to EnigmaIOT gateway instance
+     * @param data Parameter data for controller
+     */
 	void setup (EnigmaIOTNodeClass* node, void* data = NULL);
 
+    /**
+     * @brief Processes received GET or SET commands
+     * @param address Origin MAC address
+     * @param buffer Command payload
+     * @param length Payload length in bytes
+     * @param command Command type. nodeMessageType_t::DOWNSTREAM_DATA_GET or nodeMessageType_t::DOWNSTREAM_DATA_SET
+     * @param payloadEncoding Payload encoding. MSG_PACK is recommended
+     */
 	bool processRxCommand (const uint8_t* address, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding);
 
+    /**
+     * @brief Executes repetitive tasks on controller
+     */
 	void loop ();
 
 	~CONTROLLER_CLASS_NAME ();
 
 	/**
 	 * @brief Called when wifi manager starts config portal
-	 * @param node Pointer to EnigmaIOT gateway instance
 	 */
 	void configManagerStart ();
 
@@ -56,7 +71,10 @@ public:
 	 */
 	bool loadConfig ();
 
-	void connectInform () {
+    /**
+     * @brief Executed as soon as node is registered on EnigmaIOT network
+     */
+    void connectInform () {
 		sendStartAnouncement ();
 	}
 
@@ -67,8 +85,16 @@ protected:
 	  */
 	bool saveConfig ();
 
+    /**
+     * @brief Send response to commands to gateway
+     * @param command Refered command
+     * @param result `true` if command was correctly executed, `false` otherwise
+     */
 	bool sendCommandResp (const char* command, bool result);
 
+    /**
+     * @brief Sends a notification message including configurable controller name and protocol version
+     */
     bool sendStartAnouncement () {
         // You can send a 'hello' message when your node starts. Useful to detect unexpected reboot
         const size_t capacity = JSON_OBJECT_SIZE (10);
