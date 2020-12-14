@@ -1398,11 +1398,11 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 	}
 	DEBUG_VERBOSE ("Clock Response message: %s", printHexBuffer ((uint8_t*)&clockResponse_msg, CRSMSG_LEN - TAG_LENGTH));
 
-	DEBUG_DBG ("T1: %llu", node.t1);
-	DEBUG_DBG ("T2: %llu", node.t2);
-	DEBUG_DBG ("T3: %llu", node.t3);
-	DEBUG_DBG ("T4: %llu", node.t4);
-	DEBUG_DBG ("Offest adjusted to %lld ms, Roundtrip delay is %lld", offset, TimeManager.getDelay ());
+	DEBUG_DBG ("T1: %llu", t1);
+    DEBUG_DBG ("T2: %llu", t2);
+    DEBUG_DBG ("T3: %llu", t3);
+    DEBUG_DBG ("T4: %llu", t4);
+    DEBUG_DBG ("Offest adjusted to %lld us, Roundtrip delay is %lld", offset, TimeManager.getDelay ());
 
 	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
 		if (!saveRTCData ()) {
