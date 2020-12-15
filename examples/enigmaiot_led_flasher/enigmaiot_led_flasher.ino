@@ -139,10 +139,10 @@ void loop () {
 	EnigmaIOTNode.handle ();
 
 	static const time_t PERIOD = 3000;
-	static const time_t FLASH_DURATION = 100;
+	static const time_t FLASH_DURATION = 50000;
 	static time_t clock;
 
-	clock = EnigmaIOTNode.clock () % PERIOD;
+	clock = EnigmaIOTNode.clock () % (PERIOD * 1000);
 
 	if (EnigmaIOTNode.hasClockSync () && EnigmaIOTNode.isRegistered ()) {
 		if (clock >= 0 && clock < FLASH_DURATION) {
