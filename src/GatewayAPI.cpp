@@ -333,8 +333,10 @@ void GatewayAPI::onNotFound (AsyncWebServerRequest* request) {
 	DEBUG_WARN ("Method: %s", methodToString (request->method ()).c_str ());
 	int params = request->params ();
 	for (int i = 0; i < params; i++) {
+#if DEBUG_LEVEL >= INFO
 		AsyncWebParameter* p = request->getParam (i);
 		DEBUG_INFO ("Parameter %s = %s", p->name ().c_str (), p->value ().c_str ());
+#endif
 	}
 	request->send (404, "text/plain", "Not Found");
 }

@@ -199,7 +199,7 @@ Node* NodeList::getNodeFromName (const char* name) {
 }
 
 int8_t NodeList::checkNodeName (const char* name, const uint8_t* address) {
-	bool found = false;
+	//bool found = false;
 
 	if (strlen (name) > NODE_NAME_LENGTH - 1) {
 		DEBUG_ERROR ("Name too long %s", name);
@@ -219,8 +219,8 @@ int8_t NodeList::checkNodeName (const char* name, const uint8_t* address) {
 			DEBUG_DBG ("Node %d name is %s", i, currentNodeNamme ? currentNodeNamme : "NULL");
 			if (currentNodeNamme && !strncmp (currentNodeNamme, name, NODE_NAME_LENGTH)) {
 				// if addresses addresses are different
-				char addrStr[ENIGMAIOT_ADDR_LEN * 3];
-				DEBUG_INFO ("Found node name %s in Node List with address %s", name, mac2str (address, addrStr));
+				//char addrStr[ENIGMAIOT_ADDR_LEN * 3];
+				DEBUG_INFO ("Found node name %s in Node List with address %s", name, mac2str (address));
 				if (memcmp (nodes[i].getMacAddress (), address, ENIGMAIOT_ADDR_LEN)) {
 					DEBUG_ERROR ("Duplicated name %s", name);
 					return ALREADY_USED; // Already used

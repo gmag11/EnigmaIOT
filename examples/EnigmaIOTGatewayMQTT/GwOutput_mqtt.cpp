@@ -91,10 +91,10 @@ bool GwOutput_MQTT::saveConfig () {
 	DEBUG_DBG ("%s", output.c_str ());
 
 	configFile.flush ();
-	size_t size = configFile.size ();
+	//size_t size = configFile.size ();
 
 	configFile.close ();
-	DEBUG_DBG ("Gateway configuration saved to flash. %u bytes", size);
+	DEBUG_DBG ("Gateway configuration saved to flash. %u bytes", configFile.size ());
 	return true;
 }
 
@@ -113,8 +113,8 @@ bool GwOutput_MQTT::loadConfig () {
 		DEBUG_DBG ("Opening %s file", CONFIG_FILE);
         File configFile = FILESYSTEM.open (CONFIG_FILE, "r");
 		if (configFile) {
-			size_t size = configFile.size ();
-			DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, size);
+			//size_t size = configFile.size ();
+            DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, configFile.size ());
 
 			const size_t capacity = JSON_OBJECT_SIZE (4) + 110;
 			DynamicJsonDocument doc (capacity);

@@ -82,7 +82,16 @@ uint32_t calculateCRC32 (const uint8_t* data, size_t length) {
 #undef MACSTR
 #define MACSTR "%02X:%02X:%02X:%02X:%02X:%02X"
 
-char* mac2str (const uint8_t* mac, char* buffer) {
+char* mac2str (const uint8_t* mac, char* extBuffer) {
+    char* buffer;
+    static char staticBuffer[ENIGMAIOT_ADDR_LEN * 3];
+    
+    if (!extBuffer){
+        buffer = staticBuffer;
+    } else {
+        buffer = extBuffer;
+    }
+    
 	if (mac && buffer) {
 		//DEBUG_DBG ("mac2str %02x:%02x:%02x:%02x:%02x:%02x",mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 		snprintf (buffer, ENIGMAIOT_ADDR_LEN * 3, MACSTR, MAC2STR (mac));

@@ -276,7 +276,7 @@ bool EnigmaIOTNodeClass::loadFlashData () {
         File configFile = FILESYSTEM.open (CONFIG_FILE, "r");
 		if (configFile) {
 			DEBUG_DBG ("%s opened", CONFIG_FILE);
-			size_t size = configFile.size ();
+			//size_t size = configFile.size ();
 
 			const size_t capacity = JSON_ARRAY_SIZE (32) + JSON_OBJECT_SIZE (5) + 100;
 			DynamicJsonDocument doc (capacity);
@@ -382,10 +382,10 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 	DEBUG_DBG ("%s", output.c_str ());
 
 	configFile.flush ();
-	size_t size = configFile.size ();
+	//size_t size = configFile.size ();
 
 	configFile.close ();
-	DEBUG_DBG ("Configuration saved to flash. %u bytes", size);
+    DEBUG_DBG ("Configuration saved to flash. %u bytes", configFile.size ());
 #if DEBUG_LEVEL >= DBG
 	dumpRtcData (&rtcmem_data);
 #endif	
@@ -609,7 +609,7 @@ void flashLed (void* led) {
 
 void startFlash (time_t period) {
 #ifdef ESP32
-	static int id = 1;
+	//static int id = 1;
 	DEBUG_INFO ("Start flash");
 	if (!nodeConnectionLedFlashing) {
 		nodeConnectionLedFlashing = true;
@@ -841,8 +841,8 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 	int numWifi = 0;
 	int wifiIndex = 0;
 
-	time_t scanStarted = millis ();
 #ifdef ESP8266
+    time_t scanStarted = millis ();
 	numWifi = WiFi.scanNetworks (false, false, 0, (uint8_t*)(data->networkName));
 	while (!(WiFi.scanComplete () || (millis () - scanStarted) > 1500)) {
 #if DEBUG_LEVEL >= DBG
@@ -1013,8 +1013,8 @@ void EnigmaIOTNodeClass::handle () {
 				// Avoid negative values
 				sleep_t = 1000;
 			}
-			int64_t msSleep = sleep_t / 1000;
-			DEBUG_WARN ("Go to sleep for %ld ms", (int32_t)(msSleep));
+			//int64_t msSleep = sleep_t / 1000;
+            DEBUG_WARN ("Go to sleep for %ld ms", (int32_t)(sleep_t / 1000L));
 			DEBUG_WARN ("%d", millis ());
 #ifdef ESP8266
 			ESP.deepSleep (sleep_t);
@@ -1356,7 +1356,7 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 	// Copy 8 last bytes from Node Key
 	memcpy (aad + addDataLen, node.getEncriptionKey () + KEY_LENGTH - AAD_LENGTH, AAD_LENGTH);
 
-	uint8_t packetLen = count - TAG_LENGTH;
+	//uint8_t packetLen = count - TAG_LENGTH;
 
 	if (!CryptModule::decryptBuffer ((uint8_t*)&(clockResponse_msg.counter), CRSMSG_LEN - IV_LENGTH - TAG_LENGTH - 1, // Decrypt from counter, 18 bytes
 									 clockResponse_msg.iv, IV_LENGTH,
@@ -1366,7 +1366,7 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
 		return false;
 	}
 
-	DEBUG_VERBOSE ("Decripted Clock Response message: %s", printHexBuffer ((uint8_t*)&clockResponse_msg, packetLen));
+    DEBUG_VERBOSE ("Decripted Clock Response message: %s", printHexBuffer ((uint8_t*)&clockResponse_msg, count - TAG_LENGTH));
 
 	memcpy (&counter, &(clockResponse_msg.counter), sizeof (uint16_t));
 	DEBUG_INFO ("Downlink msg #%d", counter);
@@ -1607,7 +1607,7 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, bool cont
 	}
 
 	uint8_t buf[MAX_MESSAGE_LENGTH];
-	uint8_t tag[TAG_LENGTH];
+	//uint8_t tag[TAG_LENGTH];
 	uint16_t counter;
 	uint16_t nodeId = node.getNodeId ();
 
@@ -1903,7 +1903,7 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
 	*/
 
 	uint8_t buf[MAX_MESSAGE_LENGTH];
-	uint8_t tag[TAG_LENGTH];
+	//uint8_t tag[TAG_LENGTH];
 	uint16_t nodeId = node.getNodeId ();
 	uint16_t counter;
 
@@ -1982,8 +1982,8 @@ bool EnigmaIOTNodeClass::sendNodeNameSet (const char* name) {
 }
 
 bool EnigmaIOTNodeClass::processSetIdentifyCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
-	uint8_t buffer[MAX_MESSAGE_LENGTH];
-	uint8_t bufLength;
+	//uint8_t buffer[MAX_MESSAGE_LENGTH];
+	//uint8_t bufLength;
 
 	DEBUG_DBG ("Set Identify command received");
 	DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
@@ -2211,7 +2211,10 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 
 			_md5.add (dataPtr, dataLen);
 			// Process OTA Update
-			size_t numBytes = Update.write (dataPtr, dataLen);
+#if DEBUG_LEVEL >= INFO
+			size_t numBytes = 
+#endif
+                Update.write (dataPtr, dataLen);
 			totalBytes += dataLen;
 			DEBUG_INFO ("%u bytes written. Total %u", numBytes, totalBytes);
 		} else {
@@ -2254,9 +2257,9 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_FINISHED;
 			sendData (responseBuffer, 2, true);
-			uint8_t otaErrorCode = Update.getError ();
+			//uint8_t otaErrorCode = Update.getError ();
 			DEBUG_WARN ("OTA Finished OK");
-			DEBUG_WARN ("OTA eror code: %d", otaErrorCode);
+            DEBUG_WARN ("OTA eror code: %d", Update.getError ());
 			//ESP.restart ();
 			protectOTA = true;
 			//otaRunning = false;
@@ -2268,7 +2271,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			responseBuffer[0] = control_message_type::OTA_ANS;
 			responseBuffer[1] = ota_status::OTA_CHECK_FAIL;
 			sendData (responseBuffer, 2, true);
-			uint8_t otaErrorCode = Update.getError ();
+			//uint8_t otaErrorCode = Update.getError ();
 			Update.printError (otaErrorStr);
 			otaErrorStr.trim (); // remove line ending
 			DEBUG_ERROR ("OTA Failed");

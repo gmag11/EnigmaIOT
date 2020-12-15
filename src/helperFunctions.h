@@ -37,10 +37,10 @@ char* printHexBuffer (const uint8_t* buffer, uint16_t len);
 /**
   * @brief Debug helper function that generates a string that represent a MAC address
   * @param mac Pointer to the MAC address
-  * @param buffer Buffer that will store resulting address. It must be 18 bytes long at least
+  * @param extBuffer Buffer that will store resulting address. It must be 18 bytes long at least. If it is NULL a static buffer will be used
   * @return Returns a pointer to input buffer after writting MAC address on human readable format
   */
-char* mac2str (const uint8_t* mac, char* buffer);
+char* mac2str (const uint8_t* mac, char* extBuffer = NULL);
 
 /**
   * @brief Debug helper function that creates MAC address byte array from text representation

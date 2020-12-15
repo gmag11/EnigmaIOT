@@ -36,7 +36,7 @@ void Espnow_halClass::initComms (peerType_t peerType) {
 		networkGw.channel = channel;
 		networkGw.ifidx = ESP_IF_WIFI_STA;
 		networkGw.encrypt = false;
-		esp_err_t result = esp_now_add_peer (&networkGw);
+		/*esp_err_t result = */esp_now_add_peer (&networkGw);
 		DEBUG_INFO ("Gateway peer Added in channel %d. Result = %s", channel, esp_err_to_name (result));
 		DEBUG_DBG ("WIFI channel is %d", WiFi.channel ());
 #endif
@@ -90,8 +90,8 @@ bool Espnow_halClass::addPeer (const uint8_t* da) {
 	peer.ifidx = ESP_IF_WIFI_AP;
 	peer.encrypt = false;
 	esp_err_t error = esp_now_add_peer (&peer);
-	char addrStr[ENIGMAIOT_ADDR_LEN * 3];
-	DEBUG_DBG ("Peer " MACSTR " added on channel %u. Result 0x%X %s", MAC2STR (da), ch, error, esp_err_to_name (error));
+	//char addrStr[ENIGMAIOT_ADDR_LEN * 3];
+	DEBUG_DBG ("Peer %s added on channel %u. Result 0x%X %s", mac2str (da), ch, error, esp_err_to_name (error));
 	return error == ESP_OK;
 #else 
 	return true;
@@ -135,7 +135,7 @@ int32_t Espnow_halClass::send (uint8_t* da, uint8_t* data, int len) {
 #ifdef ESP32
 	DEBUG_DBG ("esp now send result = %d", error);
 	if (_ownPeerType == COMM_GATEWAY) {
-		esp_err_t error = esp_now_del_peer (da);
+		error = esp_now_del_peer (da); // TODO: test
 		DEBUG_DBG ("Peer deleted. Result %d", error);
 
 	}
