@@ -21,7 +21,7 @@
 #include <WiFi.h>
 #endif
 #include "EnigmaIoTconfig.h"
-#include "debug.h"
+#include "EnigmaIOTdebug.h"
 
   /**
   * @brief Debug helper function that generates a string that represent a buffer hexadecimal values

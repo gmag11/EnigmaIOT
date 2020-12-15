@@ -7,7 +7,7 @@
   */
 
 #include "Filter.h"
-#include "debug.h"
+#include "EnigmaIOTdebug.h"
 
 float FilterClass::addValue (float value) {
 	switch (_filterType) {

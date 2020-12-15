@@ -15,6 +15,8 @@
 #ifndef _CONFIG_ADVANCED_h
 #define _CONFIG_ADVANCED_h
 
+#include "Arduino.h"
+
 // Global configuration. Physical layer settings
 static const uint8_t MAX_MESSAGE_LENGTH = 250; ///< @brief Maximum payload size on ESP-NOW
 static const size_t ENIGMAIOT_ADDR_LEN = 6; ///< @brief Address size. Mac address = 6 bytes
@@ -28,6 +30,9 @@ static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mo
 #ifndef DISCONNECT_ON_DATA_ERROR
 static const bool DISCONNECT_ON_DATA_ERROR = true; ///< @brief Activates node invalidation in case of data error
 #endif //DISCONNECT_ON_DATA_ERROR
+#ifndef ENABLE_REST_API
+#define ENABLE_REST_API 1
+#endif // ENABLE_REST_API
 
 // Node configuration
 static const uint32_t OTA_TIMEOUT_TIME = 10000; ///< @brief Timeout between OTA messages. In milliseconds
@@ -48,5 +53,20 @@ const uint8_t AAD_LENGTH = 8; ///< @brief Number of bytes from last part of key 
 
 //Web API
 const int WEB_API_PORT = 80; ///< @brief TCP port where Web API will listen through
+
+//File system
+#if defined ESP32
+#define FILESYSTEM SPIFFS
+#include <SPIFFS.h>
+#elif defined ESP8266
+#define USE_LITTLE_FS 0
+#if USE_LITTLE_FS
+#include <FS.h>
+#include <LittleFS.h>
+#define FILESYSTEM LittleFS
+#else
+#define FILESYSTEM SPIFFS
+#endif // USE_LITTLE_FS
+#endif
 
 #endif

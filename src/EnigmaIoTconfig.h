@@ -9,6 +9,7 @@
 #ifndef _CONFIG_h
 #define _CONFIG_h
 
+#include "Arduino.h"
 #include "EnigmaIoTconfigAdvanced.h"
 
 // Global configuration. Physical layer settings

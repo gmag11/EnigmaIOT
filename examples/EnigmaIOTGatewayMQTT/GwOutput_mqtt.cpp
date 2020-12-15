@@ -13,13 +13,12 @@
 #include <ArduinoJson.h>
 #include <ESPAsyncWebServer.h>
 #include <helperFunctions.h>
-#include <debug.h>
+#include <EnigmaIOTdebug.h>
 #include <PubSubClient.h>
 
 #ifdef ESP32
 #include <WiFi.h>
 #include <AsyncTCP.h>
-#include <SPIFFS.h>
 #include "esp_system.h"
 #include "esp_event.h"
 #include "mqtt_client.h"
@@ -58,12 +57,12 @@ void GwOutput_MQTT::configManagerStart (EnigmaIOTGatewayClass* enigmaIotGw) {
 }
 
 bool GwOutput_MQTT::saveConfig () {
-	if (!SPIFFS.begin ()) {
+    if (!FILESYSTEM.begin ()) {
 		DEBUG_WARN ("Error opening filesystem");
 	}
 	DEBUG_DBG ("Filesystem opened");
 
-	File configFile = SPIFFS.open (CONFIG_FILE, "w");
+    File configFile = FILESYSTEM.open (CONFIG_FILE, "w");
 	if (!configFile) {
 		DEBUG_WARN ("Failed to open config file %s for writing", CONFIG_FILE);
 		return false;
@@ -82,7 +81,7 @@ bool GwOutput_MQTT::saveConfig () {
 	if (serializeJson (doc, configFile) == 0) {
 		DEBUG_ERROR ("Failed to write to file");
 		configFile.close ();
-		//SPIFFS.remove (CONFIG_FILE); // Testing only
+        //FILESYSTEM.remove (CONFIG_FILE); // Testing only
 		return false;
 	}
 
@@ -100,19 +99,19 @@ bool GwOutput_MQTT::saveConfig () {
 }
 
 bool GwOutput_MQTT::loadConfig () {
-	//SPIFFS.remove (CONFIG_FILE); // Only for testing
+    //FILESYSTEM.remove (CONFIG_FILE); // Only for testing
 	bool json_correct = false;
 
-	if (!SPIFFS.begin ()) {
+    if (!FILESYSTEM.begin ()) {
 		DEBUG_WARN ("Error starting filesystem. Formatting");
-		SPIFFS.format ();
+        FILESYSTEM.format ();
 		WiFi.disconnect ();
 	}
 
-	if (SPIFFS.exists (CONFIG_FILE)) {
+    if (FILESYSTEM.exists (CONFIG_FILE)) {
 
 		DEBUG_DBG ("Opening %s file", CONFIG_FILE);
-		File configFile = SPIFFS.open (CONFIG_FILE, "r");
+        File configFile = FILESYSTEM.open (CONFIG_FILE, "r");
 		if (configFile) {
 			size_t size = configFile.size ();
 			DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, size);

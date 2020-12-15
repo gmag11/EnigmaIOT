@@ -7,7 +7,7 @@
   */
 
 #include "timeManager.h"
-#include "debug.h"
+#include "EnigmaIOTdebug.h"
 
 // int64_t TimeManagerClass::setOrigin () {
 // 	//Serial.printf ("millis: %u\n", millis ());
@@ -24,7 +24,7 @@ int64_t TimeManagerClass::clock () {
     int64_t clk = currentime.tv_sec;
     clk *= 1000000L;
     clk += currentime.tv_usec;
-    DEBUG_DBG ("Clock: %lld", clk);
+    //DEBUG_DBG ("Clock: %lld", clk);
     return clk;
 
     // if (timeIsAdjusted) {

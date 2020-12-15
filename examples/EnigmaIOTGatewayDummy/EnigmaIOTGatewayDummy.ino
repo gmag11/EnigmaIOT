@@ -35,7 +35,7 @@
 
 #include <EnigmaIOTGateway.h>
 #include <helperFunctions.h>
-#include <debug.h>
+#include <EnigmaIOTdebug.h>
 #include <espnow_hal.h>
 #include <Curve25519.h>
 #include <ChaChaPoly.h>

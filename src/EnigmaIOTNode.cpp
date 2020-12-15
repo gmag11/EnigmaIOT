@@ -18,7 +18,6 @@
 #include <Updater.h>
 #elif defined ESP32
 #include <Update.h>
-#include <SPIFFS.h>
 #include "esp_wifi.h"
 #endif
 #include <StreamString.h>
@@ -45,9 +44,9 @@ RTC_DATA_ATTR rtcmem_data_t rtcmem_data_storage; ///< @brief Context data to be 
 void EnigmaIOTNodeClass::resetConfig () {
 	restartReason = CONFIG_RESET;
 	sendRestart ();
-	SPIFFS.begin ();
-	SPIFFS.remove (CONFIG_FILE);
-	SPIFFS.end ();
+    FILESYSTEM.begin ();
+    FILESYSTEM.remove (CONFIG_FILE);
+    FILESYSTEM.end ();
 	DEBUG_WARN ("Config file %s deleted. Restarting");
 
 	clearRTC ();
@@ -145,23 +144,23 @@ void dumpRtcData (rtcmem_data_t* data, uint8_t* gateway = NULL) {
 #if USE_FLASH_INSTEAD_RTC
 const char* RTC_DATA_FILE = "/context.bin";
 bool EnigmaIOTNodeClass::loadRTCData () {
-	//SPIFFS.remove (RTC_DATA_FILE); // Only for testing
+    //FILESYSTEM.remove (RTC_DATA_FILE); // Only for testing
 	//bool file_correct = false;
 	time_t start_load = millis ();
-	SPIFFS.begin ();
+    FILESYSTEM.begin ();
 
 	rtcmem_data_t context;
 
-	if (SPIFFS.exists (RTC_DATA_FILE)) {
+    if (FILESYSTEM.exists (RTC_DATA_FILE)) {
 		DEBUG_DBG ("Opening %s file", RTC_DATA_FILE);
-		File contextFile = SPIFFS.open (RTC_DATA_FILE, "r");
+        File contextFile = FILESYSTEM.open (RTC_DATA_FILE, "r");
 		if (contextFile) {
 			DEBUG_DBG ("%s opened", RTC_DATA_FILE);
 			size_t size = contextFile.size ();
 			if (size != sizeof (rtcmem_data_t)) {
 				DEBUG_WARN ("File size error. Expected %d bytes. Got %d", sizeof (rtcmem_data_t), size);
 				contextFile.close ();
-				SPIFFS.remove (RTC_DATA_FILE);
+                FILESYSTEM.remove (RTC_DATA_FILE);
 				return false;
 			}
 			size = contextFile.readBytes ((char*)&context, sizeof (rtcmem_data_t));
@@ -169,13 +168,13 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 			if (size != sizeof (rtcmem_data_t)) {
 				DEBUG_WARN ("File read error. Expected %d bytes. Got %d", sizeof (rtcmem_data_t), size);
 				//contextFile.close ();
-				SPIFFS.remove (RTC_DATA_FILE);
+                FILESYSTEM.remove (RTC_DATA_FILE);
 				return false;
 			}
 			if (!checkCRC ((uint8_t*)context.nodeKey, sizeof (rtcmem_data_t) - sizeof (uint32_t), &context.crc32)) {
 				DEBUG_WARN ("RTC Data is not valid. Wrong CRC");
 				//contextFile.close ();
-				SPIFFS.remove (RTC_DATA_FILE);
+                FILESYSTEM.remove (RTC_DATA_FILE);
 				return false;
 			} else {
 				memcpy (&rtcmem_data, &context, sizeof (rtcmem_data_t));
@@ -206,7 +205,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 			}
 		} else {
 			DEBUG_WARN ("Error opening file %s", RTC_DATA_FILE);
-			SPIFFS.remove (RTC_DATA_FILE);
+            FILESYSTEM.remove (RTC_DATA_FILE);
 			return false;
 		}
 	} else {
@@ -269,12 +268,12 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 #endif
 
 bool EnigmaIOTNodeClass::loadFlashData () {
-	//SPIFFS.remove (CONFIG_FILE); // Only for testing
+    //FILESYSTEM.remove (CONFIG_FILE); // Only for testing
 	bool json_correct = false;
 
-	if (SPIFFS.exists (CONFIG_FILE)) {
+    if (FILESYSTEM.exists (CONFIG_FILE)) {
 		DEBUG_DBG ("Opening %s file", CONFIG_FILE);
-		File configFile = SPIFFS.open (CONFIG_FILE, "r");
+        File configFile = FILESYSTEM.open (CONFIG_FILE, "r");
 		if (configFile) {
 			DEBUG_DBG ("%s opened", CONFIG_FILE);
 			size_t size = configFile.size ();
@@ -347,9 +346,9 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 		return false;
 
 	if (!fsOpen)
-		SPIFFS.begin ();
+        FILESYSTEM.begin ();
 
-	File configFile = SPIFFS.open (CONFIG_FILE, "w");
+    File configFile = FILESYSTEM.open (CONFIG_FILE, "w");
 	if (!configFile) {
 		DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
 		return false;
@@ -373,7 +372,7 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 	if (serializeJson (doc, configFile) == 0) {
 		DEBUG_ERROR ("Failed to write to file");
 		configFile.close ();
-		//SPIFFS.remove (CONFIG_FILE); // Testing
+        //FILESYSTEM.remove (CONFIG_FILE); // Testing
 		return false;
 	}
 
@@ -391,7 +390,7 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 	dumpRtcData (&rtcmem_data);
 #endif	
 	if (!fsOpen)
-		SPIFFS.end ();
+        FILESYSTEM.end ();
 	return true;
 }
 
@@ -401,7 +400,7 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 	if (configCleared)
 		return false;
 	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
-	File contextFile = SPIFFS.open (RTC_DATA_FILE, "w");
+    File contextFile = FILESYSTEM.open (RTC_DATA_FILE, "w");
 	if (!contextFile) {
 		DEBUG_WARN ("failed to open config file %s for writing", RTC_DATA_FILE);
 		return false;
@@ -454,15 +453,15 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 #endif
 
 void EnigmaIOTNodeClass::clearFlash () {
-	if (!SPIFFS.begin ()) {
+    if (!FILESYSTEM.begin ()) {
 		DEBUG_ERROR ("Error on SPIFFS.begin()");
 	}
-	if (SPIFFS.remove (CONFIG_FILE)) {
+    if (FILESYSTEM.remove (CONFIG_FILE)) {
 		DEBUG_DBG ("%s deleted", CONFIG_FILE);
 	} else {
 		DEBUG_ERROR ("Error on SPIFFS.remove(\"%s\")", CONFIG_FILE);
 	}
-	SPIFFS.end ();
+    FILESYSTEM.end ();
 }
 
 bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
@@ -521,7 +520,12 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 		DEBUG_DBG ("WiFi password: %s", wifiConfig.password);
 		const char* netkey = (char*)(wifiConfig.password);
 #elif defined ESP32
-		const char* netkey = WiFi.psk ().c_str ();
+        wifi_config_t wifiConfig;
+        if (!esp_wifi_get_config (WIFI_IF_STA, &wifiConfig)) {
+            DEBUG_WARN ("Error getting WiFi config");
+        }
+        DEBUG_WARN ("WiFi password: %.*s", 64, wifiConfig.sta.password);
+        const char* netkey = (char*)(wifiConfig.sta.password);
 #endif
 		DEBUG_DBG ("Network Key: %s", netkey);
 		DEBUG_DBG ("Sleppy time: %s", sleepyParam.getValue ());
@@ -712,9 +716,9 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 			rtcmem_data.nodeRegisterStatus = UNREGISTERED;
 		} else { // Try read from flash
 			DEBUG_INFO ("Starting from Flash");
-			if (!SPIFFS.begin ()) {
+            if (!FILESYSTEM.begin ()) {
 				DEBUG_ERROR ("Error mounting flash");
-				if (SPIFFS.format ()) {
+                if (FILESYSTEM.format ()) {
 					DEBUG_INFO ("SPIFFS formatted");
 				} else {
 					DEBUG_ERROR ("Error formatting SPIFFS");
@@ -744,11 +748,11 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 						if (!saveFlashData (true)) {
 							DEBUG_ERROR ("Error saving data on flash");
 						}
-						SPIFFS.end ();
+                        FILESYSTEM.end ();
 						ESP.restart ();
 						return;
 					}
-					SPIFFS.end ();
+                    FILESYSTEM.end ();
 					ESP.restart ();
 				} else { // Configuration error
 					DEBUG_ERROR ("Configuration error. Restarting");
@@ -1289,7 +1293,7 @@ bool EnigmaIOTNodeClass::clockRequest () {
 	memcpy (&(clockRequest_msg.t1), &t1, sizeof (int64_t));
 
 	DEBUG_VERBOSE ("Clock Request message: %s", printHexBuffer ((uint8_t*)&clockRequest_msg, CRMSG_LEN - TAG_LENGTH));
-	DEBUG_DBG ("T1: %llu", node.t1);
+	DEBUG_DBG ("T1: %llu", t1);
 
 	uint8_t addDataLen = 1 + IV_LENGTH;
 	uint8_t aad[AAD_LENGTH + addDataLen];
@@ -2061,7 +2065,7 @@ bool EnigmaIOTNodeClass::processSetSleepTimeCommand (const uint8_t* mac, const u
 
 	DEBUG_DBG ("Set Sleep command received");
 	DEBUG_VERBOSE ("%s", printHexBuffer (data, len));
-	if (!SPIFFS.begin ()) {
+    if (!FILESYSTEM.begin ()) {
 		DEBUG_ERROR ("Error mounting flash");
 	}
 	bool result = loadFlashData ();
@@ -2084,7 +2088,7 @@ bool EnigmaIOTNodeClass::processSetSleepTimeCommand (const uint8_t* mac, const u
 				DEBUG_WARN ("Error saving data after set sleep time command");
 			}
 		}
-		SPIFFS.end ();
+        FILESYSTEM.end ();
 	}
 	memcpy (buffer + 1, &sleepTime, sizeof (sleepTime));
 	bufLength = 5;

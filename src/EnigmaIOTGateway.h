@@ -22,7 +22,9 @@
 #include <ESPAsyncWiFiManager.h>
 #include <DNSServer.h>
 #include <queue>
+#if ENABLE_REST_API
 #include "GatewayAPI.h"
+#endif // ENABLE_REST_API
 
 #include "helperFunctions.h"
 

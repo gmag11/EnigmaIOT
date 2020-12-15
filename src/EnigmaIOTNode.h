@@ -762,7 +762,7 @@ public:
 	int8_t getRSSI ();
 
 	/**
-	 * @brief Deletes configuration file stored on SPIFFS. It makes neccessary to configure it again using WiFi Portal
+	 * @brief Deletes configuration file stored on flash. It makes neccessary to configure it again using WiFi Portal
 	 */
 	void resetConfig ();
 

@@ -12,7 +12,7 @@
 #include "GwOutput_dummy.h"
 #include <ESPAsyncWebServer.h>
 #include <helperFunctions.h>
-#include <debug.h>
+#include <EnigmaIOTdebug.h>
 
 #ifdef ESP32
 #include <SPIFFS.h>

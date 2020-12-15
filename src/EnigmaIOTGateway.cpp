@@ -13,7 +13,6 @@
 #ifdef ESP8266
 #include <Updater.h>
 #elif defined ESP32
-#include <SPIFFS.h>
 #include <Update.h>
 #include <esp_wifi.h>
 #endif
@@ -595,13 +594,13 @@ bool EnigmaIOTGatewayClass::configWiFiManager () {
 }
 
 bool EnigmaIOTGatewayClass::loadFlashData () {
-	//SPIFFS.remove (CONFIG_FILE); // Only for testing
+    //FILESYSTEM.remove (CONFIG_FILE); // Only for testing
 	bool json_correct = false;
 
-	if (SPIFFS.exists (CONFIG_FILE)) {
+	if (FILESYSTEM.exists (CONFIG_FILE)) {
 
 		DEBUG_DBG ("Opening %s file", CONFIG_FILE);
-		File configFile = SPIFFS.open (CONFIG_FILE, "r");
+        File configFile = FILESYSTEM.open (CONFIG_FILE, "r");
 		if (configFile) {
 			size_t size = configFile.size ();
 			DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, size);
@@ -652,7 +651,7 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 		}
 	} else {
 		DEBUG_WARN ("%s do not exist", CONFIG_FILE);
-		//SPIFFS.format (); // Testing only
+        //FILESYSTEM.format (); // Testing only
 		//WiFi.begin ("0", "0"); // Delete WiFi credentials
 		//DEBUG_WARN ("Dummy STA config loaded");
 		//return false;
@@ -666,7 +665,7 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 }
 
 bool EnigmaIOTGatewayClass::saveFlashData () {
-	File configFile = SPIFFS.open (CONFIG_FILE, "w");
+    File configFile = FILESYSTEM.open (CONFIG_FILE, "w");
 	if (!configFile) {
 		DEBUG_WARN ("failed to open config file %s for writing", CONFIG_FILE);
 		return false;
@@ -682,7 +681,7 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 	if (serializeJson (doc, configFile) == 0) {
 		DEBUG_ERROR ("Failed to write to file");
 		configFile.close ();
-		//SPIFFS.remove (CONFIG_FILE); // Testing only
+        //FILESYSTEM.remove (CONFIG_FILE); // Testing only
 		return false;
 	}
 
@@ -724,9 +723,9 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 		strncpy (plainNetKey, (char*)networkKey, KEY_LENGTH);
 		CryptModule::getSHA256 (this->gwConfig.networkKey, KEY_LENGTH);
 	} else {
-		if (!SPIFFS.begin ()) {
+        if (!FILESYSTEM.begin ()) {
 			DEBUG_ERROR ("Error mounting flash");
-			SPIFFS.format ();
+            FILESYSTEM.format ();
 			DEBUG_ERROR ("Formatted");
 			ESP.restart ();
 			return;
@@ -757,7 +756,10 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 		comm->onDataRcvd (rx_cb);
 		comm->onDataSent (tx_cb);
 
+#if ENABLE_REST_API
+        DEBUG_INFO ("GW API started");
 		GwAPI.begin ();
+#endif
 	}
 }
 
