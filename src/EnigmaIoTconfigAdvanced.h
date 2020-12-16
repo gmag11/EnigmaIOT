@@ -1,7 +1,7 @@
 /**
   * @file EnigmaIoTconfigAdvanced.h
-  * @version 0.9.6
-  * @date 10/12/2020
+  * @version 0.9.7
+  * @date 17/12/2020
   * @author German Martin
   * @brief Parameter configuration
   */
@@ -31,7 +31,7 @@ static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mo
 static const bool DISCONNECT_ON_DATA_ERROR = true; ///< @brief Activates node invalidation in case of data error
 #endif //DISCONNECT_ON_DATA_ERROR
 #ifndef ENABLE_REST_API
-#define ENABLE_REST_API 1
+#define ENABLE_REST_API 1 ///< Set to 1 to enable REST API
 #endif // ENABLE_REST_API
 
 // Node configuration
@@ -40,7 +40,7 @@ static const int MIN_SYNC_ACCURACY = 5000; ///< @brief If calculated offset abso
 static const int MAX_DATA_PAYLOAD_SIZE = 214; ///< @brief Maximun payload size for data packets
 #ifndef CHECK_COMM_ERRORS
 static const bool CHECK_COMM_ERRORS = true; ///< @brief Try to reconnect in case of communication errors
-#endif // !1
+#endif // CHECK_COMM_ERRORS
 static const uint32_t RTC_ADDRESS = 8; ///< @brief RTC memory address where to store context. Modify it if you need place to store your own data during deep sleep. Take care not to overwrite above that address. It is 8 to give space for FailSafeMode library
 #define USE_FLASH_INSTEAD_RTC 0 ///< @brief Use flash instead RTC for temporary context data. ATTENTION: This allows connection to survive power off cycles but may damage flash memory persistently.
 
@@ -59,7 +59,7 @@ const int WEB_API_PORT = 80; ///< @brief TCP port where Web API will listen thro
 #define FILESYSTEM SPIFFS
 #include <SPIFFS.h>
 #elif defined ESP8266
-#define USE_LITTLE_FS 1
+#define USE_LITTLE_FS 1 ///< Set to 0 to use SPIFFS or 1 to use LittleFS (recommended)
 #if USE_LITTLE_FS
 #include <FS.h>
 #include <LittleFS.h>

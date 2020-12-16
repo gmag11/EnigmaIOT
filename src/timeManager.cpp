@@ -1,21 +1,13 @@
 /**
   * @file timeManager.cpp
-  * @version 0.9.6
-  * @date 10/12/2020
+  * @version 0.9.7
+  * @date 17/12/2020
   * @author German Martin
   * @brief Clock synchronisation calculations
   */
 
 #include "timeManager.h"
 #include "EnigmaIOTdebug.h"
-
-// int64_t TimeManagerClass::setOrigin () {
-// 	//Serial.printf ("millis: %u\n", millis ());
-// 	//Serial.printf ("offset: %d\n", offset);
-// 	//Serial.printf ("clock:  %u %u\n", millis () + offset, clock());
-
-// 	return clock ();
-// }
 
 int64_t TimeManagerClass::clock () {
     timeval currentime;

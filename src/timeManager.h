@@ -1,7 +1,7 @@
 /**
   * @file timeManager.h
-  * @version 0.9.6
-  * @date 10/12/2020
+  * @version 0.9.7
+  * @date 17/12/2020
   * @author German Martin
   * @brief Clock synchronisation calculations
   */
@@ -14,23 +14,23 @@
 
 class TimeManagerClass {
 protected:
-    //clock_t t1, t2, t3, t4;
     bool timeIsAdjusted = false; ///< @brief Indicates if time has been synchronized
     int64_t offset = 0; ///< @brief Offet between node `millis()` and gateway time
     int64_t roundTripDelay; ///< @brief Propagation delay between Node and Gateway
 
 public:
-    // /**
-    //   * @brief Inits time synchronization getting local clock to be assigned to T1
-    //   * @return Value of T1
-    //   */
-    //int64_t setOrigin ();
-
     /**
-      * @brief Gets local clock. It returns `millis()` if not synchronized, local clock otherwise.
-      * @return Clock value in ms
+      * @brief Gets local clock.
+      * @return Clock value in milliseconds
       */
     int64_t clock ();
+    
+    /**
+      * @brief Gets local clock.
+      * @return Clock value in microseconds
+      */
+    int64_t clock_us ();
+
 
     /**
       * @brief Gets local clock in seconds. It returns `millis() / 1000` if not synchronized, local clock otherwise.
