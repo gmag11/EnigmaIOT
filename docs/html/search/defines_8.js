@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['no_5fdebug_1577',['NO_DEBUG',['../debug_8h.html#a424f1b989129c5519f4df8f61ad6dcaf',1,'debug.h']]],
-  ['node_5fdata_1578',['NODE_DATA',['../GwOutput__mqtt_8h.html#af1dcc05117b1f2ccb5922611c540e241',1,'GwOutput_mqtt.h']]],
-  ['node_5fstatus_1579',['NODE_STATUS',['../GwOutput__mqtt_8h.html#a82ea7d9552d7d2c2d977c578587e94dc',1,'GwOutput_mqtt.h']]]
+  ['no_5fdebug_1572',['NO_DEBUG',['../EnigmaIOTdebug_8h.html#a424f1b989129c5519f4df8f61ad6dcaf',1,'EnigmaIOTdebug.h']]],
+  ['node_5fdata_1573',['NODE_DATA',['../GwOutput__mqtt_8h.html#af1dcc05117b1f2ccb5922611c540e241',1,'GwOutput_mqtt.h']]],
+  ['node_5fstatus_1574',['NODE_STATUS',['../GwOutput__mqtt_8h.html#a82ea7d9552d7d2c2d977c578587e94dc',1,'GwOutput_mqtt.h']]],
+  ['ntp_5fserver_5f1_1575',['NTP_SERVER_1',['../EnigmaIoTconfig_8h.html#ad2cbd556e432924a29a3efa1d13668af',1,'EnigmaIoTconfig.h']]],
+  ['ntp_5fserver_5f2_1576',['NTP_SERVER_2',['../EnigmaIoTconfig_8h.html#a562447c925663fec9c7e923f6c46fa7d',1,'EnigmaIoTconfig.h']]]
 ];

@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.6</span>
+   &#160;<span id="projectnumber">0.9.7</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -79,7 +79,7 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;WProgram.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="EnigmaIoTconfig_8h_source.html">EnigmaIoTconfig.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="EnigmaIOTdebug_8h_source.html">EnigmaIOTdebug.h</a>&quot;</code><br />
 </div>
 <p><a href="helperFunctions_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -88,9 +88,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a34002f0936dac45b08bba5436ddc8a09"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8h.html#a34002f0936dac45b08bba5436ddc8a09">printHexBuffer</a> (const uint8_t *buffer, uint16_t len)</td></tr>
 <tr class="memdesc:a34002f0936dac45b08bba5436ddc8a09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug helper function that generates a string that represent a buffer hexadecimal values.  <a href="helperFunctions_8h.html#a34002f0936dac45b08bba5436ddc8a09">More...</a><br /></td></tr>
 <tr class="separator:a34002f0936dac45b08bba5436ddc8a09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a09e49bdb6c6cc3bfb9a22dac47f551"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8h.html#a4a09e49bdb6c6cc3bfb9a22dac47f551">mac2str</a> (const uint8_t *mac, char *buffer)</td></tr>
-<tr class="memdesc:a4a09e49bdb6c6cc3bfb9a22dac47f551"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug helper function that generates a string that represent a MAC address.  <a href="helperFunctions_8h.html#a4a09e49bdb6c6cc3bfb9a22dac47f551">More...</a><br /></td></tr>
-<tr class="separator:a4a09e49bdb6c6cc3bfb9a22dac47f551"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4d5213c3c8ecf522b12f0469ffbe840"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8h.html#aa4d5213c3c8ecf522b12f0469ffbe840">mac2str</a> (const uint8_t *mac, char *extBuffer=NULL)</td></tr>
+<tr class="memdesc:aa4d5213c3c8ecf522b12f0469ffbe840"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug helper function that generates a string that represent a MAC address.  <a href="helperFunctions_8h.html#aa4d5213c3c8ecf522b12f0469ffbe840">More...</a><br /></td></tr>
+<tr class="separator:aa4d5213c3c8ecf522b12f0469ffbe840"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fdf837000194d53f0d019f024e0f4a1"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="helperFunctions_8h.html#a0fdf837000194d53f0d019f024e0f4a1">str2mac</a> (const char *mac, uint8_t *values)</td></tr>
 <tr class="memdesc:a0fdf837000194d53f0d019f024e0f4a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug helper function that creates MAC address byte array from text representation.  <a href="helperFunctions_8h.html#a0fdf837000194d53f0d019f024e0f4a1">More...</a><br /></td></tr>
 <tr class="separator:a0fdf837000194d53f0d019f024e0f4a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,8 +112,8 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Auxiliary function definition. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.6 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>10/12/2020 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.7 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>17/12/2020 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="helperFunctions_8h_source.html">helperFunctions.h</a>.</p>
@@ -236,7 +236,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if string is a number </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00160">160</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00169">169</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
 
 </div>
 </div>
@@ -276,7 +276,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if string is a number </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00177">177</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00186">186</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
 
 </div>
 </div>
@@ -305,12 +305,12 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if string is a number </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00193">193</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00202">202</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a4a09e49bdb6c6cc3bfb9a22dac47f551"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a09e49bdb6c6cc3bfb9a22dac47f551">&#9670;&nbsp;</a></span>mac2str()</h2>
+<a id="aa4d5213c3c8ecf522b12f0469ffbe840"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4d5213c3c8ecf522b12f0469ffbe840">&#9670;&nbsp;</a></span>mac2str()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -325,7 +325,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>buffer</em>&#160;</td>
+          <td class="paramname"><em>extBuffer</em> = <code>NULL</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -339,7 +339,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mac</td><td>Pointer to the MAC address </td></tr>
-    <tr><td class="paramname">buffer</td><td>Buffer that will store resulting address. It must be 18 bytes long at least </td></tr>
+    <tr><td class="paramname">extBuffer</td><td>Buffer that will store resulting address. It must be 18 bytes long at least. If it is NULL a static buffer will be used </td></tr>
   </table>
   </dd>
 </dl>
@@ -426,7 +426,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns a pointer to <code>values</code> input buffer after writting MAC address </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00095">95</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="helperFunctions_8cpp_source.html#l00104">104</a> of file <a class="el" href="helperFunctions_8cpp_source.html">helperFunctions.cpp</a>.</p>
 
 </div>
 </div>

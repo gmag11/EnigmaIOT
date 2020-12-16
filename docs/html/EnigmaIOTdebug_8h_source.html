@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>EnigmaIOT: src/debug.h Source File</title>
+<title>EnigmaIOT: src/EnigmaIOTdebug.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.6</span>
+   &#160;<span id="projectnumber">0.9.7</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -69,10 +69,10 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">debug.h</div>  </div>
+<div class="title">EnigmaIOTdebug.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="debug_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
+<a href="EnigmaIOTdebug_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifndef _DEBUG_h</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define _DEBUG_h</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
@@ -82,12 +82,12 @@ $(function() {
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;esp_log.h&gt;</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="debug_8h.html#a424f1b989129c5519f4df8f61ad6dcaf">   24</a></span>&#160;<span class="preprocessor">#define NO_DEBUG    0 </span></div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="debug_8h.html#a8fe83ac76edc595f6b98cd4a4127aed5">   25</a></span>&#160;<span class="preprocessor">#define ERROR   1 </span></div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="debug_8h.html#a271d8f7f52be750e5c744a394ec71344">   26</a></span>&#160;<span class="preprocessor">#define WARN    2 </span></div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="debug_8h.html#ae1103fea1e1b3c41ca3322d5389f7162">   27</a></span>&#160;<span class="preprocessor">#define INFO    3 </span></div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="debug_8h.html#a49606be7356624568932ec81c0d429f4">   28</a></span>&#160;<span class="preprocessor">#define DBG     4 </span></div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="debug_8h.html#a42f8c497a1968074f38bf5055c650dca">   29</a></span>&#160;<span class="preprocessor">#define VERBOSE 5 </span></div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="EnigmaIOTdebug_8h.html#a424f1b989129c5519f4df8f61ad6dcaf">   24</a></span>&#160;<span class="preprocessor">#define NO_DEBUG    0 </span></div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="EnigmaIOTdebug_8h.html#a8fe83ac76edc595f6b98cd4a4127aed5">   25</a></span>&#160;<span class="preprocessor">#define ERROR   1 </span></div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="EnigmaIOTdebug_8h.html#a271d8f7f52be750e5c744a394ec71344">   26</a></span>&#160;<span class="preprocessor">#define WARN    2 </span></div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="EnigmaIOTdebug_8h.html#ae1103fea1e1b3c41ca3322d5389f7162">   27</a></span>&#160;<span class="preprocessor">#define INFO    3 </span></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="EnigmaIOTdebug_8h.html#a49606be7356624568932ec81c0d429f4">   28</a></span>&#160;<span class="preprocessor">#define DBG     4 </span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="EnigmaIOTdebug_8h.html#a42f8c497a1968074f38bf5055c650dca">   29</a></span>&#160;<span class="preprocessor">#define VERBOSE 5 </span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span> </div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#ifdef ESP8266</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span>* extractFileName (<span class="keyword">const</span> <span class="keywordtype">char</span>* path);</div>

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['use_5fflash_5finstead_5frtc_1597',['USE_FLASH_INSTEAD_RTC',['../EnigmaIoTconfigAdvanced_8h.html#a3adc46611e76e71d60021e6c87d11dcc',1,'EnigmaIoTconfigAdvanced.h']]],
-  ['use_5fserial_1598',['USE_SERIAL',['../EnigmaIOT-Button-Controller_8ino.html#a2cb4a65422d8c7bd10ff4436e8a79b1b',1,'USE_SERIAL():&#160;EnigmaIOT-Button-Controller.ino'],['../EnigmaIOT-DashButton-Controller_8ino.html#a2cb4a65422d8c7bd10ff4436e8a79b1b',1,'USE_SERIAL():&#160;EnigmaIOT-DashButton-Controller.ino'],['../EnigmaIOT-Json-Controller-Template_8ino.html#a2cb4a65422d8c7bd10ff4436e8a79b1b',1,'USE_SERIAL():&#160;EnigmaIOT-Json-Controller-Template.ino'],['../EnigmaIOT-Led-Controller_8ino.html#a2cb4a65422d8c7bd10ff4436e8a79b1b',1,'USE_SERIAL():&#160;EnigmaIOT-Led-Controller.ino'],['../EnigmaIOT-Sensor-Controller_8ino.html#a2cb4a65422d8c7bd10ff4436e8a79b1b',1,'USE_SERIAL():&#160;EnigmaIOT-Sensor-Controller.ino'],['../EnigmaIOT-SmartSwitch-Controller_8ino.html#a2cb4a65422d8c7bd10ff4436e8a79b1b',1,'USE_SERIAL():&#160;EnigmaIOT-SmartSwitch-Controller.ino']]]
+  ['tzinfo_1594',['TZINFO',['../EnigmaIoTconfig_8h.html#a77cde0d6b3da9d409d46bdc85147724a',1,'EnigmaIoTconfig.h']]]
 ];

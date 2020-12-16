@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.6</span>
+   &#160;<span id="projectnumber">0.9.7</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -149,156 +149,165 @@ $(function() {
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#undef MACSTR</span></div>
 <div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="helperFunctions_8cpp.html#ad6e69a2870c8f219cc679677af110849">   83</a></span>&#160;<span class="preprocessor">#define MACSTR &quot;%02X:%02X:%02X:%02X:%02X:%02X&quot;</span></div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="helperFunctions_8h.html#a4a09e49bdb6c6cc3bfb9a22dac47f551">   85</a></span>&#160;<span class="keywordtype">char</span>* <a class="code" href="helperFunctions_8cpp.html#a4a09e49bdb6c6cc3bfb9a22dac47f551">mac2str</a> (<span class="keyword">const</span> uint8_t* mac, <span class="keywordtype">char</span>* buffer) {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">if</span> (mac &amp;&amp; buffer) {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">//DEBUG_DBG (&quot;mac2str %02x:%02x:%02x:%02x:%02x:%02x&quot;,mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        snprintf (buffer, <a class="code" href="EnigmaIoTconfigAdvanced_8h.html#a479714978e5c2a44dce41ae3be800ffd">ENIGMAIOT_ADDR_LEN</a> * 3, <a class="code" href="helperFunctions_8cpp.html#ad6e69a2870c8f219cc679677af110849">MACSTR</a>, MAC2STR (mac));</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">//DEBUG_DBG (&quot;Address: %s&quot;, buffer);</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordflow">return</span> buffer;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    }</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="helperFunctions_8h.html#a0fdf837000194d53f0d019f024e0f4a1">   95</a></span>&#160;uint8_t* <a class="code" href="helperFunctions_8cpp.html#a02961b325403161b54533152d242696a">str2mac</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* macAddrString, uint8_t* macBytes) {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> cSep = <span class="charliteral">&#39;:&#39;</span>;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">if</span> (!macBytes) {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="helperFunctions_8h.html#aa4d5213c3c8ecf522b12f0469ffbe840">   85</a></span>&#160;<span class="keywordtype">char</span>* <a class="code" href="helperFunctions_8cpp.html#a4aa65746e6dd83962165de3c3191c41f">mac2str</a> (<span class="keyword">const</span> uint8_t* mac, <span class="keywordtype">char</span>* extBuffer) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">char</span>* buffer;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">char</span> staticBuffer[<a class="code" href="EnigmaIoTconfigAdvanced_8h.html#a479714978e5c2a44dce41ae3be800ffd">ENIGMAIOT_ADDR_LEN</a> * 3];</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">if</span> (!extBuffer){</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        buffer = staticBuffer;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        buffer = extBuffer;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">if</span> (mac &amp;&amp; buffer) {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="comment">//DEBUG_DBG (&quot;mac2str %02x:%02x:%02x:%02x:%02x:%02x&quot;,mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        snprintf (buffer, <a class="code" href="EnigmaIoTconfigAdvanced_8h.html#a479714978e5c2a44dce41ae3be800ffd">ENIGMAIOT_ADDR_LEN</a> * 3, <a class="code" href="helperFunctions_8cpp.html#ad6e69a2870c8f219cc679677af110849">MACSTR</a>, MAC2STR (mac));</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="comment">//DEBUG_DBG (&quot;Address: %s&quot;, buffer);</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">return</span> buffer;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 6; ++i) {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> iNumber = 0;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordtype">char</span> ch;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="comment">//Convert letter into lower case.</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        ch = tolower (*macAddrString++);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keywordflow">if</span> ((ch &lt; &#39;0&#39; || ch &gt; <span class="charliteral">&#39;9&#39;</span>) &amp;&amp; (ch &lt; &#39;a&#39; || ch &gt; <span class="charliteral">&#39;f&#39;</span>)) {</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        }</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="comment">//Convert into number. </span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="comment">//  a. If character is digit then ch - &#39;0&#39;</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="comment">//  b. else (ch - &#39;a&#39; + 10) it is done </span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="comment">//        because addition of 10 takes correct value.</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        iNumber = isdigit (ch) ? (ch - <span class="charliteral">&#39;0&#39;</span>) : (ch - <span class="charliteral">&#39;a&#39;</span> + 10);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        ch = tolower (*macAddrString);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">if</span> ((i &lt; 5 &amp;&amp; ch != cSep) ||</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            (i == 5 &amp;&amp; ch != <span class="charliteral">&#39;\0&#39;</span> &amp;&amp; !isspace (ch))) {</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            ++macAddrString;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            <span class="keywordflow">if</span> ((ch &lt; &#39;0&#39; || ch &gt; <span class="charliteral">&#39;9&#39;</span>) &amp;&amp; (ch &lt; &#39;a&#39; || ch &gt; <span class="charliteral">&#39;f&#39;</span>)) {</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            }</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            iNumber &lt;&lt;= 4;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            iNumber += isdigit (ch) ? (ch - <span class="charliteral">&#39;0&#39;</span>) : (ch - <span class="charliteral">&#39;a&#39;</span> + 10);</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            ch = *macAddrString;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="keywordflow">if</span> (i &lt; 5 &amp;&amp; ch != cSep) {</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            }</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        }</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="comment">/* Store result.  */</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        macBytes[i] = (<span class="keywordtype">unsigned</span> char)iNumber;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="comment">/* Skip cSep.  */</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        ++macAddrString;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    }</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <span class="keywordflow">return</span> macBytes;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;}</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160; </div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="preprocessor">#ifdef ESP8266</span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span>* IRAM_ATTR extractFileName (<span class="keyword">const</span> <span class="keywordtype">char</span>* path) {</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordtype">size_t</span> i = 0;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordtype">size_t</span> pos = 0;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keywordtype">char</span>* p = (<span class="keywordtype">char</span>*)path;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="keywordflow">while</span> (*p) {</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        i++;</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        <span class="keywordflow">if</span> (*p == <span class="charliteral">&#39;/&#39;</span> || *p == <span class="charliteral">&#39;\\&#39;</span>) {</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            pos = i;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        }</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        p++;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    }</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordflow">return</span> path + pos;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;}</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
-<div class="line"><a name="l00160"></a><span class="lineno"><a class="line" href="helperFunctions_8h.html#aa76d044529f5f932eb6014b50047c02b">  160</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="helperFunctions_8cpp.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* input) {</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index = 0;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">size_t</span> len = strlen (input);</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordflow">if</span> (!len) {</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    }</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordflow">while</span> (index &lt; len) {</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        <span class="keywordflow">if</span> (!isDigit (input[index])) {</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        }</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        index++;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    }</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;}</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;}</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="helperFunctions_8h.html#a0fdf837000194d53f0d019f024e0f4a1">  104</a></span>&#160;uint8_t* <a class="code" href="helperFunctions_8cpp.html#a02961b325403161b54533152d242696a">str2mac</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* macAddrString, uint8_t* macBytes) {</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> cSep = <span class="charliteral">&#39;:&#39;</span>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">if</span> (!macBytes) {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 6; ++i) {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> iNumber = 0;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keywordtype">char</span> ch;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="comment">//Convert letter into lower case.</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        ch = tolower (*macAddrString++);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keywordflow">if</span> ((ch &lt; &#39;0&#39; || ch &gt; <span class="charliteral">&#39;9&#39;</span>) &amp;&amp; (ch &lt; &#39;a&#39; || ch &gt; <span class="charliteral">&#39;f&#39;</span>)) {</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="comment">//Convert into number. </span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="comment">//  a. If character is digit then ch - &#39;0&#39;</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="comment">//  b. else (ch - &#39;a&#39; + 10) it is done </span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="comment">//        because addition of 10 takes correct value.</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        iNumber = isdigit (ch) ? (ch - <span class="charliteral">&#39;0&#39;</span>) : (ch - <span class="charliteral">&#39;a&#39;</span> + 10);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        ch = tolower (*macAddrString);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="keywordflow">if</span> ((i &lt; 5 &amp;&amp; ch != cSep) ||</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            (i == 5 &amp;&amp; ch != <span class="charliteral">&#39;\0&#39;</span> &amp;&amp; !isspace (ch))) {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            ++macAddrString;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="keywordflow">if</span> ((ch &lt; &#39;0&#39; || ch &gt; <span class="charliteral">&#39;9&#39;</span>) &amp;&amp; (ch &lt; &#39;a&#39; || ch &gt; <span class="charliteral">&#39;f&#39;</span>)) {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            }</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            iNumber &lt;&lt;= 4;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            iNumber += isdigit (ch) ? (ch - <span class="charliteral">&#39;0&#39;</span>) : (ch - <span class="charliteral">&#39;a&#39;</span> + 10);</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            ch = *macAddrString;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;            <span class="keywordflow">if</span> (i &lt; 5 &amp;&amp; ch != cSep) {</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;            }</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        }</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <span class="comment">/* Store result.  */</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        macBytes[i] = (<span class="keywordtype">unsigned</span> char)iNumber;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="comment">/* Skip cSep.  */</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        ++macAddrString;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    }</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">return</span> macBytes;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;}</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="preprocessor">#ifdef ESP8266</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span>* IRAM_ATTR extractFileName (<span class="keyword">const</span> <span class="keywordtype">char</span>* path) {</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordtype">size_t</span> i = 0;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordtype">size_t</span> pos = 0;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keywordtype">char</span>* p = (<span class="keywordtype">char</span>*)path;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordflow">while</span> (*p) {</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        i++;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        <span class="keywordflow">if</span> (*p == <span class="charliteral">&#39;/&#39;</span> || *p == <span class="charliteral">&#39;\\&#39;</span>) {</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;            pos = i;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        }</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        p++;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    }</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="keywordflow">return</span> path + pos;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;}</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
+<div class="line"><a name="l00169"></a><span class="lineno"><a class="line" href="helperFunctions_8h.html#aa76d044529f5f932eb6014b50047c02b">  169</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="helperFunctions_8cpp.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* input) {</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index = 0;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="keywordtype">size_t</span> len = strlen (input);</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keywordflow">if</span> (!len) {</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    }</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
-<div class="line"><a name="l00177"></a><span class="lineno"><a class="line" href="helperFunctions_8h.html#a26eaeecca0f44f0e5cf47b1f044a1306">  177</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="helperFunctions_8cpp.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* input, <span class="keywordtype">size_t</span> len) {</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index = 0;</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keywordflow">if</span> (!len) {</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordflow">while</span> (index &lt; len) {</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        <span class="keywordflow">if</span> (!isDigit (input[index])) {</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        }</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        index++;</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    }</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keywordflow">while</span> (input[index] != <span class="charliteral">&#39;\0&#39;</span> &amp;&amp; index &lt; len) {</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        <span class="keywordflow">if</span> (!isDigit (input[index])) {</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        }</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        index++;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    }</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;}</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;}</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
+<div class="line"><a name="l00186"></a><span class="lineno"><a class="line" href="helperFunctions_8h.html#a26eaeecca0f44f0e5cf47b1f044a1306">  186</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="helperFunctions_8cpp.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* input, <span class="keywordtype">size_t</span> len) {</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index = 0;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordflow">if</span> (!len) {</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    }</div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
-<div class="line"><a name="l00193"></a><span class="lineno"><a class="line" href="helperFunctions_8h.html#a8d64848792adcc6a1094ea0eef6bed51">  193</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="helperFunctions_8cpp.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a> (String input) {</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index = 0;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keywordtype">size_t</span> len = input.length ();</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="keywordflow">if</span> (!len) {</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    }</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160; </div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="keywordflow">while</span> (index &lt; len) {</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        <span class="keywordflow">if</span> (!isDigit (input[index])) {</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        }</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        index++;</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    }</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;}</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keywordflow">while</span> (input[index] != <span class="charliteral">&#39;\0&#39;</span> &amp;&amp; index &lt; len) {</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <span class="keywordflow">if</span> (!isDigit (input[index])) {</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        }</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        index++;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    }</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;}</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
+<div class="line"><a name="l00202"></a><span class="lineno"><a class="line" href="helperFunctions_8h.html#a8d64848792adcc6a1094ea0eef6bed51">  202</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="helperFunctions_8cpp.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a> (String input) {</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index = 0;</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keywordtype">size_t</span> len = input.length ();</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <span class="keywordflow">if</span> (!len) {</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    }</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="comment">//int str2mac (const char* mac, uint8_t* values) {</span></div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="comment">//  int error = std::sscanf (mac, &quot;%02x:%02x:%02x:%02x:%02x:%02x&quot;, &amp;values[0], &amp;values[1], &amp;values[2], &amp;values[3], &amp;values[4], &amp;values[5]);</span></div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="comment">//  Serial.printf (&quot;Error: %d&quot;, error);</span></div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="comment">//  if (error == 6) {</span></div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="comment">//      for (int i = 0; i &lt; 6; i++) {</span></div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="comment">//          Serial.println (values[i]);</span></div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<span class="comment">//      }</span></div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="comment">//      return 1;</span></div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="comment">//  }</span></div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="comment">//  else {</span></div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="comment">//      return 0;</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;<span class="comment">//  }</span></div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="comment">//}</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="keywordflow">while</span> (index &lt; len) {</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        <span class="keywordflow">if</span> (!isDigit (input[index])) {</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;        }</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        index++;</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    }</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;}</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="comment">//int str2mac (const char* mac, uint8_t* values) {</span></div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="comment">//  int error = std::sscanf (mac, &quot;%02x:%02x:%02x:%02x:%02x:%02x&quot;, &amp;values[0], &amp;values[1], &amp;values[2], &amp;values[3], &amp;values[4], &amp;values[5]);</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;<span class="comment">//  Serial.printf (&quot;Error: %d&quot;, error);</span></div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="comment">//  if (error == 6) {</span></div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="comment">//      for (int i = 0; i &lt; 6; i++) {</span></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="comment">//          Serial.println (values[i]);</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="comment">//      }</span></div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="comment">//      return 1;</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="comment">//  }</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment">//  else {</span></div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="comment">//      return 0;</span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="comment">//  }</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="comment">//}</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aEnigmaIoTconfigAdvanced_8h_html_a479714978e5c2a44dce41ae3be800ffd"><div class="ttname"><a href="EnigmaIoTconfigAdvanced_8h.html#a479714978e5c2a44dce41ae3be800ffd">ENIGMAIOT_ADDR_LEN</a></div><div class="ttdeci">static const size_t ENIGMAIOT_ADDR_LEN</div><div class="ttdoc">Address size. Mac address = 6 bytes.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIoTconfigAdvanced_8h_source.html#l00020">EnigmaIoTconfigAdvanced.h:20</a></div></div>
+<div class="ttc" id="aEnigmaIoTconfigAdvanced_8h_html_a479714978e5c2a44dce41ae3be800ffd"><div class="ttname"><a href="EnigmaIoTconfigAdvanced_8h.html#a479714978e5c2a44dce41ae3be800ffd">ENIGMAIOT_ADDR_LEN</a></div><div class="ttdeci">static const size_t ENIGMAIOT_ADDR_LEN</div><div class="ttdoc">Address size. Mac address = 6 bytes.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIoTconfigAdvanced_8h_source.html#l00022">EnigmaIoTconfigAdvanced.h:22</a></div></div>
 <div class="ttc" id="ahelperFunctions_8cpp_html_ad22aae6146b9da40aa95e2acfe12f6d3"><div class="ttname"><a href="helperFunctions_8cpp.html#ad22aae6146b9da40aa95e2acfe12f6d3">initWiFi</a></div><div class="ttdeci">void initWiFi(uint8_t channel, const char *networkName, const char *networkKey, uint8_t role)</div><div class="ttdoc">Initalizes WiFi interfaces on ESP8266 or ESP32.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00032">helperFunctions.cpp:32</a></div></div>
-<div class="ttc" id="ahelperFunctions_8cpp_html_a02961b325403161b54533152d242696a"><div class="ttname"><a href="helperFunctions_8cpp.html#a02961b325403161b54533152d242696a">str2mac</a></div><div class="ttdeci">uint8_t * str2mac(const char *macAddrString, uint8_t *macBytes)</div><div class="ttdoc">Debug helper function that creates MAC address byte array from text representation.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00095">helperFunctions.cpp:95</a></div></div>
+<div class="ttc" id="ahelperFunctions_8cpp_html_a02961b325403161b54533152d242696a"><div class="ttname"><a href="helperFunctions_8cpp.html#a02961b325403161b54533152d242696a">str2mac</a></div><div class="ttdeci">uint8_t * str2mac(const char *macAddrString, uint8_t *macBytes)</div><div class="ttdoc">Debug helper function that creates MAC address byte array from text representation.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00104">helperFunctions.cpp:104</a></div></div>
 <div class="ttc" id="ahelperFunctions_8cpp_html_a58ce36916c399104e18d32ff090f21c6"><div class="ttname"><a href="helperFunctions_8cpp.html#a58ce36916c399104e18d32ff090f21c6">MAX_STR_LEN</a></div><div class="ttdeci">#define MAX_STR_LEN</div><div class="ttdoc">Key length used by selected crypto algorythm.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00014">helperFunctions.cpp:14</a></div></div>
 <div class="ttc" id="ahelperFunctions_8cpp_html_a34002f0936dac45b08bba5436ddc8a09"><div class="ttname"><a href="helperFunctions_8cpp.html#a34002f0936dac45b08bba5436ddc8a09">printHexBuffer</a></div><div class="ttdeci">char * printHexBuffer(const uint8_t *buffer, uint16_t len)</div><div class="ttdoc">Debug helper function that generates a string that represent a buffer hexadecimal values.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00016">helperFunctions.cpp:16</a></div></div>
-<div class="ttc" id="ahelperFunctions_8cpp_html_a4a09e49bdb6c6cc3bfb9a22dac47f551"><div class="ttname"><a href="helperFunctions_8cpp.html#a4a09e49bdb6c6cc3bfb9a22dac47f551">mac2str</a></div><div class="ttdeci">char * mac2str(const uint8_t *mac, char *buffer)</div><div class="ttdoc">Debug helper function that generates a string that represent a MAC address.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00085">helperFunctions.cpp:85</a></div></div>
 <div class="ttc" id="ahelperFunctions_8cpp_html_ad6e69a2870c8f219cc679677af110849"><div class="ttname"><a href="helperFunctions_8cpp.html#ad6e69a2870c8f219cc679677af110849">MACSTR</a></div><div class="ttdeci">#define MACSTR</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00083">helperFunctions.cpp:83</a></div></div>
 <div class="ttc" id="aGwOutput__generic_8h_html_a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b"><div class="ttname"><a href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a></div><div class="ttdeci">@ data</div><div class="ttdef"><b>Definition:</b> <a href="GwOutput__generic_8h_source.html#l00023">GwOutput_generic.h:23</a></div></div>
+<div class="ttc" id="ahelperFunctions_8cpp_html_a4aa65746e6dd83962165de3c3191c41f"><div class="ttname"><a href="helperFunctions_8cpp.html#a4aa65746e6dd83962165de3c3191c41f">mac2str</a></div><div class="ttdeci">char * mac2str(const uint8_t *mac, char *extBuffer)</div><div class="ttdoc">Debug helper function that generates a string that represent a MAC address.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00085">helperFunctions.cpp:85</a></div></div>
 <div class="ttc" id="ahelperFunctions_8h_html"><div class="ttname"><a href="helperFunctions_8h.html">helperFunctions.h</a></div><div class="ttdoc">Auxiliary function definition.</div></div>
 <div class="ttc" id="ahelperFunctions_8cpp_html_a81e44efba216f1a0a981219616eeb8f3"><div class="ttname"><a href="helperFunctions_8cpp.html#a81e44efba216f1a0a981219616eeb8f3">calculateCRC32</a></div><div class="ttdeci">uint32_t calculateCRC32(const uint8_t *data, size_t length)</div><div class="ttdoc">Calculates CRC32 of a buffer.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00064">helperFunctions.cpp:64</a></div></div>
-<div class="ttc" id="ahelperFunctions_8cpp_html_aa76d044529f5f932eb6014b50047c02b"><div class="ttname"><a href="helperFunctions_8cpp.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a></div><div class="ttdeci">bool isNumber(const char *input)</div><div class="ttdoc">Checks if input string is numeric.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00160">helperFunctions.cpp:160</a></div></div>
+<div class="ttc" id="ahelperFunctions_8cpp_html_aa76d044529f5f932eb6014b50047c02b"><div class="ttname"><a href="helperFunctions_8cpp.html#aa76d044529f5f932eb6014b50047c02b">isNumber</a></div><div class="ttdeci">bool isNumber(const char *input)</div><div class="ttdoc">Checks if input string is numeric.</div><div class="ttdef"><b>Definition:</b> <a href="helperFunctions_8cpp_source.html#l00169">helperFunctions.cpp:169</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20

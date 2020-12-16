@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.6</span>
+   &#160;<span id="projectnumber">0.9.7</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -77,12 +77,12 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abee40a2c59125c58f03c8093b4121a66"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTimeManagerClass.html#abee40a2c59125c58f03c8093b4121a66">setOrigin</a> ()</td></tr>
-<tr class="memdesc:abee40a2c59125c58f03c8093b4121a66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inits time synchronization getting local clock to be assigned to T1.  <a href="classTimeManagerClass.html#abee40a2c59125c58f03c8093b4121a66">More...</a><br /></td></tr>
-<tr class="separator:abee40a2c59125c58f03c8093b4121a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85889f0610371fd502b47aae07d35506"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTimeManagerClass.html#a85889f0610371fd502b47aae07d35506">clock</a> ()</td></tr>
-<tr class="memdesc:a85889f0610371fd502b47aae07d35506"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets local clock. It returns <code>millis()</code> if not synchronized, local clock otherwise.  <a href="classTimeManagerClass.html#a85889f0610371fd502b47aae07d35506">More...</a><br /></td></tr>
+<tr class="memdesc:a85889f0610371fd502b47aae07d35506"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets local clock.  <a href="classTimeManagerClass.html#a85889f0610371fd502b47aae07d35506">More...</a><br /></td></tr>
 <tr class="separator:a85889f0610371fd502b47aae07d35506"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52790ace85f8a18dcbd7fceb5ab49af0"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTimeManagerClass.html#a52790ace85f8a18dcbd7fceb5ab49af0">clock_us</a> ()</td></tr>
+<tr class="memdesc:a52790ace85f8a18dcbd7fceb5ab49af0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets local clock.  <a href="classTimeManagerClass.html#a52790ace85f8a18dcbd7fceb5ab49af0">More...</a><br /></td></tr>
+<tr class="separator:a52790ace85f8a18dcbd7fceb5ab49af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5509b838b2b813cc5b4bce9436c825b5"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTimeManagerClass.html#a5509b838b2b813cc5b4bce9436c825b5">unixtime</a> ()</td></tr>
 <tr class="memdesc:a5509b838b2b813cc5b4bce9436c825b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets local clock in seconds. It returns <code>millis() / 1000</code> if not synchronized, local clock otherwise. This may contain current realtime clock if Gateway is synchronized using NTP time.  <a href="classTimeManagerClass.html#a5509b838b2b813cc5b4bce9436c825b5">More...</a><br /></td></tr>
 <tr class="separator:a5509b838b2b813cc5b4bce9436c825b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -116,7 +116,7 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00014">14</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00015">15</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a339f610c808ea5b39ccc9ca462269cf2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a339f610c808ea5b39ccc9ca462269cf2">&#9670;&nbsp;</a></span>adjustTime()</h2>
@@ -168,7 +168,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Clock value in seconds. It uses UnixTime format </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="timeManager_8cpp_source.html#l00030">30</a> of file <a class="el" href="timeManager_8cpp_source.html">timeManager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="timeManager_8cpp_source.html#l00034">34</a> of file <a class="el" href="timeManager_8cpp_source.html">timeManager.cpp</a>.</p>
 
 </div>
 </div>
@@ -187,10 +187,32 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Gets local clock. It returns <code>millis()</code> if not synchronized, local clock otherwise. </p>
-<dl class="section return"><dt>Returns</dt><dd>Clock value in ms </dd></dl>
+<p>Gets local clock. </p>
+<dl class="section return"><dt>Returns</dt><dd>Clock value in milliseconds </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="timeManager_8cpp_source.html#l00020">20</a> of file <a class="el" href="timeManager_8cpp_source.html">timeManager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="timeManager_8cpp_source.html#l00012">12</a> of file <a class="el" href="timeManager_8cpp_source.html">timeManager.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a52790ace85f8a18dcbd7fceb5ab49af0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52790ace85f8a18dcbd7fceb5ab49af0">&#9670;&nbsp;</a></span>clock_us()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int64_t TimeManagerClass::clock_us </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets local clock. </p>
+<dl class="section return"><dt>Returns</dt><dd>Clock value in microseconds </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="timeManager_8cpp_source.html#l00023">23</a> of file <a class="el" href="timeManager_8cpp_source.html">timeManager.cpp</a>.</p>
 
 </div>
 </div>
@@ -220,7 +242,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets propagation + processing delay between <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> and Gateway in milliseconds. </p>
 <dl class="section return"><dt>Returns</dt><dd>Delay value in ms </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00074">74</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00075">75</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
 
 </div>
 </div>
@@ -250,7 +272,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets current offset to calculate clock, in milliseconds. </p>
 <dl class="section return"><dt>Returns</dt><dd>Offset value in ms </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00058">58</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00059">59</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
 
 </div>
 </div>
@@ -280,7 +302,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets synchronization status. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>True</code> if clock is synchronized </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00066">66</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00067">67</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
 
 </div>
 </div>
@@ -309,29 +331,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Resets clock synchronization and sets values to initial status. </p>
 
-<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00081">81</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
-
-</div>
-</div>
-<a id="abee40a2c59125c58f03c8093b4121a66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abee40a2c59125c58f03c8093b4121a66">&#9670;&nbsp;</a></span>setOrigin()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int64_t TimeManagerClass::setOrigin </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Inits time synchronization getting local clock to be assigned to T1. </p>
-<dl class="section return"><dt>Returns</dt><dd>Value of T1 </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="timeManager_8cpp_source.html#l00012">12</a> of file <a class="el" href="timeManager_8cpp_source.html">timeManager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00082">82</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
 
 </div>
 </div>
@@ -361,7 +361,7 @@ Protected Attributes</h2></td></tr>
 <p>Gets local clock in seconds. It returns <code>millis() / 1000</code> if not synchronized, local clock otherwise. This may contain current realtime clock if Gateway is synchronized using NTP time. </p>
 <dl class="section return"><dt>Returns</dt><dd>Clock value in seconds. It uses UnixTime format </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00039">39</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="timeManager_8h_source.html#l00040">40</a> of file <a class="el" href="timeManager_8h_source.html">timeManager.h</a>.</p>
 
 </div>
 </div>

@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.6</span>
+   &#160;<span id="projectnumber">0.9.7</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -90,7 +90,7 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Comms__hal_8h.html">Comms_hal.h</a>&quot;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="helperFunctions_8h.html">helperFunctions.h</a>&quot;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="debug_8h.html">debug.h</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="EnigmaIOTdebug_8h.html">EnigmaIOTdebug.h</a>&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classEspnow__halClass.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classEspnow__halClass.html">Espnow_halClass</a> : <span class="keyword">public</span> <a class="code" href="classComms__halClass.html">Comms_halClass</a> {</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">public</span>:</div>
@@ -159,13 +159,13 @@ $(function() {
 <div class="ttc" id="aGwOutput__generic_8h_html_a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b"><div class="ttname"><a href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a></div><div class="ttdeci">@ data</div><div class="ttdef"><b>Definition:</b> <a href="GwOutput__generic_8h_source.html#l00023">GwOutput_generic.h:23</a></div></div>
 <div class="ttc" id="aclassEspnow__halClass_html_a084026117f83985b7f7751aa9e9726a0"><div class="ttname"><a href="classEspnow__halClass.html#a084026117f83985b7f7751aa9e9726a0">Espnow_halClass::initComms</a></div><div class="ttdeci">void initComms(peerType_t peerType)</div><div class="ttdoc">Communication subsistem initialization.</div><div class="ttdef"><b>Definition:</b> <a href="espnow__hal_8cpp_source.html#l00024">espnow_hal.cpp:24</a></div></div>
 <div class="ttc" id="ahelperFunctions_8h_html"><div class="ttname"><a href="helperFunctions_8h.html">helperFunctions.h</a></div><div class="ttdoc">Auxiliary function definition.</div></div>
+<div class="ttc" id="aEnigmaIOTdebug_8h_html"><div class="ttname"><a href="EnigmaIOTdebug_8h.html">EnigmaIOTdebug.h</a></div><div class="ttdoc">Auxiliary functions for debugging over Serial.</div></div>
 <div class="ttc" id="aclassEspnow__halClass_html_a3a037c0d31f906bc24a8475b376072fd"><div class="ttname"><a href="classEspnow__halClass.html#a3a037c0d31f906bc24a8475b376072fd">Espnow_halClass::getMaxMessageLength</a></div><div class="ttdeci">size_t getMaxMessageLength()</div><div class="ttdoc">Get maximum message length on ESP-NOW subsystem.</div><div class="ttdef"><b>Definition:</b> <a href="espnow__hal_8h_source.html#l00117">espnow_hal.h:117</a></div></div>
 <div class="ttc" id="aclassEspnow__halClass_html_a7a2dbc59ff5036ec52126b00a0e1db81"><div class="ttname"><a href="classEspnow__halClass.html#a7a2dbc59ff5036ec52126b00a0e1db81">Espnow_halClass::sentResult</a></div><div class="ttdeci">comms_hal_sent_data sentResult</div><div class="ttdoc">Pointer to a function to be called to notify last sending status.</div><div class="ttdef"><b>Definition:</b> <a href="espnow__hal_8h_source.html#l00042">espnow_hal.h:42</a></div></div>
 <div class="ttc" id="aComms__hal_8h_html"><div class="ttname"><a href="Comms__hal_8h.html">Comms_hal.h</a></div><div class="ttdoc">Generic communication system abstraction layer.</div></div>
 <div class="ttc" id="aComms__hal_8h_html_afd743715a11ed44e16dbb8d28bf3bd8b"><div class="ttname"><a href="Comms__hal_8h.html#afd743715a11ed44e16dbb8d28bf3bd8b">comms_hal_sent_data</a></div><div class="ttdeci">void(* comms_hal_sent_data)(uint8_t *address, uint8_t status)</div><div class="ttdef"><b>Definition:</b> <a href="Comms__hal_8h_source.html#l00028">Comms_hal.h:28</a></div></div>
 <div class="ttc" id="aGwOutput__generic_8h_html_a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30"><div class="ttname"><a href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a></div><div class="ttdeci">@ status</div><div class="ttdef"><b>Definition:</b> <a href="GwOutput__generic_8h_source.html#l00026">GwOutput_generic.h:25</a></div></div>
 <div class="ttc" id="aclassComms__halClass_html"><div class="ttname"><a href="classComms__halClass.html">Comms_halClass</a></div><div class="ttdoc">Interface for communication subsystem abstraction layer definition.</div><div class="ttdef"><b>Definition:</b> <a href="Comms__hal_8h_source.html#l00033">Comms_hal.h:33</a></div></div>
-<div class="ttc" id="adebug_8h_html"><div class="ttname"><a href="debug_8h.html">debug.h</a></div><div class="ttdoc">Auxiliary functions for debugging over Serial.</div></div>
 <div class="ttc" id="aclassEspnow__halClass_html_a024a232658955ce9d3cc2b41106ffd72"><div class="ttname"><a href="classEspnow__halClass.html#a024a232658955ce9d3cc2b41106ffd72">Espnow_halClass::COMMS_HAL_ADDR_LEN</a></div><div class="ttdeci">static const uint8_t COMMS_HAL_ADDR_LEN</div><div class="ttdoc">Address length for ESP-NOW. Correspond to mac address.</div><div class="ttdef"><b>Definition:</b> <a href="espnow__hal_8h_source.html#l00034">espnow_hal.h:34</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.6</span>
+   &#160;<span id="projectnumber">0.9.7</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -74,7 +74,7 @@ $(function() {
 <div class="contents">
 <a href="Filter_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Filter_8h.html">Filter.h</a>&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="debug_8h.html">debug.h</a>&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="EnigmaIOTdebug_8h.html">EnigmaIOTdebug.h</a>&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
 <div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classFilterClass.html#aa6e318ba33cab0094c7b6528e3e50337">   12</a></span>&#160;<span class="keywordtype">float</span> <a class="code" href="classFilterClass.html#aa6e318ba33cab0094c7b6528e3e50337">FilterClass::addValue</a> (<span class="keywordtype">float</span> value) {</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordflow">switch</span> (<a class="code" href="classFilterClass.html#a3d19e1f2d25502aefed9fa272e2b576b">_filterType</a>) {</div>
@@ -333,11 +333,11 @@ $(function() {
 <div class="ttc" id="aclassFilterClass_html_af7fa09578d556d8289807f25faf148f7"><div class="ttname"><a href="classFilterClass.html#af7fa09578d556d8289807f25faf148f7">FilterClass::quicksort</a></div><div class="ttdeci">void quicksort(float *array, int start, int end)</div><div class="ttdoc">Sorting function that uses QuickSort algorythm.</div><div class="ttdef"><b>Definition:</b> <a href="Filter_8cpp_source.html#l00143">Filter.cpp:143</a></div></div>
 <div class="ttc" id="aclassFilterClass_html_a4b639a7fc53bdd0f1a82c41208414180"><div class="ttname"><a href="classFilterClass.html#a4b639a7fc53bdd0f1a82c41208414180">FilterClass::_orderedValues</a></div><div class="ttdeci">float * _orderedValues</div><div class="ttdoc">Values ordered for median calculation.</div><div class="ttdef"><b>Definition:</b> <a href="Filter_8h_source.html#l00034">Filter.h:34</a></div></div>
 <div class="ttc" id="aclassFilterClass_html_a99497784c6f8a22e89c19200132797b9"><div class="ttname"><a href="classFilterClass.html#a99497784c6f8a22e89c19200132797b9">FilterClass::divide</a></div><div class="ttdeci">int divide(float *array, int start, int end)</div><div class="ttdoc">Divide function to be used on Quick Sort.</div><div class="ttdef"><b>Definition:</b> <a href="Filter_8cpp_source.html#l00091">Filter.cpp:91</a></div></div>
+<div class="ttc" id="aEnigmaIOTdebug_8h_html"><div class="ttname"><a href="EnigmaIOTdebug_8h.html">EnigmaIOTdebug.h</a></div><div class="ttdoc">Auxiliary functions for debugging over Serial.</div></div>
 <div class="ttc" id="aclassFilterClass_html_a5c265b773551343bcc7659e0253b525c"><div class="ttname"><a href="classFilterClass.html#a5c265b773551343bcc7659e0253b525c">FilterClass::_index</a></div><div class="ttdeci">uint _index</div><div class="ttdoc">Used to point latest entered value while number of values less than order.</div><div class="ttdef"><b>Definition:</b> <a href="Filter_8h_source.html#l00036">Filter.h:36</a></div></div>
 <div class="ttc" id="aclassFilterClass_html_a1522216f9bbb9a5f7813809cb3a79ac7"><div class="ttname"><a href="classFilterClass.html#a1522216f9bbb9a5f7813809cb3a79ac7">FilterClass::_weightValues</a></div><div class="ttdeci">float * _weightValues</div><div class="ttdoc">Weight values for average calculation. By default all them have value of 1 for arithmetic average.</div><div class="ttdef"><b>Definition:</b> <a href="Filter_8h_source.html#l00035">Filter.h:35</a></div></div>
 <div class="ttc" id="aclassFilterClass_html_a3d19e1f2d25502aefed9fa272e2b576b"><div class="ttname"><a href="classFilterClass.html#a3d19e1f2d25502aefed9fa272e2b576b">FilterClass::_filterType</a></div><div class="ttdeci">FilterType_t _filterType</div><div class="ttdoc">Filter type from FilterType_t.</div><div class="ttdef"><b>Definition:</b> <a href="Filter_8h_source.html#l00031">Filter.h:31</a></div></div>
 <div class="ttc" id="aFilter_8h_html_a0c87b1dd8bef5bbb8464d1652f929ff7ac9041674b910fde6edc5bf029cd3bbf9"><div class="ttname"><a href="Filter_8h.html#a0c87b1dd8bef5bbb8464d1652f929ff7ac9041674b910fde6edc5bf029cd3bbf9">AVERAGE_FILTER</a></div><div class="ttdeci">@ AVERAGE_FILTER</div><div class="ttdef"><b>Definition:</b> <a href="Filter_8h_source.html#l00027">Filter.h:26</a></div></div>
-<div class="ttc" id="adebug_8h_html"><div class="ttname"><a href="debug_8h.html">debug.h</a></div><div class="ttdoc">Auxiliary functions for debugging over Serial.</div></div>
 <div class="ttc" id="aclassFilterClass_html_a50254c631b3e05583890f63c6f0149bc"><div class="ttname"><a href="classFilterClass.html#a50254c631b3e05583890f63c6f0149bc">FilterClass::_rawValues</a></div><div class="ttdeci">float * _rawValues</div><div class="ttdoc">Raw values store.</div><div class="ttdef"><b>Definition:</b> <a href="Filter_8h_source.html#l00033">Filter.h:33</a></div></div>
 <div class="ttc" id="aFilter_8h_html"><div class="ttname"><a href="Filter_8h.html">Filter.h</a></div><div class="ttdoc">Filter to process message rate or other values.</div></div>
 <!-- start footer part -->

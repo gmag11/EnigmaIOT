@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['warn_1600',['WARN',['../debug_8h.html#a271d8f7f52be750e5c744a394ec71344',1,'debug.h']]]
+  ['verbose_1597',['VERBOSE',['../EnigmaIOTdebug_8h.html#a42f8c497a1968074f38bf5055c650dca',1,'EnigmaIOTdebug.h']]]
 ];
