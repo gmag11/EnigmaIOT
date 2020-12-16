@@ -24,16 +24,19 @@ int64_t TimeManagerClass::clock () {
     int64_t clk = currentime.tv_sec;
     clk *= 1000000L;
     clk += currentime.tv_usec;
-    //DEBUG_DBG ("Clock: %lld", clk);
-    return clk;
+    // DEBUG_DBG ("Clock: %lld", clk/1000L);
+    return clk/1000L;
+}
 
-    // if (timeIsAdjusted) {
-	// 	int64_t clk = offset + (time_t)(millis ());
-	// 	DEBUG_DBG ("Clock: %lld", clk);
-	// 	return clk;
-	// } else {
-	// 	return millis ();
-	// }
+int64_t TimeManagerClass::clock_us () {
+    timeval currentime;
+
+    gettimeofday (&currentime, NULL);
+    int64_t clk = currentime.tv_sec;
+    clk *= 1000000L;
+    clk += currentime.tv_usec;
+    // DEBUG_DBG ("Clock: %lld", clk);
+    return clk;
 }
 
 int64_t TimeManagerClass::adjustTime (int64_t t1r, int64_t t2r, int64_t t3r, int64_t t4r) {
