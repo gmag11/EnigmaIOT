@@ -286,11 +286,20 @@ bool EnigmaIOTNodeClass::loadFlashData () {
 			} else {
 				DEBUG_DBG ("JSON file parsed");
 			}
-
-			if (doc.containsKey ("networkName") && doc.containsKey ("networkKey")
-				&& doc.containsKey ("sleepTime")) {
-				json_correct = true;
-			}
+            configFile.close ();
+            
+            if (doc.containsKey("type")){
+                if (!strcmp("node",doc["type"])) {
+                    if (doc.containsKey ("networkName") && doc.containsKey ("networkKey")
+                        && doc.containsKey ("sleepTime")) {
+                        json_correct = true;
+                    }
+                } else {
+                    FILESYSTEM.remove (CONFIG_FILE);
+                    DEBUG_ERROR ("Wrong configuration. Removing file %s", CONFIG_FILE);
+                    return false;
+                }
+            }
 
 			strlcpy (rtcmem_data.networkName, doc["networkName"] | "", sizeof (rtcmem_data.networkName));
 			rtcmem_data.sleepTime = doc["sleepTime"].as<int> ();
@@ -317,7 +326,6 @@ bool EnigmaIOTNodeClass::loadFlashData () {
 				memcpy (rtcmem_data.gateway, gwAddr, 6);
 			}
 
-			configFile.close ();
 			if (json_correct) {
 				DEBUG_VERBOSE ("Configuration successfuly read");
 			}
@@ -354,12 +362,13 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 		return false;
 	}
 
-	const size_t capacity = JSON_ARRAY_SIZE (32) + JSON_OBJECT_SIZE (5) + 100;
+	const size_t capacity = JSON_ARRAY_SIZE (32) + JSON_OBJECT_SIZE (6) + 110;
 	DynamicJsonDocument doc (capacity);
 
 	char gwAddrStr[ENIGMAIOT_ADDR_LEN * 3];
 	mac2str (rtcmem_data.gateway, gwAddrStr);
 
+    doc["type"] = "node";
 	doc["networkName"] = rtcmem_data.networkName;
 	JsonArray netKeyJson = doc.createNestedArray ("networkKey");
 	for (int i = 0; i < KEY_LENGTH; i++) {

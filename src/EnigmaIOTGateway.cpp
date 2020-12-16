@@ -613,16 +613,26 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 				DEBUG_DBG ("JSON file parsed");
 			}
 
-			if (doc.containsKey ("channel") && doc.containsKey ("networkKey")
-				&& doc.containsKey ("networkName")) {
-				json_correct = true;
-			}
+            configFile.close ();
+
+            if (doc.containsKey ("type")) {
+                if (!strcmp ("gw", doc["type"])) {
+
+                    if (doc.containsKey ("channel") && doc.containsKey ("networkKey")
+                        && doc.containsKey ("networkName")) {
+                        json_correct = true;
+                    }
+                } else {
+                    FILESYSTEM.remove (CONFIG_FILE);
+                    DEBUG_ERROR ("Wrong configuration. Removing file %s", CONFIG_FILE);
+                    return false;
+                }
+            }
 
 			gwConfig.channel = doc["channel"].as<int> ();
 			strncpy ((char*)gwConfig.networkKey, doc["networkKey"] | "", sizeof (gwConfig.networkKey));
 			strncpy (gwConfig.networkName, doc["networkName"] | "", sizeof (gwConfig.networkName));
 
-			configFile.close ();
 			if (json_correct) {
 				DEBUG_VERBOSE ("Gateway configuration successfuly read");
 			}
@@ -669,9 +679,10 @@ bool EnigmaIOTGatewayClass::saveFlashData () {
 		return false;
 	}
 
-	const size_t capacity = JSON_OBJECT_SIZE (3) + 150;
+	const size_t capacity = JSON_OBJECT_SIZE (4) + 160;
 	DynamicJsonDocument doc (capacity);
 
+    doc["type"] = "gw";
 	doc["channel"] = gwConfig.channel;
 	doc["networkKey"] = plainNetKey;
 	doc["networkName"] = gwConfig.networkName;
