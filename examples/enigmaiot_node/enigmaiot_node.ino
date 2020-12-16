@@ -15,14 +15,8 @@
 
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
-#include <ESP8266httpUpdate.h>
-#include <ESPAsyncTCP.h> // Comment to compile for ESP32
-#include <Hash.h>
 #elif defined ESP32
 #include <WiFi.h>
-#include <AsyncTCP.h> // Comment to compile for ESP8266
-#include <SPIFFS.h>
 #include <Update.h>
 #include <driver/adc.h>
 #include "esp_wifi.h"
@@ -30,11 +24,6 @@
 #include "soc/rtc_cntl_reg.h"  // Disable brownout problems
 #endif
 #include <ArduinoJson.h>
-#include <Curve25519.h>
-#include <ESPAsyncWebServer.h>
-#include <ESPAsyncWiFiManager.h>
-#include <DNSServer.h>
-#include <FS.h>
 
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 2 // ESP32 boards normally have a LED in GPIO2 or GPIO5
@@ -123,8 +112,8 @@ void setup () {
 #endif
 	{
 		EnigmaIOTNode.setNodeAddress (macAddress);
-		char macStr[ENIGMAIOT_ADDR_LEN * 3];
-		DEBUG_DBG ("Node address set to %s", mac2str (macAddress, macStr));
+		//char macStr[ENIGMAIOT_ADDR_LEN * 3];
+		DEBUG_DBG ("Node address set to %s", mac2str (macAddress));
 	} else {
 		DEBUG_WARN ("Node address error");
 	}

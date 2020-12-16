@@ -11,9 +11,6 @@
 
 #include <Arduino.h>
 
-#include <PubSubClient.h>
-
-#include <GwOutput_generic.h>
 #include "GwOutput_mqtt.h"
 
 #ifdef SECURE_MQTT
@@ -25,39 +22,21 @@
 
 #ifdef ESP32
 #include <WiFi.h>
-#include <AsyncTCP.h> // Comment to compile for ESP8266
-#include <Update.h>
-#include <SPIFFS.h>
-#include "esp_system.h"
-#include "esp_event.h"
-#include "esp_tls.h"
-#include <ESPmDNS.h>
 #include "soc/soc.h"           // Disable brownout problems
 #include "soc/rtc_cntl_reg.h"  // Disable brownout problems
-#elif defined(ESP8266)
+#elif defined ESP8266
 #include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h> // Comment to compile for ESP32
-#include <ESP8266mDNS.h>
-#include <Hash.h>
-#include <SPI.h>
 #endif // ESP32
 
 #include <ArduinoOTA.h>
 
 #include <CayenneLPP.h>
-#include <FS.h>
 
 #include <EnigmaIOTGateway.h>
 #include <helperFunctions.h>
-#include <debug.h>
+#include <EnigmaIOTdebug.h>
 #include <espnow_hal.h>
-#include <Curve25519.h>
-#include <ChaChaPoly.h>
-#include <Poly1305.h>
-#include <SHA256.h>
 #include <ArduinoJson.h>
-#include <DNSServer.h>
-#include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 
 //#define MEAS_TEMP // Temperature measurement for Gateway monitoring using DS18B20
