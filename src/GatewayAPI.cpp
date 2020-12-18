@@ -18,6 +18,7 @@ const char* getNodesUri = "/api/gw/nodes";
 const char* getNodeUri = "/api/node/node";
 const char* getGwInfoUri = "/api/gw/info";
 const char* getGwRestartUri = "/api/gw/restart";
+const char* getGwResettUri = "/api/gw/reset";
 const char* getNodeRestartUri = "/api/node/restart";
 const char* nodeIdParam = "nodeid";
 const char* nodeNameParam = "nodename";
@@ -36,6 +37,7 @@ void GatewayAPI::begin () {
 	server->on (getNodeUri, HTTP_GET | HTTP_DELETE, std::bind (&GatewayAPI::nodeOp, this, _1));
 	server->on (getGwInfoUri, HTTP_GET, std::bind (&GatewayAPI::getGwInfo, this, _1));
 	server->on (getGwRestartUri, HTTP_PUT, std::bind (&GatewayAPI::restartGw, this, _1));
+    server->on (getGwResettUri, HTTP_PUT, std::bind (&GatewayAPI::resetGw, this, _1));
 	server->on (getNodeRestartUri, HTTP_PUT, std::bind (&GatewayAPI::restartNode, this, _1));
 	server->onNotFound (std::bind (&GatewayAPI::onNotFound, this, _1));
 	server->begin ();
@@ -278,6 +280,39 @@ void GatewayAPI::restartGw (AsyncWebServerRequest* request) {
 		EnigmaIOTGateway.notifyRestartRequested ();
 	}
 }
+
+void GatewayAPI::resetGw (AsyncWebServerRequest* request) {
+    char response[30];
+    bool confirm = false;
+    int resultCode = 404;
+
+    int params = request->params ();
+
+    for (int i = 0; i < params; i++) {
+        AsyncWebParameter* p = request->getParam (i);
+        if (p->name () == confirmParam) {
+            if (p->value () == "1") {
+                confirm = true;
+                resultCode = 200;
+                break;
+            }
+        }
+    }
+
+    if (confirm) {
+        snprintf (response, 30, "{'gw_reset':'processed'}");
+        request->send (resultCode, "application/json", response);
+    } else {
+        snprintf (response, 25, "{'gw_reset':'fail'}");
+        request->send (resultCode, "application/json", response);
+    }
+
+    DEBUG_INFO ("Response: %s", response);
+    
+    EnigmaIOTGateway.doResetConfig ();
+
+}
+
 
 void GatewayAPI::getNodes (AsyncWebServerRequest* request) {
 	Node* node = NULL;

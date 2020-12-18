@@ -111,7 +111,7 @@ typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len,
 typedef std::function<void ()> onConnected_t;
 typedef std::function<void (nodeInvalidateReason_t reason)> onDisconnected_t;
 typedef std::function<void (bool status)> onWiFiManagerExit_t;
-typedef std::function<void (void)> onWiFiManagerStarted_t;
+typedef std::function<void (void)> simpleEventHandler_t;
 #else
 typedef void (*onNodeDataRx_t)(const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding);
 typedef void (*onConnected_t)();
@@ -161,7 +161,7 @@ protected:
 	int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
 	AsyncWiFiManager* wifiManager; ///< @brief Wifi configuration portal
 	onWiFiManagerExit_t notifyWiFiManagerExit; ///< @brief Function called when configuration portal exits
-	onWiFiManagerStarted_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
+	simpleEventHandler_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
 	time_t cycleStartedTime;
 	int16_t lastBroadcastMsgCounter; ///< @brief Counter for broadcast messages from gateway */
 
@@ -708,7 +708,7 @@ public:
 	* @brief Register callback to be called on wifi manager start
 	* @param handle Callback function pointer
 	*/
-	void onWiFiManagerStarted (onWiFiManagerStarted_t handle) {
+	void onWiFiManagerStarted (simpleEventHandler_t handle) {
 		notifyWiFiManagerStarted = handle;
 	}
 

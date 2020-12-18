@@ -20,9 +20,10 @@ All responses are given in JSON format
 
 ### Gateway commands
 
-| Entry point    | Parameters | Method | Response                            | Comments                                     |
-| -------------- | ---------- | ------ | ----------------------------------- | -------------------------------------------- |
-| api/gw/restart | confirm=1  | PUT    | **gw_restart**: <processed \| fail> | Restarts gateway software. Confirm must be 1 |
+| Entry point    | Parameters | Method | Response                            | Comments                                        |
+| -------------- | ---------- | ------ | ----------------------------------- | ----------------------------------------------- |
+| api/gw/restart | confirm=1  | PUT    | **gw_restart**: <processed \| fail> | Restarts gateway software. Confirm must be 1    |
+| api/gw/reset   | confirm=1  | PUT    | **gw_reset**: <processed \| fail>   | Resets gateway configuration. Confirm must be 1 |
 
 
 

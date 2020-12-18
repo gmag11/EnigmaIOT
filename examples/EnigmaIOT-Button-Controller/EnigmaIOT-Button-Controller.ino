@@ -119,8 +119,8 @@ void setup () {
 
 	if (!controller->loadConfig ()) { // Trigger custom configuration loading
 		DEBUG_WARN ("Error reading config file");
-		if (SPIFFS.format ())
-			DEBUG_WARN ("SPIFFS Formatted");
+		if (FILESYSTEM.format ())
+			DEBUG_WARN ("Filesystem Formatted");
 	}
 
 	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY == 1); // Start EnigmaIOT communication
@@ -134,8 +134,7 @@ void setup () {
 #endif
 	{
 		EnigmaIOTNode.setNodeAddress (macAddress);
-		char macStr[ENIGMAIOT_ADDR_LEN * 3];
-		DEBUG_DBG ("Node address set to %s", mac2str (macAddress, macStr));
+		DEBUG_DBG ("Node address set to %s", mac2str (macAddress));
 	} else {
 		DEBUG_WARN ("Node address error");
 	}

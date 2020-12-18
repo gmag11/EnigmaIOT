@@ -86,15 +86,14 @@ typedef std::function<void (uint8_t* mac, uint8_t* buf, uint8_t len, uint16_t lo
 typedef std::function<void (uint8_t* mac, uint16_t node_id, char* nodeName)> onNewNode_t;
 typedef std::function<void (uint8_t* mac, gwInvalidateReason_t reason)> onNodeDisconnected_t;
 typedef std::function<void (boolean status)> onWiFiManagerExit_t;
-typedef std::function<void (void)> onWiFiManagerStarted_t;
-typedef std::function<void (void)> onRestartRequested_t;
+typedef std::function<void (void)> simpleEventHandler_t;
+
 #else
 typedef void (*onGwDataRx_t)(uint8_t* mac, uint8_t* data, uint8_t len, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type, char* nodeName);
 typedef void (*onNewNode_t)(uint8_t* mac, uint16_t node_id, char* nodeName);
 typedef void (*onNodeDisconnected_t)(uint8_t* mac, gwInvalidateReason_t reason);
 typedef void (*onWiFiManagerExit_t)(boolean status);
-typedef void (*onWiFiManagerStarted_t)(void);
-typedef void (*onRestartRequested_t)(void);
+typedef void (*simpleEventHandler_t)(void);
 #endif
 
 typedef struct {
@@ -228,7 +227,7 @@ protected:
 	onGwDataRx_t notifyData; ///< @brief Callback function that will be invoked when data is received fron a node
 	onNewNode_t notifyNewNode; ///< @brief Callback function that will be invoked when a new node is connected
 	onNodeDisconnected_t notifyNodeDisconnection; ///< @brief Callback function that will be invoked when a node gets disconnected
-	onRestartRequested_t notifyRestartRequested; ///< @brief Callback function that will be invoked when a hardware restart is requested
+	simpleEventHandler_t notifyRestartRequested; ///< @brief Callback function that will be invoked when a hardware restart is requested
 	bool useCounter = true; ///< @brief `true` if counter is used to check data messages order
 	gateway_config_t gwConfig; ///< @brief Gateway specific configuration to be stored on flash memory
 	char plainNetKey[KEY_LENGTH];
@@ -243,7 +242,7 @@ protected:
 	DNSServer* dns; ///< @brief DNS server used by configuration portal
 	AsyncWiFiManager* wifiManager; ///< @brief Wifi configuration portal
 	onWiFiManagerExit_t notifyWiFiManagerExit; ///< @brief Function called when configuration portal exits
-	onWiFiManagerStarted_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
+	simpleEventHandler_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
 
 	friend class GatewayAPI;
 
@@ -251,6 +250,12 @@ protected:
 	 * @brief Activates a flag that signals that configuration has to be saved
 	 */
 	static void doSave (void);
+    
+    /**
+     * @brief Activates a flag that signals that configuration has to be saved
+     */
+    static void doResetConfig (void);
+
 
 	/**
 	 * @brief Build a **ServerHello** message and send it to node
@@ -457,7 +462,7 @@ public:
 	* @brief Register callback to be called on wifi manager start
 	* @param handle Callback function pointer
 	*/
-	void onWiFiManagerStarted (onWiFiManagerStarted_t handle) {
+    void onWiFiManagerStarted (simpleEventHandler_t handle) {
 		notifyWiFiManagerStarted = handle;
 	}
 
@@ -626,10 +631,10 @@ public:
 	 * @brief Defines a function callback that will process a gateway restart request
 	 * @param handler Pointer to the function
 	 */
-	void onGatewayRestartRequested (onRestartRequested_t handler) {
+	void onGatewayRestartRequested (simpleEventHandler_t handler) {
 		notifyRestartRequested = handler;
 	}
-
+    
    /**
 	 * @brief Add message to input queue
 	 * @param addr Origin address

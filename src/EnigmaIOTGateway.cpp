@@ -35,6 +35,14 @@ void EnigmaIOTGatewayClass::doSave (void) {
 	shouldSave = true;
 }
 
+void EnigmaIOTGatewayClass::doResetConfig (void) {
+    DEBUG_INFO ("Configuration reset started");
+    if (FILESYSTEM.remove (CONFIG_FILE)){
+        DEBUG_WARN ("Configuration file removed");
+    }
+    ESP.restart ();
+}
+
 bool EnigmaIOTGatewayClass::getShouldSave () {
 	return (shouldSave);
 }
@@ -603,7 +611,7 @@ bool EnigmaIOTGatewayClass::loadFlashData () {
 			//size_t size = configFile.size ();
             DEBUG_DBG ("%s opened. %u bytes", CONFIG_FILE, configFile.size ());
 
-			const size_t capacity = JSON_OBJECT_SIZE (3) + 150;
+			const size_t capacity = JSON_OBJECT_SIZE (4) + 160;
 			DynamicJsonDocument doc (capacity);
 
 			DeserializationError error = deserializeJson (doc, configFile);

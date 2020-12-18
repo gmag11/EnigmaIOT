@@ -278,7 +278,7 @@ bool EnigmaIOTNodeClass::loadFlashData () {
 			DEBUG_DBG ("%s opened", CONFIG_FILE);
 			//size_t size = configFile.size ();
 
-			const size_t capacity = JSON_ARRAY_SIZE (32) + JSON_OBJECT_SIZE (5) + 100;
+			const size_t capacity = JSON_ARRAY_SIZE (32) + JSON_OBJECT_SIZE (7) + 110;
 			DynamicJsonDocument doc (capacity);
 			DeserializationError error = deserializeJson (doc, configFile);
 			if (error) {
@@ -362,7 +362,7 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 		return false;
 	}
 
-	const size_t capacity = JSON_ARRAY_SIZE (32) + JSON_OBJECT_SIZE (6) + 110;
+	const size_t capacity = JSON_ARRAY_SIZE (32) + JSON_OBJECT_SIZE (7) + 110;
 	DynamicJsonDocument doc (capacity);
 
 	char gwAddrStr[ENIGMAIOT_ADDR_LEN * 3];

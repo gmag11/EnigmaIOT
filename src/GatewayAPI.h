@@ -64,6 +64,13 @@ protected:
 	void restartGw (AsyncWebServerRequest* request);
     
     /**
+     * @brief Processes gateway configuration reset request
+     * @param request Gateway configuration reset request
+     */
+    void resetGw (AsyncWebServerRequest* request);
+
+    
+    /**
      * @brief Processes node information request
      * @param request Node information request
      */
