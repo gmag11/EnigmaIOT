@@ -11,10 +11,6 @@
 
 //#define DEBUG_SERIAL
 
-#ifdef ESP32
-#include <SPIFFS.h>
-#endif
-
 #include <EnigmaIOTjsonController.h>
 #define CONTROLLER_CLASS_NAME BasicController
 static const char* CONTROLLER_NAME = "EnigmaIOT controller template";

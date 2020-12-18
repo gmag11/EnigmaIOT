@@ -21,30 +21,17 @@
 
 #include <EnigmaIOTNode.h>
 #include <espnow_hal.h>
-#include <CayenneLPP.h>
 #include <ArduinoJson.h>
 
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
-#include <ESP8266httpUpdate.h>
-#include <ESPAsyncTCP.h> // Comment to compile for ESP32
-#include <Hash.h>
 #elif defined ESP32
 #include <WiFi.h>
-#include <SPIFFS.h>
-#include <AsyncTCP.h> // Comment to compile for ESP8266
-#include <SPIFFS.h>
 #include <Update.h>
 #include <driver/adc.h>
 #include "esp_wifi.h"
 #endif
 #include <ArduinoJson.h>
-#include <Curve25519.h>
-#include <ESPAsyncWebServer.h>
-#include <ESPAsyncWiFiManager.h>
-#include <DNSServer.h>
-#include <FS.h>
 
 #define SLEEPY 0 // Set it to 1 if your node should sleep after sending data
 
@@ -128,8 +115,8 @@ void setup () {
 
 	if (!controller->loadConfig ()) { // Trigger custom configuration loading
 		DEBUG_WARN ("Error reading config file");
-		if (SPIFFS.format ())
-			DEBUG_WARN ("SPIFFS Formatted");
+		if (FILESYSTEM.format ())
+            DEBUG_WARN ("File System Formatted");
 	}
 
 	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY == 1); // Start EnigmaIOT communication
