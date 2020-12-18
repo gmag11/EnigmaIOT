@@ -431,13 +431,14 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 }
 
 void GwOutput_MQTT::loop () {
-	mqtt_queue_item_t* message;
-	static time_t statusLastUpdated;
 
 	mqtt_client.loop ();
 	if (!mqtt_client.connected ()) {
 		reconnect ();
 	} else {
+        mqtt_queue_item_t* message;
+        static time_t statusLastUpdated;
+
 		if (!mqtt_queue.empty ()) {
 			message = getMQTTqueue ();
 			if (publishMQTT (message->topic, message->payload, message->payload_len, message->retain)) {
@@ -512,9 +513,9 @@ mqtt_queue_item_t* GwOutput_MQTT::getMQTTqueue () {
 }
 
 void GwOutput_MQTT::popMQTTqueue () {
-	mqtt_queue_item_t* message;
-
 	if (mqtt_queue.size ()) {
+        mqtt_queue_item_t* message;
+
 		message = mqtt_queue.front ();
 		if (message) {
 			if (message->topic) {
@@ -576,7 +577,7 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 		uint32_t sleepTime;
 		memcpy (&sleepTime, data + 1, sizeof (sleepTime));
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, GET_SLEEP_ANS);
-		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"sleeptime\":%d}", sleepTime);
+		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"sleeptime\":%u}", sleepTime);
 		if (addMQTTqueue (topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
 			result = true;
@@ -684,7 +685,7 @@ bool GwOutput_MQTT::nodeDisconnectedSend (char* address, gwInvalidateReason_t re
 	size_t pld_size;
 
 	snprintf (topic, TOPIC_SIZE, "%s/%s/bye", netName.c_str (), address);
-	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"reason\":%u}", reason);
+	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"reason\":%d}", reason);
 	bool result = addMQTTqueue (topic, payload, pld_size);
 	DEBUG_INFO ("Published MQTT %s result = %s", topic, result ? "OK" : "Fail");
 	return result;

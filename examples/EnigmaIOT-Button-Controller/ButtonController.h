@@ -34,30 +34,30 @@ protected:
 public:
 	void setup (EnigmaIOTNodeClass* node, void* data = NULL);
 
-	bool processRxCommand (const uint8_t* address, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding);
+	bool processRxCommand (const uint8_t* address, const uint8_t* buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding) override;
 
-	void loop ();
+    void loop () override;
 
 	~CONTROLLER_CLASS_NAME ();
 
 	/**
 	 * @brief Called when wifi manager starts config portal
 	 */
-	void configManagerStart ();
+    void configManagerStart () override;
 
 	/**
 	 * @brief Called when wifi manager exits config portal
 	 * @param status `true` if configuration was successful
 	 */
-	void configManagerExit (bool status);
+    void configManagerExit (bool status) override;
 
 	/**
 	 * @brief Loads output module configuration
 	 * @return Returns `true` if load was successful. `false` otherwise
 	 */
-	bool loadConfig ();
+    bool loadConfig () override;
 
-	void connectInform () {
+    void connectInform () override {
 		sendStartAnouncement ();
 	}
 
@@ -66,11 +66,11 @@ protected:
 	  * @brief Saves output module configuration
 	  * @return Returns `true` if save was successful. `false` otherwise
 	  */
-	bool saveConfig ();
+    bool saveConfig () override;
 
-	bool sendCommandResp (const char* command, bool result);
+    bool sendCommandResp (const char* command, bool result) override;
 
-    bool sendStartAnouncement () {
+    bool sendStartAnouncement () override {
         // You can send a 'hello' message when your node starts. Useful to detect unexpected reboot
         const size_t capacity = JSON_OBJECT_SIZE (10);
         DynamicJsonDocument json (capacity);

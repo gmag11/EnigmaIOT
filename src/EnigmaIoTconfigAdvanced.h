@@ -59,7 +59,9 @@ const int WEB_API_PORT = 80; ///< @brief TCP port where Web API will listen thro
 #define FILESYSTEM SPIFFS
 #include <SPIFFS.h>
 #elif defined ESP8266
-#define USE_LITTLE_FS 1 ///< Set to 0 to use SPIFFS or 1 to use LittleFS (recommended)
+    #ifndef USE_LITTLE_FS
+    #define USE_LITTLE_FS 1 ///< Set to 0 to use SPIFFS or 1 to use LittleFS (recommended)
+    #endif // USE_LITTLE_FS
 #if USE_LITTLE_FS
 #include <FS.h>
 #include <LittleFS.h>

@@ -50,8 +50,11 @@ public:
 			_max = min;
 			_min = max;
 		}
-
-		return _min + (random () % (_max - _min));
+        if (_max != _min) {
+            return _min + (random () % (_max - _min));
+        } else {
+            return _min;
+        }
 	}
 
 	/**

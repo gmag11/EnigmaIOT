@@ -119,7 +119,7 @@ public:
       * @param nodeData `node_instance` struct that contains initalization values for new Node
       * @return Returns a new Node instance with same data as given `node_instance` struct
       */
-    Node (node_t nodeData);
+    explicit Node (node_t nodeData);
 
     /**
       * @brief Gets address from Node

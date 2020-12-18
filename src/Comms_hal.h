@@ -37,7 +37,7 @@ public:
 
 protected:
 	uint8_t gateway[COMMS_HAL_ADDR_LEN]; ///< @brief Gateway address
-	uint8_t channel; ///< @brief WiFi channel to be used
+	uint8_t channel; ///< @brief Comms channel to be used
 
 	comms_hal_rcvd_data dataRcvd = 0; ///< @brief Pointer to a function to be called on every received message
 	comms_hal_sent_data sentResult = 0; ///< @brief Pointer to a function to be called to notify last sending status

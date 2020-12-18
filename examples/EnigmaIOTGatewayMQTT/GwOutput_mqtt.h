@@ -81,10 +81,10 @@ typedef struct {
 
 class GwOutput_MQTT : public GatewayOutput_generic {
 protected:
-	AsyncWiFiManagerParameter* mqttServerParam; ///< @brief Configuration field for MQTT server address
-	AsyncWiFiManagerParameter* mqttPortParam; ///< @brief Configuration field for MQTT server port
-	AsyncWiFiManagerParameter* mqttUserParam; ///< @brief Configuration field for MQTT server user name
-	AsyncWiFiManagerParameter* mqttPassParam; ///< @brief Configuration field for MQTT server password
+	AsyncWiFiManagerParameter* mqttServerParam = NULL; ///< @brief Configuration field for MQTT server address
+    AsyncWiFiManagerParameter* mqttPortParam = NULL; ///< @brief Configuration field for MQTT server port
+    AsyncWiFiManagerParameter* mqttUserParam = NULL; ///< @brief Configuration field for MQTT server user name
+    AsyncWiFiManagerParameter* mqttPassParam = NULL; ///< @brief Configuration field for MQTT server password
 
 	std::queue<mqtt_queue_item_t*> mqtt_queue; ///< @brief Output MQTT messages queue. It acts as a FIFO queue
 

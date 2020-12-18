@@ -20,8 +20,8 @@
 
 class GatewayOutput_dummy : public GatewayOutput_generic {
 protected:
-	EnigmaIOTGatewayClass* enigmaIotGateway; ///< @brief Pointer to EnigmaIOT gateway instance
-	onDlData_t downlinkCb; ///< @brief downlink processing function handle
+	//EnigmaIOTGatewayClass* enigmaIotGateway; ///< @brief Pointer to EnigmaIOT gateway instance
+	//onDlData_t downlinkCb; ///< @brief downlink processing function handle
 
 	/**
 	  * @brief Saves output module configuration
@@ -30,9 +30,9 @@ protected:
 	bool saveConfig ();
 
 public:
-	String netName; ///< @brief EnigmaIOT network name
-	String clientId; ///< @brief clientId
-	String gwTopic; ///< @brief topic for gateway
+	//String netName; ///< @brief EnigmaIOT network name
+	//String clientId; ///< @brief clientId
+	//String gwTopic; ///< @brief topic for gateway
 
 	//virtual int send () = 0;
 	//virtual void onReveive () = 0;

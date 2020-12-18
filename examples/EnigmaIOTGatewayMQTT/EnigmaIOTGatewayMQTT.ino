@@ -139,9 +139,9 @@ void arduinoOTAConfigure () {
 		static bool printed = false;
 		unsigned int percent = progress / (total / 100);
 		digitalWrite (BLUE_LED, !digitalRead (BLUE_LED));
-		if (!(percent % 1)) {
-			//Serial.print ('.');
-		}
+		// if (!(percent % 1)) {
+		// 	//Serial.print ('.');
+		// }
 		if (!(percent % 20) && !printed && percent != 0) {
 			DEBUG_WARN (" %d%%\n", percent);
 			printed = true;

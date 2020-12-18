@@ -24,13 +24,9 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
-#include <ESPAsyncTCP.h> // Comment to compile for ESP32
 #include <Hash.h>
 #elif defined ESP32
 #include <WiFi.h>
-#include <SPIFFS.h>
-#include <AsyncTCP.h> // Comment to compile for ESP8266
-#include <SPIFFS.h>
 #include <Update.h>
 #include <driver/adc.h>
 #include "esp_wifi.h"
@@ -40,7 +36,6 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
 #include <DNSServer.h>
-#include <FS.h>
 
 #define SLEEPY 0 // Set it to 1 if your node should sleep after sending data
 

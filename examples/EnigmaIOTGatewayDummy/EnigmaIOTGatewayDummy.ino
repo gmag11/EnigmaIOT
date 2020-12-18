@@ -232,19 +232,19 @@ void nodeDisconnected (uint8_t* mac, gwInvalidateReason_t reason) {
 }
 
 #ifdef ESP32
-void EnigmaIOTGateway_handle (void* param) {
-	for (;;) {
-		EnigmaIOTGateway.handle ();
-		vTaskDelay (0);
-	}
-}
+// void EnigmaIOTGateway_handle (void* param) {
+// 	for (;;) {
+// 		EnigmaIOTGateway.handle ();
+// 		vTaskDelay (0);
+// 	}
+// }
 
-void GwOutput_handle (void* param) {
-	for (;;) {
-		GwOutput.loop ();
-		vTaskDelay (0);
-	}
-}
+// void GwOutput_handle (void* param) {
+// 	for (;;) {
+// 		GwOutput.loop ();
+// 		vTaskDelay (0);
+// 	}
+// }
 
 TaskHandle_t xEnigmaIOTGateway_handle = NULL;
 TaskHandle_t gwoutput_handle = NULL;

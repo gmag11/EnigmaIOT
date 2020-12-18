@@ -149,10 +149,11 @@ void setup () {
 void showTime () {
 	//const int time_freq = 10000;
 
-	tm timeinfo;
-	static time_t displayTime;
 
 	if (EnigmaIOTNode.hasClockSync ()) {
+        static time_t displayTime;
+        tm timeinfo;
+
 		displayTime = millis ();
 		//time_t local_time_ms = EnigmaIOTNode.clock ();
 		//local_time_ms /= 1000;
