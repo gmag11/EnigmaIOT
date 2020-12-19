@@ -313,13 +313,6 @@ void CONTROLLER_CLASS_NAME::configManagerStart () {
 														 "<option value = \"ON\">" \
 														 "<option value = \"SAVE\">" \
 														 "</datalist>");
-	//bootStatusParam = new AsyncWiFiManagerParameter ("<label for=\"bootStatus\">Boot Relay Status:</label> " \
-	//												 "<select id=\"bootStatus\" >" \
-	//												 "name=\"bootStatus\" required " \
-	//												 "<option value=\"0\">Off</option>" \
-	//												 "<option value=\"1\">On</option>" \
-	//												 "<option value=\"2\">Save</option>" \
-	//												 "</select>");
 
 	enigmaIotNode->addWiFiManagerParameter (buttonPinParam);
 	enigmaIotNode->addWiFiManagerParameter (relayPinParam);
@@ -376,16 +369,16 @@ bool CONTROLLER_CLASS_NAME::loadConfig () {
 	// If you need to read custom configuration data do it here
 	bool json_correct = false;
 
-	if (!SPIFFS.begin ()) {
+	if (!FILESYSTEM.begin ()) {
 		DEBUG_WARN ("Error starting filesystem. Formatting");
-		SPIFFS.format ();
+        FILESYSTEM.format ();
 	}
 
-	// SPIFFS.remove (CONFIG_FILE); // Only for testing
+    // FILESYSTEM.remove (CONFIG_FILE); // Only for testing
 
-	if (SPIFFS.exists (CONFIG_FILE)) {
+    if (FILESYSTEM.exists (CONFIG_FILE)) {
 		DEBUG_WARN ("Opening %s file", CONFIG_FILE);
-		File configFile = SPIFFS.open (CONFIG_FILE, "r");
+        File configFile = FILESYSTEM.open (CONFIG_FILE, "r");
 		if (configFile) {
 			size_t size = configFile.size ();
 			DEBUG_WARN ("%s opened. %u bytes", CONFIG_FILE, size);
@@ -437,7 +430,7 @@ bool CONTROLLER_CLASS_NAME::loadConfig () {
 
 			size_t jsonLen = measureJsonPretty (doc) + 1;
 			char* output = (char*)malloc (jsonLen);
-			size_t resultlen = serializeJsonPretty (doc, output, jsonLen);
+			serializeJsonPretty (doc, output, jsonLen);
 
 			DEBUG_WARN ("File content:\n%s", output);
 
@@ -457,13 +450,13 @@ bool CONTROLLER_CLASS_NAME::loadConfig () {
 
 bool CONTROLLER_CLASS_NAME::saveConfig () {
 	// If you need to save custom configuration data do it here
-	if (!SPIFFS.begin ()) {
+    if (!FILESYSTEM.begin ()) {
 		DEBUG_WARN ("Error opening filesystem");
 		return false;
 	}
 	DEBUG_WARN ("Filesystem opened");
 
-	File configFile = SPIFFS.open (CONFIG_FILE, "w");
+    File configFile = FILESYSTEM.open (CONFIG_FILE, "w");
 	if (!configFile) {
 		DEBUG_WARN ("Failed to open config file %s for writing", CONFIG_FILE);
 		return false;
@@ -484,13 +477,13 @@ bool CONTROLLER_CLASS_NAME::saveConfig () {
 	if (serializeJson (doc, configFile) == 0) {
 		DEBUG_ERROR ("Failed to write to file");
 		configFile.close ();
-		//SPIFFS.remove (CONFIG_FILE);
+        //FILESYSTEM.remove (CONFIG_FILE);
 		return false;
 	}
 
 	size_t jsonLen = measureJsonPretty (doc) + 1;
 	char* output = (char*)malloc (jsonLen);
-	size_t resultlen = serializeJsonPretty (doc, output, jsonLen);
+	serializeJsonPretty (doc, output, jsonLen);
 
 	DEBUG_WARN ("File content:\n%s", output);
 
