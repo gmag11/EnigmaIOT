@@ -1297,7 +1297,7 @@ bool EnigmaIOTNodeClass::clockRequest () {
 
 	memcpy (&(clockRequest_msg.counter), &counter, sizeof (uint16_t));
 
-	uint64_t t1 = TimeManager.clock ();
+	uint64_t t1 = TimeManager.clock_us ();
 
 	memcpy (&(clockRequest_msg.t1), &t1, sizeof (int64_t));
 
@@ -1393,7 +1393,7 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
     t1 = clockResponse_msg.t1;
 	t2 = clockResponse_msg.t2;
 	t3 = clockResponse_msg.t3;
-	t4 = TimeManager.clock ();
+	t4 = TimeManager.clock_us ();
 
 	if (count < CRSMSG_LEN) {
 		DEBUG_WARN ("Message too short");
