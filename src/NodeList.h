@@ -426,11 +426,36 @@ public:
     void setRSSI (int8_t rssi) {
         this->rssi = rssi;
     }
+    
+    /**
+      * @brief Gets node info to check if it has requested time sync ever
+      * @return true or false
+      */
+    bool useTimeSync () {
+        return askedTimeSync;
+    }
+    
+    /**
+      * @brief Mark node as time sync enabled
+      */
+    void setTimeSyncEnabled () {
+        askedTimeSync = true;
+    }
 
+    /**
+      * @brief Gets node EnigmaIOT version
+      * @return EnigmaIOT protocol version in a uint8_t array of 3 elements
+      */
     uint8_t* getVersion () {
         return enigmaIOTVersion;
     }
 
+     /**
+      * @brief Sets node EnigmaIOT version
+      * @param major Major protocol version. In 0.9.6, this should be 0
+      * @param minor Minor protocol version. In 0.9.6, this should be 9
+      * @param incremental Incremental protocol version. In 0.9.6, this should be 6
+      */
     void setVersion (uint8_t major, uint8_t minor, uint8_t incremental) {
         enigmaIOTVersion[0] = major;
         enigmaIOTVersion[1] = minor;
@@ -460,6 +485,7 @@ protected:
     bool broadcastEnabled = false; ///< @brief Node is able to send broadcast messages
     bool broadcastKeyRequested = false; ///< @brief Node is waiting for broadcast key
     bool initAsSleepy; ///< @brief Stores initial sleepy node. If this is false, this node does not accept sleep time changes
+    bool askedTimeSync = false; ////< @brief Gateway marks this true to track if a node uses timeSync
     uint8_t mac[ENIGMAIOT_ADDR_LEN]; ///< @brief Node address
     uint8_t key[KEY_LENGTH]; ///< @brief Shared key
     timer_t lastMessageTime; ///< @brief Node state

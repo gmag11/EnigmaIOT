@@ -1734,6 +1734,8 @@ bool EnigmaIOTGatewayClass::processClockRequest (const uint8_t mac[ENIGMAIOT_ADD
 		return false;
 	}
     
+    node->setTimeSyncEnabled ();
+    
     // Get current time. If Gateway is synchronized to NTP server it sends real world time.
     gettimeofday (&tv, NULL);
     int64_t t2 = tv.tv_sec;
