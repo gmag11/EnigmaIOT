@@ -465,10 +465,13 @@ void EnigmaIOTNodeClass::clearFlash () {
     if (!FILESYSTEM.begin ()) {
 		DEBUG_ERROR ("Error on SPIFFS.begin()");
 	}
-    if (FILESYSTEM.remove (CONFIG_FILE)) {
+    if (FILESYSTEM.format()) {
+        DEBUG_DBG ("Filesystem formatted");
+    }
+    /*if (FILESYSTEM.remove (CONFIG_FILE)) {
 		DEBUG_DBG ("%s deleted", CONFIG_FILE);
-	} else {
-		DEBUG_ERROR ("Error on SPIFFS.remove(\"%s\")", CONFIG_FILE);
+	}*/ else {
+		DEBUG_ERROR ("Error on SPIFFS.format()", CONFIG_FILE);
 	}
     FILESYSTEM.end ();
 }
