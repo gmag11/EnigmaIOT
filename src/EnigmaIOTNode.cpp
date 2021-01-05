@@ -1020,13 +1020,20 @@ void EnigmaIOTNodeClass::handle () {
 	if (node.getSleepy () && !shouldRestart) {
 		if (sleepRequested && millis () - node.getLastMessageTime () > DOWNLINK_WAIT_TIME && node.isRegistered () && !indentifying) {
 			// Substract running time
-			int64_t sleep_t = sleepTime - ((millis () - cycleStartedTime) * 1000);
-			if (sleep_t < 1000) {
+            int64_t sleep_t = 0;
+            if (sleepTime) {
+                sleep_t = sleepTime - ((millis () - cycleStartedTime) * 1000);
+            }
+            if (sleep_t && sleep_t < 1000) {
 				// Avoid negative values
 				sleep_t = 1000;
 			}
 			//int64_t msSleep = sleep_t / 1000;
-            DEBUG_WARN ("Go to sleep for %ld ms", (int32_t)(sleep_t / 1000L));
+            if (sleep_t) {
+                DEBUG_WARN ("Go to sleep for %ld ms", (int32_t)(sleep_t / 1000L));
+            } else {
+                DEBUG_WARN ("Go to sleep indefinitely");
+            }
 			DEBUG_WARN ("%d", millis ());
 #ifdef ESP8266
 			ESP.deepSleep (sleep_t);
