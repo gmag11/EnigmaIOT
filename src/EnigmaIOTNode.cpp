@@ -2074,6 +2074,12 @@ void EnigmaIOTNodeClass::clearRTC () {
 #elif defined ESP32
 	memset (&rtcmem_data_storage, 0, sizeof (rtcmem_data));
 #endif
+    
+#if USE_FLASH_INSTEAD_RTC
+    FILESYSTEM.begin ();
+    FILESYSTEM.remove (RTC_DATA_FILE);
+    FILESYSTEM.end ();
+#endif
 
 	DEBUG_DBG ("RTC Cleared");
 }

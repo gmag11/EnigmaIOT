@@ -42,7 +42,9 @@ static const int MAX_DATA_PAYLOAD_SIZE = 214; ///< @brief Maximun payload size f
 static const bool CHECK_COMM_ERRORS = true; ///< @brief Try to reconnect in case of communication errors
 #endif // CHECK_COMM_ERRORS
 static const uint32_t RTC_ADDRESS = 8; ///< @brief RTC memory address where to store context. Modify it if you need place to store your own data during deep sleep. Take care not to overwrite above that address. It is 8 to give space for FailSafeMode library
+#ifndef USE_FLASH_INSTEAD_RTC
 #define USE_FLASH_INSTEAD_RTC 0 ///< @brief Use flash instead RTC for temporary context data. ATTENTION: This allows connection to survive power off cycles but may damage flash memory persistently.
+#endif // USE_FLASH_INSTEAD_RTC
 
 //Crypto configuration
 const uint8_t KEY_LENGTH = 32; ///< @brief Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing
