@@ -504,8 +504,6 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	if (notifyWiFiManagerStarted) {
 		notifyWiFiManagerStarted ();
 	}
-
-	wifiManager->setDebugOutput (true);
 	wifiManager->setConnectTimeout (30);
 	wifiManager->setBreakAfterConfig (true);
 	wifiManager->setTryConnectDuringConfigPortal (false);

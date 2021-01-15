@@ -55,20 +55,21 @@ char* GatewayAPI::buildGwInfo (char* gwInfo, size_t len) {
 	DEBUG_INFO ("Build Gateway Info");
 	//resultCode = 200;
 	//time_t currentMillis = millis ();
-	snprintf (gwInfo, len, "{'version':'%d.%d.%d','network':'%s','addresses':{'AP':'%s','STA':'%s'},"
-			  "'channel':%d,'ap':'%s','bssid':'%s','rssi':%d,"
+    snprintf (gwInfo, len, "{'version':'%d.%d.%d','network':'%s','addresses':{'AP':'%s','STA':'%s'},"
+              "'channel':%d,'ap':'%s','bssid':'%s','rssi':%d,"
 #ifdef ESP32
-			  "txpower':%.1f,"
+              "txpower':%.1f,"
 #endif
-			  "'dns':'%s'}",
-			  ENIGMAIOT_PROT_VERS[0], ENIGMAIOT_PROT_VERS[1], ENIGMAIOT_PROT_VERS[2],
-			  EnigmaIOTGateway.getNetworkName (),
-			  WiFi.macAddress ().c_str (), WiFi.softAPmacAddress ().c_str (),
-			  WiFi.channel (), WiFi.SSID ().c_str (), WiFi.BSSIDstr ().c_str (), WiFi.RSSI (),
+              "'dns':'%s', 'mem':%d}",
+              ENIGMAIOT_PROT_VERS[0], ENIGMAIOT_PROT_VERS[1], ENIGMAIOT_PROT_VERS[2],
+              EnigmaIOTGateway.getNetworkName (),
+              WiFi.macAddress ().c_str (), WiFi.softAPmacAddress ().c_str (),
+              WiFi.channel (), WiFi.SSID ().c_str (), WiFi.BSSIDstr ().c_str (), WiFi.RSSI (),
 #ifdef ESP32
-			  (float)(WiFi.getTxPower ()) / 4,
+              (float)(WiFi.getTxPower ()) / 4,
 #endif
-			  WiFi.dnsIP ().toString ().c_str ()
+              WiFi.dnsIP ().toString ().c_str (),
+              ESP.getFreeHeap ()
 	);
 	DEBUG_DBG ("GwInfo: %s", gwInfo);
 	return gwInfo;
