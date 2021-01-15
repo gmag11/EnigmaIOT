@@ -475,10 +475,10 @@ void loop () {
 
 #ifdef MEAS_TEMP
 	static bool tempRequested = false;
-	static time_t lastTempTime;
+	static time_t lastTempTime = 0;
 
 	if (ds18b20.validAddress (dsAddress)) {
-		if (millis () - lastTempTime > statusPeriod && !tempRequested) {
+        if ((millis () - lastTempTime > statusPeriod && !tempRequested) || !lastTempTime) {
 			ds18b20.requestTemperatures ();
 			DEBUG_WARN ("Temperature requested");
 			lastTempTime = millis ();
