@@ -305,7 +305,7 @@ void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t ms
 	}
 
 
-	if (!EnigmaIOTGateway.sendDownstream (address, (uint8_t*)buffer, bufferLen, msgType, encoding, nodeName)) {
+	if (!EnigmaIOTGateway.sendDownstream (address, buffer, bufferLen, msgType, encoding, nodeName)) {
 		if (nodeName) {
 			DEBUG_WARN ("Error sending esp_now message to %s", nodeName);
 		} else {
@@ -318,7 +318,7 @@ void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t ms
 	free (buffer);
 }
 
-void newNodeConnected (uint8_t* mac, uint16_t node_id, char* nodeName = NULL) {
+void newNodeConnected (uint8_t* mac, uint16_t node_id, char* nodeName = nullptr) {
 
 	//Serial.printf ("New node connected: %s\n", macstr);
 
