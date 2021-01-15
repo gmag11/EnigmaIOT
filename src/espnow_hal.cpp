@@ -36,7 +36,7 @@ void Espnow_halClass::initComms (peerType_t peerType) {
 		networkGw.channel = channel;
 		networkGw.ifidx = ESP_IF_WIFI_STA;
 		networkGw.encrypt = false;
-		/*esp_err_t result = */esp_now_add_peer (&networkGw);
+        esp_err_t result = esp_now_add_peer (&networkGw);
 		DEBUG_INFO ("Gateway peer Added in channel %d. Result = %s", channel, esp_err_to_name (result));
 		DEBUG_DBG ("WIFI channel is %d", WiFi.channel ());
 #endif

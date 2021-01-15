@@ -489,6 +489,9 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	char nodeName[NODE_NAME_LENGTH] = "";
 
 	wifiManager = new AsyncWiFiManager (&server, &dns);
+#if DEBUG_LEVEL == NONE
+    wifiManager->setDebugOutput (false);
+#endif
 
 	//AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
 	//AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
@@ -1423,7 +1426,7 @@ bool EnigmaIOTNodeClass::processClockResponse (const uint8_t* mac, const uint8_t
     DEBUG_DBG ("T2: %llu", t2);
     DEBUG_DBG ("T3: %llu", t3);
     DEBUG_DBG ("T4: %llu", t4);
-    DEBUG_DBG ("Offest adjusted to %lld us, Roundtrip delay is %lld", offset, TimeManager.getDelay ());
+    DEBUG_INFO ("Offest adjusted to %lld us, Roundtrip delay is %lld", offset, TimeManager.getDelay ());
 
 	if (useCounter && !otaRunning) { // RTC must not be written if OTA is running. OTA uses RTC memmory to signal 2nd firmware boot
 		if (!saveRTCData ()) {
@@ -2525,7 +2528,7 @@ void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, 
 
 	// All downlink messages should come from gateway
 	if (memcmp (mac, rtcmem_data.gateway, comm->getAddressLength ()) != 0) {
-		DEBUG_ERROR ("Message comes not from gateway");
+		DEBUG_ERROR ("Message doesn't come from gateway");
 		return;
 	}
 

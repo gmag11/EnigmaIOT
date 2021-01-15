@@ -115,11 +115,11 @@ void processRxControlData (char* macStr, uint8_t* data, uint8_t length) {
 
 void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type, char* nodeName = NULL) {
 	//uint8_t *addr = mac;
-	char* payload;
 	size_t pld_size;
 	const int PAYLOAD_SIZE = 512;
+    char payload[PAYLOAD_SIZE];
 
-	payload = (char*)malloc (PAYLOAD_SIZE);
+	//payload = (char*)malloc (PAYLOAD_SIZE);
 
 	char mac_str[ENIGMAIOT_ADDR_LEN * 3];
 	mac2str (mac, mac_str);
@@ -174,11 +174,12 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 						 EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));
 	GwOutput.outputDataSend (mac_str, payload, pld_size, GwOutput_data_type::status);
 	//DEBUG_INFO ("Published MQTT from %s: %s", mac_str, payload);
-	free (payload);
+	//free (payload);
 }
 
 void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t msgType, char* data, unsigned int len) {
-	char* buffer;
+    //char* buffer;
+    char buffer[1024];
 	unsigned int bufferLen = len;
 
 	if (nodeName) {
@@ -188,7 +189,7 @@ void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t ms
 	}
 	DEBUG_DBG ("Data: %.*s", len, data);
 
-	buffer = (char*)malloc (len + 1);
+	//buffer = (char*)malloc (len + 1);
 	sprintf (buffer, "%.*s", len, data);
 	bufferLen++;
 
@@ -198,7 +199,7 @@ void onDownlinkData (uint8_t* address, char* nodeName, control_message_type_t ms
 		DEBUG_DBG ("Esp-now message sent or queued correctly");
 	}
 
-	free (buffer);
+	//free (buffer);
 }
 
 void newNodeConnected (uint8_t* mac, uint16_t node_id, char* nodeName = NULL) {

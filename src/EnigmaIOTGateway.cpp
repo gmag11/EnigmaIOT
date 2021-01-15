@@ -1204,7 +1204,7 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 
 		size_t nodeNameLen = tag_idx - nodeName_idx;
 
-		DEBUG_DBG ("Node name length: %d bytes\n", nodeNameLen);
+		DEBUG_DBG ("Node name length: %d bytes", nodeNameLen);
 
 		if (nodeNameLen >= NODE_NAME_LENGTH) {
 			nodeNameLen = NODE_NAME_LENGTH - 1;
@@ -1289,7 +1289,7 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_A
 		}
 	}
 
-	DEBUG_DBG ("Payload length: %d bytes\n", tag_idx - data_idx);
+	DEBUG_DBG ("Payload length: %d bytes", tag_idx - data_idx);
 
 	char* nodeName = node->getNodeName ();
 

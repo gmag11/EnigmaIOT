@@ -129,6 +129,15 @@ public:
 	EnigmaIOTRingBuffer <Telement> (int range) : maxSize (range) {
 		buffer = new Telement[maxSize];
 	}
+    
+    /**
+      * @brief EnigmaIOTRingBuffer destructor 
+      * @param range Free up buffer memory
+      */
+    ~EnigmaIOTRingBuffer () {
+        maxSize = 0;
+        delete[] (buffer);
+    }
 
 	/**
 	  * @brief Returns actual number of elements that buffer holds
@@ -155,8 +164,8 @@ public:
 	  */
 	bool push (Telement* item) {
 		bool wasFull = isFull ();
-		DEBUG_DBG ("Add element. Buffer was %s\n", wasFull ? "full" : "not full");
-		DEBUG_DBG ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+		DEBUG_DBG ("Add element. Buffer was %s", wasFull ? "full" : "not full");
+		DEBUG_DBG ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d", readIndex, writeIndex, numElements);
 		memcpy (&(buffer[writeIndex]), item, sizeof (Telement));
 		//Serial.printf ("Copied: %d bytes\n", sizeof (Telement));
 		writeIndex++;
@@ -171,7 +180,7 @@ public:
 		} else {
 			numElements++;
 		}
-		DEBUG_DBG ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+		DEBUG_DBG ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d", readIndex, writeIndex, numElements);
 		return !wasFull;
 	}
 
@@ -181,8 +190,8 @@ public:
 	  */
 	bool pop () {
 		bool wasEmpty = empty ();
-		DEBUG_DBG ("Remove element. Buffer was %s\n", wasEmpty ? "empty" : "not empty");
-		DEBUG_DBG ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+		DEBUG_DBG ("Remove element. Buffer was %s", wasEmpty ? "empty" : "not empty");
+		DEBUG_DBG ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d", readIndex, writeIndex, numElements);
 		if (!wasEmpty) {
 			readIndex++;
 			if (readIndex >= maxSize) {
@@ -190,7 +199,7 @@ public:
 			}
 			numElements--;
 		}
-		DEBUG_DBG ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+		DEBUG_DBG ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d", readIndex, writeIndex, numElements);
 		return !wasEmpty;
 	}
 
@@ -199,7 +208,7 @@ public:
 	  * @return Returns pointer to element. If buffer was empty before calling this method it returns `NULL`
 	  */
 	Telement* front () {
-		DEBUG_DBG ("Read element. ReadIdx: %d. WriteIdx: %d. Size: %d\n", readIndex, writeIndex, numElements);
+		DEBUG_DBG ("Read element. ReadIdx: %d. WriteIdx: %d. Size: %d", readIndex, writeIndex, numElements);
 		if (!empty ()) {
 			return &(buffer[readIndex]);
 		} else {

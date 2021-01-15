@@ -292,7 +292,7 @@ void GwOutput_MQTT::reconnect () {
 
 char* getTopicAddress (char* topic, unsigned int& len) {
 	if (!topic)
-		return NULL;
+        return nullptr;
 
 	char* start = strchr (topic, '/') + 1;
 	char* end;
@@ -300,7 +300,7 @@ char* getTopicAddress (char* topic, unsigned int& len) {
 	if (start) {
 		end = strchr (start, '/');
 	} else {
-		return NULL;
+        return nullptr;
 	}
 	//DEBUG_INFO ("Start %p : %d", start, start - topic);
 	//DEBUG_INFO ("End %p : %d", end, end - topic);
@@ -384,7 +384,7 @@ void GwOutput_MQTT::onDlData (char* topic, uint8_t* data, unsigned int len) {
 	char* addressStr;
 	control_message_type_t msgType;
 	char* userCommand;
-	char* nodeName = NULL;
+    char* nodeName = nullptr;
 
 
 	DEBUG_DBG ("Topic %s", topic);
@@ -509,7 +509,7 @@ mqtt_queue_item_t* GwOutput_MQTT::getMQTTqueue () {
 		DEBUG_DBG ("MQTT message got from queue");
 		return mqtt_queue.front ();
 	}
-	return NULL;
+    return nullptr;
 }
 
 void GwOutput_MQTT::popMQTTqueue () {
