@@ -1,7 +1,7 @@
 /**
   * @file GwOutput_dummy.cpp
   * @version 0.9.7
-  * @date 17/12/2020
+  * @date 04/02/2021
   * @author German Martin
   * @brief Dummy Gateway output module
   *
