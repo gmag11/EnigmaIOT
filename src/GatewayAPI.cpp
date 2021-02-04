@@ -46,7 +46,7 @@ void GatewayAPI::begin () {
 void GatewayAPI::getNodeNumber (AsyncWebServerRequest* request) {
 	char response[25];
 
-	snprintf (response, 25, "{'nodeNumber':%d}", EnigmaIOTGateway.getActiveNodesNumber ());
+	snprintf (response, 25, "{\"nodeNumber\":%d}", EnigmaIOTGateway.getActiveNodesNumber ());
 	DEBUG_INFO ("Response: %s", response);
 	request->send (200, "application/json", response);
 }
@@ -55,12 +55,12 @@ char* GatewayAPI::buildGwInfo (char* gwInfo, size_t len) {
 	DEBUG_INFO ("Build Gateway Info");
 	//resultCode = 200;
 	//time_t currentMillis = millis ();
-    snprintf (gwInfo, len, "{'version':'%d.%d.%d','network':'%s','addresses':{'AP':'%s','STA':'%s'},"
-              "'channel':%d,'ap':'%s','bssid':'%s','rssi':%d,"
+    snprintf (gwInfo, len, "{\"version\":\"%d.%d.%d\",\"network\":\"%s\",\"addresses\":{\"AP\":\"%s\",\"STA\":\"%s\"},"
+              "\"channel\":%d,\"ap\":\"%s\",\"bssid\":\"%s\",\"rssi\":%d,"
 #ifdef ESP32
-              "txpower':%.1f,"
+              "\"txpower\":%.1f,"
 #endif
-              "'dns':'%s', 'mem':%d}",
+              "\"dns\":\"%s\",\"mem\":%d}",
               ENIGMAIOT_PROT_VERS[0], ENIGMAIOT_PROT_VERS[1], ENIGMAIOT_PROT_VERS[2],
               EnigmaIOTGateway.getNetworkName (),
               WiFi.macAddress ().c_str (), WiFi.softAPmacAddress ().c_str (),
@@ -83,7 +83,7 @@ void GatewayAPI::getGwInfo (AsyncWebServerRequest* request) {
 		resultCode = 200;
 	}
 	if (resultCode == 404) {
-		snprintf (response, RESPONSE_SIZE, "{'result':'not found'}");
+        snprintf (response, RESPONSE_SIZE, "{\"result\":\"not found\"}");
 	}
 	DEBUG_DBG ("Response: %d --> %s", resultCode, response);
 	request->send (resultCode, "application/json", response);
@@ -144,7 +144,7 @@ const char* GatewayAPI::deleteNode (Node* node, int& resultCode) {
 			DEBUG_INFO ("Node %d is registered", node->getNodeId ());
 			resultCode = 200;
 			EnigmaIOTGateway.invalidateKey (node, KICKED);
-			return "{'result':'ok'}";
+            return "{\"result\":\"ok\"}";
 		} else {
 			DEBUG_INFO ("Node %d is not registered", node->getNodeId ());
 		}
@@ -160,9 +160,9 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
 			resultCode = 200;
 			time_t currentMillis = millis ();
 			uint8_t* version = node->getVersion ();
-			snprintf (nodeInfo, len, "{'version':'%d.%d.%d','node_id':%d,'address':'" MACSTR "',"\
-					  "'Name':'%s','keyValidSince':%ld,'lastMessageTime':%ld,'sleepy':%s,"\
-                      "'Broadcast':%s,'TimeSync':%s,'rssi':%d,'packetsHour':%f,'per':%f}",
+            snprintf (nodeInfo, len, "{\"version\":\"%d.%d.%d\",\"node_id\":%d,\"address\":\"" MACSTR "\","\
+                      "\"Name\":\"%s\",\"keyValidSince\":%ld,\"lastMessageTime\":%ld,\"sleepy\":%s,"\
+                      "\"Broadcast\":%s,\"TimeSync\":%s,\"rssi\":%d,\"packetsHour\":%f,\"per\":%f}",
 					  version[0], version[1], version[2],
 					  node->getNodeId (),
 					  MAC2STR (node->getMacAddress ()),
@@ -200,11 +200,11 @@ void GatewayAPI::restartNode (AsyncWebServerRequest* request) {
 
 	bool result = restartNodeRequest (node);
 	if (result) {
-		snprintf (response, 30, "{'node_restart':'processed'}");
+		snprintf (response, 30, "{\"node_restart\":\"processed\"}");
 		resultCode = 200;
 	}
 	if (resultCode == 404) {
-		snprintf (response, 25, "{'result':'not found'}");
+		snprintf (response, 25, "{\"result\":\"not found\"}");
 	}
 	DEBUG_WARN ("Response: %d --> %s", resultCode, response);
 	request->send (resultCode, "application/json", response);
@@ -236,7 +236,7 @@ void GatewayAPI::nodeOp (AsyncWebServerRequest* request) {
 		}
 	}
 	if (resultCode == 404) {
-		snprintf (response, 25, "{'result':'not found'}");
+		snprintf (response, 25, "{\"result\":\"not found\"}");
 	}
 	DEBUG_DBG ("Response: %d --> %s", resultCode, response);
 	request->send (resultCode, "application/json", response);
@@ -245,7 +245,7 @@ void GatewayAPI::nodeOp (AsyncWebServerRequest* request) {
 void GatewayAPI::getMaxNodes (AsyncWebServerRequest* request) {
 	char response[25];
 
-	snprintf (response, 25, "{'maxNodes':%d}", NUM_NODES);
+	snprintf (response, 25, "{\"maxNodes\":%d}", NUM_NODES);
 	DEBUG_INFO ("Response: %s", response);
 	request->send (200, "application/json", response);
 }
@@ -269,10 +269,10 @@ void GatewayAPI::restartGw (AsyncWebServerRequest* request) {
 	}
 
 	if (confirm) {
-		snprintf (response, 30, "{'gw_restart':'processed'}");
+		snprintf (response, 30, "{\"gw_restart\":\"processed\"}");
 		request->send (resultCode, "application/json", response);
 	} else {
-		snprintf (response, 25, "{'gw_restart':'fail'}");
+		snprintf (response, 25, "{\"gw_restart\":\"fail\"}");
 		request->send (resultCode, "application/json", response);
 	}
 
@@ -302,10 +302,10 @@ void GatewayAPI::resetGw (AsyncWebServerRequest* request) {
     }
 
     if (confirm) {
-        snprintf (response, 30, "{'gw_reset':'processed'}");
+        snprintf (response, 30, "{\"gw_reset\":\"processed\"}");
         request->send (resultCode, "application/json", response);
     } else {
-        snprintf (response, 25, "{'gw_reset':'fail'}");
+        snprintf (response, 25, "{\"gw_reset\":\"fail\"}");
         request->send (resultCode, "application/json", response);
     }
 
@@ -322,7 +322,7 @@ void GatewayAPI::getNodes (AsyncWebServerRequest* request) {
 	AsyncResponseStream* response = request->beginResponseStream ("application/json");
 	response->setCode (200);
 
-	response->print ("{'nodes':[");
+	response->print ("{\"nodes\":[");
 	do {
 		bool first = (node == NULL);
 		node = EnigmaIOTGateway.nodelist.getNextActiveNode (node);
@@ -335,7 +335,7 @@ void GatewayAPI::getNodes (AsyncWebServerRequest* request) {
 		}
 		if (node) {
 			DEBUG_DBG ("Got node. NodeId -> %u", node->getNodeId ());
-			response->printf ("{'nodeId':%u,'address':'" MACSTR "','name':'%s'}",
+			response->printf ("{\"nodeId\":%u,\"address\":\"" MACSTR "\",\"name\":\"%s\"}",
 							  node->getNodeId (),
 							  MAC2STR (node->getMacAddress ()),
 							  node->getNodeName ());
