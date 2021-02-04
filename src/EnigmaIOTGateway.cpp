@@ -1269,7 +1269,7 @@ bool EnigmaIOTGatewayClass::processControlMessage (const uint8_t mac[ENIGMAIOT_A
 			DEBUG_INFO ("Accepted");
 			node->setLastControlCounter (counter);
 		} else {
-			DEBUG_WARN ("Control message rejected");
+            DEBUG_WARN ("Control message rejected. Last counter: %u. Current counter", node->getLastControlCounter (), counter);
 			return false;
 		}
 	}
