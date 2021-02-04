@@ -115,10 +115,10 @@ $(function() {
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    DEBUG_DBG (<span class="stringliteral">&quot;Round trip delay: %lld&quot;</span>, <a class="code" href="classTimeManagerClass.html#addb0c670f91aed75698ff9b70048ed71">roundTripDelay</a>);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    </div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    gettimeofday (&amp;currenttime, NULL);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    currenttime_us = (int64_t)currenttime.tv_sec * 1000000L + (int64_t)currenttime.tv_usec;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    currenttime_us = (int64_t)currenttime.tv_sec * 1000000LL + (int64_t)currenttime.tv_usec;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    newtime_us = currenttime_us + <a class="code" href="classTimeManagerClass.html#a76446d0df445c23ecb583b3d50fb3f95">offset</a>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    newtime.tv_sec = newtime_us / 1000000L;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    newtime.tv_usec = newtime_us - ((int64_t)(newtime.tv_sec) * 1000000L);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    newtime.tv_sec = newtime_us / 1000000LL;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    newtime.tv_usec = newtime_us - ((int64_t)(newtime.tv_sec) * 1000000LL);</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    </div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    settimeofday (&amp;newtime, NULL); <span class="comment">// hard adjustment</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>

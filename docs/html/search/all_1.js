@@ -13,6 +13,7 @@ var searchData=
   ['api_2emd_18',['api.md',['../api_8md.html',1,'']]],
   ['arduinootaconfigure_19',['arduinoOTAConfigure',['../EnigmaIOTGatewayMQTT_8ino.html#a8d52c8107e0bcc9687be62f7e0b388ae',1,'EnigmaIOTGatewayMQTT.ino']]],
   ['args_20',['args',['../namespaceEnigmaIoTUpdate.html#a950133eea5c2ac61becd91f089b8d610',1,'EnigmaIoTUpdate']]],
-  ['avefilter_21',['aveFilter',['../classFilterClass.html#a8571bc0e05f848a4372c3b40f7598a78',1,'FilterClass']]],
-  ['average_5ffilter_22',['AVERAGE_FILTER',['../Filter_8h.html#a0c87b1dd8bef5bbb8464d1652f929ff7ac9041674b910fde6edc5bf029cd3bbf9',1,'Filter.h']]]
+  ['askedtimesync_21',['askedTimeSync',['../classNode.html#a918b7ad8582d1b2d569dbd66a262ee50',1,'Node']]],
+  ['avefilter_22',['aveFilter',['../classFilterClass.html#a8571bc0e05f848a4372c3b40f7598a78',1,'FilterClass']]],
+  ['average_5ffilter_23',['AVERAGE_FILTER',['../Filter_8h.html#a0c87b1dd8bef5bbb8464d1652f929ff7ac9041674b910fde6edc5bf029cd3bbf9',1,'Filter.h']]]
 ];

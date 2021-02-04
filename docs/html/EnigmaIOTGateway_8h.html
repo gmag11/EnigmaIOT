@@ -125,10 +125,8 @@ Typedefs</h2></td></tr>
 <tr class="separator:a17b8c1861e099264b904a9f20ee69666"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a059cb90513e14cc8dc7befecc75bc891"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#a059cb90513e14cc8dc7befecc75bc891">onWiFiManagerExit_t</a>) (boolean <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
 <tr class="separator:a059cb90513e14cc8dc7befecc75bc891"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeafba3e3725226cdcb14a23c4e57c97a"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#aeafba3e3725226cdcb14a23c4e57c97a">onWiFiManagerStarted_t</a>) (void)</td></tr>
-<tr class="separator:aeafba3e3725226cdcb14a23c4e57c97a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13fd0589380955dca8a52f95058e8c6e"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#a13fd0589380955dca8a52f95058e8c6e">onRestartRequested_t</a>) (void)</td></tr>
-<tr class="separator:a13fd0589380955dca8a52f95058e8c6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c95cb7d1926120867fd8a4246f90f5c"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGateway_8h.html#a7c95cb7d1926120867fd8a4246f90f5c">simpleEventHandler_t</a>) (void)</td></tr>
+<tr class="separator:a7c95cb7d1926120867fd8a4246f90f5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -194,7 +192,7 @@ Variables</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Library to build a gateway for EnigmaIoT system. </p>
 <dl class="section version"><dt>Version</dt><dd>0.9.7 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>17/12/2020 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>04/02/2021 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
@@ -280,22 +278,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a13fd0589380955dca8a52f95058e8c6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13fd0589380955dca8a52f95058e8c6e">&#9670;&nbsp;</a></span>onRestartRequested_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef void(* onRestartRequested_t) (void)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8h_source.html#l00097">97</a> of file <a class="el" href="EnigmaIOTGateway_8h_source.html">EnigmaIOTGateway.h</a>.</p>
-
-</div>
-</div>
 <a id="a059cb90513e14cc8dc7befecc75bc891"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a059cb90513e14cc8dc7befecc75bc891">&#9670;&nbsp;</a></span>onWiFiManagerExit_t</h2>
 
@@ -312,14 +294,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aeafba3e3725226cdcb14a23c4e57c97a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeafba3e3725226cdcb14a23c4e57c97a">&#9670;&nbsp;</a></span>onWiFiManagerStarted_t</h2>
+<a id="a7c95cb7d1926120867fd8a4246f90f5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c95cb7d1926120867fd8a4246f90f5c">&#9670;&nbsp;</a></span>simpleEventHandler_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* onWiFiManagerStarted_t) (void)</td>
+          <td class="memname">typedef void(* simpleEventHandler_t) (void)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -473,7 +455,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01940">1940</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGateway_8cpp_source.html#l01961">1961</a> of file <a class="el" href="EnigmaIOTGateway_8cpp_source.html">EnigmaIOTGateway.cpp</a>.</p>
 
 </div>
 </div>

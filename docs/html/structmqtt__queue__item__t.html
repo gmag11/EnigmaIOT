@@ -76,10 +76,10 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aac59a2accfe1847e78f793cddbc0434c"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqtt__queue__item__t.html#aac59a2accfe1847e78f793cddbc0434c">topic</a></td></tr>
-<tr class="separator:aac59a2accfe1847e78f793cddbc0434c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8883bfd38fdf3dd3c6e43235762ae570"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqtt__queue__item__t.html#a8883bfd38fdf3dd3c6e43235762ae570">payload</a></td></tr>
-<tr class="separator:a8883bfd38fdf3dd3c6e43235762ae570"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16fd8eb5680730758fbb7d4b22bf94d8"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqtt__queue__item__t.html#a16fd8eb5680730758fbb7d4b22bf94d8">topic</a> [<a class="el" href="GwOutput__mqtt_8h.html#a77fff82f7baddba1fab736746b21bcd9">MAX_MQTT_TOPIC_LEN</a>]</td></tr>
+<tr class="separator:a16fd8eb5680730758fbb7d4b22bf94d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a188c9fd25ec2003a1ac1e677a0b55ea3"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqtt__queue__item__t.html#a188c9fd25ec2003a1ac1e677a0b55ea3">payload</a> [<a class="el" href="GwOutput__mqtt_8h.html#ae444c69d932744ac6ba80ef8683c414d">MAX_MQTT_PLD_LEN</a>]</td></tr>
+<tr class="separator:a188c9fd25ec2003a1ac1e677a0b55ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62c6546560a1c32ef4beee7366949b71"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqtt__queue__item__t.html#a62c6546560a1c32ef4beee7366949b71">payload_len</a></td></tr>
 <tr class="separator:a62c6546560a1c32ef4beee7366949b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97156ce99d23165972659f5cf86ed570"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmqtt__queue__item__t.html#a97156ce99d23165972659f5cf86ed570">retain</a></td></tr>
@@ -87,22 +87,22 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00074">74</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00077">77</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a8883bfd38fdf3dd3c6e43235762ae570"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8883bfd38fdf3dd3c6e43235762ae570">&#9670;&nbsp;</a></span>payload</h2>
+<a id="a188c9fd25ec2003a1ac1e677a0b55ea3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a188c9fd25ec2003a1ac1e677a0b55ea3">&#9670;&nbsp;</a></span>payload</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char* mqtt_queue_item_t::payload</td>
+          <td class="memname">char mqtt_queue_item_t::payload[<a class="el" href="GwOutput__mqtt_8h.html#ae444c69d932744ac6ba80ef8683c414d">MAX_MQTT_PLD_LEN</a>]</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Message payload </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00076">76</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00079">79</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -119,7 +119,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Payload length </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00077">77</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00080">80</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -136,24 +136,24 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>MQTT retain flag </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00078">78</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00081">81</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
-<a id="aac59a2accfe1847e78f793cddbc0434c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac59a2accfe1847e78f793cddbc0434c">&#9670;&nbsp;</a></span>topic</h2>
+<a id="a16fd8eb5680730758fbb7d4b22bf94d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16fd8eb5680730758fbb7d4b22bf94d8">&#9670;&nbsp;</a></span>topic</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char* mqtt_queue_item_t::topic</td>
+          <td class="memname">char mqtt_queue_item_t::topic[<a class="el" href="GwOutput__mqtt_8h.html#a77fff82f7baddba1fab736746b21bcd9">MAX_MQTT_TOPIC_LEN</a>]</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Message topic </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00075">75</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00078">78</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>

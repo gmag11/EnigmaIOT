@@ -69,7 +69,6 @@ $(function() {
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classEspnow__halClass-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Espnow_halClass Class Reference</div>  </div>
@@ -92,24 +91,24 @@ Inheritance diagram for Espnow_halClass:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4a115caab9605dd4e3d32eefb00f18db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a4a115caab9605dd4e3d32eefb00f18db">begin</a> (uint8_t *<a class="el" href="classEspnow__halClass.html#a50174d2e6b137724092121fe4a18da3c">gateway</a>, uint8_t <a class="el" href="classEspnow__halClass.html#a21c29d9dc5643cebaa975302058a8694">channel</a>=0, <a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4">peerType_t</a> peerType=<a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4a460e495e522978c8c19f3904a623c5c5">COMM_NODE</a>)</td></tr>
-<tr class="memdesc:a4a115caab9605dd4e3d32eefb00f18db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup communication environment and establish the connection from node to gateway.  <a href="classEspnow__halClass.html#a4a115caab9605dd4e3d32eefb00f18db">More...</a><br /></td></tr>
-<tr class="separator:a4a115caab9605dd4e3d32eefb00f18db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add2ac8b2494fa1b5f09d32e17118ecda"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#add2ac8b2494fa1b5f09d32e17118ecda">stop</a> ()</td></tr>
-<tr class="memdesc:add2ac8b2494fa1b5f09d32e17118ecda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Terminates communication and closes all connectrions.  <a href="classEspnow__halClass.html#add2ac8b2494fa1b5f09d32e17118ecda">More...</a><br /></td></tr>
-<tr class="separator:add2ac8b2494fa1b5f09d32e17118ecda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e900d74240975661ea48daf0a961f89"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a9e900d74240975661ea48daf0a961f89">send</a> (uint8_t *da, uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, int len)</td></tr>
-<tr class="memdesc:a9e900d74240975661ea48daf0a961f89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends data to the other peer.  <a href="classEspnow__halClass.html#a9e900d74240975661ea48daf0a961f89">More...</a><br /></td></tr>
-<tr class="separator:a9e900d74240975661ea48daf0a961f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08e6f8bf23cbdd6f2963b774894d53b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a08e6f8bf23cbdd6f2963b774894d53b9">onDataRcvd</a> (<a class="el" href="Comms__hal_8h.html#a43bcbe8a0a3d8d61dd64f1f004864af0">comms_hal_rcvd_data</a> <a class="el" href="classEspnow__halClass.html#abab5ac687881d32ddc3cf889cf32a85a">dataRcvd</a>)</td></tr>
-<tr class="memdesc:a08e6f8bf23cbdd6f2963b774894d53b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a callback function to be run on every received message.  <a href="classEspnow__halClass.html#a08e6f8bf23cbdd6f2963b774894d53b9">More...</a><br /></td></tr>
-<tr class="separator:a08e6f8bf23cbdd6f2963b774894d53b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5457112b96701137d70065307dab2492"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a5457112b96701137d70065307dab2492">onDataSent</a> (<a class="el" href="Comms__hal_8h.html#afd743715a11ed44e16dbb8d28bf3bd8b">comms_hal_sent_data</a> <a class="el" href="classEspnow__halClass.html#abab5ac687881d32ddc3cf889cf32a85a">dataRcvd</a>)</td></tr>
-<tr class="memdesc:a5457112b96701137d70065307dab2492"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a callback function to be run after sending a message to receive its status.  <a href="classEspnow__halClass.html#a5457112b96701137d70065307dab2492">More...</a><br /></td></tr>
-<tr class="separator:a5457112b96701137d70065307dab2492"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d93298e01e70e39330ca7c67c7f1a87"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a8d93298e01e70e39330ca7c67c7f1a87">getAddressLength</a> ()</td></tr>
-<tr class="memdesc:a8d93298e01e70e39330ca7c67c7f1a87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get address length used on ESP-NOW subsystem.  <a href="classEspnow__halClass.html#a8d93298e01e70e39330ca7c67c7f1a87">More...</a><br /></td></tr>
-<tr class="separator:a8d93298e01e70e39330ca7c67c7f1a87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1c3a507c1615699d4f730c77dc52b50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#aa1c3a507c1615699d4f730c77dc52b50">begin</a> (uint8_t *<a class="el" href="classComms__halClass.html#ac35585ecbc8e936d9f35d32b56164b8e">gateway</a>, uint8_t <a class="el" href="classComms__halClass.html#ac495fb3d9e576bb2717c1f43197b458e">channel</a>=0, <a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4">peerType_t</a> peerType=<a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4a460e495e522978c8c19f3904a623c5c5">COMM_NODE</a>) override</td></tr>
+<tr class="memdesc:aa1c3a507c1615699d4f730c77dc52b50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup communication environment and establish the connection from node to gateway.  <a href="classEspnow__halClass.html#aa1c3a507c1615699d4f730c77dc52b50">More...</a><br /></td></tr>
+<tr class="separator:aa1c3a507c1615699d4f730c77dc52b50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1b11d3ca5e85c95d13000acab74bff3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#ad1b11d3ca5e85c95d13000acab74bff3">stop</a> () override</td></tr>
+<tr class="memdesc:ad1b11d3ca5e85c95d13000acab74bff3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Terminates communication and closes all connectrions.  <a href="classEspnow__halClass.html#ad1b11d3ca5e85c95d13000acab74bff3">More...</a><br /></td></tr>
+<tr class="separator:ad1b11d3ca5e85c95d13000acab74bff3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e0d23a1dedf362fc1f451c7272bff2b"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a1e0d23a1dedf362fc1f451c7272bff2b">send</a> (uint8_t *da, uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, int len) override</td></tr>
+<tr class="memdesc:a1e0d23a1dedf362fc1f451c7272bff2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends data to the other peer.  <a href="classEspnow__halClass.html#a1e0d23a1dedf362fc1f451c7272bff2b">More...</a><br /></td></tr>
+<tr class="separator:a1e0d23a1dedf362fc1f451c7272bff2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b28bd22a237920c95ee9cf3f9a5ca77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a6b28bd22a237920c95ee9cf3f9a5ca77">onDataRcvd</a> (<a class="el" href="Comms__hal_8h.html#a43bcbe8a0a3d8d61dd64f1f004864af0">comms_hal_rcvd_data</a> <a class="el" href="classComms__halClass.html#a5bbed119e5e361b9be85a33404cf2e83">dataRcvd</a>) override</td></tr>
+<tr class="memdesc:a6b28bd22a237920c95ee9cf3f9a5ca77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a callback function to be run on every received message.  <a href="classEspnow__halClass.html#a6b28bd22a237920c95ee9cf3f9a5ca77">More...</a><br /></td></tr>
+<tr class="separator:a6b28bd22a237920c95ee9cf3f9a5ca77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6104d185737252c0e86476d6eca6a62b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a6104d185737252c0e86476d6eca6a62b">onDataSent</a> (<a class="el" href="Comms__hal_8h.html#afd743715a11ed44e16dbb8d28bf3bd8b">comms_hal_sent_data</a> <a class="el" href="classComms__halClass.html#a5bbed119e5e361b9be85a33404cf2e83">dataRcvd</a>) override</td></tr>
+<tr class="memdesc:a6104d185737252c0e86476d6eca6a62b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a callback function to be run after sending a message to receive its status.  <a href="classEspnow__halClass.html#a6104d185737252c0e86476d6eca6a62b">More...</a><br /></td></tr>
+<tr class="separator:a6104d185737252c0e86476d6eca6a62b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac04ab12d0b5e52948d123f226ab1101d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#ac04ab12d0b5e52948d123f226ab1101d">getAddressLength</a> () override</td></tr>
+<tr class="memdesc:ac04ab12d0b5e52948d123f226ab1101d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get address length used on ESP-NOW subsystem.  <a href="classEspnow__halClass.html#ac04ab12d0b5e52948d123f226ab1101d">More...</a><br /></td></tr>
+<tr class="separator:ac04ab12d0b5e52948d123f226ab1101d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a037c0d31f906bc24a8475b376072fd"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a3a037c0d31f906bc24a8475b376072fd">getMaxMessageLength</a> ()</td></tr>
 <tr class="memdesc:a3a037c0d31f906bc24a8475b376072fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get maximum message length on ESP-NOW subsystem.  <a href="classEspnow__halClass.html#a3a037c0d31f906bc24a8475b376072fd">More...</a><br /></td></tr>
 <tr class="separator:a3a037c0d31f906bc24a8475b376072fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,9 +131,9 @@ Static Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a084026117f83985b7f7751aa9e9726a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a084026117f83985b7f7751aa9e9726a0">initComms</a> (<a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4">peerType_t</a> peerType)</td></tr>
-<tr class="memdesc:a084026117f83985b7f7751aa9e9726a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Communication subsistem initialization.  <a href="classEspnow__halClass.html#a084026117f83985b7f7751aa9e9726a0">More...</a><br /></td></tr>
-<tr class="separator:a084026117f83985b7f7751aa9e9726a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47f4ee9859b73356a27f6baaa2f009c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a47f4ee9859b73356a27f6baaa2f009c9">initComms</a> (<a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4">peerType_t</a> peerType) override</td></tr>
+<tr class="memdesc:a47f4ee9859b73356a27f6baaa2f009c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Communication subsistem initialization.  <a href="classEspnow__halClass.html#a47f4ee9859b73356a27f6baaa2f009c9">More...</a><br /></td></tr>
+<tr class="separator:a47f4ee9859b73356a27f6baaa2f009c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7c4c848bc0fc5b4f93f9b02dd10d986"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#aa7c4c848bc0fc5b4f93f9b02dd10d986">addPeer</a> (const uint8_t *da)</td></tr>
 <tr class="memdesc:aa7c4c848bc0fc5b4f93f9b02dd10d986"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a peer to esp-now peer list.  <a href="classEspnow__halClass.html#aa7c4c848bc0fc5b4f93f9b02dd10d986">More...</a><br /></td></tr>
 <tr class="separator:aa7c4c848bc0fc5b4f93f9b02dd10d986"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,26 +147,14 @@ Static Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a5d5442d3095c57dee6ba5bc05691f587"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function that gets sending status.  <a href="classEspnow__halClass.html#a5d5442d3095c57dee6ba5bc05691f587">More...</a><br /></td></tr>
 <tr class="separator:a5d5442d3095c57dee6ba5bc05691f587"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:a50174d2e6b137724092121fe4a18da3c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a50174d2e6b137724092121fe4a18da3c">gateway</a> [<a class="el" href="classEspnow__halClass.html#a024a232658955ce9d3cc2b41106ffd72">COMMS_HAL_ADDR_LEN</a>]</td></tr>
-<tr class="memdesc:a50174d2e6b137724092121fe4a18da3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gateway address.  <a href="classEspnow__halClass.html#a50174d2e6b137724092121fe4a18da3c">More...</a><br /></td></tr>
-<tr class="separator:a50174d2e6b137724092121fe4a18da3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21c29d9dc5643cebaa975302058a8694"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a21c29d9dc5643cebaa975302058a8694">channel</a></td></tr>
-<tr class="memdesc:a21c29d9dc5643cebaa975302058a8694"><td class="mdescLeft">&#160;</td><td class="mdescRight">WiFi channel to be used.  <a href="classEspnow__halClass.html#a21c29d9dc5643cebaa975302058a8694">More...</a><br /></td></tr>
-<tr class="separator:a21c29d9dc5643cebaa975302058a8694"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abab5ac687881d32ddc3cf889cf32a85a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="Comms__hal_8h.html#a43bcbe8a0a3d8d61dd64f1f004864af0">comms_hal_rcvd_data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#abab5ac687881d32ddc3cf889cf32a85a">dataRcvd</a></td></tr>
-<tr class="memdesc:abab5ac687881d32ddc3cf889cf32a85a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to a function to be called on every received message.  <a href="classEspnow__halClass.html#abab5ac687881d32ddc3cf889cf32a85a">More...</a><br /></td></tr>
-<tr class="separator:abab5ac687881d32ddc3cf889cf32a85a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a2dbc59ff5036ec52126b00a0e1db81"><td class="memItemLeft" align="right" valign="top"><a class="el" href="Comms__hal_8h.html#afd743715a11ed44e16dbb8d28bf3bd8b">comms_hal_sent_data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspnow__halClass.html#a7a2dbc59ff5036ec52126b00a0e1db81">sentResult</a></td></tr>
-<tr class="memdesc:a7a2dbc59ff5036ec52126b00a0e1db81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to a function to be called to notify last sending status.  <a href="classEspnow__halClass.html#a7a2dbc59ff5036ec52126b00a0e1db81">More...</a><br /></td></tr>
-<tr class="separator:a7a2dbc59ff5036ec52126b00a0e1db81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_attribs_classComms__halClass"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classComms__halClass')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classComms__halClass.html">Comms_halClass</a></td></tr>
 <tr class="memitem:ac35585ecbc8e936d9f35d32b56164b8e inherit pro_attribs_classComms__halClass"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#ac35585ecbc8e936d9f35d32b56164b8e">gateway</a> [<a class="el" href="classComms__halClass.html#a6d372da9bf4d1d00c5445b26ef7d0f0b">COMMS_HAL_ADDR_LEN</a>]</td></tr>
 <tr class="memdesc:ac35585ecbc8e936d9f35d32b56164b8e inherit pro_attribs_classComms__halClass"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gateway address.  <a href="classComms__halClass.html#ac35585ecbc8e936d9f35d32b56164b8e">More...</a><br /></td></tr>
 <tr class="separator:ac35585ecbc8e936d9f35d32b56164b8e inherit pro_attribs_classComms__halClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac495fb3d9e576bb2717c1f43197b458e inherit pro_attribs_classComms__halClass"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#ac495fb3d9e576bb2717c1f43197b458e">channel</a></td></tr>
-<tr class="memdesc:ac495fb3d9e576bb2717c1f43197b458e inherit pro_attribs_classComms__halClass"><td class="mdescLeft">&#160;</td><td class="mdescRight">WiFi channel to be used.  <a href="classComms__halClass.html#ac495fb3d9e576bb2717c1f43197b458e">More...</a><br /></td></tr>
+<tr class="memdesc:ac495fb3d9e576bb2717c1f43197b458e inherit pro_attribs_classComms__halClass"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comms channel to be used.  <a href="classComms__halClass.html#ac495fb3d9e576bb2717c1f43197b458e">More...</a><br /></td></tr>
 <tr class="separator:ac495fb3d9e576bb2717c1f43197b458e inherit pro_attribs_classComms__halClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bbed119e5e361b9be85a33404cf2e83 inherit pro_attribs_classComms__halClass"><td class="memItemLeft" align="right" valign="top"><a class="el" href="Comms__hal_8h.html#a43bcbe8a0a3d8d61dd64f1f004864af0">comms_hal_rcvd_data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#a5bbed119e5e361b9be85a33404cf2e83">dataRcvd</a> = 0</td></tr>
 <tr class="memdesc:a5bbed119e5e361b9be85a33404cf2e83 inherit pro_attribs_classComms__halClass"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to a function to be called on every received message.  <a href="classComms__halClass.html#a5bbed119e5e361b9be85a33404cf2e83">More...</a><br /></td></tr>
@@ -220,8 +207,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a4a115caab9605dd4e3d32eefb00f18db"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a115caab9605dd4e3d32eefb00f18db">&#9670;&nbsp;</a></span>begin()</h2>
+<a id="aa1c3a507c1615699d4f730c77dc52b50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1c3a507c1615699d4f730c77dc52b50">&#9670;&nbsp;</a></span>begin()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -255,7 +242,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -276,8 +263,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a8d93298e01e70e39330ca7c67c7f1a87"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d93298e01e70e39330ca7c67c7f1a87">&#9670;&nbsp;</a></span>getAddressLength()</h2>
+<a id="ac04ab12d0b5e52948d123f226ab1101d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac04ab12d0b5e52948d123f226ab1101d">&#9670;&nbsp;</a></span>getAddressLength()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -294,7 +281,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -338,8 +325,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a084026117f83985b7f7751aa9e9726a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a084026117f83985b7f7751aa9e9726a0">&#9670;&nbsp;</a></span>initComms()</h2>
+<a id="a47f4ee9859b73356a27f6baaa2f009c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47f4ee9859b73356a27f6baaa2f009c9">&#9670;&nbsp;</a></span>initComms()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -357,7 +344,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -376,8 +363,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a08e6f8bf23cbdd6f2963b774894d53b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08e6f8bf23cbdd6f2963b774894d53b9">&#9670;&nbsp;</a></span>onDataRcvd()</h2>
+<a id="a6b28bd22a237920c95ee9cf3f9a5ca77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b28bd22a237920c95ee9cf3f9a5ca77">&#9670;&nbsp;</a></span>onDataRcvd()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -395,7 +382,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -414,8 +401,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5457112b96701137d70065307dab2492"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5457112b96701137d70065307dab2492">&#9670;&nbsp;</a></span>onDataSent()</h2>
+<a id="a6104d185737252c0e86476d6eca6a62b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6104d185737252c0e86476d6eca6a62b">&#9670;&nbsp;</a></span>onDataSent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -433,7 +420,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -506,8 +493,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9e900d74240975661ea48daf0a961f89"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e900d74240975661ea48daf0a961f89">&#9670;&nbsp;</a></span>send()</h2>
+<a id="a1e0d23a1dedf362fc1f451c7272bff2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e0d23a1dedf362fc1f451c7272bff2b">&#9670;&nbsp;</a></span>send()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -541,7 +528,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -563,8 +550,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="add2ac8b2494fa1b5f09d32e17118ecda"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add2ac8b2494fa1b5f09d32e17118ecda">&#9670;&nbsp;</a></span>stop()</h2>
+<a id="ad1b11d3ca5e85c95d13000acab74bff3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1b11d3ca5e85c95d13000acab74bff3">&#9670;&nbsp;</a></span>stop()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -581,7 +568,7 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -642,32 +629,6 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a21c29d9dc5643cebaa975302058a8694"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21c29d9dc5643cebaa975302058a8694">&#9670;&nbsp;</a></span>channel</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t Espnow_halClass::channel</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>WiFi channel to be used. </p>
-
-<p class="definition">Definition at line <a class="el" href="espnow__hal_8h_source.html#l00039">39</a> of file <a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>.</p>
-
-</div>
-</div>
 <a id="a024a232658955ce9d3cc2b41106ffd72"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a024a232658955ce9d3cc2b41106ffd72">&#9670;&nbsp;</a></span>COMMS_HAL_ADDR_LEN</h2>
 
@@ -717,84 +678,6 @@ Protected Attributes</h2></td></tr>
 <p>Maximum message length for ESP-NOW. </p>
 
 <p class="definition">Definition at line <a class="el" href="espnow__hal_8h_source.html#l00033">33</a> of file <a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>.</p>
-
-</div>
-</div>
-<a id="abab5ac687881d32ddc3cf889cf32a85a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abab5ac687881d32ddc3cf889cf32a85a">&#9670;&nbsp;</a></span>dataRcvd</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="Comms__hal_8h.html#a43bcbe8a0a3d8d61dd64f1f004864af0">comms_hal_rcvd_data</a> Espnow_halClass::dataRcvd</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Pointer to a function to be called on every received message. </p>
-
-<p class="definition">Definition at line <a class="el" href="espnow__hal_8h_source.html#l00041">41</a> of file <a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>.</p>
-
-</div>
-</div>
-<a id="a50174d2e6b137724092121fe4a18da3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50174d2e6b137724092121fe4a18da3c">&#9670;&nbsp;</a></span>gateway</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t Espnow_halClass::gateway[<a class="el" href="classEspnow__halClass.html#a024a232658955ce9d3cc2b41106ffd72">COMMS_HAL_ADDR_LEN</a>]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Gateway address. </p>
-
-<p class="definition">Definition at line <a class="el" href="espnow__hal_8h_source.html#l00038">38</a> of file <a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>.</p>
-
-</div>
-</div>
-<a id="a7a2dbc59ff5036ec52126b00a0e1db81"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a2dbc59ff5036ec52126b00a0e1db81">&#9670;&nbsp;</a></span>sentResult</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="Comms__hal_8h.html#afd743715a11ed44e16dbb8d28bf3bd8b">comms_hal_sent_data</a> Espnow_halClass::sentResult</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Pointer to a function to be called to notify last sending status. </p>
-
-<p class="definition">Definition at line <a class="el" href="espnow__hal_8h_source.html#l00042">42</a> of file <a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>.</p>
 
 </div>
 </div>

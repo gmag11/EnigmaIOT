@@ -155,21 +155,20 @@ Static Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a6c30a4c67499253c238fc8646f3285ef"><td class="memItemLeft" align="right" valign="top">AsyncWiFiManagerParameter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#a6c30a4c67499253c238fc8646f3285ef">mqttServerParam</a></td></tr>
+<tr class="memitem:a6c30a4c67499253c238fc8646f3285ef"><td class="memItemLeft" align="right" valign="top">AsyncWiFiManagerParameter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#a6c30a4c67499253c238fc8646f3285ef">mqttServerParam</a> = NULL</td></tr>
 <tr class="memdesc:a6c30a4c67499253c238fc8646f3285ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration field for MQTT server address.  <a href="classGwOutput__MQTT.html#a6c30a4c67499253c238fc8646f3285ef">More...</a><br /></td></tr>
 <tr class="separator:a6c30a4c67499253c238fc8646f3285ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7949ebf56b8a63b24553fe02d857373d"><td class="memItemLeft" align="right" valign="top">AsyncWiFiManagerParameter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#a7949ebf56b8a63b24553fe02d857373d">mqttPortParam</a></td></tr>
+<tr class="memitem:a7949ebf56b8a63b24553fe02d857373d"><td class="memItemLeft" align="right" valign="top">AsyncWiFiManagerParameter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#a7949ebf56b8a63b24553fe02d857373d">mqttPortParam</a> = NULL</td></tr>
 <tr class="memdesc:a7949ebf56b8a63b24553fe02d857373d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration field for MQTT server port.  <a href="classGwOutput__MQTT.html#a7949ebf56b8a63b24553fe02d857373d">More...</a><br /></td></tr>
 <tr class="separator:a7949ebf56b8a63b24553fe02d857373d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24682127079586d71ac858f7e2f78f6f"><td class="memItemLeft" align="right" valign="top">AsyncWiFiManagerParameter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#a24682127079586d71ac858f7e2f78f6f">mqttUserParam</a></td></tr>
+<tr class="memitem:a24682127079586d71ac858f7e2f78f6f"><td class="memItemLeft" align="right" valign="top">AsyncWiFiManagerParameter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#a24682127079586d71ac858f7e2f78f6f">mqttUserParam</a> = NULL</td></tr>
 <tr class="memdesc:a24682127079586d71ac858f7e2f78f6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration field for MQTT server user name.  <a href="classGwOutput__MQTT.html#a24682127079586d71ac858f7e2f78f6f">More...</a><br /></td></tr>
 <tr class="separator:a24682127079586d71ac858f7e2f78f6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4d784744aeee89199092987f9ba5c53"><td class="memItemLeft" align="right" valign="top">AsyncWiFiManagerParameter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#ad4d784744aeee89199092987f9ba5c53">mqttPassParam</a></td></tr>
+<tr class="memitem:ad4d784744aeee89199092987f9ba5c53"><td class="memItemLeft" align="right" valign="top">AsyncWiFiManagerParameter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#ad4d784744aeee89199092987f9ba5c53">mqttPassParam</a> = NULL</td></tr>
 <tr class="memdesc:ad4d784744aeee89199092987f9ba5c53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration field for MQTT server password.  <a href="classGwOutput__MQTT.html#ad4d784744aeee89199092987f9ba5c53">More...</a><br /></td></tr>
 <tr class="separator:ad4d784744aeee89199092987f9ba5c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d617e48568014fbfce66e5cdf34022a"><td class="memItemLeft" align="right" valign="top">std::queue&lt; <a class="el" href="structmqtt__queue__item__t.html">mqtt_queue_item_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#a3d617e48568014fbfce66e5cdf34022a">mqtt_queue</a></td></tr>
-<tr class="memdesc:a3d617e48568014fbfce66e5cdf34022a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output MQTT messages queue. It acts as a FIFO queue.  <a href="classGwOutput__MQTT.html#a3d617e48568014fbfce66e5cdf34022a">More...</a><br /></td></tr>
-<tr class="separator:a3d617e48568014fbfce66e5cdf34022a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0477251ade40b70ff8c65f1e5478163"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEnigmaIOTRingBuffer.html">EnigmaIOTRingBuffer</a>&lt; <a class="el" href="structmqtt__queue__item__t.html">mqtt_queue_item_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#af0477251ade40b70ff8c65f1e5478163">mqtt_queue</a></td></tr>
+<tr class="separator:af0477251ade40b70ff8c65f1e5478163"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13bd3d7f5d5a221627886a8b4ce29516"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmqttgw__config__t.html">mqttgw_config_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGwOutput__MQTT.html#a13bd3d7f5d5a221627886a8b4ce29516">mqttgw_config</a></td></tr>
 <tr class="memdesc:a13bd3d7f5d5a221627886a8b4ce29516"><td class="mdescLeft">&#160;</td><td class="mdescRight">MQTT server configuration data.  <a href="classGwOutput__MQTT.html#a13bd3d7f5d5a221627886a8b4ce29516">More...</a><br /></td></tr>
 <tr class="separator:a13bd3d7f5d5a221627886a8b4ce29516"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,7 +204,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00082">82</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00085">85</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a50976e1efb3c1570e3596672ffd83c56"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a50976e1efb3c1570e3596672ffd83c56">&#9670;&nbsp;</a></span>GwOutput_MQTT()</h2>
@@ -232,7 +231,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Constructor to initialize MQTT client. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00165">165</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00169">169</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -294,7 +293,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00483">483</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00484">484</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -432,7 +431,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Gets next item in the queue. </p>
 <dl class="section return"><dt>Returns</dt><dd>Next MQTT message to be sent </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00506">506</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00507">507</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -545,7 +544,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classGatewayOutput__generic.html#a7e5626e20f3decbb28d85acbf14e106b">GatewayOutput_generic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00660">660</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00664">664</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -595,7 +594,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classGatewayOutput__generic.html#a0d3fe3f57535eb485910b5a460e6bb58">GatewayOutput_generic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00678">678</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00682">682</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -706,7 +705,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classGatewayOutput__generic.html#a050f9bea35a220be645be5d99fbc3a07">GatewayOutput_generic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00556">556</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00560">560</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -770,7 +769,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classGatewayOutput__generic.html#a8a61150a6388caee08a1092def5bdce5">GatewayOutput_generic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00533">533</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00537">537</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -799,7 +798,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Deletes next item in the queue. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00514">514</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00515">515</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -860,7 +859,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00455">455</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00456">456</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -951,7 +950,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Synchronizes time over NTP to check certifitate expiration time. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00466">466</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8cpp_source.html#l00467">467</a> of file <a class="el" href="GwOutput__mqtt_8cpp_source.html">GwOutput_mqtt.cpp</a>.</p>
 
 </div>
 </div>
@@ -978,7 +977,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>TCP client. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00100">100</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00104">104</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1004,12 +1003,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>MQTT client. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00102">102</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00106">106</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
-<a id="a3d617e48568014fbfce66e5cdf34022a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d617e48568014fbfce66e5cdf34022a">&#9670;&nbsp;</a></span>mqtt_queue</h2>
+<a id="af0477251ade40b70ff8c65f1e5478163"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0477251ade40b70ff8c65f1e5478163">&#9670;&nbsp;</a></span>mqtt_queue</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1018,7 +1017,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::queue&lt;<a class="el" href="structmqtt__queue__item__t.html">mqtt_queue_item_t</a>*&gt; GwOutput_MQTT::mqtt_queue</td>
+          <td class="memname"><a class="el" href="classEnigmaIOTRingBuffer.html">EnigmaIOTRingBuffer</a>&lt;<a class="el" href="structmqtt__queue__item__t.html">mqtt_queue_item_t</a>&gt; GwOutput_MQTT::mqtt_queue</td>
         </tr>
       </table>
   </td>
@@ -1028,9 +1027,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Output MQTT messages queue. It acts as a FIFO queue. </p>
-
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00089">89</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00093">93</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1056,7 +1053,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>MQTT server configuration data. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00091">91</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00095">95</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1070,7 +1067,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">AsyncWiFiManagerParameter* GwOutput_MQTT::mqttPassParam</td>
+          <td class="memname">AsyncWiFiManagerParameter* GwOutput_MQTT::mqttPassParam = NULL</td>
         </tr>
       </table>
   </td>
@@ -1082,7 +1079,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configuration field for MQTT server password. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00087">87</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00090">90</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1096,7 +1093,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">AsyncWiFiManagerParameter* GwOutput_MQTT::mqttPortParam</td>
+          <td class="memname">AsyncWiFiManagerParameter* GwOutput_MQTT::mqttPortParam = NULL</td>
         </tr>
       </table>
   </td>
@@ -1108,7 +1105,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configuration field for MQTT server port. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00085">85</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00088">88</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1122,7 +1119,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">AsyncWiFiManagerParameter* GwOutput_MQTT::mqttServerParam</td>
+          <td class="memname">AsyncWiFiManagerParameter* GwOutput_MQTT::mqttServerParam = NULL</td>
         </tr>
       </table>
   </td>
@@ -1134,7 +1131,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configuration field for MQTT server address. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00084">84</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00087">87</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1148,7 +1145,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">AsyncWiFiManagerParameter* GwOutput_MQTT::mqttUserParam</td>
+          <td class="memname">AsyncWiFiManagerParameter* GwOutput_MQTT::mqttUserParam = NULL</td>
         </tr>
       </table>
   </td>
@@ -1160,7 +1157,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configuration field for MQTT server user name. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00086">86</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00089">89</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
@@ -1186,7 +1183,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Flag to indicate if configuration should be saved. </p>
 
-<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00092">92</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GwOutput__mqtt_8h_source.html#l00096">96</a> of file <a class="el" href="GwOutput__mqtt_8h_source.html">GwOutput_mqtt.h</a>.</p>
 
 </div>
 </div>
