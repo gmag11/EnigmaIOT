@@ -25,6 +25,7 @@ static const int RESET_PIN_DURATION = 5000; ///< @brief Number of milliseconds t
 static const unsigned int MAX_KEY_VALIDITY = 86400000U; ///< @brief After this time (in ms) a node is unregistered. Setting this to 0 means imfinite
 static const unsigned int MAX_NODE_INACTIVITY = 86400000U; ///< @brief After this time (in ms) a node is marked as gone. Setting this to 0 means imfinite
 static const size_t MAX_MQTT_QUEUE_SIZE = 3; ///< @brief Maximum number of MQTT messages to be sent
+#define ENABLE_STATUS_MESSAGES 1 ///< @brief Enable sending status message after every data message
 static const int RATE_AVE_ORDER = 5; ///< @brief Message rate filter order
 static const int MAX_INPUT_QUEUE_SIZE = 3; ///< @brief Input queue size for EnigmaIOT messages. Acts as a buffer to be able to handle messages during high load
 #ifndef NUM_NODES
