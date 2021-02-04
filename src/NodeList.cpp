@@ -142,8 +142,8 @@ Node* NodeList::getNodeFromID (uint16_t nodeId) {
 Node* NodeList::getNodeFromMAC (const uint8_t* mac) {
 	uint16_t index = 0;
 
-	if (!memcmp (broadcastNode->getEncriptionKey (), mac, ENIGMAIOT_ADDR_LEN)) {
-		return broadcastNode;
+	if (!memcmp (broadcastNode.getEncriptionKey (), mac, ENIGMAIOT_ADDR_LEN)) {
+		return &broadcastNode;
 	}
 
 	while (index < NUM_NODES) {
@@ -159,16 +159,16 @@ Node* NodeList::getNodeFromMAC (const uint8_t* mac) {
 }
 
 void NodeList::initBroadcastNode () {
-	broadcastNode = new Node ();
-	node_t node;
+	//broadcastNode = new Node ();
+	//node_t node;
 
 	//uint8_t broadcastAddress[ENIGMAIOT_ADDR_LEN];
 	//memcpy (broadcastAddress, BROADCAST_ADDRESS, ENIGMAIOT_ADDR_LEN);
-	broadcastNode->setMacAddress (BROADCAST_ADDRESS);
-	broadcastNode->setNodeId (0xffff);
-	broadcastNode->setStatus (REGISTERED);
-	broadcastNode->setSleepy (false);
-	broadcastNode->setNodeName (BROADCAST_NONE_NAME);
+	broadcastNode.setMacAddress (BROADCAST_ADDRESS);
+	broadcastNode.setNodeId (0xffff);
+	broadcastNode.setStatus (REGISTERED);
+	broadcastNode.setSleepy (false);
+	broadcastNode.setNodeName (BROADCAST_NONE_NAME);
 }
 
 Node* NodeList::getNodeFromName (const char* name) {
@@ -181,9 +181,9 @@ Node* NodeList::getNodeFromName (const char* name) {
 	}
 
 	// check if destination is broadcast
-	if (!strncmp (name, broadcastNode->getNodeName (), NODE_NAME_LENGTH)) {
+	if (!strncmp (name, broadcastNode.getNodeName (), NODE_NAME_LENGTH)) {
 		DEBUG_DBG ("Address '%s' is broadcast node", name);
-		return broadcastNode;
+		return &broadcastNode;
 	}
 
 	while (index < NUM_NODES) {

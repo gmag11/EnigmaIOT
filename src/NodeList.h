@@ -605,7 +605,7 @@ public:
      * @return Broadcas node instance
      */
     Node* getBroadcastNode () {
-        return broadcastNode;
+        return &broadcastNode;
     }
 
     /**
@@ -630,7 +630,7 @@ public:
 
 protected:
     Node nodes[NUM_NODES]; ///< @brief Static Node array that holds maximum number of supported nodes 
-    Node* broadcastNode; ///< @brief Node instance that holds data used for broadcast messages. This does not represent any individual node
+    Node broadcastNode; ///< @brief Node instance that holds data used for broadcast messages. This does not represent any individual node
     uint16_t lastBroadcastMsgCounter; ///< @brief Last broadcast message counter state for all nodes, both for data and control messages
 
 };

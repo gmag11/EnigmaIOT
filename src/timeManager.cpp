@@ -48,10 +48,10 @@ int64_t TimeManagerClass::adjustTime (int64_t t1r, int64_t t2r, int64_t t3r, int
     DEBUG_DBG ("Round trip delay: %lld", roundTripDelay);
     
     gettimeofday (&currenttime, NULL);
-    currenttime_us = (int64_t)currenttime.tv_sec * 1000000L + (int64_t)currenttime.tv_usec;
+    currenttime_us = (int64_t)currenttime.tv_sec * 1000000LL + (int64_t)currenttime.tv_usec;
     newtime_us = currenttime_us + offset;
-    newtime.tv_sec = newtime_us / 1000000L;
-    newtime.tv_usec = newtime_us - ((int64_t)(newtime.tv_sec) * 1000000L);
+    newtime.tv_sec = newtime_us / 1000000LL;
+    newtime.tv_usec = newtime_us - ((int64_t)(newtime.tv_sec) * 1000000LL);
     
     settimeofday (&newtime, NULL); // hard adjustment
 

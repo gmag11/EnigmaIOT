@@ -71,9 +71,12 @@ typedef struct {
 	char mqtt_pass[41]; /**< MQTT broker user password*/
 } mqttgw_config_t;
 
+constexpr auto MAX_MQTT_TOPIC_LEN = 50;
+constexpr auto MAX_MQTT_PLD_LEN = 2048;
+
 typedef struct {
-	char* topic; /**< Message topic*/
-	char* payload; /**< Message payload*/
+	char topic[MAX_MQTT_TOPIC_LEN]; /**< Message topic*/
+	char payload[MAX_MQTT_PLD_LEN]; /**< Message payload*/
 	size_t payload_len; /**< Payload length*/
 	bool retain; /**< MQTT retain flag*/
 } mqtt_queue_item_t;
@@ -86,7 +89,8 @@ protected:
     AsyncWiFiManagerParameter* mqttUserParam = NULL; ///< @brief Configuration field for MQTT server user name
     AsyncWiFiManagerParameter* mqttPassParam = NULL; ///< @brief Configuration field for MQTT server password
 
-	std::queue<mqtt_queue_item_t*> mqtt_queue; ///< @brief Output MQTT messages queue. It acts as a FIFO queue
+	//std::queue<mqtt_queue_item_t*> mqtt_queue; ///< @brief Output MQTT messages queue. It acts as a FIFO queue
+    EnigmaIOTRingBuffer<mqtt_queue_item_t> mqtt_queue;
 
 	mqttgw_config_t mqttgw_config; ///< @brief MQTT server configuration data
 	bool shouldSaveConfig = false; ///< @brief Flag to indicate if configuration should be saved
@@ -100,7 +104,7 @@ protected:
 	WiFiClient espClient; ///< @brief TCP client
 #endif // SECURE_MQTT
 	PubSubClient mqtt_client; ///< @brief MQTT client
-
+    
    /**
 	 * @brief Saves output module configuration
 	 * @return Returns `true` if save was successful. `false` otherwise
@@ -163,6 +167,7 @@ public:
 	 * @brief Constructor to initialize MQTT client
 	 */
 	GwOutput_MQTT () :
+        mqtt_queue (MAX_MQTT_QUEUE_SIZE),
 #if defined ESP8266 && defined SECURE_MQTT
 		certificate (DSTroot_CA),
 #endif // ESP8266 && SECURE_MQTT

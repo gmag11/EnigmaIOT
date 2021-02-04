@@ -606,6 +606,8 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	if (notifyWiFiManagerExit) {
 		notifyWiFiManagerExit (result);
 	}
+    
+    delete (wifiManager);
 
 	return result;
 }

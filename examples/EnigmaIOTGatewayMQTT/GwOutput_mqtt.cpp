@@ -201,7 +201,7 @@ void GwOutput_MQTT::configManagerExit (bool status) {
 }
 
 bool GwOutput_MQTT::begin () {
-
+    //this->mqtt_queue = new EnigmaIOTRingBuffer<mqtt_queue_item_t> (MAX_MQTT_QUEUE_SIZE);
 #ifdef SECURE_MQTT
 	randomSeed (micros ());
 #ifdef ESP32
@@ -482,24 +482,24 @@ void GwOutput_MQTT::setClock () {
 //#endif
 
 bool GwOutput_MQTT::addMQTTqueue (const char* topic, char* payload, size_t len, bool retain) {
-	mqtt_queue_item_t* message = new mqtt_queue_item_t;
+    mqtt_queue_item_t message;
 
 	if (mqtt_queue.size () >= MAX_MQTT_QUEUE_SIZE) {
 		mqtt_queue.pop ();
 	}
 
-	message->topic = (char*)malloc (strlen (topic) + 1);
-	strcpy (message->topic, topic);
-	message->payload_len = len;
-	message->payload = (char*)malloc (len);
-	memcpy (message->payload, payload, len);
-	message->retain = retain;
+	//message.topic = (char*)malloc (strlen (topic) + 1);
+	strncpy (message.topic, topic, MAX_MQTT_TOPIC_LEN);
+    message.payload_len = len < MAX_MQTT_PLD_LEN ? len : MAX_MQTT_PLD_LEN;
+	//message->payload = (char*)malloc (len);
+    memcpy (message.payload, payload, message.payload_len);
+	message.retain = retain;
 
-	mqtt_queue.push (message);
+	mqtt_queue.push (&message);
 	DEBUG_DBG ("%d MQTT messages queued Len:%d %s %.*s", mqtt_queue.size (),
 			   len,
-			   message->topic,
-			   message->payload_len, message->payload);
+			   message.topic,
+			   message.payload_len, message.payload);
 
 	return true;
 }
@@ -519,12 +519,15 @@ void GwOutput_MQTT::popMQTTqueue () {
 		message = mqtt_queue.front ();
 		if (message) {
 			if (message->topic) {
-				delete(message->topic);
+				//delete(message->topic);
+                message->topic[0] = 0;
 			}
 			if (message->payload) {
-				delete(message->payload);
+				//delete(message->payload);
+                message->payload[0] = 0;
 			}
-			delete message;
+            message->payload_len = 0;
+			//delete message;
 		}
 		mqtt_queue.pop ();
 		DEBUG_DBG ("MQTT message pop. Size %d", mqtt_queue.size ());
