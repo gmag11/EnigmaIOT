@@ -139,8 +139,7 @@ void setup () {
 #endif
 	{
 		EnigmaIOTNode.setNodeAddress (macAddress);
-		char macStr[ENIGMAIOT_ADDR_LEN * 3];
-		DEBUG_DBG ("Node address set to %s", mac2str (macAddress, macStr));
+		DEBUG_WARN ("Node address set to %s", mac2str (macAddress));
 	} else {
 		DEBUG_WARN ("Node address error");
 	}
@@ -151,10 +150,10 @@ void showTime () {
 
 
 	if (EnigmaIOTNode.hasClockSync ()) {
-        static time_t displayTime;
+        //static time_t displayTime;
         tm timeinfo;
 
-		displayTime = millis ();
+		//displayTime = millis ();
 		//time_t local_time_ms = EnigmaIOTNode.clock ();
 		//local_time_ms /= 1000;
 		time_t local_time = EnigmaIOTNode.unixtime ();
