@@ -144,7 +144,7 @@ public:
         //message = buffer;
         int len = measureMsgPack (*entityConfig);
 
-        if (len > MAX_MESSAGE_LENGTH) {
+        if (len > MAX_DATA_PAYLOAD_LENGTH) {
             DEBUG_WARN ("Too long message. Reduce HA anounce options");
             return 0;
         }
