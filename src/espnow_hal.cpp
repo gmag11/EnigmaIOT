@@ -34,7 +34,7 @@ void Espnow_halClass::initComms (peerType_t peerType) {
 		esp_now_peer_info_t networkGw;
 		memcpy (networkGw.peer_addr, gateway, COMMS_HAL_ADDR_LEN);
 		networkGw.channel = channel;
-		networkGw.ifidx = ESP_IF_WIFI_STA;
+        networkGw.ifidx = WIFI_IF_STA;
 		networkGw.encrypt = false;
         esp_err_t result = esp_now_add_peer (&networkGw);
 		DEBUG_INFO ("Gateway peer Added in channel %d. Result = %s", channel, esp_err_to_name (result));
@@ -87,7 +87,7 @@ bool Espnow_halClass::addPeer (const uint8_t* da) {
 	wifi_second_chan_t secondCh;
 	esp_wifi_get_channel (&ch, &secondCh);
 	peer.channel = ch;
-	peer.ifidx = ESP_IF_WIFI_AP;
+    peer.ifidx = WIFI_IF_AP;
 	peer.encrypt = false;
 	esp_err_t error = esp_now_add_peer (&peer);
 	//char addrStr[ENIGMAIOT_ADDR_LEN * 3];
