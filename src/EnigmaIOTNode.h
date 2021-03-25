@@ -41,7 +41,8 @@ enum nodeMessageType {
 	DOWNSTREAM_DATA_GET = 0x12, /**< Data message from gateway. Downstream data for user commands */
 	DOWNSTREAM_BRCAST_DATA_GET = 0x92, /**< Data broadcast message from gateway. Downstream data for user commands */
 	CONTROL_DATA = 0x03, /**< Internal control message from node to gateway. Used for OTA, settings configuration, etc */
-	DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to node. Used for OTA, settings configuration, etc */
+    DOWNSTREAM_CTRL_DATA = 0x04, /**< Internal control message from gateway to node. Used for OTA, settings configuration, etc */
+    HA_DISCOVERY_MESSAGE = 0x08, /**< This sends gateway needed information to build a Home Assistant discovery MQTT message to allow automatic entities provision */
 	DOWNSTREAM_BRCAST_CTRL_DATA = 0x84, /**< Internal control broadcast message from gateway to sensor. Used for OTA, settings configuration, etc */
 	CLOCK_REQUEST = 0x05, /**< Clock request message from node */
 	CLOCK_RESPONSE = 0x06, /**< Clock response message from gateway */
@@ -62,6 +63,12 @@ enum nodePayloadEncoding_t {
 	BSON = 0x84, /**< Data packed using BSON. NOT IMPLEMENTED */
 	CBOR = 0x85, /**< Data packed using CBOR. NOT IMPLEMENTED */
 	SMILE = 0x86 /**< Data packed using SMILE. NOT IMPLEMENTED */
+};
+
+enum dataMessageType_t {
+    DATA_TYPE,      /**< User data message */
+    CONTROL_TYPE,   /**< Control message */
+    HA_DISC_TYPE    /**< Home Assistant Discovery message */
 };
 
 
@@ -270,22 +277,30 @@ protected:
 	  * @brief Builds, encrypts and sends a **Data** message.
 	  * @param data Buffer to store payload to be sent
 	  * @param len Length of payload data
-	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
+      * @param dataMsgType Signals if this message is a special EnigmaIoT message or that should not be passed to higher layers
 	  * @param payloadEncoding Determine payload data encoding as nodePayloadEncoding_t. It can be RAW, CAYENNELPP, MSGPACK
 	  * @param encrypt Indicates if message should be encrypted. True by default. Not recommended to set to false, use it only if you absolutely need more performance
 	  * @return Returns `true` if message could be correcly sent
 	  */
-	bool dataMessage (const uint8_t* data, size_t len, bool controlMessage = false, bool encrypt = true, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);
+    bool dataMessage (const uint8_t* data, size_t len, dataMessageType_t dataMsgType = DATA_TYPE, bool encrypt = true, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);
+
+    /**
+      * @brief Builds, encrypts and sends a **HomeAssistant discovery** message.
+      * @param data Buffer to store payload to be sent
+      * @param len Length of payload data
+      * @return Returns `true` if message could be correcly sent
+      */
+    bool sendHADiscoveryMessage (const uint8_t* data, size_t len);
 
 	/**
 	  * @brief Builds and sends a **Data** message without encryption. Not recommended, use it only if you absolutely need more performance.
 	  * @param data Buffer to store payload to be sent
 	  * @param len Length of payload data
-	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
+      * @param dataMsgType Signals if this message is a special EnigmaIoT message or that should not be passed to higher layers
 	  * @param payloadEncoding Determine payload data encoding as nodePayloadEncoding_t. It can be RAW, CAYENNELPP, MSGPACK
 	  * @return Returns `true` if message could be correcly sent
 	  */
-	bool unencryptedDataMessage (const uint8_t* data, size_t len, bool controlMessage = false, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);
+    bool unencryptedDataMessage (const uint8_t* data, size_t len, dataMessageType_t dataMsgType = DATA_TYPE, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);
 
 	/**
 	  * @brief Processes a single OTA update command or data
@@ -407,12 +422,12 @@ protected:
 	  * @brief Initiades data transmission distinguissing if it is payload or control data.
 	  * @param data Buffer to store payload to be sent
 	  * @param len Length of payload data
-	  * @param controlMessage Signals if this message is an EnigmaIoT control message that should not be passed to higher layers
+      * @param dataMsgType Signals if this message is a special EnigmaIoT message or that should not be passed to higher layers
 	  * @param encrypt `true` if data should be encrypted. Default is `true`
 	  * @param payloadEncoding Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
 	  * @return Returns `true` if message could be correcly sent
 	  */
-	bool sendData (const uint8_t* data, size_t len, bool controlMessage, bool encrypt = true, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);
+    bool sendData (const uint8_t* data, size_t len, dataMessageType_t dataMsgType, bool encrypt = true, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);
 
 	/**
 	 * @brief Starts searching for a gateway that it using configured Network Name as WiFi AP. Stores this info for subsequent use
@@ -600,7 +615,7 @@ public:
 	  * @param payloadEncoding Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
 	  */
 	bool sendData (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding = CAYENNELPP) {
-		return sendData (data, len, false, true, payloadEncoding);
+		return sendData (data, len, DATA_TYPE, true, payloadEncoding);
 	}
 
 	/**
@@ -610,7 +625,7 @@ public:
 	  * @param payloadEncoding Identifies data encoding of payload. It can be RAW, CAYENNELPP, MSGPACK
 	  */
 	bool sendUnencryptedData (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding = CAYENNELPP) {
-		return sendData (data, len, false, false, payloadEncoding);
+        return sendData (data, len, DATA_TYPE, false, payloadEncoding);
 	}
 
 	/**
