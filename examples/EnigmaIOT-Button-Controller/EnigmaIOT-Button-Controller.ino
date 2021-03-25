@@ -59,8 +59,8 @@ const int FAILSAFE_RTC_ADDRESS = 0; // If you use RTC memory adjust offset to no
 
 // Called when node is connected to gateway. You don't need to do anything here usually
 void connectEventHandler () {
-	controller->connectInform ();
 	DEBUG_WARN ("Connected");
+    controller->connectInform ();
 }
 
 // Called when node is unregistered from gateway. You don't need to do anything here usually
@@ -69,8 +69,14 @@ void disconnectEventHandler (nodeInvalidateReason_t reason) {
 }
 
 // Called to route messages to EnitmaIOTNode class. Do not modify
-bool sendUplinkData (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding) {
-	return EnigmaIOTNode.sendData (data, len, payloadEncoding);
+bool sendUplinkData (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding, dataMessageType_t dataMsgType) {
+    if (dataMsgType == DATA_TYPE) {
+        return EnigmaIOTNode.sendData (data, len, payloadEncoding);    
+    } else if (dataMsgType == HA_DISC_TYPE) {
+        return EnigmaIOTNode.sendHADiscoveryMessage (data, len);
+    } else {
+        return false;
+    }
 }
 
 // Called to route incoming messages to your code. Do not modify
@@ -96,7 +102,7 @@ void setup () {
 
 #ifdef USE_SERIAL
 	Serial.begin (115200);
-	delay (1000);
+	// delay (1000);
 	Serial.println ();
 #endif
 

@@ -284,14 +284,6 @@ protected:
 	  */
     bool dataMessage (const uint8_t* data, size_t len, dataMessageType_t dataMsgType = DATA_TYPE, bool encrypt = true, nodePayloadEncoding_t payloadEncoding = CAYENNELPP);
 
-    /**
-      * @brief Builds, encrypts and sends a **HomeAssistant discovery** message.
-      * @param data Buffer to store payload to be sent
-      * @param len Length of payload data
-      * @return Returns `true` if message could be correcly sent
-      */
-    bool sendHADiscoveryMessage (const uint8_t* data, size_t len);
-
 	/**
 	  * @brief Builds and sends a **Data** message without encryption. Not recommended, use it only if you absolutely need more performance.
 	  * @param data Buffer to store payload to be sent
@@ -616,7 +608,16 @@ public:
 	  */
 	bool sendData (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding = CAYENNELPP) {
 		return sendData (data, len, DATA_TYPE, true, payloadEncoding);
-	}
+    }
+
+    /**
+      * @brief Builds, encrypts and sends a **HomeAssistant discovery** message.
+      * @param data Buffer to store payload to be sent
+      * @param len Length of payload data
+      * @return Returns `true` if message could be correcly sent
+      */
+    bool sendHADiscoveryMessage (const uint8_t* data, size_t len);
+
 
 	/**
 	  * @brief Starts a data message transmission

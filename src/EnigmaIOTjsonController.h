@@ -20,7 +20,7 @@
 
 #if defined ESP8266 || defined ESP32
 #include <functional>
-typedef std::function<bool (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding)> sendData_cb; /**< Data send callback definition */
+typedef std::function<bool (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding, dataMessageType_t dataMsgType)> sendData_cb; /**< Data send callback definition */
 #else
 #error This code only supports ESP8266 or ESP32 platforms
 #endif
@@ -125,7 +125,7 @@ protected:
 		DEBUG_INFO ("Trying to send: %s", strBuffer);
 		bool result = false;
 		if (sendData)
-			result = sendData (buffer, len, MSG_PACK);
+            result = sendData (buffer, len, MSG_PACK, DATA_TYPE);
 		if (!result) {
 			DEBUG_WARN ("---- Error sending data");
 		} else {
@@ -134,7 +134,23 @@ protected:
 		free (buffer);
 		free (strBuffer);
 		return result;
-	}
+    }
+
+    bool sendHADiscovery (uint8_t* data, size_t len) {
+        if (!data || !len) {
+            DEBUG_WARN ("Empty HA message");
+            return false;
+        }
+        bool result = false;
+        if (sendData)
+            result = sendData (data, len, MSG_PACK, HA_DISC_TYPE);
+        if (!result) {
+            DEBUG_WARN ("---- Error sending data");
+        } else {
+            DEBUG_INFO ("---- Data sent");
+        }
+        return result;
+    }
 };
 
 #endif // _ENIGMAIOTJSONCONTROLLER_h
