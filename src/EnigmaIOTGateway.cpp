@@ -23,6 +23,14 @@
 #include <cstdint>
 #include <regex>
 
+#if SUPPORT_HA_DISCOVERY
+#include "haEntity.h"
+#include "haBinarySensor.h"
+#include "haCover.h"
+#include "haSensor.h"
+#include "haSwitch.h"
+#endif // SUPPORT_HA_DISCOVERY
+
 const char CONFIG_FILE[] = "/config.json";
 
 bool shouldSave = false;

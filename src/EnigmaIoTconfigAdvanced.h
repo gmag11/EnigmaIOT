@@ -32,8 +32,14 @@ static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mo
 static const bool DISCONNECT_ON_DATA_ERROR = true; ///< @brief Activates node invalidation in case of data error
 #endif //DISCONNECT_ON_DATA_ERROR
 #ifndef ENABLE_REST_API
-#define ENABLE_REST_API 1 ///< Set to 1 to enable REST API
+#define ENABLE_REST_API 1 ///< @brief Set to 1 to enable REST API
 #endif // ENABLE_REST_API
+#ifndef SUPPORT_HA_DISCOVERY
+#define SUPPORT_HA_DISCOVERY 1  ///< @brief Set to 1 to enable HomeAssistant autodiscovery support
+#if SUPPORT_HA_DISCOVERY
+static const char HA_DISCOVERY_PREFIX[] = "homeassistant"; ///< @brief Used to build HomeAssistant discovery message topic
+#endif // SUPPORT_HA_DISCOVERY
+#endif // SUPPORT_HA_DISCOVERY
 
 // Node configuration
 static const uint32_t OTA_TIMEOUT_TIME = 10000; ///< @brief Timeout between OTA messages. In milliseconds
