@@ -26,7 +26,7 @@ public:
     
     void setValueField (const char* payload);
 
-    static size_t getDiscoveryJson (char* buffer, size_t buflen, const char* nodeName, const char* networkName, uint8_t* msgPack, size_t len);
+    static size_t getDiscoveryJson (char* buffer, size_t buflen, const char* nodeName, const char* networkName, DynamicJsonDocument* inputJSON);
 
     static String deviceClassStr (haSensorClass_t sensorClass);
 

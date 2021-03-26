@@ -46,43 +46,43 @@ void HASensor::setValueField (const char* payload) {
 }
 */
 
-size_t HASensor::getDiscoveryJson (char* buffer, size_t buflen, const char* nodeName, const char* networkName, uint8_t* msgPack, size_t len) {
-    DynamicJsonDocument inputJSON (1024);
+size_t HASensor::getDiscoveryJson (char* buffer, size_t buflen, const char* nodeName, const char* networkName, DynamicJsonDocument* inputJSON) {
+    //DynamicJsonDocument inputJSON (1024);
     DynamicJsonDocument outputJSON (1300);
 
-    deserializeMsgPack (inputJSON, msgPack, len);
+    //deserializeMsgPack (inputJSON, msgPack, len);
 
-    if (!nodeName || !networkName || !msgPack || !len) {
+    if (!nodeName || !networkName || !inputJSON /*!msgPack || !len*/) {
         DEBUG_WARN ("Whrong parameters");
         return 0;
     }
     
-    if (inputJSON.containsKey (ha_name_sufix)) {
-        outputJSON["name"] = String (nodeName) + "_" + inputJSON[ha_name_sufix].as<String> ();
+    if (inputJSON->containsKey (ha_name_sufix)) {
+        outputJSON["name"] = String (nodeName) + "_" + (*inputJSON)[ha_name_sufix].as<String> ();
     } else {
         outputJSON["name"] = nodeName;
     }
-    if (inputJSON.containsKey (ha_name_sufix)) {
-        outputJSON["unique_id"] = String (nodeName) + "_" + inputJSON[ha_name_sufix].as<String> ();
+    if (inputJSON->containsKey (ha_name_sufix)) {
+        outputJSON["unique_id"] = String (nodeName) + "_" + (*inputJSON)[ha_name_sufix].as<String> ();
     } else {
         outputJSON["unique_id"] = nodeName;
     }
-    if (inputJSON.containsKey (ha_device_class)) {
-        outputJSON["device_class"] = deviceClassStr (inputJSON[ha_device_class]);
+    if (inputJSON->containsKey (ha_device_class)) {
+        outputJSON["device_class"] = deviceClassStr ((*inputJSON)[ha_device_class]);
     }
-    if (inputJSON.containsKey (ha_expiration) && inputJSON[ha_expiration].is<int> ()) {
-        outputJSON["expire_after"] = deviceClassStr (inputJSON[ha_expiration]);
+    if (inputJSON->containsKey (ha_expiration) && (*inputJSON)[ha_expiration].is<int> ()) {
+        outputJSON["expire_after"] = deviceClassStr ((*inputJSON)[ha_expiration]);
     }
     outputJSON["state_topic"] = String (networkName) + "/" + String (nodeName) + "/data";
-    if (inputJSON.containsKey (ha_unit_of_measurement)) {
-        outputJSON["unit_of_measurement"] = deviceClassStr (inputJSON[ha_unit_of_measurement]);
+    if (inputJSON->containsKey (ha_unit_of_measurement)) {
+        outputJSON["unit_of_measurement"] = deviceClassStr ((*inputJSON)[ha_unit_of_measurement]);
     }
-    if (inputJSON.containsKey (ha_value_key)) {
-        outputJSON["value_template"] = String ("{{value_json.") + inputJSON[ha_value_key].as<String>() + String("}}");
+    if (inputJSON->containsKey (ha_value_key)) {
+        outputJSON["value_template"] = String ("{{value_json.") + (*inputJSON)[ha_value_key].as<String> () + String ("}}");
     } else {
         outputJSON["value_template"] = "{{value_json.value}}";
     }
-    if (inputJSON.containsKey (ha_allow_attrib) && inputJSON[ha_allow_attrib].as<bool> ()) {
+    if (inputJSON->containsKey (ha_allow_attrib) && (*inputJSON)[ha_allow_attrib].as<bool> ()) {
         outputJSON["json_attributes_topic"] = String (networkName) + "/" + String (nodeName) + "/data";
         outputJSON["json_attributes_template"] = "{{value_json | tojson}}";
     }

@@ -102,67 +102,67 @@ void HACover::setStateStopped (const char* payload) {
 }
 */
 
-size_t HACover::getDiscoveryJson (char* buffer, size_t buflen, const char* nodeName, const char* networkName, uint8_t* msgPack, size_t len) {
-    DynamicJsonDocument inputJSON (1024);
+size_t HACover::getDiscoveryJson (char* buffer, size_t buflen, const char* nodeName, const char* networkName, DynamicJsonDocument* inputJSON) {
+    //DynamicJsonDocument inputJSON (1024);
     DynamicJsonDocument outputJSON (1300);
 
-    deserializeMsgPack (inputJSON, msgPack, len);
+    //deserializeMsgPack (inputJSON, msgPack, len);
 
-    if (!nodeName || !networkName || !msgPack || !len) {
+    if (!nodeName || !networkName || !inputJSON /*!msgPack || !len*/) {
         DEBUG_WARN ("Whrong parameters");
         return 0;
     }
     
-    if (inputJSON.containsKey (ha_name_sufix)) {
-        outputJSON["name"] = String (nodeName) + "_" + inputJSON[ha_name_sufix].as<String> ();
+    if (inputJSON->containsKey (ha_name_sufix)) {
+        outputJSON["name"] = String (nodeName) + "_" + (*inputJSON)[ha_name_sufix].as<String> ();
     } else {
         outputJSON["name"] = nodeName;
     }
-    if (inputJSON.containsKey (ha_name_sufix)) {
-        outputJSON["unique_id"] = String (nodeName) + "_" + inputJSON[ha_name_sufix].as<String> ();
+    if (inputJSON->containsKey (ha_name_sufix)) {
+        outputJSON["unique_id"] = String (nodeName) + "_" + (*inputJSON)[ha_name_sufix].as<String> ();
     } else {
         outputJSON["unique_id"] = nodeName;
     }
     outputJSON["command_topic"] = String (networkName) + "/" + String (nodeName) + "/data";
-    if (inputJSON.containsKey (ha_device_class)) {
-        outputJSON["device_class"] = deviceClassStr (inputJSON[ha_device_class]);
+    if (inputJSON->containsKey (ha_device_class)) {
+        outputJSON["device_class"] = deviceClassStr ((*inputJSON)[ha_device_class]);
     }
-    if (inputJSON.containsKey (ha_payload_close)) {
-        outputJSON["payload_close"] = inputJSON[ha_payload_close];
+    if (inputJSON->containsKey (ha_payload_close)) {
+        outputJSON["payload_close"] = (*inputJSON)[ha_payload_close];
     }
-    if (inputJSON.containsKey (ha_payload_open)) {
-        outputJSON["payload_open"] = inputJSON[ha_payload_open];
+    if (inputJSON->containsKey (ha_payload_open)) {
+        outputJSON["payload_open"] = (*inputJSON)[ha_payload_open];
     }
-    if (inputJSON.containsKey (ha_payload_stop)) {
-        outputJSON["payload_stop"] = inputJSON[ha_payload_stop];
+    if (inputJSON->containsKey (ha_payload_stop)) {
+        outputJSON["payload_stop"] = (*inputJSON)[ha_payload_stop];
     }
     outputJSON["position_topic"] = String (networkName) + "/" + String (nodeName) + "/data";
     outputJSON["position_template"] = "{{value_json.pos}}";
     outputJSON["set_position_topic"] = String (networkName) + "/" + String (nodeName) + "/set/data";
     String pl_goto = "pos";
-    if (inputJSON.containsKey (ha_payload_goto)) {
-        pl_goto = inputJSON[ha_payload_goto].as<String>();
+    if (inputJSON->containsKey (ha_payload_goto)) {
+        pl_goto = (*inputJSON)[ha_payload_goto].as<String> ();
     }
     outputJSON["set_position_template"]= String("{\"cmd\":") + pl_goto + String("\"pos\":{{position|int}}}");
-    if (inputJSON.containsKey (ha_state_closed)) {
-        outputJSON["state_closed"] = inputJSON[ha_state_closed];
+    if (inputJSON->containsKey (ha_state_closed)) {
+        outputJSON["state_closed"] = (*inputJSON)[ha_state_closed];
     }
-    if (inputJSON.containsKey (ha_state_closing)) {
-        outputJSON["state_closing"] = inputJSON[ha_state_closing];
+    if (inputJSON->containsKey (ha_state_closing)) {
+        outputJSON["state_closing"] = (*inputJSON)[ha_state_closing];
     }
-    if (inputJSON.containsKey (ha_state_open)) {
-        outputJSON["state_open"] = inputJSON[ha_state_open];
+    if (inputJSON->containsKey (ha_state_open)) {
+        outputJSON["state_open"] = (*inputJSON)[ha_state_open];
     }
-    if (inputJSON.containsKey (ha_state_opening)) {
-        outputJSON["state_opening"] = inputJSON[ha_state_opening];
+    if (inputJSON->containsKey (ha_state_opening)) {
+        outputJSON["state_opening"] = (*inputJSON)[ha_state_opening];
     }
-    if (inputJSON.containsKey (ha_state_stopped)) {
-        outputJSON["state_stopped"] = inputJSON[ha_state_stopped];
+    if (inputJSON->containsKey (ha_state_stopped)) {
+        outputJSON["state_stopped"] = (*inputJSON)[ha_state_stopped];
     }
     outputJSON["state_topic"] = String (networkName) + "/" + String (nodeName) + "/data";
     outputJSON["value_template"] = "{{value_json.state}}";
 
-    if (inputJSON.containsKey (ha_allow_attrib) && inputJSON[ha_allow_attrib].as<bool> ()) {
+    if (inputJSON->containsKey (ha_allow_attrib) && (*inputJSON)[ha_allow_attrib].as<bool> ()) {
         outputJSON["json_attributes_topic"] = String (networkName) + "/" + String (nodeName) + "/data";
         outputJSON["json_attributes_template"] = "{{value_json | tojson}}";
     }
