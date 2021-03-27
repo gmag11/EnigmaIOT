@@ -1223,7 +1223,7 @@ bool EnigmaIOTGatewayClass::processNodeNameSet (const uint8_t mac[ENIGMAIOT_ADDR
 		error = nodelist.checkNodeName (nodeName, mac);
 	}
 
-	nodeNameSetRespose (node, error);
+	//nodeNameSetRespose (node, error);
 
 	if (error) {
 		return false;
