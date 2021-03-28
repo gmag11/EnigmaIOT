@@ -29,6 +29,7 @@
 #include "haCover.h"
 #include "haSensor.h"
 #include "haSwitch.h"
+#include "haTrigger.h"
 #endif // SUPPORT_HA_DISCOVERY
 
 const char CONFIG_FILE[] = "/config.json";
@@ -2012,31 +2013,37 @@ bool EnigmaIOTGatewayClass::sendHADiscoveryJSON (uint8_t* address, uint8_t* data
         return false;
     }
 
-    String topic = HAEntity::getDiscoveryTopic (HA_DISCOVERY_PREFIX, nodeName, deviceType, inputJSON.containsKey (ha_name_sufix) ? inputJSON[ha_name_sufix] : String("").c_str());
+    String topic = HAEntity::getDiscoveryTopic (HA_DISCOVERY_PREFIX, nodeName, deviceType, inputJSON.containsKey (ha_name_sufix) ? inputJSON[ha_name_sufix] : (const char *) NULL);
 
+    size_t jsonStrLen;
+    
     switch (deviceType) {
     case BINARY_SENSOR:
-        HABinarySensor::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
+        jsonStrLen = HABinarySensor::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
         break;
     case SENSOR:
-        HASensor::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
+        jsonStrLen = HASensor::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
         break;
     case COVER:
-        HACover::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
+        jsonStrLen = HACover::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
         break;
     case SWITCH:
-        HASwitch::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
+        jsonStrLen = HASwitch::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
+        break;
+    case DEVICE_TRIGGER:
+        jsonStrLen = HATrigger::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
         break;
     default:
         jsonStringBuffer[0] = 0;
-        DEBUG_WARN ("Device is not supported for HomeAssistant discovery");
+        jsonStrLen = 0;
+        DEBUG_WARN ("Device is not supported for HomeAssistant discovery: %d", deviceType);
         return false;
         break;
     }
 
     DEBUG_WARN ("%s : %s", topic.c_str (), jsonStringBuffer);
     if (notifyHADiscovery) {
-        notifyHADiscovery (topic.c_str(), jsonStringBuffer);
+        notifyHADiscovery (topic.c_str (), jsonStringBuffer, jsonStrLen);
     }
     
     return true;
