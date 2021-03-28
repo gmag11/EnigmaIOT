@@ -1989,7 +1989,6 @@ bool EnigmaIOTGatewayClass::sendHADiscoveryJSON (uint8_t* address, uint8_t* data
     DynamicJsonDocument inputJSON (1024);
     const int jsonBufferSize = 1024;
     char jsonStringBuffer[jsonBufferSize];
-    //String nameSufix;
     haDeviceType_t deviceType;
 
     DeserializationError result = deserializeMsgPack (inputJSON, data, len);
@@ -1999,12 +1998,8 @@ bool EnigmaIOTGatewayClass::sendHADiscoveryJSON (uint8_t* address, uint8_t* data
         return false;
     }
     
-    // if (inputJSON.containsKey (ha_name_sufix)) {
-    //     nameSufix = String (nodeName) + "_" + inputJSON[ha_name_sufix].as<String> ();
-    // } else {
-    //     entityName = nodeName;
-    // }
-    DEBUG_WARN ("Entity name: %s", nodeName);
+    DEBUG_WARN ("Entity name: %s", nodeName ? nodeName : mac2str (address));
+
     if (inputJSON.containsKey (ha_device_type)) {
         deviceType = inputJSON[ha_device_type];
         DEBUG_WARN ("Device Type: %d", deviceType);
@@ -2013,25 +2008,25 @@ bool EnigmaIOTGatewayClass::sendHADiscoveryJSON (uint8_t* address, uint8_t* data
         return false;
     }
 
-    String topic = HAEntity::getDiscoveryTopic (HA_DISCOVERY_PREFIX, nodeName, deviceType, inputJSON.containsKey (ha_name_sufix) ? inputJSON[ha_name_sufix] : (const char *) NULL);
+    String topic = HAEntity::getDiscoveryTopic (HA_DISCOVERY_PREFIX, nodeName ? nodeName : mac2str(address), deviceType, inputJSON.containsKey (ha_name_sufix) ? inputJSON[ha_name_sufix] : (const char *) NULL);
 
     size_t jsonStrLen;
     
     switch (deviceType) {
     case BINARY_SENSOR:
-        jsonStrLen = HABinarySensor::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
+        jsonStrLen = HABinarySensor::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName ? nodeName : mac2str (address), networkName, &inputJSON);
         break;
     case SENSOR:
-        jsonStrLen = HASensor::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
+        jsonStrLen = HASensor::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName ? nodeName : mac2str (address), networkName, &inputJSON);
         break;
     case COVER:
-        jsonStrLen = HACover::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
+        jsonStrLen = HACover::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName ? nodeName : mac2str (address), networkName, &inputJSON);
         break;
     case SWITCH:
-        jsonStrLen = HASwitch::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
+        jsonStrLen = HASwitch::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName ? nodeName : mac2str (address), networkName, &inputJSON);
         break;
     case DEVICE_TRIGGER:
-        jsonStrLen = HATrigger::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName, networkName, &inputJSON);
+        jsonStrLen = HATrigger::getDiscoveryJson (jsonStringBuffer, jsonBufferSize, nodeName ? nodeName : mac2str (address), networkName, &inputJSON);
         break;
     default:
         jsonStringBuffer[0] = 0;
