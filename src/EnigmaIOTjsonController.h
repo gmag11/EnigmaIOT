@@ -141,6 +141,7 @@ protected:
 		return result;
     }
 
+#if SUPPORT_HA_DISCOVERY
     bool sendHADiscovery (uint8_t* data, size_t len) {
         if (!data || !len) {
             DEBUG_WARN ("Empty HA message");
@@ -156,6 +157,7 @@ protected:
         }
         return result;
     }
+#endif
 };
 
 #endif // _ENIGMAIOTJSONCONTROLLER_h

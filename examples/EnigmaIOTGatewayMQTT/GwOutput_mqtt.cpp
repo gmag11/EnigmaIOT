@@ -534,6 +534,7 @@ void GwOutput_MQTT::popMQTTqueue () {
 	}
 }
 
+#if SUPPORT_HA_DISCOVERY
 bool GwOutput_MQTT::rawMsgSend (const char* topic, char* payload, size_t len) {
     bool result;
     
@@ -544,6 +545,7 @@ bool GwOutput_MQTT::rawMsgSend (const char* topic, char* payload, size_t len) {
     }
     return result;
 }
+#endif
 
 
 bool GwOutput_MQTT::outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type) {

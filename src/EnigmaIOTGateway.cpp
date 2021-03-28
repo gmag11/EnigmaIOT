@@ -1020,8 +1020,9 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 	case SENSOR_DATA:
     case UNENCRYPTED_NODE_DATA:
 #if SUPPORT_HA_DISCOVERY
-    case HA_DISCOVERY_MESSAGE: {
+    case HA_DISCOVERY_MESSAGE:
 #endif // SUPPORT_HA_DISCOVERY
+    {
         bool encrypted = false;
         if (buf[0] == SENSOR_DATA) {
             DEBUG_INFO (" <------- ENCRYPTED DATA");

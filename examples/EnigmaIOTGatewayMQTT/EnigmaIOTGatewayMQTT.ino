@@ -203,10 +203,12 @@ void doRestart () {
 
 }
 
+#if SUPPORT_HA_DISCOVERY
 void processHADiscovery (const char* topic, char* message, size_t len) {
     DEBUG_WARN ("About to process HA discovery. Len: %d - %s --> %.*s", len, topic, len, message);
     GwOutput.rawMsgSend (topic, message, len);
 }
+#endif
 
 void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type, char* nodeName = NULL) {
 	uint8_t* addr = mac;
@@ -420,7 +422,9 @@ void setup () {
 	EnigmaIOTGateway.onWiFiManagerStarted (wifiManagerStarted);
 	EnigmaIOTGateway.onWiFiManagerExit (wifiManagerExit);
     EnigmaIOTGateway.onDataRx (processRxData);
+#if SUPPORT_HA_DISCOVERY
     EnigmaIOTGateway.onHADiscovery (processHADiscovery);
+#endif
 	EnigmaIOTGateway.onGatewayRestartRequested (doRestart);
 
 	EnigmaIOTGateway.begin (&Espnow_hal);

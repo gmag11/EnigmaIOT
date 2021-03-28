@@ -235,8 +235,10 @@ protected:
 	int8_t rxled = -1; ///< @brief I/O pin to connect a led that flashes when gateway receives data
 	unsigned long txLedOnTime; ///< @brief Flash duration for Tx LED
 	unsigned long rxLedOnTime; ///< @brief Flash duration for Rx LED
-	onGwDataRx_t notifyData; ///< @brief Callback function that will be invoked when data is received from a node
+    onGwDataRx_t notifyData; ///< @brief Callback function that will be invoked when data is received from a node
+#if SUPPORT_HA_DISCOVERY
     onHADiscovery_t notifyHADiscovery; ///< @brief Callback function that will be invoked when HomeAssistant discovery message is received from a node
+#endif
 	onNewNode_t notifyNewNode; ///< @brief Callback function that will be invoked when a new node is connected
 	onNodeDisconnected_t notifyNodeDisconnection; ///< @brief Callback function that will be invoked when a node gets disconnected
 	simpleEventHandler_t notifyRestartRequested; ///< @brief Callback function that will be invoked when a hardware restart is requested
@@ -424,9 +426,20 @@ protected:
 	* @brief Saves configuration to flash memory
 	* @return Returns `true` if data could be written successfuly. `false` otherwise
 	*/
-	bool saveFlashData ();
-
+    bool saveFlashData ();
+    
+#if SUPPORT_HA_DISCOVERY
+    /**
+    * @brief Sends a Home Assistant discovery message after receiving it from node
+    * @param address Node physical address
+    * @param data MsgPack input buffer
+    * @param len Input buffer length
+    * @param networkName EnigmaIOT network name
+    * @param nodeName Node name. Can be NULL
+    * @return Returns `true` if data could be written successfuly. `false` otherwise
+    */
     bool sendHADiscoveryJSON (uint8_t* address, uint8_t* data, size_t len, const char* networkName, const char* nodeName);
+#endif
     
 public:
    /**
@@ -543,6 +556,7 @@ public:
 		notifyData = handler;
     }
 
+#if SUPPORT_HA_DISCOVERY
     /**
      * @brief Defines a function callback that will be called when a Home Assistant discovery message is received from a node
  	 * @param handler Pointer to the function
@@ -550,6 +564,7 @@ public:
     void onHADiscovery (onHADiscovery_t handler) {
         notifyHADiscovery = handler;
     }
+#endif
 
 	/**
 	 * @brief Gets packet error rate of node that has a specific address

@@ -232,8 +232,17 @@ public:
 	  */
     bool outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type = data);
 
+#if SUPPORT_HA_DISCOVERY
+    /**
+      * @brief Send MQTT generic message
+      * @param topic MQTT topic
+      * @param payload Message data buffer
+      * @param len Data buffer length
+      * @return Returns `true` if sending was successful. `false` otherwise
+      */
     bool rawMsgSend (const char* topic, char* payload, size_t len);
-
+#endif
+    
 	 /**
 	  * @brief Should be called regularly for module management
 	  */
