@@ -534,6 +534,18 @@ void GwOutput_MQTT::popMQTTqueue () {
 	}
 }
 
+bool GwOutput_MQTT::rawMsgSend (const char* topic, char* payload, size_t len) {
+    bool result;
+    
+    if ((result = addMQTTqueue (topic, payload, len))) {
+        DEBUG_INFO ("MQTT queued %s. Length %d", topic, len);
+    } else {
+        DEBUG_WARN ("Error queuing MQTT %s", topic);
+    }
+    return result;
+}
+
+
 bool GwOutput_MQTT::outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type) {
 	const int TOPIC_SIZE = 64;
 	char topic[TOPIC_SIZE];

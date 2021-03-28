@@ -230,7 +230,9 @@ public:
 	  * @param type Type of message
 	  * @return Returns `true` if sending was successful. `false` otherwise
 	  */
-	bool outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type = data);
+    bool outputDataSend (char* address, char* data, size_t length, GwOutput_data_type_t type = data);
+
+    bool rawMsgSend (const char* topic, char* payload, size_t len);
 
 	 /**
 	  * @brief Should be called regularly for module management
