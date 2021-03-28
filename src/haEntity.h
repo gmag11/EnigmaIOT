@@ -20,6 +20,7 @@ constexpr auto ha_set_position_template = "set_pos_tpl";
 constexpr auto ha_position_open = "pos_open";
 constexpr auto ha_position_closed = "pos_clsd";
 constexpr auto ha_payload_goto = "pl_goto"; // custom
+constexpr auto ha_payload = "pl";
 constexpr auto ha_state_open = "stat_open";
 constexpr auto ha_state_opening = "stat_opening";
 constexpr auto ha_state_closed = "stat_clsd";
@@ -31,6 +32,8 @@ constexpr auto ha_off_delay = "off_dly";
 constexpr auto ha_unit_of_measurement = "unit_of_meas";
 constexpr auto ha_name_sufix = "nmsfx";
 constexpr auto ha_allow_attrib = "attr";
+constexpr auto ha_type = "ttype";
+constexpr auto ha_subtype = "tstype";
 
 
 typedef enum {
