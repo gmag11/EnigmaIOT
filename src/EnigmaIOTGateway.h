@@ -84,7 +84,9 @@ enum gwInvalidateReason_t {
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 #include <functional>
 typedef std::function<void (uint8_t* mac, uint8_t* buf, uint8_t len, uint16_t lostMessages, bool control, gatewayPayloadEncoding_t payload_type, char* nodeName)> onGwDataRx_t;
+#if SUPPORT_HA_DISCOVERY
 typedef std::function<void (const char* topic, char *message, size_t len)> onHADiscovery_t;
+#endif
 typedef std::function<void (uint8_t* mac, uint16_t node_id, char* nodeName)> onNewNode_t;
 typedef std::function<void (uint8_t* mac, gwInvalidateReason_t reason)> onNodeDisconnected_t;
 typedef std::function<void (boolean status)> onWiFiManagerExit_t;
