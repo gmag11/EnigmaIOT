@@ -130,9 +130,14 @@ protected:
 			DEBUG_WARN ("---- Error sending data");
 		} else {
 			DEBUG_INFO ("---- Data sent");
-		}
-		free (buffer);
-		free (strBuffer);
+        }
+        if (buffer) {
+            free (buffer);        
+        }
+        if (strBuffer) {
+            free (strBuffer);
+        }
+        DEBUG_WARN ("1");
 		return result;
     }
 

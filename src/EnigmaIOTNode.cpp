@@ -2253,10 +2253,7 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 
 			_md5.add (dataPtr, dataLen);
 			// Process OTA Update
-#if DEBUG_LEVEL >= INFO
-			size_t numBytes = 
-#endif
-                Update.write (dataPtr, dataLen);
+			size_t numBytes = Update.write (dataPtr, dataLen);
 			totalBytes += dataLen;
 			DEBUG_INFO ("%u bytes written. Total %u", numBytes, totalBytes);
 		} else {
