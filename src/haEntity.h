@@ -1,8 +1,17 @@
+/**
+  * Defines an entity for Home Assistant autodiscovery
+  *
+  * https://www.home-assistant.io/docs/mqtt/discovery/
+  */
+
+
 #ifndef _HA_ENTITY_h
 #define _HA_ENTITY_h
 
 #include <Arduino.h>
 #include "EnigmaIoTconfig.h"
+
+#if SUPPORT_HA_DISCOVERY
 #include <ArduinoJson.h>
 #include <EnigmaIOTdebug.h>
 #include <helperFunctions.h>
@@ -53,7 +62,7 @@ typedef enum {
     SWITCH,
     TAG_SCANNER,
     VACUUM
-} haDeviceType_t;
+} haDeviceType_t; ///< @brief HomeAssistant entity type
 
 
 typedef enum {
@@ -82,7 +91,7 @@ typedef enum {
     bs_sound,            // on means sound detected,          off means no sound (clear)
     bs_vibration,        // on means vibration detected,      off means no vibration (clear)
     bs_window            // on means open,                    off means closed
-} haBinarySensorClass_t;
+} haBinarySensorClass_t; ///< @brief HomeAssistant Binary Sensor class https://www.home-assistant.io/integrations/binary_sensor/#device-class
 
 
 typedef enum {
@@ -97,7 +106,7 @@ typedef enum {
     cover_shade,      // Control of shades, which are a continuous plane of material or connected cells that expanded or collapsed over an opening, such as window shades
     cover_shutter,    // Control of shutters, which are linked slats that swing out / in to covering an opening or may be tilted to partially cover an opening, such as indoor or exterior window shutters
     cover_window      // Control of a physical window that opens and closes or may tilt
-} haCoverClass_t;
+} haCoverClass_t; ///< @brief HomeAssistant Cover class https://www.home-assistant.io/integrations/cover/#device-class
 
 typedef enum {
     sensor_none,            // Generic sensor. This is the default and doesn’t need to be set.
@@ -113,21 +122,29 @@ typedef enum {
     sensor_pressure,        // Pressure in hPa or mbar.
     sensor_timestamp,       // Datetime object or timestamp string (ISO 8601).
     sensor_voltage,         // Voltage in V.
-} haSensorClass_t;
+} haSensorClass_t;  ///< @brief HomeAssistant Sensor class https://www.home-assistant.io/integrations/sensor/#device-class
 
 class HAEntity {
 protected:
-    size_t capacity;
-    haDeviceType_t deviceType = UNDEFINED;
-    uint expiration = 0;
-    char name[20];
-    DynamicJsonDocument* entityConfig;
-    //uint8_t* message;
-    HAEntity () {
-        // capacity = JSON_OBJECT_SIZE (8) + 200
-    }
+    size_t capacity; ///< @brief JSON object memory reservation length
+    haDeviceType_t deviceType = UNDEFINED; ///< @brief HomeAssistant entity device type
+    // uint expiration = 0; ///< @brief Entity expiration parameter
+    //char name[20]; ///< @brief Entity name
+    DynamicJsonDocument* entityConfig; ///< @brief JSON object to be sent to gateway
+
+    /**
+     * @brief Default constructor. Needed for inheritance
+     */
+    HAEntity () {}
 
 public:
+
+    /**
+     * @brief Gets entity anounce message to be sent over EnigmaIOT message
+     * @param bufferlen Buffer length. Needed legth can be got using `measureMessage ()`
+     * @param buffer Buffer to put the payload in
+     * @return Amount of data written to buffer
+     */
     size_t getAnounceMessage (int bufferlen, uint8_t* buffer) {
 #if DEBUG_LEVEL >= WARN
         char* output;
@@ -171,21 +188,37 @@ public:
         return len;
     }
     
-
+    /**
+     * @brief Sets name suffix. Used for multi entity nodes
+     * @param payload Name suffix
+     */
     void setNameSufix (const char* payload) {
        if (payload) {
            (*entityConfig)[ha_name_sufix] = payload;
        }
     }
 
+    /**
+     * @brief Enables registering entity attributes as a json object
+     */
     void allowSendAttributes () {
         (*entityConfig)[ha_allow_attrib] = true;
     }
-    
+
+    /**
+     * @brief Gets needed buffer size for discovery message
+     * @return Minimum buffer size
+     */
     size_t measureMessage () {
         return measureMsgPack (*entityConfig) + 1;
     }
 
+    /**
+     * @brief Gets entity type string from haDeviceType_t value
+     *        https://www.home-assistant.io/docs/mqtt/discovery/
+     * @param entityType Entity code
+     * @return Entity string
+     */
     static String deviceTypeStr (haDeviceType_t entityType) {
         switch (entityType) {
         case ALARM_PANEL:
@@ -227,6 +260,15 @@ public:
         Discovery configuration topic template
         <hass_prefix>/<device_type>/<node_name>/config
     */
+    /**
+     * @brief Allows Gateway to get discovery message MQTT topic
+     * @param hassPrefix HomeAssistant topic prefix. Usually it is "homeassistant"
+     * @param nodeName Name of the node
+     * @param entityType Entity type. Used to differentiate discovery message template
+     * @param nameSuffix This is used to allow a single node to have different HomeAssistant entities. For instance, a smart switch may behave
+     *                  as a power, voltage and current sensor too.
+     * @return MQTT topic
+     */
     static String getDiscoveryTopic (const char* hassPrefix, const char* nodeName, haDeviceType_t entityType, const char* nameSuffix = NULL) {
         String output;
 
@@ -250,5 +292,7 @@ public:
 
 
 };
+
+#endif // SUPPORT_HA_DISCOVERY
 
 #endif // _HA_ENTITY_h

@@ -71,7 +71,7 @@ size_t HASensor::getDiscoveryJson (char* buffer, size_t buflen, const char* node
         outputJSON["device_class"] = deviceClassStr ((*inputJSON)[ha_device_class]);
     }
     if (inputJSON->containsKey (ha_expiration) && (*inputJSON)[ha_expiration].is<int> ()) {
-        outputJSON["expire_after"] = deviceClassStr ((*inputJSON)[ha_expiration]);
+        outputJSON["expire_after"] = (*inputJSON)[ha_expiration].as<int>();
     }
     outputJSON["state_topic"] = String (networkName) + "/" + String (nodeName) + "/data";
     if (inputJSON->containsKey (ha_unit_of_measurement)) {

@@ -61,7 +61,7 @@ void HACover::setStateStopped (const char* payload) {
     }
 }
 
-/* Discovery JSON template for binary sensor
+/* Discovery JSON template for Cover
 {
     "dev_cla":<device_class>,
     "pl_cls":<pl_cls>>,
@@ -76,11 +76,10 @@ void HACover::setStateStopped (const char* payload) {
     "stat_open":<stat_open>,
     "stat_opening":<stat_opening>,
     "stat_stopped":<stat_stopped>,
-    "nmsfx":<name_suffix>
 }
 {
-    "name":<node_name>_<name_suffix>,
-    "unique_id":<node_name>_<name_suffix>,
+    "name":<node_name>,
+    "unique_id":<node_name>,
     "command_topic":<network_name>/<node_name>/set/data,
     "device_class":<device_class>,
     "json_attributes_topic":"<network_name>/<node_name>/data",

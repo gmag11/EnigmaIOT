@@ -43,12 +43,14 @@ void HABinarySensor::setOffDelay (uint payload) {
   "pl_off":<cmd_payload_off>,
   "val":<value_field>,
   "exp_aft":<expire_time>,
+  "dev_cla":<device_class>
   "nmsfx":<name_suffix>
 }
 
 {
   "name":<node_name>_<name_suffix>,
   "unique_id":<node_name>_<name_suffix>,
+  "device_class":<device_class>,
   "state_topic":"<network_name>/<node_name>/data",
   "payload_on":<cmd_payload_on>,
   "payload_off":<cmd_payload_off>,
