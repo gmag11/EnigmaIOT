@@ -110,11 +110,11 @@ int32_t Espnow_halClass::send (uint8_t* da, uint8_t* data, int len) {
     comms_queue_item_t message;
 
     if (!da || !data || !len) {
-        return ESP_ERR_INVALID_ARG;
+        return -1;
     }
     
     if (len > MAX_MESSAGE_LENGTH) {
-        return ESP_ERR_INVALID_SIZE;
+        return -1;
     }
     
     if (out_queue.size () >= COMMS_QUEUE_SIZE) {
@@ -127,10 +127,10 @@ int32_t Espnow_halClass::send (uint8_t* da, uint8_t* data, int len) {
     
     if (out_queue.push (&message)) {
         DEBUG_DBG ("%d Comms messages queued Len:%d", out_queue.size ());
-        return ESP_OK;
+        return 0;
     } else {
         DEBUG_WARN ("Error queuing Comms message to %s", mac2str (da));
-        return ESP_ERR_NO_MEM;
+        return -1;
     }
 }
 
@@ -159,10 +159,10 @@ int32_t Espnow_halClass::sendEspNowMessage (comms_queue_item_t* message) {
     int32_t error;
 
     if (!message) {
-        return ESP_FAIL;
+        return -1;
     }
     if (!(message->payload_len) || (message->payload_len > MAX_MESSAGE_LENGTH)) {
-        return ESP_FAIL;
+        return -1;
     }
     
 //#ifdef ESP32
