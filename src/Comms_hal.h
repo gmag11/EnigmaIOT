@@ -15,6 +15,7 @@
 #else
 #include "WProgram.h"
 #endif
+#include "EnigmaIoTconfig.h"
 
   /**
 	* @brief Peer role on communication
@@ -23,6 +24,13 @@ enum peerType_t {
 	COMM_NODE = 0, /**< Peer acts as a node */
 	COMM_GATEWAY = 1 /**< Peer acts as a gateway */
 };
+
+typedef struct {
+    uint8_t dstAddress[ENIGMAIOT_ADDR_LEN]; /**< Message topic*/
+    uint8_t payload[MAX_MESSAGE_LENGTH]; /**< Message payload*/
+    size_t payload_len; /**< Payload length*/
+} comms_queue_item_t;
+
 
 typedef void (*comms_hal_rcvd_data)(uint8_t* address, uint8_t* data, uint8_t len);
 typedef void (*comms_hal_sent_data)(uint8_t* address, uint8_t status);
@@ -51,6 +59,8 @@ protected:
 
 
 public:
+    Comms_halClass () {}
+    
 	/**
 	  * @brief Setup communication environment and establish the connection from node to gateway
 	  * @param gateway Address of gateway. It may be `NULL` in case this is used in the own gateway

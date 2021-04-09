@@ -24,6 +24,7 @@ static const uint8_t NETWORK_NAME_LENGTH = 21; ///< @brief Maximum number of cha
 static const uint8_t NODE_NAME_LENGTH = 33; ///< @brief Maximum number of characters of node name
 static const uint8_t BROADCAST_ADDRESS[] = { 0xff,0xff,0xff,0xff,0xff,0xff }; ///< @brief Broadcast address
 static const char BROADCAST_NONE_NAME[] = "broadcast"; ///< @brief Name to reference broadcast node
+static const uint8_t COMMS_QUEUE_SIZE = 3;
 
 // Gateway configuration
 static const int OTA_GW_TIMEOUT = 11000; ///< @brief OTA mode timeout. In OTA mode all data messages are ignored

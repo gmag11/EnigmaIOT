@@ -34,7 +34,7 @@ void Espnow_halClass::initComms (peerType_t peerType) {
 		esp_now_peer_info_t networkGw;
 		memcpy (networkGw.peer_addr, gateway, COMMS_HAL_ADDR_LEN);
 		networkGw.channel = channel;
-		networkGw.ifidx = ESP_IF_WIFI_STA;
+        networkGw.ifidx = WIFI_IF_STA;
 		networkGw.encrypt = false;
         esp_err_t result = esp_now_add_peer (&networkGw);
 		DEBUG_INFO ("Gateway peer Added in channel %d. Result = %s", channel, esp_err_to_name (result));
@@ -59,6 +59,7 @@ void ICACHE_FLASH_ATTR Espnow_halClass::rx_cb (uint8_t* mac_addr, uint8_t* data,
 }
 
 void ICACHE_FLASH_ATTR Espnow_halClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
+    Espnow_hal.readyToSend = true;
 	if (Espnow_hal.sentResult) {
 		Espnow_hal.sentResult (mac_addr, status);
 	}
@@ -87,7 +88,7 @@ bool Espnow_halClass::addPeer (const uint8_t* da) {
 	wifi_second_chan_t secondCh;
 	esp_wifi_get_channel (&ch, &secondCh);
 	peer.channel = ch;
-	peer.ifidx = ESP_IF_WIFI_AP;
+    peer.ifidx = WIFI_IF_AP;
 	peer.encrypt = false;
 	esp_err_t error = esp_now_add_peer (&peer);
 	//char addrStr[ENIGMAIOT_ADDR_LEN * 3];
@@ -106,13 +107,68 @@ void Espnow_halClass::stop () {
 }
 
 int32_t Espnow_halClass::send (uint8_t* da, uint8_t* data, int len) {
-	int32_t error;
+    comms_queue_item_t message;
+
+    if (!da || !data || !len) {
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    if (len > MAX_MESSAGE_LENGTH) {
+        return ESP_ERR_INVALID_SIZE;
+    }
+    
+    if (out_queue.size () >= COMMS_QUEUE_SIZE) {
+        out_queue.pop ();
+    }
+
+    memcpy (message.dstAddress, da, ENIGMAIOT_ADDR_LEN);
+    message.payload_len = len;
+    memcpy (message.payload, data, len);
+    
+    if (out_queue.push (&message)) {
+        DEBUG_DBG ("%d Comms messages queued Len:%d", out_queue.size ());
+        return ESP_OK;
+    } else {
+        DEBUG_WARN ("Error queuing Comms message to %s", mac2str (da));
+        return ESP_ERR_NO_MEM;
+    }
+}
+
+comms_queue_item_t* Espnow_halClass::getCommsQueue () {
+    if (out_queue.size ()) {
+        DEBUG_DBG ("Comms message got from queue");
+        return out_queue.front ();
+    }
+    return nullptr;
+}
+
+void Espnow_halClass::popCommsQueue () {
+    if (out_queue.size ()) {
+        comms_queue_item_t* message;
+
+        message = out_queue.front ();
+        if (message) {
+            message->payload_len = 0;
+        }
+        out_queue.pop ();
+        DEBUG_DBG ("Comms message pop. Queue size %d", out_queue.size ());
+    }
+}
+
+int32_t Espnow_halClass::sendEspNowMessage (comms_queue_item_t* message) {
+    int32_t error;
+
+    if (!message) {
+        return ESP_FAIL;
+    }
+    if (!(message->payload_len) || (message->payload_len > MAX_MESSAGE_LENGTH)) {
+        return ESP_FAIL;
+    }
+    
 //#ifdef ESP32
-	char buffer[18];
-	mac2str (da, buffer);
-	DEBUG_DBG ("ESP-NOW message to %s", buffer);
+	DEBUG_DBG ("ESP-NOW message to %s", mac2str(message->dstAddress));
 	if (_ownPeerType == COMM_GATEWAY) {
-		addPeer (da);
+        addPeer (message->dstAddress);
 		/*esp_now_peer_info_t peer;
 		memcpy (peer.peer_addr, da, COMMS_HAL_ADDR_LEN);
 		uint8_t ch;
@@ -131,11 +187,12 @@ int32_t Espnow_halClass::send (uint8_t* da, uint8_t* data, int len) {
 //#endif
 
 	// Serial.printf ("Phy Mode ---> %d\n", (int)wifi_get_phy_mode ());
-	error = esp_now_send (da, data, len);
+    error = esp_now_send (message->dstAddress, message->payload, message->payload_len);
+    readyToSend = false;
 #ifdef ESP32
 	DEBUG_DBG ("esp now send result = %d", error);
 	if (_ownPeerType == COMM_GATEWAY) {
-		error = esp_now_del_peer (da); // TODO: test
+        error = esp_now_del_peer (message->dstAddress); // TODO: test
 		DEBUG_DBG ("Peer deleted. Result %d", error);
 
 	}
@@ -149,4 +206,21 @@ void Espnow_halClass::onDataRcvd (comms_hal_rcvd_data dataRcvd) {
 
 void Espnow_halClass::onDataSent (comms_hal_sent_data sentResult) {
 	this->sentResult = sentResult;
+}
+
+void Espnow_halClass::loop () {
+    if (transmitEnable && readyToSend) {
+        if (!out_queue.empty ()) {
+            comms_queue_item_t* message;
+            message = getCommsQueue ();
+            if (message) {
+                if (!sendEspNowMessage (message)) {
+                    DEBUG_DBG ("Message to %s sent. Type: 0x%02X", mac2str(message->dstAddress),(message->payload)[0]);
+                    popCommsQueue ();
+                } else {
+                    DEBUG_WARN ("Error sendign message to %s. Type: 0x%02X", mac2str (message->dstAddress), (message->payload)[0]);
+                }
+            }
+        }
+    }
 }
