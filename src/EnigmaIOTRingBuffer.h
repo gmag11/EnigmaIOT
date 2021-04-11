@@ -74,6 +74,10 @@ public:
         bool wasFull = isFull ();
         DEBUG_DBG ("Add element. Buffer was %s", wasFull ? "full" : "not full");
         DEBUG_DBG ("Before -- > ReadIdx: %d. WriteIdx: %d. Size: %d", readIndex, writeIndex, numElements);
+#ifdef ESP32
+        portMUX_TYPE myMutex = portMUX_INITIALIZER_UNLOCKED;
+        portENTER_CRITICAL (&myMutex);
+#endif
         memcpy (&(buffer[writeIndex]), item, sizeof (Telement));
         //Serial.printf ("Copied: %d bytes\n", sizeof (Telement));
         writeIndex++;
@@ -88,6 +92,9 @@ public:
         } else {
             numElements++;
         }
+#ifdef ESP32
+        portEXIT_CRITICAL (&myMutex);
+#endif
         DEBUG_DBG ("After -- > ReadIdx: %d. WriteIdx: %d. Size: %d", readIndex, writeIndex, numElements);
         return !wasFull;
     }

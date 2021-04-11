@@ -100,6 +100,9 @@ public:
 	  * @return Returns number of bytes that is used to represent an address
 	  */
 	virtual uint8_t getAddressLength () = 0;
+
+    virtual void handle () = 0;
+    virtual void enableTransmit (bool enable) = 0;
 };
 
 #endif

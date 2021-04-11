@@ -36,8 +36,10 @@ public:
 protected:
 
     EnigmaIOTRingBuffer<comms_queue_item_t> out_queue;
-    bool transmitEnable = true;
     bool readyToSend = true;
+#ifdef ESP32
+    TaskHandle_t espnowLoopTask;
+#endif
 
 	/**
 	  * @brief Communication subsistem initialization
@@ -125,7 +127,34 @@ public:
 		return COMMS_HAL_MAX_MESSAGE_LENGTH;
     }
 
-    void loop ();
+    void enableTransmit (bool enable) override {
+        DEBUG_DBG ("Send esp-now task %s", enable ? "enabled" : "disabled");
+        if (enable) {
+#ifdef ESP8266
+            timer1_enable (TIM_DIV16, TIM_EDGE, TIM_LOOP);
+#else
+            if (espnowLoopTask) {
+                vTaskResume (espnowLoopTask);
+            }
+#endif
+        } else {
+#ifdef ESP8266
+            timer1_disable ();
+#else
+            if (espnowLoopTask) {
+                vTaskSuspend (espnowLoopTask);
+            }
+#endif
+        }
+    } 
+
+    void handle () override;
+
+#ifdef ESP32
+    static void runHandle (void* param);
+#else
+    static void runHandle ();
+#endif
 
 };
 

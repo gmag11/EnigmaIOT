@@ -463,15 +463,17 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 
 void EnigmaIOTNodeClass::clearFlash () {
     if (!FILESYSTEM.begin ()) {
-		DEBUG_ERROR ("Error on SPIFFS.begin()");
-	}
+        DEBUG_ERROR ("Error on FILESYSTEM.begin()");
+    }
+    
+    DEBUG_WARN ("About to format Flash");
     if (FILESYSTEM.format()) {
-        DEBUG_DBG ("Filesystem formatted");
+        DEBUG_WARN ("Filesystem formatted");
     }
     /*if (FILESYSTEM.remove (CONFIG_FILE)) {
 		DEBUG_DBG ("%s deleted", CONFIG_FILE);
 	}*/ else {
-		DEBUG_ERROR ("Error on SPIFFS.format()", CONFIG_FILE);
+        DEBUG_ERROR ("Error on FILESYSTEM.format()", CONFIG_FILE);
 	}
     FILESYSTEM.end ();
 }
@@ -534,7 +536,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 		const char* netkey = (char*)(wifiConfig.password);
 #elif defined ESP32
         wifi_config_t wifiConfig;
-        if (!esp_wifi_get_config (WIFI_IF_STA, &wifiConfig)) {
+        if (esp_wifi_get_config (WIFI_IF_STA, &wifiConfig)) {
             DEBUG_WARN ("Error getting WiFi config");
         }
         DEBUG_WARN ("WiFi password: %.*s", 64, wifiConfig.sta.password);
@@ -677,7 +679,7 @@ void EnigmaIOTNodeClass::checkResetButton () {
 			time_t resetPinGrounded = millis ();
 			while (digitalRead (resetPin) == LOW) {
 				if (millis () - resetPinGrounded > RESET_PIN_DURATION) {
-					DEBUG_WARN ("Produce reset");
+                    DEBUG_WARN ("Produce reset. Reset pin %d", resetPin);
 					digitalWrite (led, LED_OFF); // Turn off LED
 					startFlash (50);
 					clearFlash ();
@@ -856,6 +858,8 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 	int numWifi = 0;
 	int wifiIndex = 0;
 
+    comm->enableTransmit (false);
+    DEBUG_DBG ("Transmission disabled");
 #ifdef ESP8266
     time_t scanStarted = millis ();
 	numWifi = WiFi.scanNetworks (false, false, 0, (uint8_t*)(data->networkName));
@@ -874,6 +878,8 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 #elif defined ESP32
 	numWifi = scanGatewaySSID (data->networkName, wifiIndex);
 #endif // ESP8266
+    comm->enableTransmit (true);
+    DEBUG_DBG ("Transmission enabled");
 
 	uint8_t prevGwAddr[ENIGMAIOT_ADDR_LEN];
 	memcpy (prevGwAddr, data->gateway, 6);
@@ -2052,8 +2058,9 @@ bool EnigmaIOTNodeClass::processSetResetConfigCommand (const uint8_t* mac, const
 
 	DEBUG_WARN ("Send restart command before deleting config");
 	restartReason = CONFIG_RESET;
-	sendRestart ();
-
+    sendRestart ();
+    
+    comm->enableTransmit (false);
 	clearRTC ();
 	clearFlash ();
 
@@ -2238,11 +2245,13 @@ bool EnigmaIOTNodeClass::processOTACommand (const uint8_t* mac, const uint8_t* d
 			static size_t totalBytes = 0;
 
 			_md5.add (dataPtr, dataLen);
+            comm->enableTransmit (false);
 			// Process OTA Update
 #if DEBUG_LEVEL >= INFO
 			size_t numBytes = 
 #endif
                 Update.write (dataPtr, dataLen);
+            comm->enableTransmit (true);
 			totalBytes += dataLen;
 			DEBUG_INFO ("%u bytes written. Total %u", numBytes, totalBytes);
 		} else {

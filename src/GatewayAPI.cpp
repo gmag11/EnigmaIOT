@@ -119,12 +119,12 @@ Node* GatewayAPI::getNodeFromParam (AsyncWebServerRequest* request) {
 			if (addrResult) {
 				if (memcmp (addr, BROADCAST_ADDRESS, ENIGMAIOT_ADDR_LEN)) {
 					node = EnigmaIOTGateway.nodelist.getNodeFromMAC (addr);
-					DEBUG_INFO ("Node to process is %s", addr ? p->value ().c_str () : "NULL");
+					DEBUG_INFO ("Node to process is %s", p ? p->value ().c_str () : "NULL");
 				}
 			}
 			break;
 		}
-		DEBUG_DBG ("Parameter %s = %s", p->name ().c_str (), p->value ().c_str ());
+		DEBUG_DBG ("Parameter %s = %s", p->name ().c_str (), p ? p->value ().c_str () : "NULL");
 	}
 
 	DEBUG_DBG ("NodeId = %d, node: %p", nodeIndex, node);
