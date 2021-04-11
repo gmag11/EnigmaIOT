@@ -23,7 +23,7 @@
 #endif
 #include "Comms_hal.h"
 #include "helperFunctions.h"
-#include "EnigmaIOTdebug.h"
+#include "EnigmaIOTRingBuffer.h"
 
 /**
   * @brief Definition for ESP-NOW hardware abstraction layer
@@ -35,11 +35,11 @@ public:
 
 protected:
 
-	//uint8_t gateway[COMMS_HAL_ADDR_LEN]; ///< @brief Gateway address
-	//uint8_t channel; ///< @brief WiFi channel to be used
-
-	//comms_hal_rcvd_data dataRcvd; ///< @brief Pointer to a function to be called on every received message
-	//comms_hal_sent_data sentResult; ///< @brief Pointer to a function to be called to notify last sending status
+    EnigmaIOTRingBuffer<comms_queue_item_t> out_queue;
+    bool readyToSend = true;
+#ifdef ESP32
+    TaskHandle_t espnowLoopTask;
+#endif
 
 	/**
 	  * @brief Communication subsistem initialization
@@ -66,9 +66,17 @@ protected:
 	  * @param mac_addr Destination address to send the message to
 	  * @param status Sending status
 	  */
-	static void ICACHE_FLASH_ATTR tx_cb (uint8_t* mac_addr, uint8_t status);
+    static void ICACHE_FLASH_ATTR tx_cb (uint8_t* mac_addr, uint8_t status);
+
+    int32_t sendEspNowMessage (comms_queue_item_t* message);
+    comms_queue_item_t* getCommsQueue ();
+    void popCommsQueue ();
 
 public:
+    Espnow_halClass () :
+        out_queue (COMMS_QUEUE_SIZE) {}
+
+    
    /**
 	 * @brief Setup communication environment and establish the connection from node to gateway
 	 * @param gateway Address of gateway. It may be `NULL` in case this is used in the own gateway
@@ -90,6 +98,7 @@ public:
 	  * @return Returns sending status. 0 for success, 1 to indicate an error.
 	  */
     int32_t send (uint8_t* da, uint8_t* data, int len) override;
+
 	/**
 	  * @brief Attach a callback function to be run on every received message
 	  * @param dataRcvd Pointer to the callback function
@@ -116,7 +125,36 @@ public:
 	  */
 	size_t getMaxMessageLength () {
 		return COMMS_HAL_MAX_MESSAGE_LENGTH;
-	}
+    }
+
+    void enableTransmit (bool enable) override {
+        DEBUG_DBG ("Send esp-now task %s", enable ? "enabled" : "disabled");
+        if (enable) {
+#ifdef ESP8266
+            timer1_enable (TIM_DIV16, TIM_EDGE, TIM_LOOP);
+#else
+            if (espnowLoopTask) {
+                vTaskResume (espnowLoopTask);
+            }
+#endif
+        } else {
+#ifdef ESP8266
+            timer1_disable ();
+#else
+            if (espnowLoopTask) {
+                vTaskSuspend (espnowLoopTask);
+            }
+#endif
+        }
+    } 
+
+    void handle () override;
+
+#ifdef ESP32
+    static void runHandle (void* param);
+#else
+    static void runHandle ();
+#endif
 
 };
 

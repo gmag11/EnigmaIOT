@@ -22,7 +22,7 @@ Espnow_halClass Espnow_hal;
 peerType_t _peerType;
 
 void Espnow_halClass::initComms (peerType_t peerType) {
-	if (esp_now_init () != 0) {
+	if (esp_now_init ()) {
 		ESP.restart ();
 		delay (1);
 	}
@@ -31,13 +31,13 @@ void Espnow_halClass::initComms (peerType_t peerType) {
 		esp_now_set_self_role (ESP_NOW_ROLE_CONTROLLER);
 		esp_now_add_peer (gateway, ESP_NOW_ROLE_SLAVE, channel, NULL, 0);
 #elif defined ESP32
-		esp_now_peer_info_t networkGw;
-		memcpy (networkGw.peer_addr, gateway, COMMS_HAL_ADDR_LEN);
-		networkGw.channel = channel;
-        networkGw.ifidx = WIFI_IF_STA;
-		networkGw.encrypt = false;
-        esp_err_t result = esp_now_add_peer (&networkGw);
-		DEBUG_INFO ("Gateway peer Added in channel %d. Result = %s", channel, esp_err_to_name (result));
+		// esp_now_peer_info_t networkGw;
+		// memcpy (networkGw.peer_addr, gateway, COMMS_HAL_ADDR_LEN);
+		// networkGw.channel = channel;
+        // networkGw.ifidx = WIFI_IF_STA;
+		// networkGw.encrypt = false;
+        //esp_err_t result = esp_now_add_peer (&networkGw);
+		//DEBUG_INFO ("Gateway peer Added in channel %d. Result = %s", channel, esp_err_to_name (result));
 		DEBUG_DBG ("WIFI channel is %d", WiFi.channel ());
 #endif
 	}
@@ -48,8 +48,15 @@ void Espnow_halClass::initComms (peerType_t peerType) {
 #endif
 
 	esp_now_register_recv_cb (reinterpret_cast<esp_now_recv_cb_t>(rx_cb));
-	esp_now_register_send_cb (reinterpret_cast<esp_now_send_cb_t>(tx_cb));
+    esp_now_register_send_cb (reinterpret_cast<esp_now_send_cb_t>(tx_cb));
 
+#ifdef ESP32
+    xTaskCreateUniversal (runHandle, "espnow_loop", 2048, NULL, 1, &espnowLoopTask, CONFIG_ARDUINO_RUNNING_CORE);
+#else
+    timer1_attachInterrupt (runHandle);
+    timer1_enable (TIM_DIV16, TIM_EDGE, TIM_LOOP);
+    timer1_write (25000); //5000 us
+#endif
 }
 
 void ICACHE_FLASH_ATTR Espnow_halClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
@@ -59,6 +66,8 @@ void ICACHE_FLASH_ATTR Espnow_halClass::rx_cb (uint8_t* mac_addr, uint8_t* data,
 }
 
 void ICACHE_FLASH_ATTR Espnow_halClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
+    Espnow_hal.readyToSend = true;
+    DEBUG_DBG ("Ready to send: true");
 	if (Espnow_hal.sentResult) {
 		Espnow_hal.sentResult (mac_addr, status);
 	}
@@ -87,10 +96,13 @@ bool Espnow_halClass::addPeer (const uint8_t* da) {
 	wifi_second_chan_t secondCh;
 	esp_wifi_get_channel (&ch, &secondCh);
 	peer.channel = ch;
-    peer.ifidx = WIFI_IF_AP;
+    if (_ownPeerType == COMM_NODE) {
+        peer.ifidx = WIFI_IF_STA;
+    } else {
+        peer.ifidx = WIFI_IF_AP;
+    }
 	peer.encrypt = false;
 	esp_err_t error = esp_now_add_peer (&peer);
-	//char addrStr[ENIGMAIOT_ADDR_LEN * 3];
 	DEBUG_DBG ("Peer %s added on channel %u. Result 0x%X %s", mac2str (da), ch, error, esp_err_to_name (error));
 	return error == ESP_OK;
 #else 
@@ -99,46 +111,90 @@ bool Espnow_halClass::addPeer (const uint8_t* da) {
 }
 
 void Espnow_halClass::stop () {
-	DEBUG_INFO ("-------------> ESP-NOW STOP");
+    DEBUG_INFO ("-------------> ESP-NOW STOP");
 	esp_now_unregister_recv_cb ();
-	esp_now_unregister_send_cb ();
-	esp_now_deinit ();
+    esp_now_unregister_send_cb ();
+    esp_now_deinit ();
 }
 
 int32_t Espnow_halClass::send (uint8_t* da, uint8_t* data, int len) {
-	int32_t error;
-//#ifdef ESP32
-	char buffer[18];
-	mac2str (da, buffer);
-	DEBUG_DBG ("ESP-NOW message to %s", buffer);
-	if (_ownPeerType == COMM_GATEWAY) {
-		addPeer (da);
-		/*esp_now_peer_info_t peer;
-		memcpy (peer.peer_addr, da, COMMS_HAL_ADDR_LEN);
-		uint8_t ch;
-		wifi_second_chan_t secondCh;
-		esp_wifi_get_channel (&ch, &secondCh);
-		peer.channel = ch;
-		peer.ifidx = ESP_IF_WIFI_AP;
-		peer.encrypt = false;
-		esp_err_t error = esp_now_add_peer (&peer);
-		DEBUG_DBG ("Peer added on channel %u. Result %d", ch, error);*/
+    comms_queue_item_t message;
 
-		//wifi_bandwidth_t bw;
-		//esp_wifi_get_bandwidth (ESP_IF_WIFI_AP, &bw);
-		//ESP_LOGD (TAG, "WiFi bandwidth: %s", bw == WIFI_BW_HT20 ? "20 MHz" : "40 MHz");
-	}
-//#endif
+    if (!da || !data || !len) {
+        DEBUG_WARN ("Parameters error");
+        return -1;
+    }
+    
+    if (len > MAX_MESSAGE_LENGTH) {
+        DEBUG_WARN ("Length error");
+        return -1;
+    }
 
-	// Serial.printf ("Phy Mode ---> %d\n", (int)wifi_get_phy_mode ());
-	error = esp_now_send (da, data, len);
+    if (out_queue.size () >= COMMS_QUEUE_SIZE) {
+        out_queue.pop ();
+    }
+
+    memcpy (message.dstAddress, da, ENIGMAIOT_ADDR_LEN);
+    message.payload_len = len;
+    memcpy (message.payload, data, len);
+    
+    if (out_queue.push (&message)) {
+        DEBUG_DBG ("%d Comms messages queued. Type: 0x%02X Len: %d", out_queue.size (), data[0], len);
+        return 0;
+    } else {
+        DEBUG_WARN ("Error queuing Comms message 0x%02X to %s", data[0], mac2str (da));
+        return -1;
+    }
+}
+
+comms_queue_item_t* Espnow_halClass::getCommsQueue () {
+    if (out_queue.size ()) {
+        DEBUG_DBG ("Comms message got from queue");
+        return out_queue.front ();
+    }
+    return nullptr;
+}
+
+void Espnow_halClass::popCommsQueue () {
+    if (out_queue.size ()) {
+        comms_queue_item_t* message;
+
+        message = out_queue.front ();
+        if (message) {
+            message->payload_len = 0;
+        }
+        out_queue.pop ();
+        DEBUG_DBG ("Comms message pop. Queue size %d", out_queue.size ());
+    }
+}
+
+int32_t Espnow_halClass::sendEspNowMessage (comms_queue_item_t* message) {
+    int32_t error;
+
+    if (!message) {
+        return -1;
+    }
+    if (!(message->payload_len) || (message->payload_len > MAX_MESSAGE_LENGTH)) {
+        return -1;
+    }
+    
+	DEBUG_DBG ("ESP-NOW message to %s", mac2str(message->dstAddress));
 #ifdef ESP32
-	DEBUG_DBG ("esp now send result = %d", error);
-	if (_ownPeerType == COMM_GATEWAY) {
-		error = esp_now_del_peer (da); // TODO: test
-		DEBUG_DBG ("Peer deleted. Result %d", error);
+	//if (_ownPeerType == COMM_GATEWAY) {
+        addPeer (message->dstAddress);
+        DEBUG_DBG ("Peer added");
+    //}
+#endif
 
-	}
+    error = esp_now_send (message->dstAddress, message->payload, message->payload_len);
+    DEBUG_DBG ("Ready to send: false");
+    readyToSend = false;
+#ifdef ESP32
+    DEBUG_DBG ("esp now send result = %s", esp_err_to_name(error));
+	//if (_ownPeerType == COMM_GATEWAY) {
+        error = esp_now_del_peer (message->dstAddress); // TODO: test
+        DEBUG_DBG ("Peer deleted. Result %s", esp_err_to_name(error));
+	//}
 #endif
 	return error;
 }
@@ -149,4 +205,36 @@ void Espnow_halClass::onDataRcvd (comms_hal_rcvd_data dataRcvd) {
 
 void Espnow_halClass::onDataSent (comms_hal_sent_data sentResult) {
 	this->sentResult = sentResult;
+}
+
+void Espnow_halClass::handle () {
+    if (readyToSend) {
+        //DEBUG_WARN ("Process queue: Elements: %d", out_queue.size ());
+        if (!out_queue.empty ()) {
+            comms_queue_item_t* message;
+            message = getCommsQueue ();
+            if (message) {
+                if (!sendEspNowMessage (message)) {
+                    DEBUG_DBG ("Message to %s sent. Type: 0x%02X. Len: %u", mac2str (message->dstAddress), (message->payload)[0], message->payload_len);
+                } else {
+                    DEBUG_WARN ("Error sendign message to %s. Type: 0x%02X. Len: %u", mac2str (message->dstAddress), (message->payload)[0], message->payload_len);
+                }
+                popCommsQueue ();
+            }
+        }
+    }
+}
+
+#ifdef ESP32
+void Espnow_halClass::runHandle (void* param) {
+    for (;;) {
+#else
+void ICACHE_RAM_ATTR Espnow_halClass::runHandle () {
+#endif
+        Espnow_hal.handle ();
+#ifdef ESP32
+        vTaskDelay (1 / portTICK_PERIOD_MS);
+
+    }
+#endif
 }

@@ -50,7 +50,7 @@
 
 EnigmaIOTjsonController* controller; // Generic controller is refferenced here. You do not need to modify it
 
-#define RESET_PIN 13 // You can set a different configuration reset pin here. Check for conflicts with used pins.
+#define RESET_PIN 5 // You can set a different configuration reset pin here. Check for conflicts with used pins.
 
 const time_t BOOT_FLAG_TIMEOUT = 10000; // Time in ms to reset flag
 const int MAX_CONSECUTIVE_BOOT = 3; // Number of rapid boot cycles before enabling fail safe mode
@@ -101,8 +101,7 @@ void wifiManagerStarted () {
 void setup () {
 
 #ifdef USE_SERIAL
-	Serial.begin (115200);
-	// delay (1000);
+    Serial.begin (921600);
 	Serial.println ();
 #endif
 

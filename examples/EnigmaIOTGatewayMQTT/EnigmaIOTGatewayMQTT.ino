@@ -380,7 +380,7 @@ void nodeDisconnected (uint8_t* mac, gwInvalidateReason_t reason) {
 //#endif // ESP32
 
 void setup () {
-	Serial.begin (115200); Serial.println (); Serial.println ();
+	Serial.begin (921600); Serial.println (); Serial.println ();
 
 #ifdef ESP32
 // Turn-off the 'brownout detector' to avoid random restarts during wake up,

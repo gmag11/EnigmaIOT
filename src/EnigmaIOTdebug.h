@@ -30,7 +30,7 @@
 
 #ifdef ESP8266
 const char* extractFileName (const char* path);
-#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf_P (PSTR("[%lu][%s:%d] %s() Heap: %lu | "),millis(),extractFileName(__FILE__),__LINE__,__FUNCTION__,(unsigned long)ESP.getFreeHeap())
+#define DEBUG_LINE_PREFIX() DEBUG_ESP_PORT.printf_P (PSTR("[%lu][H:%5lu][%s:%d] %s() | "),millis(),(unsigned long)ESP.getFreeHeap(),extractFileName(__FILE__),__LINE__,__FUNCTION__)
 #endif
 
 #ifdef DEBUG_ESP_PORT

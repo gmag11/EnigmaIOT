@@ -602,7 +602,7 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 		break;
 	case control_message_type::RESET_ANS:
 		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, SET_RESET_ANS);
-		pld_size = snprintf (payload, PAYLOAD_SIZE, "{}");
+		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"result\":\"OK\"}");
 		if (addMQTTqueue (topic, payload, pld_size)) {
 			DEBUG_INFO ("Published MQTT %s %s", topic, payload);
 			result = true;
