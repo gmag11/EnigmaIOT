@@ -1999,11 +1999,11 @@ bool EnigmaIOTGatewayClass::sendHADiscoveryJSON (uint8_t* address, uint8_t* data
         return false;
     }
     
-    DEBUG_WARN ("Entity name: %s", nodeName ? nodeName : mac2str (address));
+    DEBUG_DBG ("Entity name: %s", nodeName ? nodeName : mac2str (address));
 
     if (inputJSON.containsKey (ha_device_type)) {
         deviceType = inputJSON[ha_device_type];
-        DEBUG_WARN ("Device Type: %d", deviceType);
+        DEBUG_DBG ("Device Type: %d", deviceType);
     } else {
         DEBUG_WARN ("Device type error");
         return false;
@@ -2037,7 +2037,7 @@ bool EnigmaIOTGatewayClass::sendHADiscoveryJSON (uint8_t* address, uint8_t* data
         break;
     }
 
-    DEBUG_WARN ("%s : %s", topic.c_str (), jsonStringBuffer);
+    DEBUG_INFO ("%s : %s", topic.c_str (), jsonStringBuffer);
     if (notifyHADiscovery) {
         notifyHADiscovery (topic.c_str (), jsonStringBuffer, jsonStrLen);
     }

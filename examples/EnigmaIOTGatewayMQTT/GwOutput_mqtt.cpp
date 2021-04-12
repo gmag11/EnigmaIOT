@@ -688,7 +688,7 @@ bool GwOutput_MQTT::newNodeSend (char* address, uint16_t node_id) {
 	snprintf (payload, ENIGMAIOT_ADDR_LEN * 3 + 14, "{\"address\":\"%s\"}", mac2str (nodeAddress, addrStr));
 
 	snprintf (topic, TOPIC_SIZE, "%s/%s/hello", netName.c_str (), address);
-	bool result = addMQTTqueue (topic, payload, ENIGMAIOT_ADDR_LEN * 3 + 14);
+	bool result = addMQTTqueue (topic, payload, ENIGMAIOT_ADDR_LEN * 3 + 13);
 	DEBUG_INFO ("Published MQTT %s", topic);
 	return result;
 }

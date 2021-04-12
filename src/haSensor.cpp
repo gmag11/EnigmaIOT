@@ -75,7 +75,7 @@ size_t HASensor::getDiscoveryJson (char* buffer, size_t buflen, const char* node
     }
     outputJSON["state_topic"] = String (networkName) + "/" + String (nodeName) + "/data";
     if (inputJSON->containsKey (ha_unit_of_measurement)) {
-        outputJSON["unit_of_measurement"] = deviceClassStr ((*inputJSON)[ha_unit_of_measurement]);
+        outputJSON["unit_of_measurement"] = (*inputJSON)[ha_unit_of_measurement];
     }
     if (inputJSON->containsKey (ha_value_key)) {
         outputJSON["value_template"] = String ("{{value_json.") + (*inputJSON)[ha_value_key].as<String> () + String ("}}");
@@ -87,7 +87,7 @@ size_t HASensor::getDiscoveryJson (char* buffer, size_t buflen, const char* node
         outputJSON["json_attributes_template"] = "{{value_json | tojson}}";
     }
 
-    size_t jsonLen = measureJson (outputJSON) + 1;
+    size_t jsonLen = measureJson (outputJSON);
 
     if (jsonLen > buflen) {
         DEBUG_WARN ("Too small buffer. Required %u Has %u", jsonLen, buflen);

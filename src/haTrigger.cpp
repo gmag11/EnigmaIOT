@@ -68,7 +68,7 @@ size_t HATrigger::getDiscoveryJson (char* buffer, size_t buflen, const char* nod
     device["name"] = String (nodeName) + (type != "" ? ("_" + type) : "") + (subtype != "" ? ("_" + subtype) : "");
     device["identifiers"] = device["name"];
     
-    size_t jsonLen = measureJson (outputJSON) + 1;
+    size_t jsonLen = measureJson (outputJSON);
 
     if (jsonLen > buflen) {
         DEBUG_WARN ("Too small buffer. Required %u Has %u", jsonLen, buflen);

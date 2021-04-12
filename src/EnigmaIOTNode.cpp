@@ -1539,7 +1539,7 @@ bool EnigmaIOTNodeClass::sendData (const uint8_t* data, size_t len, dataMessageT
 		if (dataMsgType == CONTROL_TYPE) {
             DEBUG_VERBOSE ("Control message sent: %s", printHexBuffer (data, len));
         } else if (dataMsgType == HA_DISC_TYPE) {
-            DEBUG_WARN ("HA discovery message sent: %s", printHexBuffer (data, len));
+            DEBUG_VERBOSE ("HA discovery message sent: %s", printHexBuffer (data, len));
         } else {
 			DEBUG_VERBOSE ("%s data sent: %s", encrypt ? "Encrypted" : "Unencrypted", printHexBuffer (data, len));
 		}
@@ -1736,7 +1736,7 @@ bool EnigmaIOTNodeClass::dataMessage (const uint8_t* data, size_t len, dataMessa
     if (dataMsgType == CONTROL_TYPE) {
         DEBUG_INFO (" -------> CONTROL MESSAGE");
     } else if (dataMsgType == HA_DISC_TYPE) {
-        DEBUG_WARN (" -------> HA DISCOVERY MESSAGE");
+        DEBUG_INFO (" -------> HA DISCOVERY MESSAGE");
 	} else {
 		DEBUG_INFO (" -------> DATA");
 	}

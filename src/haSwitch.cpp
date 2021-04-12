@@ -114,7 +114,7 @@ size_t HASwitch::getDiscoveryJson (char* buffer, size_t buflen, const char* node
         outputJSON["json_attributes_template"] = "{{value_json | tojson}}";
     }
     
-    size_t jsonLen = measureJson (outputJSON) + 1;
+    size_t jsonLen = measureJson (outputJSON);
 
     if (jsonLen > buflen) {
         DEBUG_WARN ("Too small buffer. Required %u Has %u", jsonLen, buflen);

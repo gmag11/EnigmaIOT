@@ -152,7 +152,7 @@ public:
         output = (char*)malloc (json_len);
         serializeJsonPretty (*entityConfig, output, json_len);
 
-        DEBUG_WARN ("JSON message\n%s", output);
+        DEBUG_DBG ("JSON message\n%s", output);
         free (output);
 #endif
 
@@ -175,14 +175,14 @@ public:
         }
 
         len = serializeMsgPack (*entityConfig, buffer, bufferlen);
-        DEBUG_WARN ("Msg Pack size: %u", len);
+        DEBUG_DBG ("Msg Pack size: %u", len);
 
-        DEBUG_WARN ("%s", printHexBuffer (buffer, len));
+        DEBUG_VERBOSE ("%s", printHexBuffer (buffer, len));
 
         if (entityConfig) {
             delete (entityConfig);
             entityConfig = NULL;
-            DEBUG_WARN ("Deleted JSON");
+            DEBUG_DBG ("Deleted JSON");
         }
 
         return len;

@@ -137,7 +137,6 @@ protected:
         if (strBuffer) {
             free (strBuffer);
         }
-        DEBUG_WARN ("1");
 		return result;
     }
 
