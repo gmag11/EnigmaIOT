@@ -17,18 +17,28 @@
 
 #include <EnigmaIOTNode.h>
 #include <ArduinoJson.h>
+#include <queue>
 
 #if defined ESP8266 || defined ESP32
 #include <functional>
 typedef std::function<bool (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding, dataMessageType_t dataMsgType)> sendData_cb; /**< Data send callback definition */
+#if SUPPORT_HA_DISCOVERY
+typedef std::function<void ()> haDiscovery_call_t; /**< Function called to send HA discovery data */
+#endif // SUPPORT_HA_DISCOVERY
 #else
 #error This code only supports ESP8266 or ESP32 platforms
-#endif
+#endif // defined ESP8266 || defined ESP32
 
 class EnigmaIOTjsonController {
 protected:
 	sendData_cb sendData;
-	EnigmaIOTNodeClass* enigmaIotNode;
+    EnigmaIOTNodeClass* enigmaIotNode;
+#if SUPPORT_HA_DISCOVERY
+    std::queue<haDiscovery_call_t> haCallQueue;
+    bool doSendHAdiscovery = false;
+    time_t sendHAtime;
+    time_t sendHAdelay = 5000;
+#endif // SUPPORT_HA_DISCOVERY
 
 public:
    /**
@@ -66,7 +76,13 @@ public:
 	/**
 	 * @brief Used to notify controller that it is registered on EnigmaIOT network
 	 */
-	virtual void connectInform ();
+    void connectInform () {
+        sendStartAnouncement ();
+#if SUPPORT_HA_DISCOVERY
+        doSendHAdiscovery = true;
+        sendHAtime = millis ();
+#endif // SUPPORT_HA_DISCOVERY
+    }
 
 	/**
 	 * @brief Called when wifi manager starts config portal
@@ -83,7 +99,22 @@ public:
 	 * @brief Loads output module configuration
 	 * @return Returns `true` if load was successful. `false` otherwise
 	 */
-	virtual bool loadConfig () = 0;
+    virtual bool loadConfig () = 0;
+
+    void callHAdiscoveryCalls () {
+        if (doSendHAdiscovery && millis () - sendHAtime > sendHAdelay) {
+            DEBUG_WARN ("Call HA discovery");
+            haDiscovery_call_t hacall = haCallQueue.front ();
+            if (hacall) {
+                hacall ();
+                haCallQueue.pop ();
+                sendHAtime = millis ();
+                sendHAdelay = 1000;
+            } else {
+                doSendHAdiscovery = false;
+            }
+        }
+    }
 
 protected:
 
@@ -140,7 +171,11 @@ protected:
 		return result;
     }
 
-#if SUPPORT_HA_DISCOVERY
+#if SUPPORT_HA_DISCOVERY    
+    void addHACall (haDiscovery_call_t HACall) {
+        haCallQueue.push (HACall);
+    }
+
     bool sendHADiscovery (uint8_t* data, size_t len) {
         if (!data || !len) {
             DEBUG_WARN ("Empty HA message");

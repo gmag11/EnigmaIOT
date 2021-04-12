@@ -161,6 +161,7 @@ void loop () {
         return;
     }
 
-	controller->loop (); // Loop controller class
+    controller->loop (); // Loop controller class
+    controller->callHAdiscoveryCalls (); // Send HA registration messages
 	EnigmaIOTNode.handle (); // Mantain EnigmaIOT connection
 }

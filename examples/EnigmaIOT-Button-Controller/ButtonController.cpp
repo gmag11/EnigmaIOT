@@ -31,7 +31,9 @@ bool CONTROLLER_CLASS_NAME::sendCommandResp (const char* command, bool result) {
 void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	enigmaIotNode = node;
 	// You do node setup here. Use it as it was the normal setup() Arduino function
-	pinMode (BUTTON_PIN, INPUT_PULLUP);
+    pinMode (BUTTON_PIN, INPUT_PULLUP);
+
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
 
 	// Send a 'hello' message when initalizing is finished
 	sendStartAnouncement ();
@@ -110,4 +112,38 @@ bool CONTROLLER_CLASS_NAME::loadConfig () {
 bool CONTROLLER_CLASS_NAME::saveConfig () {
 	// If you need to save custom configuration data do it here
 	return true;
+}
+
+void CONTROLLER_CLASS_NAME::buildHADiscovery () {
+    HATrigger* haEntity = new HATrigger ();
+
+    uint8_t* msgPackBuffer;
+
+    if (!haEntity) {
+        DEBUG_WARN ("JSON object instance does not exist");
+        return;
+    }
+
+    haEntity->setType (button_short_press);
+    haEntity->setSubtype (button_1);
+
+    size_t bufferLen = haEntity->measureMessage ();
+
+    msgPackBuffer = (uint8_t*)malloc (bufferLen);
+
+    size_t len = haEntity->getAnounceMessage (bufferLen, msgPackBuffer);
+
+    DEBUG_WARN ("Resulting MSG pack length: %d", len);
+
+    if (!sendHADiscovery (msgPackBuffer, len)) {
+        DEBUG_WARN ("Error sending HA discovery message");
+    }
+
+    if (haEntity) {
+        delete (haEntity);
+    }
+
+    if (msgPackBuffer) {
+        free (msgPackBuffer);
+    }
 }
