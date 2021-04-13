@@ -43,7 +43,9 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 		DEBUG_WARN ("Button press sent");
 	} else {
 		DEBUG_WARN ("Error sending message");
-	}
+    }
+
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
 
 	DEBUG_DBG ("Finish begin");
 
@@ -88,4 +90,46 @@ bool CONTROLLER_CLASS_NAME::loadConfig () {
 bool CONTROLLER_CLASS_NAME::saveConfig () {
 	// If you need to save custom configuration data do it here
 	return true;
+}
+
+// Repeat this method for every entity
+void CONTROLLER_CLASS_NAME::buildHADiscovery () {
+    // Select corresponding HAEntiny type
+    HATrigger* haEntity = new HATrigger ();
+
+    uint8_t* msgPackBuffer;
+
+    if (!haEntity) {
+        DEBUG_WARN ("JSON object instance does not exist");
+        return;
+    }
+
+    // *******************************
+    // Add your characteristics here
+    // There is no need to futher modify this function
+
+    haEntity->setType (button_short_press);
+    haEntity->setSubtype (turn_on);
+
+    // *******************************
+
+    size_t bufferLen = haEntity->measureMessage ();
+
+    msgPackBuffer = (uint8_t*)malloc (bufferLen);
+
+    size_t len = haEntity->getAnounceMessage (bufferLen, msgPackBuffer);
+
+    DEBUG_DBG ("Resulting MSG pack length: %d", len);
+
+    if (!sendHADiscovery (msgPackBuffer, len)) {
+        DEBUG_WARN ("Error sending HA discovery message");
+    }
+
+    if (haEntity) {
+        delete (haEntity);
+    }
+
+    if (msgPackBuffer) {
+        free (msgPackBuffer);
+    }
 }

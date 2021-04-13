@@ -57,8 +57,8 @@ EnigmaIOTjsonController* controller; // Generic controller is refferenced here. 
 
 #define RESET_PIN 13 // You can set a different configuration reset pin here. Check for conflicts with used pins.
 
-const time_t BOOT_FLAG_TIMEOUT = 10000; // Time in ms to reset flag
-const int MAX_CONSECUTIVE_BOOT = 3; // Number of rapid boot cycles before enabling fail safe mode
+const time_t BOOT_FLAG_TIMEOUT = 7000; // Time in ms to reset flag
+const int MAX_CONSECUTIVE_BOOT = 10; // Number of rapid boot cycles before enabling fail safe mode
 const int LED = LED_BUILTIN; // Number of rapid boot cycles before enabling fail safe mode
 const int FAILSAFE_RTC_ADDRESS = 0; // If you use RTC memory adjust offset to not overwrite other data
 

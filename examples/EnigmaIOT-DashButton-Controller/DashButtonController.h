@@ -8,6 +8,7 @@
 #else
 #include "WProgram.h"
 #endif
+#include <haTrigger.h>
 
 //#define DEBUG_SERIAL
 
@@ -56,8 +57,8 @@ public:
 	bool loadConfig ();
 
 	void connectInform () {
-		sendStartAnouncement ();
-	}
+        EnigmaIOTjsonController::connectInform ();
+    }
 
 protected:
 	/**
@@ -81,6 +82,8 @@ protected:
 
         return sendJson (json);
     }
+
+    void buildHADiscovery ();
 
 	// ------------------------------------------------------------
 	// You may add additional method definitions that you need here
