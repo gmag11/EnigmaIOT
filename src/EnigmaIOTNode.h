@@ -788,7 +788,11 @@ public:
 	 */
 	bool getOTArunning () {
 		return otaRunning;
-	}
+    }
+
+    Node* getNode () {
+        return &node;
+    }
 
 };
 

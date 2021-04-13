@@ -53,6 +53,18 @@ static const uint32_t RTC_ADDRESS = 8; ///< @brief RTC memory address where to s
 #ifndef USE_FLASH_INSTEAD_RTC
 #define USE_FLASH_INSTEAD_RTC 0 ///< @brief Use flash instead RTC for temporary context data. ATTENTION: This allows connection to survive power off cycles but may damage flash memory persistently.
 #endif // USE_FLASH_INSTEAD_RTC
+#ifndef HA_FIRST_DISCOVERY_DELAY
+#define HA_FIRST_DISCOVERY_DELAY 5000
+#endif // HA_FIRST_DISCOVERY_DELAY
+#ifndef HA_NEXT_DISCOVERY_DELAY
+#define HA_NEXT_DISCOVERY_DELAY 1000
+#endif // HA_NEXT_DISCOVERY_DELAY
+#ifndef HA_FIRST_DISCOVERY_DELAY_SLEEPY
+#define HA_FIRST_DISCOVERY_DELAY_SLEEPY 10
+#endif // HA_FIRST_DISCOVERY_DELAY
+#ifndef HA_NEXT_DISCOVERY_DELAY_SLEEPY
+#define HA_NEXT_DISCOVERY_DELAY_SLEEPY 10
+#endif // HA_NEXT_DISCOVERY_DELAY
 
 //Crypto configuration
 const uint8_t KEY_LENGTH = 32; ///< @brief Key length used by selected crypto algorythm. The only tested value is 32. Change it only if you know what you are doing

@@ -37,7 +37,7 @@ protected:
     std::queue<haDiscovery_call_t> haCallQueue;
     bool doSendHAdiscovery = false;
     time_t sendHAtime;
-    time_t sendHAdelay = 5000;
+    time_t sendHAdelay = HA_FIRST_DISCOVERY_DELAY;
 #endif // SUPPORT_HA_DISCOVERY
 
 public:
@@ -77,8 +77,12 @@ public:
 	 * @brief Used to notify controller that it is registered on EnigmaIOT network
 	 */
     void connectInform () {
+        DEBUG_INFO ("Connect inform");
         sendStartAnouncement ();
 #if SUPPORT_HA_DISCOVERY
+        if (enigmaIotNode->getNode ()->getSleepy ()) {
+            sendHAdelay = HA_FIRST_DISCOVERY_DELAY_SLEEPY;
+        }
         doSendHAdiscovery = true;
         sendHAtime = millis ();
 #endif // SUPPORT_HA_DISCOVERY
@@ -103,16 +107,26 @@ public:
 
     void callHAdiscoveryCalls () {
         if (doSendHAdiscovery && millis () - sendHAtime > sendHAdelay) {
-            DEBUG_WARN ("Call HA discovery");
-            haDiscovery_call_t hacall = haCallQueue.front ();
+            haDiscovery_call_t hacall = 0;
+            DEBUG_INFO ("Call HA discovery");
+            if (haCallQueue.size ()) {
+                hacall = haCallQueue.front ();
+            }
+            DEBUG_DBG ("haCallQueue size is %d", haCallQueue.size ());
             if (hacall) {
+                DEBUG_DBG ("Execute hacall");
                 hacall ();
                 haCallQueue.pop ();
                 sendHAtime = millis ();
-                sendHAdelay = 1000;
+                if (enigmaIotNode->getNode ()->getSleepy ()) {
+                    sendHAdelay = HA_NEXT_DISCOVERY_DELAY_SLEEPY;
+                } else {
+                    sendHAdelay = HA_NEXT_DISCOVERY_DELAY;
+                }
             } else {
                 doSendHAdiscovery = false;
             }
+            DEBUG_INFO (" Exit call HA discovery");
         }
     }
 

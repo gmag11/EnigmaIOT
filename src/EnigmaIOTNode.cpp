@@ -1043,7 +1043,8 @@ void EnigmaIOTNodeClass::handle () {
             } else {
                 DEBUG_WARN ("Go to sleep indefinitely");
             }
-			DEBUG_WARN ("%d", millis ());
+            DEBUG_WARN ("%d", millis ());
+            comm->enableTransmit (false);
 #ifdef ESP8266
 			ESP.deepSleep (sleep_t);
 #elif defined ESP32
