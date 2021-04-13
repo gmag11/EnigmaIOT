@@ -39,6 +39,8 @@ protected:
     bool readyToSend = true;
 #ifdef ESP32
     TaskHandle_t espnowLoopTask;
+#else // ESP8266
+    ETSTimer espnowLoopTask;
 #endif
 
 	/**
@@ -131,7 +133,8 @@ public:
         DEBUG_DBG ("Send esp-now task %s", enable ? "enabled" : "disabled");
         if (enable) {
 #ifdef ESP8266
-            timer1_enable (TIM_DIV16, TIM_EDGE, TIM_LOOP);
+            os_timer_arm (&espnowLoopTask, 20, true);
+            //timer1_enable (TIM_DIV16, TIM_EDGE, TIM_LOOP);
 #else
             if (espnowLoopTask) {
                 vTaskResume (espnowLoopTask);
@@ -139,7 +142,8 @@ public:
 #endif
         } else {
 #ifdef ESP8266
-            timer1_disable ();
+            os_timer_disarm (&espnowLoopTask);
+            //timer1_disable ();
 #else
             if (espnowLoopTask) {
                 vTaskSuspend (espnowLoopTask);
@@ -150,11 +154,7 @@ public:
 
     void handle () override;
 
-#ifdef ESP32
     static void runHandle (void* param);
-#else
-    static void runHandle ();
-#endif
 
 };
 

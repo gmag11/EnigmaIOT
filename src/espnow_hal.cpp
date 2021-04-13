@@ -53,9 +53,11 @@ void Espnow_halClass::initComms (peerType_t peerType) {
 #ifdef ESP32
     xTaskCreateUniversal (runHandle, "espnow_loop", 2048, NULL, 1, &espnowLoopTask, CONFIG_ARDUINO_RUNNING_CORE);
 #else
-    timer1_attachInterrupt (runHandle);
-    timer1_enable (TIM_DIV16, TIM_EDGE, TIM_LOOP);
-    timer1_write (25000); //5000 us
+    os_timer_setfn (&espnowLoopTask, runHandle, NULL);
+    os_timer_arm (&espnowLoopTask, 20, true);
+    // timer1_attachInterrupt (runHandle);
+    // timer1_enable (TIM_DIV16, TIM_EDGE, TIM_LOOP);
+    // timer1_write (25000); //5000 us
 #endif
 }
 
@@ -225,16 +227,13 @@ void Espnow_halClass::handle () {
     }
 }
 
-#ifdef ESP32
 void Espnow_halClass::runHandle (void* param) {
+#ifdef ESP32
     for (;;) {
-#else
-void ICACHE_RAM_ATTR Espnow_halClass::runHandle () {
 #endif
         Espnow_hal.handle ();
 #ifdef ESP32
         vTaskDelay (1 / portTICK_PERIOD_MS);
-
     }
 #endif
 }
