@@ -64,7 +64,7 @@ bool CONTROLLER_CLASS_NAME::processRxCommand (const uint8_t* address, const uint
 	// Get state
 	if (command == nodeMessageType_t::DOWNSTREAM_DATA_GET) {
 		if (!strcmp (doc[commandKey], ledKey)) {
-			DEBUG_WARN ("Request LED status. LED = %s", led == LED_ON ? "ON" : "OFF");
+			DEBUG_WARN ("Request LED status. LED = %s", led == _LED_ON ? "ON" : "OFF");
 			if (!sendLedStatus ()) {
 				DEBUG_WARN ("Error sending LED status");
 				return false;
@@ -77,14 +77,14 @@ bool CONTROLLER_CLASS_NAME::processRxCommand (const uint8_t* address, const uint
 		if (!strcmp (doc[commandKey], ledKey)) {
 			if (doc.containsKey (ledKey)) {
 				if (doc[ledKey].as<int> () == 1) {
-					led = LED_ON;
+					led = _LED_ON;
 				} else if (doc[ledKey].as<int> () == 0) {
-					led = LED_OFF;
+					led = _LED_OFF;
 				} else {
 					DEBUG_WARN ("Wrong LED value: %d", doc[ledKey].as<int> ());
 					return false;
 				}
-				DEBUG_WARN ("Set LED status to %s", led == LED_ON ? "ON" : "OFF");
+				DEBUG_WARN ("Set LED status to %s", led == _LED_ON ? "ON" : "OFF");
 			} else {
 				DEBUG_WARN ("Wrong format");
 				return false;
@@ -107,7 +107,7 @@ bool CONTROLLER_CLASS_NAME::sendLedStatus () {
 	DynamicJsonDocument json (capacity);
 
 	json[commandKey] = ledKey;
-	json[ledKey] = led;
+    json[ledKey] = led ? _LED_ON : _LED_OFF;
 
 	return sendJson (json);
 }
@@ -123,11 +123,19 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 
 	// You do node setup here. Use it as it was the normal setup() Arduino function
 	pinMode (LED_PIN, OUTPUT);
-	digitalWrite (LED_PIN, LED_ON);
+	digitalWrite (LED_PIN, _LED_ON);
 
 	// Send a 'hello' message when initalizing is finished
-	sendStartAnouncement ();
+    sendStartAnouncement ();
+    
+#if SUPPORT_HA_DISCOVERY    
+    // Register every HAEntity discovery function here. As many as you need
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::sendLedStatus, this));
+#endif
 
+    sendLedStatus ();
+    
 	DEBUG_DBG ("Finish begin");
 
 	// If your node should sleep after sending data do all remaining tasks here
@@ -163,3 +171,51 @@ bool CONTROLLER_CLASS_NAME::saveConfig () {
 	// If you need to save custom configuration data do it here
 	return true;
 }
+
+#if SUPPORT_HA_DISCOVERY   
+// Repeat this method for every entity
+void CONTROLLER_CLASS_NAME::buildHADiscovery () {
+    // Select corresponding HAEntiny type
+    HASwitch* haEntity = new HASwitch ();
+
+    uint8_t* msgPackBuffer;
+
+    if (!haEntity) {
+        DEBUG_WARN ("JSON object instance does not exist");
+        return;
+    }
+
+    // *******************************
+    // Add your characteristics here
+    // There is no need to futher modify this function
+
+    //haEntity->setNameSufix ("switch");
+    haEntity->setPayloadOff ("{\"cmd\":\"led\",\"led\":0}");
+    haEntity->setPayloadOn ("{\"cmd\":\"led\",\"led\":1}");
+    haEntity->setValueField ("led");
+    haEntity->setStateOff (0);
+    haEntity->setStateOn (1);
+
+    // *******************************
+
+    size_t bufferLen = haEntity->measureMessage ();
+
+    msgPackBuffer = (uint8_t*)malloc (bufferLen);
+
+    size_t len = haEntity->getAnounceMessage (bufferLen, msgPackBuffer);
+
+    DEBUG_INFO ("Resulting MSG pack length: %d", len);
+
+    if (!sendHADiscovery (msgPackBuffer, len)) {
+        DEBUG_WARN ("Error sending HA discovery message");
+    }
+
+    if (haEntity) {
+        delete (haEntity);
+    }
+
+    if (msgPackBuffer) {
+        free (msgPackBuffer);
+    }
+}
+#endif // SUPPORT_HA_DISCOVERY

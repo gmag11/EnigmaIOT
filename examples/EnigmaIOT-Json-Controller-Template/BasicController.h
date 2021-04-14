@@ -15,6 +15,10 @@
 #define CONTROLLER_CLASS_NAME BasicController
 static const char* CONTROLLER_NAME = "EnigmaIOT controller template";
 
+#if SUPPORT_HA_DISCOVERY    
+#include <haTrigger.h>
+#endif
+
 // --------------------------------------------------
 // You may define data structures and constants here
 // --------------------------------------------------
@@ -48,6 +52,9 @@ public:
      */
 	void loop ();
 
+    /**
+     * @brief Default destructor
+     */
 	~CONTROLLER_CLASS_NAME ();
 
 	/**
@@ -71,7 +78,7 @@ public:
      * @brief Executed as soon as node is registered on EnigmaIOT network
      */
     void connectInform () {
-		sendStartAnouncement ();
+        EnigmaIOTjsonController::connectInform ();
 	}
 
 protected:
@@ -104,6 +111,12 @@ protected:
 
         return sendJson (json);
     }
+
+    /**
+     * @brief Sends a HA discovery message for a single entity. Add as many functions like this
+     * as number of entities you need to create
+     */
+    void buildHADiscovery ();
 
 	// ------------------------------------------------------------
 	// You may add additional method definitions that you need here

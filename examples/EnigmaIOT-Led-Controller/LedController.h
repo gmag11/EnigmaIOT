@@ -19,19 +19,23 @@
 #define CONTROLLER_CLASS_NAME LedController
 static const char* CONTROLLER_NAME = "LED controller";
 
+#if SUPPORT_HA_DISCOVERY    
+#include <haSwitch.h>
+#endif
+
 // --------------------------------------------------
 // You may define data structures and constants here
 // --------------------------------------------------
-#define LED_PIN 14
-#define LED_ON HIGH
-#define LED_OFF !LED_ON
+#define LED_PIN 2
+#define _LED_ON LOW
+#define _LED_OFF !_LED_ON
 
 class CONTROLLER_CLASS_NAME : EnigmaIOTjsonController {
 protected:
 	// --------------------------------------------------
 	// add all parameters that your project needs here
 	// --------------------------------------------------
-	int led = LED_OFF;
+	int led = _LED_OFF;
 
 public:
 	void setup (EnigmaIOTNodeClass* node, void* data = NULL);
@@ -61,8 +65,8 @@ public:
 	bool loadConfig ();
 
 	void connectInform () {
-		sendStartAnouncement ();
-	}
+        EnigmaIOTjsonController::connectInform ();
+    }
 
 protected:
 	/**
@@ -87,6 +91,8 @@ protected:
         return sendJson (json);
     }
 
+    void buildHADiscovery ();
+    
     // ------------------------------------------------------------
 	// You may add additional method definitions that you need here
 	// ------------------------------------------------------------

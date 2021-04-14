@@ -136,4 +136,4 @@ void CONTROLLER_CLASS_NAME::buildHADiscovery () {
         free (msgPackBuffer);
     }
 }
-#endif
+#endif // SUPPORT_HA_DISCOVERY

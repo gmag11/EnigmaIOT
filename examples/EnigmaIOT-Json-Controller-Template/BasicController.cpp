@@ -30,10 +30,18 @@ bool CONTROLLER_CLASS_NAME::sendCommandResp (const char* command, bool result) {
 void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	enigmaIotNode = node;
 
-	// You do node setup here. Use it as it was the normal setup() Arduino function
+    // You do node setup here. Use it as it was the normal setup() Arduino function
 
     // Send a 'hello' message when initalizing is finished
-    sendStartAnouncement ();  // Disable this if node is sleepy
+    if (!(enigmaIotNode->getNode ()->getSleepy ())) {
+        sendStartAnouncement ();  // Disable this if node is sleepy
+    }
+
+#if SUPPORT_HA_DISCOVERY    
+    // Register every HAEntity discovery function here. As many as you need
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
+#endif
+    
 	DEBUG_DBG ("Finish begin");
 
 	// If your node should sleep after sending data do all remaining tasks here
@@ -78,3 +86,47 @@ bool CONTROLLER_CLASS_NAME::saveConfig () {
 	// If you need to save custom configuration data do it here
 	return true;
 }
+
+#if SUPPORT_HA_DISCOVERY   
+// Repeat this method for every entity
+void CONTROLLER_CLASS_NAME::buildHADiscovery () {
+    // Select corresponding HAEntiny type
+    HATrigger* haEntity = new HATrigger ();
+
+    uint8_t* msgPackBuffer;
+
+    if (!haEntity) {
+        DEBUG_WARN ("JSON object instance does not exist");
+        return;
+    }
+
+    // *******************************
+    // Add your characteristics here
+    // There is no need to futher modify this function
+    
+    haEntity->setType (button_short_press);
+    haEntity->setSubtype (turn_on);
+
+    // *******************************
+
+    size_t bufferLen = haEntity->measureMessage ();
+
+    msgPackBuffer = (uint8_t*)malloc (bufferLen);
+
+    size_t len = haEntity->getAnounceMessage (bufferLen, msgPackBuffer);
+
+    DEBUG_INFO ("Resulting MSG pack length: %d", len);
+
+    if (!sendHADiscovery (msgPackBuffer, len)) {
+        DEBUG_WARN ("Error sending HA discovery message");
+    }
+
+    if (haEntity) {
+        delete (haEntity);
+    }
+
+    if (msgPackBuffer) {
+        free (msgPackBuffer);
+    }
+}
+#endif // SUPPORT_HA_DISCOVERY

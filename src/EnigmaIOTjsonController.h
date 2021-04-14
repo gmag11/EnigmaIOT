@@ -38,8 +38,8 @@ protected:
 #if SUPPORT_HA_DISCOVERY
     std::queue<haDiscovery_call_t> haCallQueue;
     bool doSendHAdiscovery = false;
-    time_t sendHAtime;
-    time_t sendHAdelay = HA_FIRST_DISCOVERY_DELAY;
+    clock_t sendHAtime;
+    clock_t sendHAdelay = HA_FIRST_DISCOVERY_DELAY;
 #endif // SUPPORT_HA_DISCOVERY
 
 public:

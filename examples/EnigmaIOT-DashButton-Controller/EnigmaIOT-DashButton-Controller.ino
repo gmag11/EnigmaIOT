@@ -133,9 +133,11 @@ void setup () {
 			DEBUG_WARN ("SPIFFS Formatted");
 	}
 
-	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY == 1); // Start EnigmaIOT communication
-	EnigmaIOTNode.setSleepTime (0, true);
-
+    EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY == 1); // Start EnigmaIOT communication
+#if SLEEPY
+    EnigmaIOTNode.setSleepTime (0, true);
+#endif
+    
 	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
 	// Set Address using internal MAC Address. Do not modify
 #ifdef ESP8266
@@ -170,6 +172,6 @@ void loop () {
     controller->loop (); // Loop controller class
 #if SUPPORT_HA_DISCOVERY    
     controller->callHAdiscoveryCalls (); // Send HA registration messages
-#endif
+#endif // SUPPORT_HA_DISCOVERY 
 	EnigmaIOTNode.handle (); // Mantain EnigmaIOT connection
 }
