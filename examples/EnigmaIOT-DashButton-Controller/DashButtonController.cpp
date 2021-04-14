@@ -35,16 +35,6 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	// Not needed as this will reboot after deep sleep
 	// sendStartAnouncement (); 
 
-	const size_t capacity = JSON_OBJECT_SIZE (2);
-	DynamicJsonDocument json (capacity);
-	json["button"] = 1;
-
-	if (sendJson (json)) {
-		DEBUG_WARN ("Button press sent");
-	} else {
-		DEBUG_WARN ("Error sending message");
-    }
-
 #if SUPPORT_HA_DISCOVERY    
     addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
 #endif
@@ -60,7 +50,20 @@ void CONTROLLER_CLASS_NAME::loop () {
 
 	// You can send your data as JSON. This is a basic example
 
-		//const size_t capacity = JSON_OBJECT_SIZE (4);
+    if (!buttonPressSent && enigmaIotNode->isRegistered ()) {
+        const size_t capacity = JSON_OBJECT_SIZE (2);
+        DynamicJsonDocument json (capacity);
+        json["button"] = 1;
+
+        if (sendJson (json)) {
+            DEBUG_WARN ("Button press sent");
+            buttonPressSent = true;
+        } else {
+            DEBUG_WARN ("Error sending message");
+        }
+    }
+
+        //const size_t capacity = JSON_OBJECT_SIZE (4);
 		//DynamicJsonDocument json (capacity);
 		//json["sensor"] = data_description;
 		//json["meas"] = measurement;

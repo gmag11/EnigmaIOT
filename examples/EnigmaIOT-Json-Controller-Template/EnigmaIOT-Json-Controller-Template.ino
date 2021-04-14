@@ -169,4 +169,9 @@ void loop () {
     controller->callHAdiscoveryCalls (); // Send HA registration messages
 #endif // SUPPORT_HA_DISCOVERY 
 	EnigmaIOTNode.handle (); // Mantain EnigmaIOT connection
+
+#if SLEEPY
+    FailSafe.resetFlag ();
+#endif
+
 }

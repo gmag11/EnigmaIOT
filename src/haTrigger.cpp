@@ -42,7 +42,7 @@ size_t HATrigger::getDiscoveryJson (char* buffer, size_t buflen, const char* nod
     }
 
     outputJSON["automation_type"] = "trigger";
-    outputJSON["command_topic"] = String (networkName) + "/" + String (nodeName) + "/data";
+    outputJSON["topic"] = String (networkName) + "/" + String (nodeName) + "/data";
     
     if (inputJSON->containsKey (ha_payload)) {
         outputJSON["payload"] = (*inputJSON)[ha_payload].as<String> ();

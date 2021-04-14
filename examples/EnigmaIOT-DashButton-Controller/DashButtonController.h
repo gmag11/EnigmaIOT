@@ -32,7 +32,7 @@ protected:
 	// --------------------------------------------------
 	// add all parameters that your project needs here
 	// --------------------------------------------------
-
+    bool buttonPressSent = false;
 public:
 	void setup (EnigmaIOTNodeClass* node, void* data = NULL);
 
