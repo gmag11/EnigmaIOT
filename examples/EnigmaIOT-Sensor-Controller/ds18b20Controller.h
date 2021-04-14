@@ -19,6 +19,10 @@
 #define CONTROLLER_CLASS_NAME ds18b20Controller
 static const char* CONTROLLER_NAME = "DS18B20 controller";
 
+#if SUPPORT_HA_DISCOVERY    
+#include <haSensor.h>
+#endif
+
 // --------------------------------------------------
 // You may define data structures and constants here
 // --------------------------------------------------
@@ -32,7 +36,9 @@ protected:
 	// --------------------------------------------------
 	OneWire* oneWire;
 	DallasTemperature* sensors;
-	DeviceAddress insideThermometer;
+    DeviceAddress insideThermometer;
+    bool tempSent = false;
+    float tempC;
 
 public:
 	void setup (EnigmaIOTNodeClass* node, void* data = NULL);
@@ -62,8 +68,8 @@ public:
 	bool loadConfig ();
 
 	void connectInform () {
-		sendStartAnouncement ();
-	}
+        EnigmaIOTjsonController::connectInform ();
+    }
 
 protected:
 	/**
@@ -88,11 +94,18 @@ protected:
         return sendJson (json);
     }
 
-	bool sendTemperature (float temp);
-
+    /**
+     * @brief Sends a HA discovery message for a single entity. Add as many functions like this
+     * as number of entities you need to create
+     */
+    void buildHADiscovery ();
+    
 	// ------------------------------------------------------------
 	// You may add additional method definitions that you need here
 	// ------------------------------------------------------------
+
+    bool sendTemperature (float temp);
+
 };
 
 #endif

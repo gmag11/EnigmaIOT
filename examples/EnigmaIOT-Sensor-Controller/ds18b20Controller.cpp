@@ -8,6 +8,8 @@
 using namespace std;
 using namespace placeholders;
 
+#define TEST 0
+
 constexpr auto CONFIG_FILE = "/customconf.json"; ///< @brief Custom configuration file name
 
 // -----------------------------------------
@@ -42,26 +44,35 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	enigmaIotNode = node;
 
 	// You do node setup here. Use it as it was the normal setup() Arduino function
-	float tempC;
 
+#if !TEST
 	oneWire = new OneWire (ONE_WIRE_BUS);
 	sensors = new DallasTemperature (oneWire);
 	sensors->begin ();
 	sensors->setWaitForConversion (false);
 	sensors->requestTemperatures ();
-	time_t start = millis ();
+#endif
+    time_t start = millis ();
 
 	// Send a 'hello' message when initalizing is finished
-	sendStartAnouncement ();
-
+    if (!(enigmaIotNode->getNode ()->getSleepy ())) {
+        sendStartAnouncement ();  // Disable this if node is sleepy
+    }
+    
+#if SUPPORT_HA_DISCOVERY    
+    // Register every HAEntity discovery function here. As many as you need
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
+#endif
+#if !TEST
 	while (!sensors->isConversionComplete ()) {
 		delay (0);
 	}
 	DEBUG_WARN ("Conversion completed in %d ms", millis () - start);
-	tempC = sensors->getTempCByIndex (0);
-
-	sendTemperature (tempC);
-
+    tempC = sensors->getTempCByIndex (0);
+#else
+    tempC = 25.8;
+#endif
+    
     // Send a 'hello' message when initalizing is finished
     //sendStartAnouncement ();
 
@@ -76,7 +87,14 @@ void CONTROLLER_CLASS_NAME::loop () {
 
 	// You can send your data as JSON. This is a basic example
 
-		//const size_t capacity = JSON_OBJECT_SIZE (4);
+    if (!tempSent && enigmaIotNode->isRegistered()) {
+        if (sendTemperature (tempC)) {
+            tempSent = true;
+        } else {
+        }
+    }
+    
+        //const size_t capacity = JSON_OBJECT_SIZE (4);
 		//DynamicJsonDocument json (capacity);
 		//json["sensor"] = data_description;
 		//json["meas"] = measurement;
@@ -109,3 +127,49 @@ bool CONTROLLER_CLASS_NAME::saveConfig () {
 	// If you need to save custom configuration data do it here
 	return true;
 }
+
+#if SUPPORT_HA_DISCOVERY   
+// Repeat this method for every entity
+void CONTROLLER_CLASS_NAME::buildHADiscovery () {
+    // Select corresponding HAEntiny type
+    HASensor* haEntity = new HASensor ();
+
+    uint8_t* msgPackBuffer;
+
+    if (!haEntity) {
+        DEBUG_WARN ("JSON object instance does not exist");
+        return;
+    }
+
+    // *******************************
+    // Add your characteristics here
+    // There is no need to futher modify this function
+
+    haEntity->setDeviceClass (sensor_temperature);
+    haEntity->setExpireTime (3600);
+    haEntity->setUnitOfMeasurement ("ºC");
+    haEntity->setValueField ("temp");
+
+    // *******************************
+
+    size_t bufferLen = haEntity->measureMessage ();
+
+    msgPackBuffer = (uint8_t*)malloc (bufferLen);
+
+    size_t len = haEntity->getAnounceMessage (bufferLen, msgPackBuffer);
+
+    DEBUG_INFO ("Resulting MSG pack length: %d", len);
+
+    if (!sendHADiscovery (msgPackBuffer, len)) {
+        DEBUG_WARN ("Error sending HA discovery message");
+    }
+
+    if (haEntity) {
+        delete (haEntity);
+    }
+
+    if (msgPackBuffer) {
+        free (msgPackBuffer);
+    }
+}
+#endif // SUPPORT_HA_DISCOVERY

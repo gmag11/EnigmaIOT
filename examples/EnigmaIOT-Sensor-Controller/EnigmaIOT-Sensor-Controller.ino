@@ -34,9 +34,7 @@
 #include <Hash.h>
 #elif defined ESP32
 #include <WiFi.h>
-#include <SPIFFS.h>
 #include <AsyncTCP.h> // Comment to compile for ESP8266
-#include <SPIFFS.h>
 #include <Update.h>
 #include <driver/adc.h>
 #include "esp_wifi.h"
@@ -67,9 +65,13 @@ const time_t BOOT_FLAG_TIMEOUT = 10000; // Time in ms to reset flag
 const int MAX_CONSECUTIVE_BOOT = 3; // Number of rapid boot cycles before enabling fail safe mode
 const int LED = LED_BUILTIN; // Number of rapid boot cycles before enabling fail safe mode
 const int FAILSAFE_RTC_ADDRESS = 0; // If you use RTC memory adjust offset to not overwrite other data
+#if SLEEPY
+const int SLEEP_TIME = 10; // Sleep time time in secons.
+#endif
 
 // Called when node is connected to gateway. You don't need to do anything here usually
 void connectEventHandler () {
+    controller->connectInform ();
 	DEBUG_WARN ("Connected");
 }
 
@@ -79,8 +81,14 @@ void disconnectEventHandler (nodeInvalidateReason_t reason) {
 }
 
 // Called to route messages to EnitmaIOTNode class. Do not modify
-bool sendUplinkData (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding) {
-	return EnigmaIOTNode.sendData (data, len, payloadEncoding);
+bool sendUplinkData (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding, dataMessageType_t dataMsgType) {
+    if (dataMsgType == DATA_TYPE) {
+        return EnigmaIOTNode.sendData (data, len, payloadEncoding);
+    } else if (dataMsgType == HA_DISC_TYPE) {
+        return EnigmaIOTNode.sendHADiscoveryMessage (data, len);
+    } else {
+        return false;
+    }
 }
 
 // Called to route incoming messages to your code. Do not modify
@@ -105,8 +113,8 @@ void wifiManagerStarted () {
 void setup () {
 
 #ifdef USE_SERIAL
-	Serial.begin (115200);
-	delay (1000);
+    Serial.begin (921600);
+	//delay (1000);
 	Serial.println ();
 #endif
 
@@ -128,12 +136,15 @@ void setup () {
 
 	if (!controller->loadConfig ()) { // Trigger custom configuration loading
 		DEBUG_WARN ("Error reading config file");
-		if (SPIFFS.format ())
-			DEBUG_WARN ("SPIFFS Formatted");
+		if (FILESYSTEM.format ())
+			DEBUG_WARN ("Filesystem Formatted");
 	}
 
 	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY == 1); // Start EnigmaIOT communication
-
+#if SLEEPY
+    // EnigmaIOTNode.setSleepTime (SLEEP_TIME, true);
+#endif
+    
 	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
 	// Set Address using internal MAC Address. Do not modify
 #ifdef ESP8266
@@ -143,8 +154,7 @@ void setup () {
 #endif
 	{
 		EnigmaIOTNode.setNodeAddress (macAddress);
-		char macStr[ENIGMAIOT_ADDR_LEN * 3];
-		DEBUG_DBG ("Node address set to %s", mac2str (macAddress, macStr));
+		DEBUG_DBG ("Node address set to %s", mac2str (macAddress));
 	} else {
 		DEBUG_WARN ("Node address error");
 	}
@@ -152,7 +162,7 @@ void setup () {
 	controller->sendDataCallback (sendUplinkData); // Listen for data from controller class
 	controller->setup (&EnigmaIOTNode);			   // Start controller class
 
-#if SLEEPY == 1
+#if SLEEPY
 	EnigmaIOTNode.sleep ();
 #endif
 
@@ -167,5 +177,8 @@ void loop () {
     }
 
 	controller->loop (); // Loop controller class
-	EnigmaIOTNode.handle (); // Mantain EnigmaIOT connection
+#if SUPPORT_HA_DISCOVERY 
+    controller->callHAdiscoveryCalls (); // Send HA registration messages
+#endif // SUPPORT_HA_DISCOVERY 
+    EnigmaIOTNode.handle (); // Mantain EnigmaIOT connection
 }
