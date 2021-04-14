@@ -8,7 +8,6 @@
 #else
 #include "WProgram.h"
 #endif
-#include <haTrigger.h>
 
 //#define DEBUG_SERIAL
 
@@ -19,6 +18,10 @@
 #include <EnigmaIOTjsonController.h>
 #define CONTROLLER_CLASS_NAME DashButtonController
 static const char* CONTROLLER_NAME = "DashButton controller";
+
+#if SUPPORT_HA_DISCOVERY    
+#include <haTrigger.h>
+#endif
 
 // --------------------------------------------------
 // You may define data structures and constants here
@@ -84,7 +87,7 @@ protected:
     }
 
     void buildHADiscovery ();
-
+    
 	// ------------------------------------------------------------
 	// You may add additional method definitions that you need here
 	// ------------------------------------------------------------

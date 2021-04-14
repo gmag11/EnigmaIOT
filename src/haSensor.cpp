@@ -1,5 +1,7 @@
 #include "haSensor.h"
 
+#if SUPPORT_HA_DISCOVERY
+
 void HASensor::setDeviceClass (haSensorClass_t devClass) {
     if (devClass > sensor_none) {
         // DEBUG_WARN ("Set device class to %d", devClass);
@@ -130,3 +132,5 @@ String HASensor::deviceClassStr (haSensorClass_t sensorClass) {
         return "";
     }
 }
+
+#endif // SUPPORT_HA_DISCOVERY

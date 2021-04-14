@@ -1,5 +1,7 @@
 #include "haBinarySensor.h"
 
+#if SUPPORT_HA_DISCOVERY
+
 void HABinarySensor::setDeviceClass (haBinarySensorClass_t devClass) {
     if (devClass > bs_none) {
         // DEBUG_WARN ("Set device class to %d", devClass);
@@ -171,3 +173,4 @@ String HABinarySensor::deviceClassStr (haBinarySensorClass_t sensorClass) {
         return "";
     }
 }
+#endif

@@ -3,6 +3,8 @@
 
 #include "haEntity.h"
 
+#if SUPPORT_HA_DISCOVERY
+
 class HASensor : public HAEntity {
    //friend class HAEntity;
 // protected:
@@ -31,5 +33,7 @@ public:
     static String deviceClassStr (haSensorClass_t sensorClass);
 
 };
+
+#endif // SUPPORT_HA_DISCOVERY
 
 #endif // _HA_COVER_h

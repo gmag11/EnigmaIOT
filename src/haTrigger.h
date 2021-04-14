@@ -3,6 +3,8 @@
 
 #include "haEntity.h"
 
+#if SUPPORT_HA_DISCOVERY
+
 typedef enum {
     button_short_press     = 0,
     button_short_release   = 1,
@@ -99,5 +101,7 @@ public:
     static size_t getDiscoveryJson (char* buffer, size_t buflen, const char* nodeName, const char* networkName, DynamicJsonDocument* inputJSON);
 
 };
+
+#endif // SUPPORT_HA_DISCOVERY
 
 #endif // _HA_TRIGGER_h

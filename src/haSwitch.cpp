@@ -1,5 +1,7 @@
 #include "haSwitch.h"
 
+#if SUPPORT_HA_DISCOVERY
+
 void HASwitch::setPayloadOn (const char* payload) {
     if (payload) {
         (*entityConfig)[ha_payload_on] = payload;
@@ -127,3 +129,4 @@ size_t HASwitch::getDiscoveryJson (char* buffer, size_t buflen, const char* node
     return jsonLen;
 }
 
+#endif // SUPPORT_HA_DISCOVERY

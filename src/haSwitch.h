@@ -3,6 +3,8 @@
 
 #include "haEntity.h"
 
+#if SUPPORT_HA_DISCOVERY
+
 class HASwitch : public HAEntity {
    //friend class HAEntity;
 // protected:
@@ -39,5 +41,7 @@ public:
     static size_t getDiscoveryJson (char* buffer, size_t buflen, const char* nodeName, const char* networkName, DynamicJsonDocument* inputJSON);
 
 };
+
+#endif // SUPPORT_HA_DISCOVERY
 
 #endif // _SWITCH_h

@@ -1,5 +1,7 @@
 #include "haTrigger.h"
 
+#if SUPPORT_HA_DISCOVERY
+
 void HATrigger::setPayload (const char* payload) {
     if (payload) {
         (*entityConfig)[ha_payload_on] = payload;
@@ -81,3 +83,4 @@ size_t HATrigger::getDiscoveryJson (char* buffer, size_t buflen, const char* nod
     return jsonLen;
 }
 
+#endif // SUPPORT_HA_DISCOVERY

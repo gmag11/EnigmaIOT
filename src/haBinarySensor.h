@@ -3,6 +3,9 @@
 
 #include "haEntity.h"
 
+#if SUPPORT_HA_DISCOVERY
+
+
 /**
  * The mqtt binary sensor platform uses an MQTT message received to set the binary sensor’s state to on or off.
  * The state will be updated only after a new message is published on state_topic matching payload_on or payload_off.
@@ -163,5 +166,6 @@ public:
 
 
 };
+#endif // SUPPORT_HA_DISCOVERY
 
 #endif // _BINARY_SENSOR_h

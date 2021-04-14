@@ -17,7 +17,9 @@
 
 #include <EnigmaIOTNode.h>
 #include <ArduinoJson.h>
+#if SUPPORT_HA_DISCOVERY    
 #include <queue>
+#endif
 
 #if defined ESP8266 || defined ESP32
 #include <functional>
@@ -105,6 +107,7 @@ public:
 	 */
     virtual bool loadConfig () = 0;
 
+#if SUPPORT_HA_DISCOVERY    
     void callHAdiscoveryCalls () {
         if (doSendHAdiscovery && millis () - sendHAtime > sendHAdelay) {
             haDiscovery_call_t hacall = 0;
@@ -129,7 +132,8 @@ public:
             DEBUG_INFO (" Exit call HA discovery");
         }
     }
-
+#endif
+    
 protected:
 
 	/**

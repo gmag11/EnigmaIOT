@@ -45,7 +45,9 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 		DEBUG_WARN ("Error sending message");
     }
 
+#if SUPPORT_HA_DISCOVERY    
     addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
+#endif
 
 	DEBUG_DBG ("Finish begin");
 
@@ -92,6 +94,7 @@ bool CONTROLLER_CLASS_NAME::saveConfig () {
 	return true;
 }
 
+#if SUPPORT_HA_DISCOVERY    
 // Repeat this method for every entity
 void CONTROLLER_CLASS_NAME::buildHADiscovery () {
     // Select corresponding HAEntiny type
@@ -133,3 +136,4 @@ void CONTROLLER_CLASS_NAME::buildHADiscovery () {
         free (msgPackBuffer);
     }
 }
+#endif

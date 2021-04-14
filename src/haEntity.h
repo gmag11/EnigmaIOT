@@ -12,6 +12,7 @@
 #include "EnigmaIoTconfig.h"
 
 #if SUPPORT_HA_DISCOVERY
+
 #include <ArduinoJson.h>
 #include <EnigmaIOTdebug.h>
 #include <helperFunctions.h>

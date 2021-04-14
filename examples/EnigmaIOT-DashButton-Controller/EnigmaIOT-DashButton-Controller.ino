@@ -168,6 +168,8 @@ void loop () {
     }
 
     controller->loop (); // Loop controller class
+#if SUPPORT_HA_DISCOVERY    
     controller->callHAdiscoveryCalls (); // Send HA registration messages
+#endif
 	EnigmaIOTNode.handle (); // Mantain EnigmaIOT connection
 }

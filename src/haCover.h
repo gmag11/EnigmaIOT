@@ -3,6 +3,8 @@
 
 #include "haEntity.h"
 
+#if SUPPORT_HA_DISCOVERY
+
 /**
  * A cover entity can be in states (open, opening, closed or closing).
  * If a state_topic is configured, the entity’s state will be updated only after an MQTT message is received on
@@ -207,5 +209,7 @@ public:
     static String deviceClassStr (haCoverClass_t sensorClass);
 
 };
+
+#endif // SUPPORT_HA_DISCOVERY
 
 #endif // _HA_COVER_h

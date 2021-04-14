@@ -1,5 +1,7 @@
 #include "haCover.h"
 
+#if SUPPORT_HA_DISCOVERY
+
 void HACover::setDeviceClass (haCoverClass_t devClass) {
     if (devClass > cover_none) {
         // DEBUG_WARN ("Set device class to %d", devClass);
@@ -205,3 +207,4 @@ String HACover::deviceClassStr (haCoverClass_t sensorClass) {
         return "";
     }
 }
+#endif // SUPPORT_HA_DISCOVERY
