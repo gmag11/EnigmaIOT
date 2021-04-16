@@ -64,7 +64,8 @@ const int FAILSAFE_RTC_ADDRESS = 0; // If you use RTC memory adjust offset to no
 
 // Called when node is connected to gateway. You don't need to do anything here usually
 void connectEventHandler () {
-	DEBUG_WARN ("Connected");
+    controller->connectInform ();
+    DEBUG_WARN ("Connected");
 }
 
 // Called when node is unregistered from gateway. You don't need to do anything here usually
@@ -73,8 +74,14 @@ void disconnectEventHandler (nodeInvalidateReason_t reason) {
 }
 
 // Called to route messages to EnitmaIOTNode class. Do not modify
-bool sendUplinkData (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding) {
-	return EnigmaIOTNode.sendData (data, len, payloadEncoding);
+bool sendUplinkData (const uint8_t* data, size_t len, nodePayloadEncoding_t payloadEncoding, dataMessageType_t dataMsgType) {
+    if (dataMsgType == DATA_TYPE) {
+        return EnigmaIOTNode.sendData (data, len, payloadEncoding);
+    } else if (dataMsgType == HA_DISC_TYPE) {
+        return EnigmaIOTNode.sendHADiscoveryMessage (data, len);
+    } else {
+        return false;
+    }
 }
 
 // Called to route incoming messages to your code. Do not modify
@@ -99,8 +106,8 @@ void wifiManagerStarted () {
 void setup () {
 
 #ifdef USE_SERIAL
-	Serial.begin (115200);
-	delay (1000);
+    Serial.begin (921600);
+	//delay (1000);
 	Serial.println ();
 #endif
     FailSafe.checkBoot (MAX_CONSECUTIVE_BOOT, LED, FAILSAFE_RTC_ADDRESS); // Parameters are optional
@@ -123,12 +130,12 @@ void setup () {
 	if (!controller->loadConfig ()) { // Trigger custom configuration loading
 		DEBUG_WARN ("Error reading config file");
 		if (FILESYSTEM.format ())
-			DEBUG_WARN ("SPIFFS Formatted");
+            DEBUG_WARN ("FILESYSTEM Formatted");
 	}
 
 	EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY == 1); // Start EnigmaIOT communication
-
-	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
+    
+    uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
 	// Set Address using internal MAC Address. Do not modify
 #ifdef ESP8266
 	if (wifi_get_macaddr (STATION_IF, macAddress))
@@ -159,6 +166,13 @@ void loop () {
         return;
     }
 
-	controller->loop (); // Loop controller class
-	EnigmaIOTNode.handle (); // Mantain EnigmaIOT connection
+    controller->loop (); // Loop controller class
+#if SUPPORT_HA_DISCOVERY 
+    controller->callHAdiscoveryCalls (); // Send HA registration messages
+#endif // SUPPORT_HA_DISCOVERY 
+    EnigmaIOTNode.handle (); // Mantain EnigmaIOT connection
+
+#if SLEEPY
+    FailSafe.resetFlag ();
+#endif
 }

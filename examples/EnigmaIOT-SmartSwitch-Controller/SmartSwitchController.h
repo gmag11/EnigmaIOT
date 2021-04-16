@@ -19,6 +19,11 @@
 #define CONTROLLER_CLASS_NAME SmartSwitchController
 static const char* CONTROLLER_NAME = "SamrtSwitch controller";
 
+#if SUPPORT_HA_DISCOVERY    
+#include <haTrigger.h>
+#include <haSwitch.h>
+#endif
+
 // --------------------------------------------------
 // You may define data structures and constants here
 // --------------------------------------------------
@@ -83,7 +88,7 @@ public:
 	bool loadConfig ();
 
 	void connectInform () {
-		sendStartAnouncement ();
+        EnigmaIOTjsonController::connectInform ();
 	}
 
 protected:
@@ -108,6 +113,14 @@ protected:
 
         return sendJson (json);
     }
+
+    /**
+     * @brief Sends a HA discovery message for a single entity. Add as many functions like this
+     * as number of entities you need to create
+     */
+    void buildHASwitchDiscovery ();
+    void buildHATriggerDiscovery ();
+    void buildHALinkDiscovery ();
 
 	// ------------------------------------------------------------
 	// You may add additional method definitions that you need here

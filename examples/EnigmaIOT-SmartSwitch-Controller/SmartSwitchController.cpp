@@ -136,11 +136,13 @@ bool CONTROLLER_CLASS_NAME::processRxCommand (const uint8_t* address, const uint
 }
 
 bool CONTROLLER_CLASS_NAME::sendRelayStatus () {
-	const size_t capacity = JSON_OBJECT_SIZE (2);
+	const size_t capacity = JSON_OBJECT_SIZE (6);
 	DynamicJsonDocument json (capacity);
 
 	json[commandKey] = relayKey;
-	json[relayKey] = config.relayStatus;
+    json[relayKey] = config.relayStatus ? 1 : 0;
+    json[linkKey] = config.linked ? 1 : 0;
+    json[bootStateKey] = config.bootStatus;
 
 	return sendJson (json);
 }
@@ -150,7 +152,7 @@ bool CONTROLLER_CLASS_NAME::sendLinkStatus () {
 	DynamicJsonDocument json (capacity);
 
 	json[commandKey] = linkKey;
-	json[linkKey] = config.linked;
+    json[linkKey] = config.linked ? 1 : 0;
 
 	return sendJson (json);
 }
@@ -184,11 +186,18 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	}
 	DEBUG_WARN ("Relay status set to %s", config.relayStatus ? "ON" : "OFF");
 	digitalWrite (config.relayPin, config.relayStatus);
-	if (!sendRelayStatus ()) {
-		DEBUG_WARN ("Error sending relay status");
-	}
+	// if (!sendRelayStatus ()) {
+	// 	DEBUG_WARN ("Error sending relay status");
+	// }
 
-	// Send a 'hello' message when initalizing is finished
+#if SUPPORT_HA_DISCOVERY    
+    // Register every HAEntity discovery function here. As many as you need
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHASwitchDiscovery, this));
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHATriggerDiscovery, this));
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHALinkDiscovery, this));
+#endif
+    
+    // Send a 'hello' message when initalizing is finished
 	sendStartAnouncement ();
 
 	DEBUG_WARN ("Finish begin");
@@ -283,7 +292,15 @@ void CONTROLLER_CLASS_NAME::loop () {
 			DEBUG_WARN ("Button released");
 			pushReleased = true;
 		}
-	}
+    }
+
+    static clock_t lastSentStatus;
+    static clock_t sendStatusPeriod = 2000;
+    if (enigmaIotNode->isRegistered () && millis () - lastSentStatus > sendStatusPeriod) {
+        lastSentStatus = millis ();
+        sendStatusPeriod = 300000;
+        sendRelayStatus ();
+    }
 }
 
 CONTROLLER_CLASS_NAME::~CONTROLLER_CLASS_NAME () {
@@ -310,14 +327,14 @@ void CONTROLLER_CLASS_NAME::configManagerStart () {
 	bootStatusParam = new AsyncWiFiManagerParameter ("bootStatus", "Boot Relay Status", "", 6, "required type=\"text\" list=\"bootStatusList\" pattern=\"^ON$|^OFF$|^SAVE$\"");
 	bootStatusListParam = new AsyncWiFiManagerParameter ("<datalist id=\"bootStatusList\">" \
 														 "<option value = \"OFF\" >" \
+														 "<option valsenue = \"OFF\" >" \
 														 "<option value = \"ON\">" \
 														 "<option value = \"SAVE\">" \
 														 "</datalist>");
-
-	enigmaIotNode->addWiFiManagerParameter (buttonPinParam);
-	enigmaIotNode->addWiFiManagerParameter (relayPinParam);
-	enigmaIotNode->addWiFiManagerParameter (bootStatusListParam);
-	enigmaIotNode->addWiFiManagerParameter (bootStatusParam);
+	EnigmaIOTNode.addWiFiManagerParameter (buttonPinParam);
+    EnigmaIOTNode.addWiFiManagerParameter (relayPinParam);
+    EnigmaIOTNode.addWiFiManagerParameter (bootStatusListParam);
+    EnigmaIOTNode.addWiFiManagerParameter (bootStatusParam);
 }
 
 void CONTROLLER_CLASS_NAME::configManagerExit (bool status) {
@@ -498,3 +515,136 @@ bool CONTROLLER_CLASS_NAME::saveConfig () {
 
 	return true;
 }
+
+#if SUPPORT_HA_DISCOVERY   
+// Repeat this method for every entity
+void CONTROLLER_CLASS_NAME::buildHASwitchDiscovery () {
+    // Select corresponding HAEntiny type
+    HASwitch* haEntity = new HASwitch ();
+
+    uint8_t* msgPackBuffer;
+
+    if (!haEntity) {
+        DEBUG_WARN ("JSON object instance does not exist");
+        return;
+    }
+
+    // *******************************
+    // Add your characteristics here
+    // There is no need to futher modify this function
+
+    haEntity->setNameSufix ("switch");
+    haEntity->setStateOn (1);
+    haEntity->setStateOff (0);
+    haEntity->setValueField ("rly");
+    haEntity->setPayloadOff ("{\"cmd\":\"rly\",\"rly\":0}");
+    haEntity->setPayloadOn ("{\"cmd\":\"rly\",\"rly\":1}");
+    // *******************************
+
+    size_t bufferLen = haEntity->measureMessage ();
+
+    msgPackBuffer = (uint8_t*)malloc (bufferLen);
+
+    size_t len = haEntity->getAnounceMessage (bufferLen, msgPackBuffer);
+
+    DEBUG_INFO ("Resulting MSG pack length: %d", len);
+
+    if (!sendHADiscovery (msgPackBuffer, len)) {
+        DEBUG_WARN ("Error sending HA discovery message");
+    }
+
+    if (haEntity) {
+        delete (haEntity);
+    }
+
+    if (msgPackBuffer) {
+        free (msgPackBuffer);
+    }
+}
+
+void CONTROLLER_CLASS_NAME::buildHALinkDiscovery () {
+    // Select corresponding HAEntiny type
+    HASwitch* haEntity = new HASwitch ();
+
+    uint8_t* msgPackBuffer;
+
+    if (!haEntity) {
+        DEBUG_WARN ("JSON object instance does not exist");
+        return;
+    }
+
+    // *******************************
+    // Add your characteristics here
+    // There is no need to futher modify this function
+
+    haEntity->setNameSufix ("link");
+    haEntity->setStateOn (1);
+    haEntity->setStateOff (0);
+    haEntity->setValueField ("link");
+    haEntity->setPayloadOff ("{\"cmd\":\"link\",\"link\":0}");
+    haEntity->setPayloadOn ("{\"cmd\":\"link\",\"link\":1}");
+    // *******************************
+
+    size_t bufferLen = haEntity->measureMessage ();
+
+    msgPackBuffer = (uint8_t*)malloc (bufferLen);
+
+    size_t len = haEntity->getAnounceMessage (bufferLen, msgPackBuffer);
+
+    DEBUG_INFO ("Resulting MSG pack length: %d", len);
+
+    if (!sendHADiscovery (msgPackBuffer, len)) {
+        DEBUG_WARN ("Error sending HA discovery message");
+    }
+
+    if (haEntity) {
+        delete (haEntity);
+    }
+
+    if (msgPackBuffer) {
+        free (msgPackBuffer);
+    }
+}
+
+void CONTROLLER_CLASS_NAME::buildHATriggerDiscovery () {
+    // Select corresponding HAEntiny type
+    HATrigger* haEntity = new HATrigger ();
+
+    uint8_t* msgPackBuffer;
+
+    if (!haEntity) {
+        DEBUG_WARN ("JSON object instance does not exist");
+        return;
+    }
+
+    // *******************************
+    // Add your characteristics here
+    // There is no need to futher modify this function
+
+    haEntity->setNameSufix ("button");
+    haEntity->setType (button_short_press);
+    haEntity->setSubtype (turn_on);
+    haEntity->setPayload ("{\"button\":4,\"push\":1}");
+    // *******************************
+
+    size_t bufferLen = haEntity->measureMessage ();
+
+    msgPackBuffer = (uint8_t*)malloc (bufferLen);
+
+    size_t len = haEntity->getAnounceMessage (bufferLen, msgPackBuffer);
+
+    DEBUG_INFO ("Resulting MSG pack length: %d", len);
+
+    if (!sendHADiscovery (msgPackBuffer, len)) {
+        DEBUG_WARN ("Error sending HA discovery message");
+    }
+
+    if (haEntity) {
+        delete (haEntity);
+    }
+
+    if (msgPackBuffer) {
+        free (msgPackBuffer);
+    }
+}
+#endif // SUPPORT_HA_DISCOVERY
