@@ -71,7 +71,7 @@ typedef struct {
 	char mqtt_pass[41]; /**< MQTT broker user password*/
 } mqttgw_config_t;
 
-constexpr auto MAX_MQTT_TOPIC_LEN = 50;
+constexpr auto MAX_MQTT_TOPIC_LEN = 100;
 constexpr auto MAX_MQTT_PLD_LEN = 2048;
 
 typedef struct {
