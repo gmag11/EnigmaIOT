@@ -130,7 +130,7 @@ void setup () {
 
     EnigmaIOTNode.begin (&Espnow_hal, NULL, NULL, true, SLEEPY == 1); // Start EnigmaIOT communication
 #if SLEEPY
-        EnigmaIOTNode.setSleepTime (SLEEP_TIME, true);
+    // EnigmaIOTNode.setSleepTime (SLEEP_TIME, true); // Optional
 #endif
 
 	uint8_t macAddress[ENIGMAIOT_ADDR_LEN];
