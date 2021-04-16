@@ -13,7 +13,7 @@
 #include "EnigmaIoTconfigAdvanced.h"
 
 // Global configuration. Physical layer settings
-static const uint8_t ENIGMAIOT_PROT_VERS[3] = { 0,9,7 }; ///< @brief EnitmaIoT Version
+static const uint8_t ENIGMAIOT_PROT_VERS[3] = { 0,9,8 }; ///< @brief EnitmaIoT Version
 static const uint8_t DEFAULT_CHANNEL = 3; ///< @brief WiFi channel to be used on ESP-NOW
 static const uint32_t FLASH_LED_TIME = 30; ///< @brief Time that led keeps on during flash in ms
 static const int RESET_PIN_DURATION = 5000; ///< @brief Number of milliseconds that reset pin has to be grounded to produce a configuration reset

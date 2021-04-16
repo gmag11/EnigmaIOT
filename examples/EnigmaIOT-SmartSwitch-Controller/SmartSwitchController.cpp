@@ -206,12 +206,12 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 }
 
 void CONTROLLER_CLASS_NAME::toggleRelay () {
-	DEBUG_WARN ("Toggle relay");
+	DEBUG_INFO ("Toggle relay");
 	config.relayStatus = !config.relayStatus;
 	digitalWrite (config.relayPin, config.relayStatus ? ON : OFF);
 	if (config.bootStatus == SAVE_RELAY_STATUS) {
 		if (saveConfig ()) {
-			DEBUG_WARN ("Config updated. Relay is %s", config.relayStatus ? "ON" : "OFF");
+			DEBUG_INFO ("Config updated. Relay is %s", config.relayStatus ? "ON" : "OFF");
 		} else {
 			DEBUG_ERROR ("Error saving config");
 		}
@@ -264,7 +264,7 @@ void CONTROLLER_CLASS_NAME::loop () {
 		if (!digitalRead (config.buttonPin)) {
 			delay (50); // debounce button push
 			if (!digitalRead (config.buttonPin)) {
-				DEBUG_WARN ("Button triggered!");
+				DEBUG_INFO ("Button triggered!");
 				pushTriggered = true; // Button is pushed
 				pushReleased = false; // Mark button as not released
 			}
@@ -289,7 +289,7 @@ void CONTROLLER_CLASS_NAME::loop () {
 
 	if (!pushReleased) {
 		if (digitalRead (config.buttonPin)) { // If button is released
-			DEBUG_WARN ("Button released");
+			DEBUG_INFO ("Button released");
 			pushReleased = true;
 		}
     }
@@ -471,14 +471,14 @@ bool CONTROLLER_CLASS_NAME::saveConfig () {
 		DEBUG_WARN ("Error opening filesystem");
 		return false;
 	}
-	DEBUG_WARN ("Filesystem opened");
+	DEBUG_INFO ("Filesystem opened");
 
     File configFile = FILESYSTEM.open (CONFIG_FILE, "w");
 	if (!configFile) {
 		DEBUG_WARN ("Failed to open config file %s for writing", CONFIG_FILE);
 		return false;
 	} else {
-		DEBUG_WARN ("%s opened for writting", CONFIG_FILE);
+		DEBUG_INFO ("%s opened for writting", CONFIG_FILE);
 	}
 
 	DynamicJsonDocument doc (512);
@@ -502,7 +502,7 @@ bool CONTROLLER_CLASS_NAME::saveConfig () {
 	char* output = (char*)malloc (jsonLen);
 	serializeJsonPretty (doc, output, jsonLen);
 
-	DEBUG_WARN ("File content:\n%s", output);
+	DEBUG_DBG ("File content:\n%s", output);
 
 	free (output);
 
@@ -511,7 +511,7 @@ bool CONTROLLER_CLASS_NAME::saveConfig () {
 
 	//configFile.write ((uint8_t*)(&mqttgw_config), sizeof (mqttgw_config));
 	configFile.close ();
-	DEBUG_WARN ("Smart Switch controller configuration saved to flash. %u bytes", size);
+	DEBUG_DBG ("Smart Switch controller configuration saved to flash. %u bytes", size);
 
 	return true;
 }
