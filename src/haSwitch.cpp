@@ -15,11 +15,11 @@ void HASwitch::setPayloadOff (const char* payload) {
 }
 
 void HASwitch::setPayloadOn (int payload) {
-    (*entityConfig)[ha_payload_on] = payload;
+    (*entityConfig)[ha_payload_on].set<int> (payload);
 }
 
 void HASwitch::setPayloadOff (int payload) {
-    (*entityConfig)[ha_payload_off] = payload;
+    (*entityConfig)[ha_payload_off].set<int> (payload);
 }
 
 void HASwitch::setStateOn (const char* payload) {
@@ -35,11 +35,11 @@ void HASwitch::setStateOff (const char* payload) {
 }
 
 void HASwitch::setStateOn (int payload) {
-    (*entityConfig)[ha_state_on] = payload;
+    (*entityConfig)[ha_state_on].set<int> (payload);
 }
 
 void HASwitch::setStateOff (int payload) {
-    (*entityConfig)[ha_state_off] = payload;
+    (*entityConfig)[ha_state_off].set<int>(payload);
 }
 
 void HASwitch::setValueField (const char* payload) {

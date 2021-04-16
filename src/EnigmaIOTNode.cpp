@@ -736,15 +736,15 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
             if (!FILESYSTEM.begin ()) {
 				DEBUG_ERROR ("Error mounting flash");
                 if (FILESYSTEM.format ()) {
-					DEBUG_INFO ("SPIFFS formatted");
+                    DEBUG_INFO ("FILESYSTEM formatted");
 				} else {
-					DEBUG_ERROR ("Error formatting SPIFFS");
+                    DEBUG_ERROR ("Error formatting FILESYSTEM");
 				}
 				delay (2500);
 				ESP.restart ();
 				//return;
 			} else {
-				DEBUG_INFO ("SPIFFS mounted");
+                DEBUG_INFO ("FILESYSTEM mounted");
 			}
 			if (loadFlashData ()) { // If data present on flash, read and continue
 				node.setStatus (UNREGISTERED);
