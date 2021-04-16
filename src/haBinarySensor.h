@@ -121,8 +121,9 @@ public:
     void setPayloadOff (int payload);
 
     /**
-     * @brief Defines a number that represents the **on state**. It will be compared to the message in the **state_topic** (see value_template for details)
-     *          https://www.home-assistant.io/integrations/binary_sensor.mqtt/#payload_on
+     * @brief Defines a template that returns a string to be compared to payload_on/payload_off or an empty string, in which case the MQTT message will be removed.
+     *          Available variables: entity_id. Remove this option when ‘payload_on’ and ‘payload_off’ are sufficient to match your payloads (i.e no pre-processing of original message is required)
+     *          https://www.home-assistant.io/integrations/binary_sensor.mqtt/#value_template
      * @param payload ON state value
      */
     void setValueField (const char* payload);

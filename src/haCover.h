@@ -59,7 +59,7 @@
  *   "value_template":"{{value_json.state}}",  // string (optional) Defines a template that can be used to extract the payload for the state_topic topic
  * }
  * 
- * Template message for binary sensor is this
+ * Template message for cover is this
  *
  *  Topic:
  *    homeassistant/cover/<node_name>_<name_suffix>/config
@@ -123,7 +123,7 @@ public:
     };
 
     /**
-     * @brief Define binary sensor class as `haCoverClass_t`
+     * @brief Define cover class as `haCoverClass_t`
      * @param devClass Device class
      */
     void setDeviceClass (haCoverClass_t devClass);

@@ -75,6 +75,9 @@ protected:
     void popCommsQueue ();
 
 public:
+    /**
+     * @brief Class constructor
+     */
     Espnow_halClass () :
         out_queue (COMMS_QUEUE_SIZE) {}
 
@@ -129,6 +132,10 @@ public:
 		return COMMS_HAL_MAX_MESSAGE_LENGTH;
     }
 
+    /**
+      * @brief Enables or disables transmission of queued messages. Used to disable communication during wifi scan
+      * @param enable `true` to enable transmission, `false` to disable it
+      */
     void enableTransmit (bool enable) override {
         DEBUG_DBG ("Send esp-now task %s", enable ? "enabled" : "disabled");
         if (enable) {
@@ -152,8 +159,14 @@ public:
         }
     } 
 
+    /**
+      * @brief Sends next message in the queue
+      */
     void handle () override;
 
+    /**
+      * @brief Static function that calls handle inside task
+      */
     static void runHandle (void* param);
 
 };

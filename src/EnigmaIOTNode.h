@@ -169,7 +169,7 @@ protected:
 	AsyncWiFiManager* wifiManager; ///< @brief Wifi configuration portal
 	onWiFiManagerExit_t notifyWiFiManagerExit; ///< @brief Function called when configuration portal exits
 	simpleEventHandler_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
-	time_t cycleStartedTime;
+	time_t cycleStartedTime; ///< @brief Used to calculate exact sleep time by substracting awake time
 	int16_t lastBroadcastMsgCounter; ///< @brief Counter for broadcast messages from gateway */
 
 	/**
@@ -790,6 +790,10 @@ public:
 		return otaRunning;
     }
 
+    /**
+     * @brief Gets Node instance
+     * @return Node instance pointer
+     */
     Node* getNode () {
         return &node;
     }
