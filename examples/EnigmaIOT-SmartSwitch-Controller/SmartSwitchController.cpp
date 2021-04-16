@@ -278,7 +278,7 @@ void CONTROLLER_CLASS_NAME::loop () {
 		json[buttonKey] = config.buttonPin;
 		json["push"] = 1;
 		if (sendJson (json)) {
-			DEBUG_WARN ("Push triggered sent");
+			DEBUG_INFO ("Push triggered sent");
 		} else {
 			DEBUG_ERROR ("Push send error");
 		}
@@ -466,7 +466,7 @@ bool CONTROLLER_CLASS_NAME::loadConfig () {
 }
 
 bool CONTROLLER_CLASS_NAME::saveConfig () {
-	// If you need to save custom configuration data do it here
+    // If you need to save custom configuration data do it here
     if (!FILESYSTEM.begin ()) {
 		DEBUG_WARN ("Error opening filesystem");
 		return false;
