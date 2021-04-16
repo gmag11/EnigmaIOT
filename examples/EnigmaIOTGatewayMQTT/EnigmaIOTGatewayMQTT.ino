@@ -394,14 +394,15 @@ void setup () {
 
 #endif
 	pinMode (LED_BUILTIN, OUTPUT);
-	digitalWrite (LED_BUILTIN, LED_OFF);
-	startConnectionFlash (100);
+	digitalWrite (LED_BUILTIN, LED_ON);
 
 #ifdef MEAS_TEMP
-	ds18b20.begin ();
-	if (ds18b20.getDeviceCount () > 0) {
-		ds18b20.getAddress (dsAddress, 0);
-		DEBUG_INFO ("DS18B20 address: %02X %02X %02X %02X %02X %02X %02X %02X",
+    ds18b20.begin ();
+    
+    DEBUG_WARN ("Found %u sensors", ds18b20.getDeviceCount ());
+    
+    if (ds18b20.getAddress (dsAddress, 0)) {
+		DEBUG_WARN ("DS18B20 address: %02X %02X %02X %02X %02X %02X %02X %02X",
 					dsAddress[0], dsAddress[1], dsAddress[2], dsAddress[3],
 					dsAddress[4], dsAddress[5], dsAddress[6], dsAddress[7]);
 	} else {
@@ -411,7 +412,9 @@ void setup () {
 	ds18b20.setResolution (DS18B20_PREC);
 #endif // MEAS_TEMP
 
-	if (!GwOutput.loadConfig ()) {
+    startConnectionFlash (100);
+    
+    if (!GwOutput.loadConfig ()) {
 		DEBUG_WARN ("Error reading config file");
 	}
 
@@ -466,9 +469,11 @@ void sendStatus (float temperature) {
 
 	DynamicJsonDocument doc (capacity);
 
-	JsonObject status = doc.createNestedObject ("status");
-	status["temp"] = temperature;
-	status["nodes"] = EnigmaIOTGateway.getActiveNodesNumber ();
+    JsonObject status = doc.createNestedObject ("status");
+    if (temperature > -100) {
+        status["temp"] = temperature;
+    }
+    status["nodes"] = EnigmaIOTGateway.getActiveNodesNumber ();
 	status["mem"] = ESP.getFreeHeap ();
 
 	len = measureJson (doc) + 1;
@@ -491,10 +496,13 @@ void loop () {
 
 	if (ds18b20.validAddress (dsAddress)) {
         if ((millis () - lastTempTime > statusPeriod && !tempRequested) || !lastTempTime) {
-			ds18b20.requestTemperatures ();
-			DEBUG_WARN ("Temperature requested");
-			lastTempTime = millis ();
-			tempRequested = true;
+            if (ds18b20.requestTemperaturesByIndex (0)) {
+                DEBUG_INFO ("Temperature requested");
+                lastTempTime = millis ();
+                tempRequested = true;
+            } else {
+                DEBUG_WARN ("Temperature request error");
+            }
 		}
 		if (tempRequested) {
 			if (ds18b20.isConversionComplete ()) {
