@@ -4,7 +4,7 @@
 
 void HATrigger::setPayload (const char* payload) {
     if (payload) {
-        (*entityConfig)[ha_payload_on] = payload;
+        (*entityConfig)[ha_payload] = payload;
     }
 }
 

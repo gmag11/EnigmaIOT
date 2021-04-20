@@ -94,13 +94,15 @@ protected:
         return sendJson (json);
     }
 
+#if SUPPORT_HA_DISCOVERY    
     /**
      * @brief Sends a HA discovery message for a single entity. Add as many functions like this
      * as number of entities you need to create
      */
     void buildHADiscovery ();
+#endif
     
-	// ------------------------------------------------------------
+    // ------------------------------------------------------------
 	// You may add additional method definitions that you need here
 	// ------------------------------------------------------------
 
