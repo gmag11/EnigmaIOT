@@ -29,7 +29,7 @@ static const size_t MAX_MQTT_QUEUE_SIZE = 3; ///< @brief Maximum number of MQTT 
 static const int RATE_AVE_ORDER = 5; ///< @brief Message rate filter order
 static const int MAX_INPUT_QUEUE_SIZE = 3; ///< @brief Input queue size for EnigmaIOT messages. Acts as a buffer to be able to handle messages during high load
 #ifndef NUM_NODES
-static const int NUM_NODES = 20; ///< @brief Maximum number of nodes that this gateway can handle
+static const int NUM_NODES = 35; ///< @brief Maximum number of nodes that this gateway can handle
 #endif //NUM_NODES
 #ifndef CONNECT_TO_WIFI_AP
 #define CONNECT_TO_WIFI_AP 1 ///< @brief In projects where gateway should not be connected to WiFi (for instance a data logger to SD) it may be useful to disable WiFi setting this to 0. Set it to 1 otherwise
