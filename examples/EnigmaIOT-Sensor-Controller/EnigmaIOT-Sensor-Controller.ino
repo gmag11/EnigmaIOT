@@ -132,7 +132,10 @@ void setup () {
 	EnigmaIOTNode.onDataRx (processRxData); // Configure incoming data handler
 	EnigmaIOTNode.enableClockSync (false); // Set to true if you need this node to get its clock syncronized with gateway
 	EnigmaIOTNode.onWiFiManagerStarted (wifiManagerStarted);
-	EnigmaIOTNode.onWiFiManagerExit (wifiManagerExit);
+    EnigmaIOTNode.onWiFiManagerExit (wifiManagerExit);
+#if !SLEEPY 
+    EnigmaIOTNode.enableBroadcast ();
+#endif
 
 	if (!controller->loadConfig ()) { // Trigger custom configuration loading
 		DEBUG_WARN ("Error reading config file");
