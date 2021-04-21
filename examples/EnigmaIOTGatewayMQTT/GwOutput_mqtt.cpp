@@ -535,10 +535,10 @@ void GwOutput_MQTT::popMQTTqueue () {
 }
 
 #if SUPPORT_HA_DISCOVERY
-bool GwOutput_MQTT::rawMsgSend (const char* topic, char* payload, size_t len) {
+bool GwOutput_MQTT::rawMsgSend (const char* topic, char* payload, size_t len, bool retain) {
     bool result;
     
-    if ((result = addMQTTqueue (topic, payload, len))) {
+    if ((result = addMQTTqueue (topic, payload, len, retain))) {
         DEBUG_INFO ("MQTT queued %s. Length %d", topic, len);
     } else {
         DEBUG_WARN ("Error queuing MQTT %s", topic);

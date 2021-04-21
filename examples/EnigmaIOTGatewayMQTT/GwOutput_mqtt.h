@@ -238,9 +238,10 @@ public:
       * @param topic MQTT topic
       * @param payload Message data buffer
       * @param len Data buffer length
+      * @param retain MQTT retain parameter
       * @return Returns `true` if sending was successful. `false` otherwise
       */
-    bool rawMsgSend (const char* topic, char* payload, size_t len);
+    bool rawMsgSend (const char* topic, char* payload, size_t len, bool retain);
 #endif
     
 	 /**

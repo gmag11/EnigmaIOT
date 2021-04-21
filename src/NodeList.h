@@ -65,10 +65,10 @@ typedef enum control_message_type {
     RESTART_NODE = 0x09,
     RESTART_CONFIRM = 0x89,
     BRCAST_KEY = 0x10,
-	  OTA = 0xEF,
-	  OTA_ANS = 0xFF,
-	  USERDATA_GET = 0x00,
-	  USERDATA_SET = 0x20,
+	OTA = 0xEF,
+	OTA_ANS = 0xFF,
+	USERDATA_GET = 0x00,
+	USERDATA_SET = 0x20,
     INVALID = 0xF0
 	//USERDATA_ANS = 0x90
 } control_message_type_t;

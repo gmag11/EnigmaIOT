@@ -206,7 +206,7 @@ void doRestart () {
 #if SUPPORT_HA_DISCOVERY
 void processHADiscovery (const char* topic, char* message, size_t len) {
     DEBUG_INFO ("About to process HA discovery. Len: %d - %s --> %.*s", len, topic, len, message);
-    GwOutput.rawMsgSend (topic, message, len);
+    GwOutput.rawMsgSend (topic, message, len, true);
 }
 #endif
 
