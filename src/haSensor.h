@@ -77,7 +77,7 @@ public:
      * @brief Sensor constructor
      */
     HASensor () {
-        capacity = JSON_OBJECT_SIZE (10) + 250;
+        capacity = 1024; //JSON_OBJECT_SIZE (15) + 512;
         entityConfig = new DynamicJsonDocument (capacity);
         deviceType = SENSOR;
         (*entityConfig)[ha_device_type] = deviceType;
@@ -105,12 +105,20 @@ public:
     void setUnitOfMeasurement (const char* payload);
 
     /**
-     * @brief Defines a json key that defines sensor value
+     * @brief Defines a json key that defines sensor value. When setting this, `setValueTemplate ()` should not be called
      *          https://www.home-assistant.io/integrations/sensor.mqtt/#value_template
-     * @param payload ON state value
+     * @param payload json key
      */
     void setValueField (const char* payload);
 
+    /**
+     * @brief Defines a template that defines sensor value. When setting this you should not call `setValueField ()`
+     *          https://www.home-assistant.io/integrations/sensor.mqtt/#value_template
+     * @param payload Value template definition
+     */
+    void setValueTemplate (const char* payload);
+
+    
      /**
      * @brief Allows Gateway to get Home Assistant discovery message using Sensor template
      * @param buffer Buffer to hold message string

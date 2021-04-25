@@ -27,6 +27,12 @@ void HASensor::setValueField (const char* payload) {
     }
 }
 
+void HASensor::setValueTemplate (const char* payload) {
+    if (payload) {
+        (*entityConfig)[ha_value_template] = payload;
+    }
+}
+
 /* Discovery JSON template for binary sensor
 {
     "dev_cla":<device_class>,
@@ -79,7 +85,11 @@ size_t HASensor::getDiscoveryJson (char* buffer, size_t buflen, const char* node
     if (inputJSON->containsKey (ha_unit_of_measurement)) {
         outputJSON["unit_of_measurement"] = (*inputJSON)[ha_unit_of_measurement];
     }
-    if (inputJSON->containsKey (ha_value_key)) {
+    if (inputJSON->containsKey (ha_value_template)) {
+        String templ = ((*inputJSON)[ha_value_template]).as<String> ();
+        templ.replace ("***", nodeName);
+        outputJSON["value_template"].set<String> (templ);
+    } else if (inputJSON->containsKey (ha_value_key)) {
         outputJSON["value_template"] = String ("{{value_json.") + (*inputJSON)[ha_value_key].as<String> () + String ("}}");
     } else {
         outputJSON["value_template"] = "{{value_json.value}}";

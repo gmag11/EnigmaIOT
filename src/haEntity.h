@@ -22,6 +22,7 @@ constexpr auto ha_device_class = "dev_cla";
 constexpr auto ha_payload_on = "pl_on";
 constexpr auto ha_payload_off = "pl_off";
 constexpr auto ha_value_key = "val";
+constexpr auto ha_value_template = "val_tpl";
 constexpr auto ha_expiration = "exp_aft";
 constexpr auto ha_payload_open = "pl_open";
 constexpr auto ha_payload_close = "pl_cls";

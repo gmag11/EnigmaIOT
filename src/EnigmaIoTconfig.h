@@ -52,7 +52,9 @@ static const uint8_t COMM_ERRORS_BEFORE_SCAN = 2; ///< @brief Node will search f
 #define ENABLE_WEB_API 1 ///< @brief Enable Web API support on gateway
 
 //Debug
+#ifndef DEBUG_ESP_PORT
 #define DEBUG_ESP_PORT Serial ///< @brief Stream to output debug info. It will normally be `Serial`
+#endif // DEBUG_ESP_PORT
 #ifndef DEBUG_LEVEL
 // DON'T ENABLE DEBUG IF YOU CAN ONLY DO OTA UPDATE. YOU MAY BE UNABLE TO DO OTA UPDATE ANYMORE UNTIL YOU FLASH THE NODE THROUGH WIRE
 #define DEBUG_LEVEL WARN ///< @brief Possible values VERBOSE, DBG, INFO, WARN, ERROR, NONE
