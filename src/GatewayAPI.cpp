@@ -159,14 +159,15 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
 			DEBUG_INFO ("Node %d is registered", node->getNodeId ());
 			resultCode = 200;
 			time_t currentMillis = millis ();
-			uint8_t* version = node->getVersion ();
-            snprintf (nodeInfo, len, "{\"version\":\"%d.%d.%d\",\"node_id\":%d,\"address\":\"" MACSTR "\","\
-                      "\"Name\":\"%s\",\"keyValidSince\":%ld,\"lastMessageTime\":%ld,\"sleepy\":%s,"\
-                      "\"Broadcast\":%s,\"TimeSync\":%s,\"rssi\":%d,\"packetsHour\":%f,\"per\":%f}",
+            uint8_t* version = node->getVersion ();
+            size_t index;
+            index = snprintf (nodeInfo, len,
+                              "{\"version\":\"%d.%d.%d\",\"node_id\":%d,\"address\":\"" MACSTR "\","\
+                              "\"keyValidSince\":%ld,\"lastMessageTime\":%ld,\"sleepy\":%s,"\
+                              "\"Broadcast\":%s,\"TimeSync\":%s,\"rssi\":%d,\"packetsHour\":%f,\"per\":%f",
 					  version[0], version[1], version[2],
 					  node->getNodeId (),
 					  MAC2STR (node->getMacAddress ()),
-					  node->getNodeName (),
 					  currentMillis - node->getKeyValidFrom (),
 					  currentMillis - node->getLastMessageTime (),
 					  node->getSleepy () ? "True" : "False",
@@ -175,8 +176,13 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
 					  node->getRSSI (),
 					  node->packetsHour,
 					  node->per
-			);
-			DEBUG_DBG ("NodeInfo: %s", nodeInfo);
+            );
+            char* nodeName = node->getNodeName ();
+            if (nodeName && strlen (nodeName)) {
+                index = index + snprintf (nodeInfo + index, len - index, "\"Name\":\"%s\"", nodeName);
+            }
+            snprintf (nodeInfo + index, len - index, "}");
+            DEBUG_DBG ("NodeInfo: %s", nodeInfo);
 			return nodeInfo;
 		} else {
 			DEBUG_INFO ("Node %d is not registered", node->getNodeId ());
@@ -335,11 +341,15 @@ void GatewayAPI::getNodes (AsyncWebServerRequest* request) {
 		}
 		if (node) {
 			DEBUG_DBG ("Got node. NodeId -> %u", node->getNodeId ());
-			response->printf ("{\"nodeId\":%u,\"address\":\"" MACSTR "\",\"name\":\"%s\"}",
+			response->printf ("{\"nodeId\":%u,\"address\":\"" MACSTR "\"",
 							  node->getNodeId (),
-							  MAC2STR (node->getMacAddress ()),
-							  node->getNodeName ());
-		}
+                              MAC2STR (node->getMacAddress ()));
+            char* nodeName = node->getNodeName ();
+            if (nodeName && strlen (nodeName)) {
+                response->printf (", \"name\":\"%s\"", node->getNodeName ());            
+            }
+            response->print ("}");
+        }
 	} while (node != NULL);
 	response->print ("]}");
 	request->send (response);
