@@ -145,10 +145,12 @@ void CONTROLLER_CLASS_NAME::buildHADiscovery () {
     // Add your characteristics here
     // There is no need to futher modify this function
 
+    haEntity->setNameSufix ("temp");
     haEntity->setDeviceClass (sensor_temperature);
     haEntity->setExpireTime (3600);
     haEntity->setUnitOfMeasurement ("ºC");
     haEntity->setValueField ("temp");
+    //haEntity->setValueTemplate ("{%if value_json.dp==2-%}{{value_json.temp}}{%-else-%}{{states('sensor.***_temp')}}{%-endif%}");
 
     // *******************************
 
