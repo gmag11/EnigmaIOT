@@ -179,7 +179,7 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
             );
             char* nodeName = node->getNodeName ();
             if (nodeName && strlen (nodeName)) {
-                index = index + snprintf (nodeInfo + index, len - index, "\"Name\":\"%s\"", nodeName);
+                index = index + snprintf (nodeInfo + index, len - index, ",\"Name\":\"%s\"", nodeName);
             }
             snprintf (nodeInfo + index, len - index, "}");
             DEBUG_DBG ("NodeInfo: %s", nodeInfo);
