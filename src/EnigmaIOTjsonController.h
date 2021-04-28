@@ -90,6 +90,11 @@ public:
 #endif // SUPPORT_HA_DISCOVERY
     }
 
+    /**
+     * @brief Used to notify controller that it is unregistered on EnigmaIOT network
+     */
+    virtual void disconnectInform (nodeInvalidateReason_t reason){}
+
 	/**
 	 * @brief Called when wifi manager starts config portal
 	 */
