@@ -749,7 +749,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 				DEBUG_DBG ("Flash data loaded");
 				uint8_t prevGwAddr[ENIGMAIOT_ADDR_LEN];
 				memcpy (prevGwAddr, rtcmem_data.gateway, 6);
-				if (searchForGateway (&rtcmem_data), true) {
+				if (searchForGateway (&rtcmem_data, true)) {
 					//DEBUG_DBG ("Found gateway. Storing");
 					rtcmem_data.commErrors = 0;
 				}
@@ -758,7 +758,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 				bool result = configWiFiManager (&rtcmem_data);
 				if (result) {
 					DEBUG_DBG ("Got configuration. Searching for Gateway");
-					if (!searchForGateway (&rtcmem_data), true) {
+					if (!searchForGateway (&rtcmem_data, true)) {
 						DEBUG_DBG ("Found EnigmaIOT Gateway. Storing configuration");
 						if (!saveFlashData (true)) {
 							DEBUG_ERROR ("Error saving data on flash");
@@ -1150,7 +1150,7 @@ void EnigmaIOTNodeClass::handle () {
 		if (!gatewaySearchStarted) {
 			gatewaySearchStarted = true;
 
-			if (searchForGateway (&rtcmem_data), true) {
+			if (searchForGateway (&rtcmem_data, true)) {
 				rtcmem_data.commErrors = 0;
 			}
 		}
