@@ -44,7 +44,9 @@ static const time_t IDENTIFY_TIMEOUT = 10000; ///< @brief How long LED will be f
 static const uint32_t TIME_SYNC_PERIOD = 30000; ///< @brief Period of clock synchronization request
 #endif // TIME_SYNC_PERIOD
 static const unsigned int QUICK_SYNC_TIME = 5000; ///< @brief Period of clock synchronization request in case of resync is needed 
+#ifndef PRE_REG_DELAY
 static const uint32_t PRE_REG_DELAY = 5000; ///< @brief Time to wait before registration so that other nodes have time to communicate. Real delay is a random lower than this value.
+#endif // PRE_REG_DELAY
 static const uint32_t POST_REG_DELAY = 1500; ///< @brief Time to wait before sending data after registration so that other nodes have time to finish their registration. Real delay is a random lower than this value.
 static const uint8_t COMM_ERRORS_BEFORE_SCAN = 2; ///< @brief Node will search for a gateway if this number of communication errors have happened.
 

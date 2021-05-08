@@ -90,8 +90,9 @@ void CONTROLLER_CLASS_NAME::loop () {
     if (!tempSent && enigmaIotNode->isRegistered()) {
         if (sendTemperature (tempC)) {
             tempSent = true;
-        } else {
         }
+        // else {
+        //}
     }
     
         //const size_t capacity = JSON_OBJECT_SIZE (4);

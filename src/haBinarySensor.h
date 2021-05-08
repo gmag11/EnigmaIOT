@@ -123,10 +123,18 @@ public:
     /**
      * @brief Defines a template that returns a string to be compared to payload_on/payload_off or an empty string, in which case the MQTT message will be removed.
      *          Available variables: entity_id. Remove this option when ‘payload_on’ and ‘payload_off’ are sufficient to match your payloads (i.e no pre-processing of original message is required)
+     *          When setting this, `setValueTemplate ()` should not be called
      *          https://www.home-assistant.io/integrations/binary_sensor.mqtt/#value_template
      * @param payload ON state value
      */
     void setValueField (const char* payload);
+
+    /**
+     * @brief Defines a template that defines binary sensor value. When setting this you should not call `setValueField ()`
+     *          https://www.home-assistant.io/integrations/binary_sensor.mqtt/#value_template
+     * @param payload Value template definition
+     */
+    void setValueTemplate (const char* payload);
 
     /**
      * @brief For sensors that only send on state updates (like PIRs), this sets a delay in seconds after which the sensor’s state will be updated back to off.

@@ -35,6 +35,12 @@ void HABinarySensor::setValueField (const char* payload) {
     }
 }
 
+void HABinarySensor::setValueTemplate (const char* payload) {
+    if (payload) {
+        (*entityConfig)[ha_value_template] = payload;
+    }
+}
+
 void HABinarySensor::setOffDelay (uint payload) {
     (*entityConfig)[ha_off_delay] = payload;
 }
@@ -92,8 +98,14 @@ size_t HABinarySensor::getDiscoveryJson (char* buffer, size_t buflen, const char
     if (inputJSON->containsKey (ha_payload_off)) {
         outputJSON["payload_off"] = (*inputJSON)[ha_payload_off];
     }
-    if (inputJSON->containsKey (ha_value_key) && (*inputJSON)[ha_value_key].is<String> ()) {
+    if (inputJSON->containsKey (ha_value_template)) {
+        String templ = ((*inputJSON)[ha_value_template]).as<String> ();
+        templ.replace ("***", nodeName);
+        outputJSON["value_template"].set<String> (templ);
+    } else if (inputJSON->containsKey (ha_value_key) && (*inputJSON)[ha_value_key].is<String> ()) {
         outputJSON["value_template"] = String ("{{value_json.") + (*inputJSON)[ha_value_key].as<String> () + String ("}}");
+    } else {
+        outputJSON["value_template"] = "{{value_json.value}}";
     }
     if (inputJSON->containsKey (ha_expiration) && (*inputJSON)[ha_expiration].is<int> ()) {
         outputJSON["expire_after"] = (*inputJSON)[ha_expiration].as<int> ();
