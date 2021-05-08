@@ -146,7 +146,7 @@ const char* RTC_DATA_FILE = "/context.bin";
 bool EnigmaIOTNodeClass::loadRTCData () {
     //FILESYSTEM.remove (RTC_DATA_FILE); // Only for testing
 	//bool file_correct = false;
-	time_t start_load = millis ();
+	clock_t start_load = millis ();
     FILESYSTEM.begin ();
 
 	rtcmem_data_t context;
@@ -213,7 +213,7 @@ bool EnigmaIOTNodeClass::loadRTCData () {
 		return false;
 	}
 
-	DEBUG_DBG ("Load process finished in %d ms", millis () - start_load);
+	DEBUG_DBG ("Load process finished in %lu ms", millis () - start_load);
 
 	return true;
 }
@@ -405,7 +405,7 @@ bool EnigmaIOTNodeClass::saveFlashData (bool fsOpen) {
 
 #if USE_FLASH_INSTEAD_RTC
 bool EnigmaIOTNodeClass::saveRTCData () {
-	time_t start_save = millis ();
+	clock_t start_save = millis ();
 	if (configCleared)
 		return false;
 	rtcmem_data.crc32 = calculateCRC32 ((uint8_t*)rtcmem_data.nodeKey, sizeof (rtcmem_data) - sizeof (uint32_t));
@@ -423,7 +423,7 @@ bool EnigmaIOTNodeClass::saveRTCData () {
 #if DEBUG_LEVEL >= VERBOSE
 	dumpRtcData (&rtcmem_data);
 #endif
-	DEBUG_DBG ("Save process finished in %d ms", millis () - start_save);
+	DEBUG_DBG ("Save process finished in %lu ms", millis () - start_save);
 
 	return true;
 }
@@ -774,7 +774,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
                         DEBUG_WARN ("No gateway found. Go to sleep for 120 seconds");
                         ESP.deepSleep (120);
                     } else {
-                        DEBUG_WARN ("No gateway found. REstarting");
+                        DEBUG_WARN ("No gateway found. Restarting");
                         ESP.restart ();
                     }
                 } else { // Configuration error
