@@ -760,7 +760,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 				bool result = configWiFiManager (&rtcmem_data);
 				if (result) {
 					DEBUG_DBG ("Got configuration. Searching for Gateway");
-					if (!searchForGateway (&rtcmem_data, true)) {
+					if (searchForGateway (&rtcmem_data, true)) {
 						DEBUG_DBG ("Found EnigmaIOT Gateway. Storing configuration");
 						if (!saveFlashData (true)) {
 							DEBUG_ERROR ("Error saving data on flash");
@@ -770,8 +770,14 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 						return;
 					}
                     FILESYSTEM.end ();
-					ESP.restart ();
-				} else { // Configuration error
+                    if (node.getSleepy ()) {
+                        DEBUG_WARN ("No gateway found. Go to sleep for 120 seconds");
+                        ESP.deepSleep (120);
+                    } else {
+                        DEBUG_WARN ("No gateway found. REstarting");
+                        ESP.restart ();
+                    }
+                } else { // Configuration error
 					DEBUG_ERROR ("Configuration error. Restarting");
 					ESP.restart ();
 				}
