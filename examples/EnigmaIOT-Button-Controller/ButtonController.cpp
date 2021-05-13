@@ -28,12 +28,19 @@ bool CONTROLLER_CLASS_NAME::sendCommandResp (const char* command, bool result) {
 	return true;
 }
 
+void CONTROLLER_CLASS_NAME::connectInform () {
+
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
+
+    EnigmaIOTjsonController::connectInform ();
+    // Add more actions here if needed
+    // Keep this method duration short
+}
+
 void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	enigmaIotNode = node;
 	// You do node setup here. Use it as it was the normal setup() Arduino function
     pinMode (BUTTON_PIN, INPUT_PULLUP);
-
-    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
 
 	// Send a 'hello' message when initalizing is finished
 	sendStartAnouncement ();

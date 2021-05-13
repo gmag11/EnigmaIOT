@@ -173,6 +173,18 @@ bool CONTROLLER_CLASS_NAME::sendCommandResp (const char* command, bool result) {
 	return true;
 }
 
+void CONTROLLER_CLASS_NAME::connectInform () {
+
+#if SUPPORT_HA_DISCOVERY    
+    // Register every HAEntity discovery function here. As many as you need
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHASwitchDiscovery, this));
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHATriggerDiscovery, this));
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHALinkDiscovery, this));
+#endif
+
+    EnigmaIOTjsonController::connectInform ();
+}
+
 void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	enigmaIotNode = node;
 
@@ -190,13 +202,6 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	// 	DEBUG_WARN ("Error sending relay status");
 	// }
 
-#if SUPPORT_HA_DISCOVERY    
-    // Register every HAEntity discovery function here. As many as you need
-    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHASwitchDiscovery, this));
-    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHATriggerDiscovery, this));
-    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHALinkDiscovery, this));
-#endif
-    
     // Send a 'hello' message when initalizing is finished
 	sendStartAnouncement ();
 

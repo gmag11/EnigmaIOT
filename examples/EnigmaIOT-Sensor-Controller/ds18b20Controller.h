@@ -67,9 +67,7 @@ public:
 	 */
 	bool loadConfig ();
 
-	void connectInform () {
-        EnigmaIOTjsonController::connectInform ();
-    }
+    void connectInform ();
 
 protected:
 	/**

@@ -27,6 +27,15 @@ bool CONTROLLER_CLASS_NAME::sendCommandResp (const char* command, bool result) {
 	return true;
 }
 
+void CONTROLLER_CLASS_NAME::connectInform () {
+
+#if SUPPORT_HA_DISCOVERY    
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
+#endif
+
+    EnigmaIOTjsonController::connectInform ();
+}
+
 void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	enigmaIotNode = node;
 	// You do node setup here. Use it as it was the normal setup() Arduino function
@@ -34,10 +43,6 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	// Send a 'hello' message when initalizing is finished
 	// Not needed as this will reboot after deep sleep
 	// sendStartAnouncement (); 
-
-#if SUPPORT_HA_DISCOVERY    
-    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
-#endif
 
 	DEBUG_DBG ("Finish begin");
 

@@ -27,6 +27,16 @@ bool CONTROLLER_CLASS_NAME::sendCommandResp (const char* command, bool result) {
 	return true;
 }
 
+void CONTROLLER_CLASS_NAME::connectInform () {
+
+#if SUPPORT_HA_DISCOVERY    
+// Register every HAEntity discovery function here. As many as you need
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
+#endif
+
+    EnigmaIOTjsonController::connectInform ();
+}
+
 void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 	enigmaIotNode = node;
 
@@ -37,11 +47,6 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
         sendStartAnouncement ();  // Disable this if node is sleepy
     }
 
-#if SUPPORT_HA_DISCOVERY    
-    // Register every HAEntity discovery function here. As many as you need
-    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHADiscovery, this));
-#endif
-    
 	DEBUG_DBG ("Finish begin");
 
 	// If your node should sleep after sending data do all remaining tasks here

@@ -77,9 +77,7 @@ public:
     /**
      * @brief Executed as soon as node is registered on EnigmaIOT network
      */
-    void connectInform () {
-        EnigmaIOTjsonController::connectInform ();
-	}
+    void connectInform ();
 
 protected:
 	/**
