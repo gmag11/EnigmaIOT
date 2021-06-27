@@ -78,13 +78,14 @@ public:
 	/**
 	 * @brief Used to notify controller that it is registered on EnigmaIOT network
 	 */
-    void connectInform () {
+    virtual void connectInform () {
         DEBUG_INFO ("Connect inform");
         sendStartAnouncement ();
 #if SUPPORT_HA_DISCOVERY
         if (enigmaIotNode->getNode ()->getSleepy ()) {
             sendHAdelay = HA_FIRST_DISCOVERY_DELAY_SLEEPY;
         }
+        DEBUG_INFO ("Enable HA Discovery");
         doSendHAdiscovery = true;
         sendHAtime = millis ();
 #endif // SUPPORT_HA_DISCOVERY
@@ -120,9 +121,9 @@ public:
             if (haCallQueue.size ()) {
                 hacall = haCallQueue.front ();
             }
-            DEBUG_DBG ("haCallQueue size is %d", haCallQueue.size ());
+            DEBUG_INFO ("haCallQueue size is %d", haCallQueue.size ());
             if (hacall) {
-                DEBUG_DBG ("Execute hacall");
+                DEBUG_INFO ("Execute hacall");
                 hacall ();
                 haCallQueue.pop ();
                 sendHAtime = millis ();
@@ -134,7 +135,8 @@ public:
             } else {
                 doSendHAdiscovery = false;
             }
-            DEBUG_INFO (" Exit call HA discovery");
+            DEBUG_INFO (" Exit call HA discovery. Delay = %d. doSendHAdiscovery = %s",
+                        sendHAdelay, doSendHAdiscovery ? "true" : "false");
         }
     }
 #endif
