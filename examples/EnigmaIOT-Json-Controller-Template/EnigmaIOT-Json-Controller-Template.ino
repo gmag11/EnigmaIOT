@@ -33,11 +33,13 @@
 #endif
 #include <ArduinoJson.h>
 
+#ifndef SLEEPY
 #define SLEEPY 0 // Set it to 1 if your node should sleep after sending data
+#endif // SLEEPY
 
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 2 // ESP32 boards normally have a LED in GPIO3 or GPIO5
-#endif // !LED_BUILTIN
+#endif // LED_BUILTIN
 
 // If you do need serial for your project you must disable serial debug by commenting next line
 #define USE_SERIAL // Don't forget to set DEBUG_LEVEL to NONE if serial is disabled
