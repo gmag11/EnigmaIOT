@@ -138,7 +138,20 @@ void loop () {
 }
 ```
 
+If you use [PlatformIO](https://platformio.org) IDE you may use this platformio.ini
 
+```ini
+[env:d1_mini_pro]
+platform = espressif8266
+board = d1_mini_pro
+framework = arduino
+lib_deps =
+   ESPAsyncWiFiManager
+   ESP Async WebServer
+   ArduinoJson
+   https://github.com/gmag11/CryptoArduino.git
+   https://github.com/gmag11/EnigmaIOT.git
+```
 
 ### First node configuration
 
@@ -193,60 +206,129 @@ If you need to build a node you may start coding from scratch as it is shown bef
 - WiFi Manager custom parameters
 - Integrated [fail safe mode](https://github.com/gmag11/FailSafeMode)
 
-### Designing sensor integration
+### Designing sensor algorithm
 
 JSON Controller wraps EnigmaIOT node with additional features. It is implemented as a cpp and h files that contains `setup ()` and `loop ()` functions. You should use them instead main setup and loop.
 
 First step I recommend is coding a simple sketch that deals with your hardware (sensors, actuators) as a regular Arduino program. To illustrate this I will use EnigmaIOT-Sensor-Controller example. It is a node that uses a DS18B20 temperature sensor that reads temperature value, sends it and then sleeps until next measurement.
 
-So first code could look like this
+So starting code could look like this
 
 ```c++
 #include <DallasTemperature.h>
 
-#define ONE_WIRE_BUS 4
+#define ONE_WIRE_BUS 4 // I/O pin used to communicate with sensor
 
+//----------------- GLOBAL VARIABLES -----------------
 OneWire* oneWire;
 DallasTemperature* sensors;
 DeviceAddress insideThermometer;
-bool tempSent = false;
+bool tempSent = false; // True when
 float tempC;
+//----------------- GLOBAL VARIABLES -----------------
 
-bool sendTemperature (float temp) {
+bool sendTemperature (float temp) { // Mock function. This will later be adapted to send an EnigmaIOT message
     Serial.printf ("Temperarure: %f\n", temp);
     return true;
 }
 
 void setup () {
-    Serial.begin (115200);
+    Serial.begin (115200); // Only for this test
     
+    //----------------- USER CODE -----------------
     oneWire = new OneWire (ONE_WIRE_BUS);
 	sensors = new DallasTemperature (oneWire);
 	sensors->begin ();
 	sensors->setWaitForConversion (false);
 	sensors->requestTemperatures ();
     
-    time_t start = millis ();
+    time_t start = millis (); 
     
     while (!sensors->isConversionComplete ()) {
 		delay (0);
 	}
 	Serial.printf ("Conversion completed in %lld ms\n", millis () - start);
     tempC = sensors->getTempCByIndex (0);
+    //----------------- USER CODE END -------------
 }
 
 void loop () {
-    if (!tempSent) {
-        if (sendTemperature (tempC)) {
+    //----------------- USER CODE -----------------
+    if (!tempSent) { 
+        if (sendTemperature (tempC)) { // First time this will be executed
             tempSent = true;
         }
     }
-    ESP.deepSleep(10000000);
+    //----------------- USER CODE END -------------
+    else {
+        ESP.deepSleep(10000); // Next time deep sleep mode will be requested. Only for testing
+    }
 }
 ```
 
+When this code has the functionality that you need and it is tested you can follow with integration on EnigmaIOT JSON Controller code.
 
+### Code integration into EnigmaIOT
 
+To develop a new JSONController node you need to use [JSONController template](https://github.com/gmag11/EnigmaIOT/tree/dev/examples/EnigmaIOT-Json-Controller-Template) example as starting point.
 
+I will follow the process to get to the point implemented in [**EnigmaIOT-Sensor-Controller**](https://github.com/gmag11/EnigmaIOT/tree/dev/examples/EnigmaIOT-Sensor-Controller).
 
-To develop a new JSONController node you need to use JSONController template example as starting point.
+You need to follow these steps:
+
+#### Rename JSON Controller files and class
+
+   It is recommended to rename cpp and h files so that its name is coherent with the function they have. Following this, `BasicController.h/cpp`  will become `ds18b20Controller.h/cpp`. Then edit `CONTROLLER_CLASS_NAME` and `CONTROLLER_NAME` on `ds18b20Controller.h` like this:
+
+```c++
+#define CONTROLLER_CLASS_NAME ds18b20Controller
+static const char* CONTROLLER_NAME = "DS18B20 controller";
+```
+
+and two first lines to:
+
+```c++
+#ifndef _DS18B20CONTROLLER_h
+#define _DS18B20CONTROLLER_h
+```
+
+#### Copy global variables as class parameters
+
+You need to add all global variables defined in Arduino code as JSON Controller class parameters in `ds18b20Controller.h`.
+
+```c++
+class CONTROLLER_CLASS_NAME : EnigmaIOTjsonController {
+protected:
+	// --------------------------------------------------
+	// add all parameters that your project needs here
+	// --------------------------------------------------
+	OneWire* oneWire;
+	DallasTemperature* sensors;
+    DeviceAddress insideThermometer;
+    bool tempSent = false;
+    float tempC;a
+```
+
+#### Add custom function as class methods
+
+In the same way you should add custom functions like `sendTemperature ()` as class methods. You need to define them in `ds18b20Controller.h`
+
+```c++
+    // ------------------------------------------------------------
+	// You may add additional method definitions that you need here
+	// ------------------------------------------------------------
+
+    bool sendTemperature (float temp);
+```
+
+#### Include Home Assistant integration
+
+If you like to integrate your node into HomeAssistant you may include the corresponding header file.
+
+```c++
+#if SUPPORT_HA_DISCOVERY    
+#include <haSensor.h>
+#endif
+```
+
+You need to choose the file to include according node function. As this will be a sensor node we should use `haSensor.h`
