@@ -64,11 +64,13 @@ void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
 #endif
     time_t start = millis ();
 
-	// Send a 'hello' message when initalizing is finished
-    if (!(enigmaIotNode->getNode ()->getSleepy ())) {
-        sendStartAnouncement ();  // Disable this if node is sleepy
+    // Send a 'hello' message when initalizing is finished
+    if (!enigmaIotNode->getNode ()->getSleepy ()) {
+        if (!(enigmaIotNode->getNode ()->getSleepy ())) {
+            sendStartAnouncement ();  // Disable this if node is sleepy
+        }
     }
-    
+
 #if !TEST
 	while (!sensors->isConversionComplete ()) {
 		delay (0);

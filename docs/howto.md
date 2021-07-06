@@ -261,7 +261,7 @@ void loop () {
     }
     //----------------- USER CODE END -------------
     else {
-        ESP.deepSleep(10000); // Next time deep sleep mode will be requested. Only for testing
+        ESP.deepSleep(10000); // Next time deep sleep mode will be requested automatically. Only for testing
     }
 }
 ```
@@ -306,8 +306,21 @@ protected:
 	DallasTemperature* sensors;
     DeviceAddress insideThermometer;
     bool tempSent = false;
-    float tempC;a
+    float tempC;
 ```
+
+#### Add custom libraries
+
+If your code needs custom libraries you may add them on JSON controller header file (`ds18b20Controller.h`)
+
+```c++
+// --------------------------------------------------
+// You may define data structures and constants here
+// --------------------------------------------------
+#include <DallasTemperature.h>
+```
+
+
 
 #### Add custom function as class methods
 
@@ -331,4 +344,97 @@ If you like to integrate your node into HomeAssistant you may include the corres
 #endif
 ```
 
-You need to choose the file to include according node function. As this will be a sensor node we should use `haSensor.h`
+You need to choose the file to include according node function. As this will be a sensor node we should use `haSensor.h`. If your node uses different profiles you can include several HA integration header files. For instance, a smart metering plug is a sensor (Power measurement) and binary switch (ON-OFF).
+
+#### Add defines
+
+All needed defines and constants that you need in your code may be added at the beginning of controller cpp file. You can add them to header file instead but it is a good practice to restrict its code visibility.
+
+```c++
+// -----------------------------------------
+// You may add some global variables you need here,
+// like serial port instances, I2C, etc
+// -----------------------------------------
+
+#define ONE_WIRE_BUS 4
+```
+
+#### Correct JSON controller header include in cpp file
+
+If you modified file and class names you will need to update include in cpp file
+
+```c++
+#include "ds18b20Controller.h"
+```
+
+#### Add `setup()` and `loop()`code to class method
+
+Now, you can start integrating your code into JSON controller class. You need to copy setup and loop code into corresponding methods in JSON controller class.
+
+```c++
+void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {
+	enigmaIotNode = node;
+
+    // Send a 'hello' message when initalizing is finished for non sleepy nodes
+    if (!enigmaIotNode->getNode ()->getSleepy ()) {
+        if (!(enigmaIotNode->getNode ()->getSleepy ())) {
+            sendStartAnouncement ();  // Disable this if node is sleepy
+        }
+    }
+    // Send hello end
+    
+	// You do node setup here. Use it as it was the normal setup() Arduino function
+
+	oneWire = new OneWire (ONE_WIRE_BUS);
+	sensors = new DallasTemperature (oneWire);
+	sensors->begin ();
+	sensors->setWaitForConversion (false);
+	sensors->requestTemperatures ();
+    time_t start = millis ();
+
+	while (!sensors->isConversionComplete ()) {
+		delay (0);
+	}
+	DEBUG_WARN ("Conversion completed in %d ms", millis () - start);
+    tempC = sensors->getTempCByIndex (0);
+}
+```
+
+```c++
+void CONTROLLER_CLASS_NAME::loop () {
+
+	// If your node stays allways awake do your periodic task here
+
+	// You can send your data as JSON. This is a basic example
+
+    if (!tempSent && enigmaIotNode->isRegistered()) {
+        if (sendTemperature (tempC)) {
+            tempSent = true;
+        }
+    }
+    
+}
+```
+
+Notice that I've added `enigmaIotNode->isRegistered()` to send data only if node has already registered with Gateway and not losing messages.
+
+#### Add custom functions as class methods
+
+Add every custom function you have used as method into the class. You already added definitions in header file before. Now add the implementation to cpp file
+
+```c++
+bool CONTROLLER_CLASS_NAME::sendTemperature (float temp) {
+	const size_t capacity = JSON_OBJECT_SIZE (2);
+	DynamicJsonDocument json (capacity);
+	json["temp"] = temp;
+
+	return sendJson (json);
+}
+```
+
+This creates a JSON object with all data you need and sends it to gateway using `sendJson ()` method. Notice that EnigmaIOT uses esp-now protocol to communicate nodes with gateway. This implies a limit of 250 bytes per message, including headers. So, if you have problem receiving messages or you get partial data check the length of your payload.
+
+#### Additional functions
+
+
+
