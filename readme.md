@@ -564,6 +564,83 @@ Notice that using ESP-NOW, device address correspond to **MAC address** of your 
 
 It is very important to configure user and password on you MQTT broker. Besides, if it is going to be accessed from the Internet you should activate TLS encryption and a certificate.
 
+## Home Assistant integration
+
+JSON controller examples have integrated [Home Assistant autoconfiguration](https://www.home-assistant.io/docs/mqtt/discovery/). So, it is possible to design a node that autoregister automatically as soon it is connected to EnigmaIOT network.
+
+You just need to add the specfic header files that correspond with your node profile. Currently these are implemented:
+
+- [Sensors](https://www.home-assistant.io/integrations/sensor.mqtt/)
+- [Binary sensors](https://www.home-assistant.io/integrations/binary_sensor.mqtt/)
+- [Covers](https://www.home-assistant.io/integrations/cover.mqtt/)
+- [Switches](https://www.home-assistant.io/integrations/switch.mqtt/)
+- [Device Triggers](https://www.home-assistant.io/integrations/device_trigger.mqtt/)
+
+Additionaly you need to add specific configuration in separate methods like this from `SmartSwitchController.cpp`
+
+```c++
+void CONTROLLER_CLASS_NAME::buildHASwitchDiscovery () {
+    // Select corresponding HAEntiny type
+    HASwitch* haEntity = new HASwitch ();
+
+    uint8_t* msgPackBuffer;
+
+    if (!haEntity) {
+        DEBUG_WARN ("JSON object instance does not exist");
+        return;
+    }
+
+    // *******************************
+    // Add your characteristics here
+    // There is no need to futher modify this function
+
+    haEntity->setNameSufix ("switch");
+    haEntity->setStateOn (1);
+    haEntity->setStateOff (0);
+    haEntity->setValueField ("rly");
+    haEntity->setPayloadOff ("{\"cmd\":\"rly\",\"rly\":0}");
+    haEntity->setPayloadOn ("{\"cmd\":\"rly\",\"rly\":1}");
+    // *******************************
+
+    size_t bufferLen = haEntity->measureMessage ();
+
+    msgPackBuffer = (uint8_t*)malloc (bufferLen);
+
+    size_t len = haEntity->getAnounceMessage (bufferLen, msgPackBuffer);
+
+    DEBUG_INFO ("Resulting MSG pack length: %d", len);
+
+    if (!sendHADiscovery (msgPackBuffer, len)) {
+        DEBUG_WARN ("Error sending HA discovery message");
+    }
+
+    if (haEntity) {
+        delete (haEntity);
+    }
+
+    if (msgPackBuffer) {
+        free (msgPackBuffer);
+    }
+}
+
+```
+
+Finally you need to register every auto discovery methods in `connectInform` method.
+
+```c++
+void CONTROLLER_CLASS_NAME::connectInform () {
+
+#if SUPPORT_HA_DISCOVERY    
+    // Register every HAEntity discovery function here. As many as you need
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHASwitchDiscovery, this));
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHATriggerDiscovery, this));
+    addHACall (std::bind (&CONTROLLER_CLASS_NAME::buildHALinkDiscovery, this));
+#endif
+
+    EnigmaIOTjsonController::connectInform ();
+}
+```
+
 ## External libraries
 
 - ESPAsyncTCP -- https://github.com/me-no-dev/ESPAsyncTCP **(Required only for ESP8266)**
