@@ -292,6 +292,18 @@ and two first lines to:
 #define _DS18B20CONTROLLER_h
 ```
 
+#### Define if your node should sleep
+
+If you want to design a node that is powered with batteries, then it should enter into deep sleep mode after sending its data. To do so you only need to set `SLEEPY ` to 1 or `true`. You need to do so on main cpp file. In sensor controller example, it is `EnigmaIOT-Sensor-Controller.ino`.
+
+```c++
+#define SLEEPY 1 // Set it to 1 if your node should sleep after sending data
+```
+
+It you don't need sleep function leave it as 0.
+
+Notice that non sleepy nodes have an additional time synchronization function that is not available for nodes that enter deep sleep mode. This allows you to add features as timer or time synchronized tasks in different nodes.
+
 #### Copy global variables as class parameters
 
 You need to add all global variables defined in Arduino code as JSON Controller class parameters in `ds18b20Controller.h`.
@@ -345,6 +357,20 @@ If you like to integrate your node into HomeAssistant you may include the corres
 ```
 
 You need to choose the file to include according node function. As this will be a sensor node we should use `haSensor.h`. If your node uses different profiles you can include several HA integration header files. For instance, a smart metering plug is a sensor (Power measurement) and binary switch (ON-OFF).
+
+Then you need to add configuration on cpp file. In sensor controller node example it is 
+
+```c++
+	// *******************************
+    // Add your characteristics here
+    // There is no need to futher modify this function
+    haEntity->setNameSufix ("temp");
+    haEntity->setDeviceClass (sensor_temperature);
+    haEntity->setExpireTime (3600);
+    haEntity->setUnitOfMeasurement ("ºC");
+    haEntity->setValueField ("temp");
+    // *******************************
+```
 
 #### Add defines
 
@@ -435,6 +461,34 @@ bool CONTROLLER_CLASS_NAME::sendTemperature (float temp) {
 This creates a JSON object with all data you need and sends it to gateway using `sendJson ()` method. Notice that EnigmaIOT uses esp-now protocol to communicate nodes with gateway. This implies a limit of 250 bytes per message, including headers. So, if you have problem receiving messages or you get partial data check the length of your payload.
 
 #### Additional functions
+
+There are a few of additional functions. Check other controller examples to learn how to use them.
+
+- [**EnigmaIOTButtonController**](https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOT-Button-Controller): Node that send messages when a button is pressed. (Non sleepy)
+- [**EnigmaIOT-DashButton-Controller**](https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOT-DashButton-Controller): Node that wakes from deep sleep when a button is pressed, send its message and sleeps indefinitely. (Sleepy)
+- [**EnigmaIOT-Led-Controller**](https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOT-Led-Controller): Node that controls a singled light or LED (Non sleepy)
+- [**EnigmaIOT-Sensor-Controller**](https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOT-Sensor-Controller): Node that send value from a DS18B20 temperature sensor regularly. (Sleepy)
+- [**EnigmaIOT-SmartSwitch-Controller**](https://github.com/gmag11/EnigmaIOT/tree/master/examples/EnigmaIOT-SmartSwitch-Controller): Smart switch that uses a button to toggle a relay. It sends status messages regularly and on every toggle action. It listens for messages to allow remote control. (Non sleepy)
+
+##### Listen for incoming messages from gateway
+
+Some kind of nodes as light controllers or smart switches should accept incoming messages to control different parameters. This can be achieved with `processRxCommand` and `sendCommandResp`.
+
+##### Notice when a node is connected or disconnected from EnigmaIOT network
+
+It may be useful for a node to know if it is actually connected to gateway. To implement this you may fill these two methods: `connectInform` and `disconnectInform`.
+
+##### Save and recover custom persistent configuration
+
+Sometimes you need some data to be stored persistently on node sleeps or power cycles. There are a couple methods that may be implemented to achieve this: `loadConfig` and `saveConfig`.
+
+##### Add custom parameters to configuration portal
+
+You may want to add your own configuration fields to first configuration web portal on node. You can get this by implementing `configManagerStart` and `configManagerExit`.
+
+#### Advanced tuning
+
+There are some advanced settings on `EnigmaIOTconfig.h`. You may modify this data but it is important that you understand what every setting means. If you adjust them randomly you may get into instabilities or your node may be unable to communicate at all. 
 
 
 
