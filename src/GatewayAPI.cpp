@@ -163,7 +163,7 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
             size_t index;
             index = snprintf (nodeInfo, len,
                               "{\"version\":\"%d.%d.%d\",\"node_id\":%d,\"address\":\"" MACSTR "\","\
-                              "\"keyValidSince\":%ld,\"lastMessageTime\":%ld,\"sleepy\":%s,"\
+                              "\"keyValidSince\":%lld,\"lastMessageTime\":%lld,\"sleepy\":%s,"\
                               "\"Broadcast\":%s,\"TimeSync\":%s,\"rssi\":%d,\"packetsHour\":%f,\"per\":%f",
 					  version[0], version[1], version[2],
 					  node->getNodeId (),
