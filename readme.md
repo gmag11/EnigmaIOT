@@ -35,11 +35,11 @@ It you are courious to quickly test how does EnigmaIOT performs you can follow t
 
 During this project conception I decided that it should fulfil this list of requirements.
 
-- Use the simplest hardware, based on ESP8266.
+- Use the simplest hardware, based on ESP8266 and/or ESP32.
 - Secure by design. Make use of a secure channel for data transmission.
 - Automatic dynamic key agreement.
 - Do not require connection to the Internet.
-- Do not overload my home WiFi infrastructure. Only Gateway may be connected to LAN.
+- Do not overload my home WiFi infrastructure. Only Gateway will be connected to LAN.
 - Able to use deep sleep to run on batteries.
 - Enough wireless range for a house.
 - Support for a high number of nodes.
@@ -96,6 +96,8 @@ Notice that network key used to implement this feature is stored on flash. ESP82
 - [x] Both gateway or nodes may run on ESP32 or ESP8266
 
 - [x] Simple REST API to get information and send commands to gateway and nodes. Check [api.md](docs/api.md)
+
+- [x] Node library includes methods to configure [Home Assistant](https://www.home-assistant.io) automatic integration using [MQTT discovery](https://www.home-assistant.io/docs/mqtt/discovery/)
 
 ## Technical background
 
