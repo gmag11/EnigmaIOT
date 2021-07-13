@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['timemanagerclass_832',['TimeManagerClass',['../classTimeManagerClass.html',1,'']]]
+  ['smartswitchcontrollerhw_5ft_1057',['smartSwitchControllerHw_t',['../structsmartSwitchControllerHw__t.html',1,'']]]
 ];

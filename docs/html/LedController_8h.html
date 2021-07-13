@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.7</span>
+   &#160;<span id="projectnumber">0.9.8</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -90,12 +90,12 @@ Classes</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a8257556540571a0fe1f5f05eb434af87"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LedController_8h.html#a8257556540571a0fe1f5f05eb434af87">CONTROLLER_CLASS_NAME</a>&#160;&#160;&#160;LedController</td></tr>
 <tr class="separator:a8257556540571a0fe1f5f05eb434af87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4553be4db9860d940f81d7447173b2f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LedController_8h.html#ab4553be4db9860d940f81d7447173b2f">LED_PIN</a>&#160;&#160;&#160;14</td></tr>
+<tr class="memitem:ab4553be4db9860d940f81d7447173b2f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LedController_8h.html#ab4553be4db9860d940f81d7447173b2f">LED_PIN</a>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:ab4553be4db9860d940f81d7447173b2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2e697ac60e05813d45ea2c9c9e79c25"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LedController_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a>&#160;&#160;&#160;HIGH</td></tr>
-<tr class="separator:af2e697ac60e05813d45ea2c9c9e79c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80700bb63bd56ebabbb4728aa433fd29"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LedController_8h.html#a80700bb63bd56ebabbb4728aa433fd29">LED_OFF</a>&#160;&#160;&#160;!<a class="el" href="EnigmaIOTNode_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a></td></tr>
-<tr class="separator:a80700bb63bd56ebabbb4728aa433fd29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5793e03d17141eff8c3dc885f6cd0ea"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LedController_8h.html#af5793e03d17141eff8c3dc885f6cd0ea">_LED_ON</a>&#160;&#160;&#160;LOW</td></tr>
+<tr class="separator:af5793e03d17141eff8c3dc885f6cd0ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af88429de4c8d15fc065a7ea1c07bedde"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LedController_8h.html#af88429de4c8d15fc065a7ea1c07bedde">_LED_OFF</a>&#160;&#160;&#160;!<a class="el" href="LedController_8h.html#af5793e03d17141eff8c3dc885f6cd0ea">_LED_ON</a></td></tr>
+<tr class="separator:af88429de4c8d15fc065a7ea1c07bedde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -103,6 +103,38 @@ Variables</h2></td></tr>
 <tr class="separator:a0cf4eba0801e84be66f6198f07bfe287"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="af88429de4c8d15fc065a7ea1c07bedde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af88429de4c8d15fc065a7ea1c07bedde">&#9670;&nbsp;</a></span>_LED_OFF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _LED_OFF&#160;&#160;&#160;!<a class="el" href="LedController_8h.html#af5793e03d17141eff8c3dc885f6cd0ea">_LED_ON</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LedController_8h_source.html#l00031">31</a> of file <a class="el" href="LedController_8h_source.html">LedController.h</a>.</p>
+
+</div>
+</div>
+<a id="af5793e03d17141eff8c3dc885f6cd0ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5793e03d17141eff8c3dc885f6cd0ea">&#9670;&nbsp;</a></span>_LED_ON</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _LED_ON&#160;&#160;&#160;LOW</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LedController_8h_source.html#l00030">30</a> of file <a class="el" href="LedController_8h_source.html">LedController.h</a>.</p>
+
+</div>
+</div>
 <a id="a8257556540571a0fe1f5f05eb434af87"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8257556540571a0fe1f5f05eb434af87">&#9670;&nbsp;</a></span>CONTROLLER_CLASS_NAME</h2>
 
@@ -119,38 +151,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a80700bb63bd56ebabbb4728aa433fd29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80700bb63bd56ebabbb4728aa433fd29">&#9670;&nbsp;</a></span>LED_OFF</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LED_OFF&#160;&#160;&#160;!<a class="el" href="EnigmaIOTNode_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LedController_8h_source.html#l00027">27</a> of file <a class="el" href="LedController_8h_source.html">LedController.h</a>.</p>
-
-</div>
-</div>
-<a id="af2e697ac60e05813d45ea2c9c9e79c25"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2e697ac60e05813d45ea2c9c9e79c25">&#9670;&nbsp;</a></span>LED_ON</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LED_ON&#160;&#160;&#160;HIGH</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LedController_8h_source.html#l00026">26</a> of file <a class="el" href="LedController_8h_source.html">LedController.h</a>.</p>
-
-</div>
-</div>
 <a id="ab4553be4db9860d940f81d7447173b2f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab4553be4db9860d940f81d7447173b2f">&#9670;&nbsp;</a></span>LED_PIN</h2>
 
@@ -158,12 +158,12 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define LED_PIN&#160;&#160;&#160;14</td>
+          <td class="memname">#define LED_PIN&#160;&#160;&#160;2</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LedController_8h_source.html#l00025">25</a> of file <a class="el" href="LedController_8h_source.html">LedController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LedController_8h_source.html#l00029">29</a> of file <a class="el" href="LedController_8h_source.html">LedController.h</a>.</p>
 
 </div>
 </div>

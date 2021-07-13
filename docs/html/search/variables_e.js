@@ -1,17 +1,19 @@
 var searchData=
 [
-  ['packeterrors_1359',['packetErrors',['../classNode.html#a4e2e4c6afb4bf93ca10e60d239fd87c5',1,'Node']]],
-  ['packetnumber_1360',['packetNumber',['../classNode.html#aedfde4376c7c84dd8c88c2c530b3b102',1,'Node']]],
-  ['packetshour_1361',['packetsHour',['../classNode.html#abc1ad898434142e44923f7220b6a2ae4',1,'Node']]],
-  ['payload_1362',['payload',['../structmqtt__queue__item__t.html#a188c9fd25ec2003a1ac1e677a0b55ea3',1,'mqtt_queue_item_t']]],
-  ['payload_5flen_1363',['payload_len',['../structmqtt__queue__item__t.html#a62c6546560a1c32ef4beee7366949b71',1,'mqtt_queue_item_t']]],
-  ['per_1364',['per',['../classNode.html#a2f8f6419cc10c972285178991b2cec78',1,'Node']]],
-  ['plainnetkey_1365',['plainNetKey',['../classEnigmaIOTGatewayClass.html#a5e875dd3fa022dfba029f1e1124fcded',1,'EnigmaIOTGatewayClass']]],
-  ['post_5freg_5fdelay_1366',['POST_REG_DELAY',['../EnigmaIoTconfig_8h.html#a198819f64ca0424df0b0fc930b85caed',1,'EnigmaIoTconfig.h']]],
-  ['pre_5freg_5fdelay_1367',['PRE_REG_DELAY',['../EnigmaIoTconfig_8h.html#a122e04d1d7956015ed3e7d349fa34a6a',1,'EnigmaIoTconfig.h']]],
-  ['privatedhkey_1368',['privateDHKey',['../classCryptModule.html#a34795afc7eeb1110a1672d496b3d55a3',1,'CryptModule']]],
-  ['protectota_1369',['protectOTA',['../classEnigmaIOTNodeClass.html#a7068191735c2fb154c857fc80660adc0',1,'EnigmaIOTNodeClass']]],
-  ['publicdhkey_1370',['publicDHKey',['../classCryptModule.html#ae55611b17617615a79de5325d2c3c02d',1,'CryptModule']]],
-  ['pushreleased_1371',['pushReleased',['../classCONTROLLER__CLASS__NAME.html#ab1766a261776bbdd0aa7c9016b6502be',1,'CONTROLLER_CLASS_NAME']]],
-  ['pushtriggered_1372',['pushTriggered',['../classCONTROLLER__CLASS__NAME.html#a97993aade6d2d6e22e48872f71b7f40a',1,'CONTROLLER_CLASS_NAME']]]
+  ['offset_1680',['offset',['../classTimeManagerClass.html#a76446d0df445c23ecb583b3d50fb3f95',1,'TimeManagerClass']]],
+  ['on_5fstate_1681',['ON_STATE',['../structsmartSwitchControllerHw__t.html#a4655115d731c63e4f4e98f3b2cf0f743',1,'smartSwitchControllerHw_t']]],
+  ['onewire_1682',['oneWire',['../classCONTROLLER__CLASS__NAME.html#aa83d1a9fa08dfeb08690d132e77883db',1,'CONTROLLER_CLASS_NAME']]],
+  ['ota_5ffinished_1683',['OTA_FINISHED',['../namespaceEnigmaIoTUpdate.html#a56955d84eb178a78a16db3ed6e2a1c7e',1,'EnigmaIoTUpdate']]],
+  ['ota_5fgw_5ftimeout_1684',['OTA_GW_TIMEOUT',['../EnigmaIoTconfigAdvanced_8h.html#aad94db36f97a563732bfd0ca10b164f9',1,'EnigmaIoTconfigAdvanced.h']]],
+  ['ota_5fout_5fof_5fsequence_1685',['OTA_OUT_OF_SEQUENCE',['../namespaceEnigmaIoTUpdate.html#ad815631b097bdf448ecd824fc28bfec6',1,'EnigmaIoTUpdate']]],
+  ['ota_5ftimeout_5ftime_1686',['OTA_TIMEOUT_TIME',['../EnigmaIoTconfigAdvanced_8h.html#aeb4681294ade5149d1db83df99744f6e',1,'EnigmaIoTconfigAdvanced.h']]],
+  ['otaerror_1687',['otaError',['../classEnigmaIOTNodeClass.html#a70fa9cce1a3080b3e946783a791363d6',1,'EnigmaIOTNodeClass']]],
+  ['otafinished_1688',['otaFinished',['../namespaceEnigmaIoTUpdate.html#a1efdbd8359ee1708af1bcf3be3eff850',1,'EnigmaIoTUpdate']]],
+  ['otaok_1689',['otaOK',['../namespaceEnigmaIoTUpdate.html#af461562efece05d0467c0e17edd2e58f',1,'EnigmaIoTUpdate']]],
+  ['otaongoing_1690',['OTAongoing',['../EnigmaIOTGateway_8cpp.html#a96db16d874da26d9a7b199c904da0d5f',1,'EnigmaIOTGateway.cpp']]],
+  ['otaoutofsequenceerror_1691',['otaOutOfSequenceError',['../namespaceEnigmaIoTUpdate.html#ade24b0154bfadccc5f69ee560a33de8b',1,'EnigmaIoTUpdate']]],
+  ['otaresulttopic_1692',['otaResultTopic',['../namespaceEnigmaIoTUpdate.html#af04fd96058043d8861cd38175cb99e6c',1,'EnigmaIoTUpdate']]],
+  ['otarunning_1693',['otaRunning',['../classEnigmaIOTNodeClass.html#a238294f8ca6888e5e6000592e0955888',1,'EnigmaIOTNodeClass']]],
+  ['otasettopic_1694',['otaSetTopic',['../namespaceEnigmaIoTUpdate.html#aefdb455c166193127480d7b5afe88a66',1,'EnigmaIoTUpdate']]],
+  ['out_5fqueue_1695',['out_queue',['../classEspnow__halClass.html#a4fdb484427e4128d2776a0b9eb2efe92',1,'Espnow_halClass']]]
 ];

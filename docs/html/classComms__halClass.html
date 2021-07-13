@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.7</span>
+   &#160;<span id="projectnumber">0.9.8</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -91,6 +91,8 @@ Inheritance diagram for Comms_halClass:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a38e3e9572cead89962b66c2634a9e2ac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#a38e3e9572cead89962b66c2634a9e2ac">Comms_halClass</a> ()</td></tr>
+<tr class="separator:a38e3e9572cead89962b66c2634a9e2ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b7f86efd799761dead77fcccf036d1d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#a1b7f86efd799761dead77fcccf036d1d">begin</a> (uint8_t *<a class="el" href="classComms__halClass.html#ac35585ecbc8e936d9f35d32b56164b8e">gateway</a>, uint8_t <a class="el" href="classComms__halClass.html#ac495fb3d9e576bb2717c1f43197b458e">channel</a>, <a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4">peerType_t</a> peerType=<a class="el" href="Comms__hal_8h.html#ae3f1dec7ee0f3731002fa17598e6e7b4a460e495e522978c8c19f3904a623c5c5">COMM_NODE</a>)=0</td></tr>
 <tr class="memdesc:a1b7f86efd799761dead77fcccf036d1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup communication environment and establish the connection from node to gateway.  <a href="classComms__halClass.html#a1b7f86efd799761dead77fcccf036d1d">More...</a><br /></td></tr>
 <tr class="separator:a1b7f86efd799761dead77fcccf036d1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -109,6 +111,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6093fd7b0a9eedba72c3622977639d92"><td class="memItemLeft" align="right" valign="top">virtual uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#a6093fd7b0a9eedba72c3622977639d92">getAddressLength</a> ()=0</td></tr>
 <tr class="memdesc:a6093fd7b0a9eedba72c3622977639d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get address length that a specific communication subsystem uses.  <a href="classComms__halClass.html#a6093fd7b0a9eedba72c3622977639d92">More...</a><br /></td></tr>
 <tr class="separator:a6093fd7b0a9eedba72c3622977639d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1038d7620825a653dfa36af70a2fca04"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#a1038d7620825a653dfa36af70a2fca04">handle</a> ()=0</td></tr>
+<tr class="memdesc:a1038d7620825a653dfa36af70a2fca04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends next message in the queue.  <a href="classComms__halClass.html#a1038d7620825a653dfa36af70a2fca04">More...</a><br /></td></tr>
+<tr class="separator:a1038d7620825a653dfa36af70a2fca04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae85cd6a5937cb47f88fb82d06b21087a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classComms__halClass.html#ae85cd6a5937cb47f88fb82d06b21087a">enableTransmit</a> (bool enable)=0</td></tr>
+<tr class="memdesc:ae85cd6a5937cb47f88fb82d06b21087a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables transmission of queued messages. Used to disable communication during wifi scan.  <a href="classComms__halClass.html#ae85cd6a5937cb47f88fb82d06b21087a">More...</a><br /></td></tr>
+<tr class="separator:ae85cd6a5937cb47f88fb82d06b21087a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -146,8 +154,36 @@ Protected Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface for communication subsystem abstraction layer definition. </p>
 
-<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00033">33</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00041">41</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a38e3e9572cead89962b66c2634a9e2ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38e3e9572cead89962b66c2634a9e2ac">&#9670;&nbsp;</a></span>Comms_halClass()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Comms_halClass::Comms_halClass </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00062">62</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a1b7f86efd799761dead77fcccf036d1d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1b7f86efd799761dead77fcccf036d1d">&#9670;&nbsp;</a></span>begin()</h2>
 
@@ -202,6 +238,42 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ae85cd6a5937cb47f88fb82d06b21087a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae85cd6a5937cb47f88fb82d06b21087a">&#9670;&nbsp;</a></span>enableTransmit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Comms_halClass::enableTransmit </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enables or disables transmission of queued messages. Used to disable communication during wifi scan. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td><code>true</code> to enable transmission, <code>false</code> to disable it </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classEspnow__halClass.html#a91c6aaf2781c9e141641fe4a4b92115f">Espnow_halClass</a>.</p>
+
+</div>
+</div>
 <a id="a6093fd7b0a9eedba72c3622977639d92"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6093fd7b0a9eedba72c3622977639d92">&#9670;&nbsp;</a></span>getAddressLength()</h2>
 
@@ -229,6 +301,35 @@ Protected Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Returns number of bytes that is used to represent an address </dd></dl>
 
 <p>Implemented in <a class="el" href="classEspnow__halClass.html#ac04ab12d0b5e52948d123f226ab1101d">Espnow_halClass</a>.</p>
+
+</div>
+</div>
+<a id="a1038d7620825a653dfa36af70a2fca04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1038d7620825a653dfa36af70a2fca04">&#9670;&nbsp;</a></span>handle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Comms_halClass::handle </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sends next message in the queue. </p>
+
+<p>Implemented in <a class="el" href="classEspnow__halClass.html#aa332cba65f82a6e14af3ca5ef59732e9">Espnow_halClass</a>.</p>
 
 </div>
 </div>
@@ -447,7 +548,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Stores peer type, node or gateway. </p>
 
-<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00044">44</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00052">52</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
 
 </div>
 </div>
@@ -473,7 +574,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Comms channel to be used. </p>
 
-<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00040">40</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00048">48</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
 
 </div>
 </div>
@@ -499,7 +600,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Address length. </p>
 
-<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00036">36</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00044">44</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
 
 </div>
 </div>
@@ -525,7 +626,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Maximum message length. </p>
 
-<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00035">35</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00043">43</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
 
 </div>
 </div>
@@ -551,7 +652,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Pointer to a function to be called on every received message. </p>
 
-<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00042">42</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00050">50</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
 
 </div>
 </div>
@@ -577,7 +678,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Gateway address. </p>
 
-<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00039">39</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00047">47</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
 
 </div>
 </div>
@@ -603,7 +704,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Pointer to a function to be called to notify last sending status. </p>
 
-<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00043">43</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Comms__hal_8h_source.html#l00051">51</a> of file <a class="el" href="Comms__hal_8h_source.html">Comms_hal.h</a>.</p>
 
 </div>
 </div>

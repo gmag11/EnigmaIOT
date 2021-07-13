@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.7</span>
+   &#160;<span id="projectnumber">0.9.8</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -139,16 +139,17 @@ Enumerations</h2></td></tr>
 <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa6b9b36c3722a1256ac7fa097bf10f4de">CONTROL_DATA</a> = 0x03, 
 <br />
 &#160;&#160;<a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fad2c18ef749d0eca5f53ecfb0fb0af0bc">DOWNSTREAM_CTRL_DATA</a> = 0x04, 
+<a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa01b2a3fb2e751c9536ae814b4b8919c3">HA_DISCOVERY_MESSAGE</a> = 0x08, 
 <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fade8205c810264376dfc45dc2b72e116c">DOWNSTREAM_BRCAST_CTRL_DATA</a> = 0x84, 
 <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa50ab02cc83b80322e63edd2e2779a735">CLOCK_REQUEST</a> = 0x05, 
-<a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa597b515e2c48496c513e6d502a7528c0">CLOCK_RESPONSE</a> = 0x06, 
 <br />
-&#160;&#160;<a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa766d5c890baa0b6a0e7e1e3f5cb0b224">NODE_NAME_SET</a> = 0x07, 
+&#160;&#160;<a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa597b515e2c48496c513e6d502a7528c0">CLOCK_RESPONSE</a> = 0x06, 
+<a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa766d5c890baa0b6a0e7e1e3f5cb0b224">NODE_NAME_SET</a> = 0x07, 
 <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fae69668f8ce604a1b3d09c3314cdba5bf">NODE_NAME_RESULT</a> = 0x17, 
 <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa45ed732c2c1b8f670d6730e6f7a684b5">BROADCAST_KEY_REQUEST</a> = 0x08, 
-<a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7faebca9b745a0bd1dedae14258e54e1838">BROADCAST_KEY_RESPONSE</a> = 0x18, 
 <br />
-&#160;&#160;<a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa0c8da6c451065bed79ea70684e6f3fca">CLIENT_HELLO</a> = 0xFF, 
+&#160;&#160;<a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7faebca9b745a0bd1dedae14258e54e1838">BROADCAST_KEY_RESPONSE</a> = 0x18, 
+<a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa0c8da6c451065bed79ea70684e6f3fca">CLIENT_HELLO</a> = 0xFF, 
 <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa28914d3bb26ec8c2bd2d5ad9781cbf8c">SERVER_HELLO</a> = 0xFE, 
 <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa32637f9c9b67f884990ed21097ebc543">INVALIDATE_KEY</a> = 0xFB
 <br />
@@ -167,6 +168,11 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:ac183d8bfcebdc9231366539a77b669eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3716f5ccb3d0e7f9222a842f67b9d0a2"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8h.html#a3716f5ccb3d0e7f9222a842f67b9d0a2">dataMessageType_t</a> { <a class="el" href="EnigmaIOTNode_8h.html#a3716f5ccb3d0e7f9222a842f67b9d0a2a66b2cf49a1e6f25c381fd9602bed19d6">DATA_TYPE</a>, 
+<a class="el" href="EnigmaIOTNode_8h.html#a3716f5ccb3d0e7f9222a842f67b9d0a2a26f7e9eda4c234f149d2064ed6d81e96">CONTROL_TYPE</a>, 
+<a class="el" href="EnigmaIOTNode_8h.html#a3716f5ccb3d0e7f9222a842f67b9d0a2af6cf7c4e34dc4cb2aca96d3b4a09cacd">HA_DISC_TYPE</a>
+ }</td></tr>
+<tr class="separator:a3716f5ccb3d0e7f9222a842f67b9d0a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c3e9c34675da8090182cab1de105bc6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a> { <br />
 &#160;&#160;<a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6a8216aa4b3a817cdf8c15ed32aa946e83">UNKNOWN_ERROR</a> = 0x00, 
 <a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6ad6e9d0b3e3d479305eb2ce4233f4eca6">WRONG_CLIENT_HELLO</a> = 0x01, 
@@ -186,8 +192,8 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Library to build a node for EnigmaIoT system. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.7 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>04/02/2021 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.9.8 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>15/07/2021 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
@@ -237,7 +243,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00106">106</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00113">113</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -253,7 +259,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00117">117</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00124">124</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -269,7 +275,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00118">118</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00125">125</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -285,7 +291,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00116">116</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00123">123</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -301,7 +307,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00119">119</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00126">126</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -317,11 +323,35 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00120">120</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00127">127</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a3716f5ccb3d0e7f9222a842f67b9d0a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3716f5ccb3d0e7f9222a842f67b9d0a2">&#9670;&nbsp;</a></span>dataMessageType_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="EnigmaIOTNode_8h.html#a3716f5ccb3d0e7f9222a842f67b9d0a2">dataMessageType_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3716f5ccb3d0e7f9222a842f67b9d0a2a66b2cf49a1e6f25c381fd9602bed19d6"></a>DATA_TYPE&#160;</td><td class="fielddoc"><p>User data message </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a3716f5ccb3d0e7f9222a842f67b9d0a2a26f7e9eda4c234f149d2064ed6d81e96"></a>CONTROL_TYPE&#160;</td><td class="fielddoc"><p>Control message </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a3716f5ccb3d0e7f9222a842f67b9d0a2af6cf7c4e34dc4cb2aca96d3b4a09cacd"></a>HA_DISC_TYPE&#160;</td><td class="fielddoc"><p>Home Assistant Discovery message </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00068">68</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+
+</div>
+</div>
 <a id="a1c3e9c34675da8090182cab1de105bc6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1c3e9c34675da8090182cab1de105bc6">&#9670;&nbsp;</a></span>nodeInvalidateReason_t</h2>
 
@@ -348,7 +378,7 @@ Variables</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00071">71</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00078">78</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -383,6 +413,8 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="a040804a4fb880b7e7dfe5c489f7bdf7fa6b9b36c3722a1256ac7fa097bf10f4de"></a>CONTROL_DATA&#160;</td><td class="fielddoc"><p>Internal control message from node to gateway. Used for OTA, settings configuration, etc </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a040804a4fb880b7e7dfe5c489f7bdf7fad2c18ef749d0eca5f53ecfb0fb0af0bc"></a>DOWNSTREAM_CTRL_DATA&#160;</td><td class="fielddoc"><p>Internal control message from gateway to node. Used for OTA, settings configuration, etc </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a040804a4fb880b7e7dfe5c489f7bdf7fa01b2a3fb2e751c9536ae814b4b8919c3"></a>HA_DISCOVERY_MESSAGE&#160;</td><td class="fielddoc"><p>This sends gateway needed information to build a Home Assistant discovery MQTT message to allow automatic entities provision </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a040804a4fb880b7e7dfe5c489f7bdf7fade8205c810264376dfc45dc2b72e116c"></a>DOWNSTREAM_BRCAST_CTRL_DATA&#160;</td><td class="fielddoc"><p>Internal control broadcast message from gateway to sensor. Used for OTA, settings configuration, etc </p>
 </td></tr>
@@ -438,7 +470,7 @@ Variables</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00057">57</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8h_source.html#l00058">58</a> of file <a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>.</p>
 
 </div>
 </div>
@@ -463,7 +495,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l02689">2689</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTNode_8cpp_source.html#l02719">2719</a> of file <a class="el" href="EnigmaIOTNode_8cpp_source.html">EnigmaIOTNode.cpp</a>.</p>
 
 </div>
 </div>

@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.7</span>
+   &#160;<span id="projectnumber">0.9.8</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -113,8 +113,8 @@ Functions</h2></td></tr>
 <tr class="separator:a940f8c4df553df52c9145ef2df107ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23fc74fc5731518093d5fa0db24edae1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Sensor-Controller_8ino.html#a23fc74fc5731518093d5fa0db24edae1">disconnectEventHandler</a> (<a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a> reason)</td></tr>
 <tr class="separator:a23fc74fc5731518093d5fa0db24edae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91ea72c09dd2fcbfbc7bae67e4ae625e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Sensor-Controller_8ino.html#a91ea72c09dd2fcbfbc7bae67e4ae625e">sendUplinkData</a> (const uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, size_t len, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
-<tr class="separator:a91ea72c09dd2fcbfbc7bae67e4ae625e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d577988d753f4702c13e41090c705a4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Sensor-Controller_8ino.html#a2d577988d753f4702c13e41090c705a4">sendUplinkData</a> (const uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, size_t len, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding, <a class="el" href="EnigmaIOTNode_8h.html#a3716f5ccb3d0e7f9222a842f67b9d0a2">dataMessageType_t</a> dataMsgType)</td></tr>
+<tr class="separator:a2d577988d753f4702c13e41090c705a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81397ad933b5a8b902d6161f702838fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Sensor-Controller_8ino.html#a81397ad933b5a8b902d6161f702838fc">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
 <tr class="separator:a81397ad933b5a8b902d6161f702838fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a960401606ecc83efdb2e45646619f277"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Sensor-Controller_8ino.html#a960401606ecc83efdb2e45646619f277">wifiManagerExit</a> (boolean <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
@@ -138,6 +138,8 @@ Variables</h2></td></tr>
 <tr class="separator:a734029c5fc6508cd75bf19cd7f52b66d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d64e953651e420d91f95bacd3078b4e"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Sensor-Controller_8ino.html#a4d64e953651e420d91f95bacd3078b4e">FAILSAFE_RTC_ADDRESS</a> = 0</td></tr>
 <tr class="separator:a4d64e953651e420d91f95bacd3078b4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91ca03d6b7d66ece63e5bfdc9b0d3260"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-Sensor-Controller_8ino.html#a91ca03d6b7d66ece63e5bfdc9b0d3260">SLEEP_TIME</a> = 10</td></tr>
+<tr class="separator:a91ca03d6b7d66ece63e5bfdc9b0d3260"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a41c7fcbe209a1c236fd1b8e35bd8b55a"></a>
@@ -152,7 +154,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00060">60</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00058">58</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -168,7 +170,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00054">54</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00052">52</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -184,7 +186,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00064">64</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00062">62</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -200,7 +202,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00051">51</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00049">49</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -216,7 +218,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00058">58</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00056">56</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -236,7 +238,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00072">72</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00073">73</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -256,7 +258,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00077">77</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00079">79</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -275,7 +277,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00162">162</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00175">175</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -323,12 +325,12 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00087">87</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00095">95</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
-<a id="a91ea72c09dd2fcbfbc7bae67e4ae625e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91ea72c09dd2fcbfbc7bae67e4ae625e">&#9670;&nbsp;</a></span>sendUplinkData()</h2>
+<a id="a2d577988d753f4702c13e41090c705a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d577988d753f4702c13e41090c705a4">&#9670;&nbsp;</a></span>sendUplinkData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -349,7 +351,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a>&#160;</td>
-          <td class="paramname"><em>payloadEncoding</em>&#160;</td>
+          <td class="paramname"><em>payloadEncoding</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="EnigmaIOTNode_8h.html#a3716f5ccb3d0e7f9222a842f67b9d0a2">dataMessageType_t</a>&#160;</td>
+          <td class="paramname"><em>dataMsgType</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -359,7 +367,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00082">82</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00084">84</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -378,7 +386,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00105">105</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00113">113</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -398,7 +406,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00096">96</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00104">104</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -417,7 +425,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00101">101</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00109">109</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -434,7 +442,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00066">66</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00064">64</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -450,7 +458,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00062">62</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00060">60</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -466,7 +474,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00069">69</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00067">67</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -482,7 +490,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00068">68</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00066">66</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>
@@ -498,7 +506,23 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00067">67</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00065">65</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
+
+</div>
+</div>
+<a id="a91ca03d6b7d66ece63e5bfdc9b0d3260"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91ca03d6b7d66ece63e5bfdc9b0d3260">&#9670;&nbsp;</a></span>SLEEP_TIME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int SLEEP_TIME = 10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html#l00069">69</a> of file <a class="el" href="EnigmaIOT-Sensor-Controller_8ino_source.html">EnigmaIOT-Sensor-Controller.ino</a>.</p>
 
 </div>
 </div>

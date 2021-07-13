@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.7</span>
+   &#160;<span id="projectnumber">0.9.8</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -101,74 +101,141 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">CONTROLLER_CLASS_NAME::setup</a> (<a class="code" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a>* node, <span class="keywordtype">void</span>* <a class="code" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    enigmaIotNode = node;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="comment">// You do node setup here. Use it as it was the normal setup() Arduino function</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="comment">// Send a &#39;hello&#39; message when initalizing is finished</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    sendStartAnouncement ();  <span class="comment">// Disable this if node is sleepy</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    DEBUG_DBG (<span class="stringliteral">&quot;Finish begin&quot;</span>);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="comment">// If your node should sleep after sending data do all remaining tasks here</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#ae744508f79e2bdfcc7352908d537a671">CONTROLLER_CLASS_NAME::loop</a> () {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="comment">// If your node stays allways awake do your periodic task here</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">// You can send your data as JSON. This is a basic example</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="comment">//const size_t capacity = JSON_OBJECT_SIZE (4);</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="comment">//DynamicJsonDocument json (capacity);</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="comment">//json[&quot;sensor&quot;] = data_description;</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="comment">//json[&quot;meas&quot;] = measurement;</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="comment">//sendJson (json);</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME::connectInform</a> () {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#if SUPPORT_HA_DISCOVERY    </span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// Register every HAEntity discovery function here. As many as you need</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    addHACall (std::bind (&amp;<a class="code" href="classCONTROLLER__CLASS__NAME.html#ab5ec6ad2c5cd0f6edfb7635aba862915">CONTROLLER_CLASS_NAME::buildHADiscovery</a>, <span class="keyword">this</span>));</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="classEnigmaIOTjsonController.html#ac9fda7397114e169164bc6ee390f0e2d">EnigmaIOTjsonController::connectInform</a> ();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">CONTROLLER_CLASS_NAME::setup</a> (<a class="code" href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a>* node, <span class="keywordtype">void</span>* <a class="code" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>) {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    enigmaIotNode = node;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">// You do node setup here. Use it as it was the normal setup() Arduino function</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="comment">// Send a &#39;hello&#39; message when initalizing is finished</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">if</span> (!(enigmaIotNode-&gt;getNode ()-&gt;getSleepy ())) {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        sendStartAnouncement ();  <span class="comment">// Disable this if node is sleepy</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    DEBUG_DBG (<span class="stringliteral">&quot;Finish begin&quot;</span>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">// If your node should sleep after sending data do all remaining tasks here</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#ae744508f79e2bdfcc7352908d537a671">CONTROLLER_CLASS_NAME::loop</a> () {</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<a class="code" href="classCONTROLLER__CLASS__NAME.html#af6ef186cd6f5518739ef722213151284">CONTROLLER_CLASS_NAME::~CONTROLLER_CLASS_NAME</a> () {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="comment">// It your class uses dynamic data free it up here</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">// This is normally not needed but it is a good practice</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#a6fc95acd652b504ae0e342f7ce5450c3">CONTROLLER_CLASS_NAME::configManagerStart</a> () {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    DEBUG_INFO (<span class="stringliteral">&quot;==== CCost Controller Configuration start ====&quot;</span>);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="comment">// If you need to add custom configuration parameters do it here</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#a9fc25e3bff52d9d4a642e5a604dd7c44">CONTROLLER_CLASS_NAME::configManagerExit</a> (<span class="keywordtype">bool</span> <a class="code" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>) {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    DEBUG_INFO (<span class="stringliteral">&quot;==== CCost Controller Configuration result ====&quot;</span>);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">// You can read configuration paramenter values here</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#ab2dd07a8fecca7f083f2776dbc294dc9">CONTROLLER_CLASS_NAME::loadConfig</a> () {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="comment">// If you need to read custom configuration data do it here</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#a4a58511842391487187927dd1b87a0dc">CONTROLLER_CLASS_NAME::saveConfig</a> () {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// If you need to save custom configuration data do it here</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// If your node stays allways awake do your periodic task here</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">// You can send your data as JSON. This is a basic example</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="comment">//const size_t capacity = JSON_OBJECT_SIZE (4);</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="comment">//DynamicJsonDocument json (capacity);</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="comment">//json[&quot;sensor&quot;] = data_description;</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="comment">//json[&quot;meas&quot;] = measurement;</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="comment">//sendJson (json);</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<a class="code" href="classCONTROLLER__CLASS__NAME.html#af6ef186cd6f5518739ef722213151284">CONTROLLER_CLASS_NAME::~CONTROLLER_CLASS_NAME</a> () {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">// It your class uses dynamic data free it up here</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">// This is normally not needed but it is a good practice</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#a6fc95acd652b504ae0e342f7ce5450c3">CONTROLLER_CLASS_NAME::configManagerStart</a> () {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    DEBUG_INFO (<span class="stringliteral">&quot;==== CCost Controller Configuration start ====&quot;</span>);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">// If you need to add custom configuration parameters do it here</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;}</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#a9fc25e3bff52d9d4a642e5a604dd7c44">CONTROLLER_CLASS_NAME::configManagerExit</a> (<span class="keywordtype">bool</span> <a class="code" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>) {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    DEBUG_INFO (<span class="stringliteral">&quot;==== CCost Controller Configuration result ====&quot;</span>);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// You can read configuration paramenter values here</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#ab2dd07a8fecca7f083f2776dbc294dc9">CONTROLLER_CLASS_NAME::loadConfig</a> () {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// If you need to read custom configuration data do it here</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#a4a58511842391487187927dd1b87a0dc">CONTROLLER_CLASS_NAME::saveConfig</a> () {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// If you need to save custom configuration data do it here</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#if SUPPORT_HA_DISCOVERY   </span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">// Repeat this method for every entity</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classCONTROLLER__CLASS__NAME.html#ab5ec6ad2c5cd0f6edfb7635aba862915">CONTROLLER_CLASS_NAME::buildHADiscovery</a> () {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">// Select corresponding HAEntiny type</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="classHATrigger.html">HATrigger</a>* haEntity = <span class="keyword">new</span> <a class="code" href="classHATrigger.html">HATrigger</a> ();</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    uint8_t* msgPackBuffer;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">if</span> (!haEntity) {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        DEBUG_WARN (<span class="stringliteral">&quot;JSON object instance does not exist&quot;</span>);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="comment">// *******************************</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="comment">// Add your characteristics here</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="comment">// There is no need to futher modify this function</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    haEntity-&gt;<a class="code" href="classHATrigger.html#adda48fb69d4ad6c9f95dfb7f7f92b79c">setType</a> (<a class="code" href="haTrigger_8h.html#ada6f3c61fe343e74af1f533d73d3c72caf1dd6651bf9013b816cca0dd1759b5e2">button_short_press</a>);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    haEntity-&gt;<a class="code" href="classHATrigger.html#a4fb9c73855aba7474fb26e13bd74f3cf">setSubtype</a> (<a class="code" href="haTrigger_8h.html#a4f9c1c9c9344d12ea72582134ba7421bac8473ad51167f78c23ee4cb4719852f1">turn_on</a>);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="comment">// *******************************</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">size_t</span> bufferLen = haEntity-&gt;<a class="code" href="classHAEntity.html#ad299ecdb73519da56e2f5439941af544">measureMessage</a> ();</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    msgPackBuffer = (uint8_t*)malloc (bufferLen);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">size_t</span> len = haEntity-&gt;<a class="code" href="classHAEntity.html#a64140dc1e3e041eafbcd6eca04abb9ef">getAnounceMessage</a> (bufferLen, msgPackBuffer);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    DEBUG_INFO (<span class="stringliteral">&quot;Resulting MSG pack length: %d&quot;</span>, len);</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordflow">if</span> (!sendHADiscovery (msgPackBuffer, len)) {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        DEBUG_WARN (<span class="stringliteral">&quot;Error sending HA discovery message&quot;</span>);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    }</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordflow">if</span> (haEntity) {</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keyword">delete</span> (haEntity);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    }</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordflow">if</span> (msgPackBuffer) {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        free (msgPackBuffer);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    }</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#endif // SUPPORT_HA_DISCOVERY</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclassHAEntity_html_ad299ecdb73519da56e2f5439941af544"><div class="ttname"><a href="classHAEntity.html#ad299ecdb73519da56e2f5439941af544">HAEntity::measureMessage</a></div><div class="ttdeci">size_t measureMessage()</div><div class="ttdoc">Gets needed buffer size for discovery message.</div><div class="ttdef"><b>Definition:</b> <a href="haEntity_8h_source.html#l00217">haEntity.h:217</a></div></div>
 <div class="ttc" id="aEnigmaIOTNode_8h_html_a040804a4fb880b7e7dfe5c489f7bdf7f"><div class="ttname"><a href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType</a></div><div class="ttdeci">nodeMessageType</div><div class="ttdoc">Message code definition.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00035">EnigmaIOTNode.h:35</a></div></div>
-<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_ae744508f79e2bdfcc7352908d537a671"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#ae744508f79e2bdfcc7352908d537a671">CONTROLLER_CLASS_NAME::loop</a></div><div class="ttdeci">void loop() override</div><div class="ttdoc">This should be called periodically for module handling.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00044">ButtonController.cpp:44</a></div></div>
-<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_a6fc95acd652b504ae0e342f7ce5450c3"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#a6fc95acd652b504ae0e342f7ce5450c3">CONTROLLER_CLASS_NAME::configManagerStart</a></div><div class="ttdeci">void configManagerStart() override</div><div class="ttdoc">Called when wifi manager starts config portal.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00094">ButtonController.cpp:94</a></div></div>
+<div class="ttc" id="aclassHAEntity_html_a64140dc1e3e041eafbcd6eca04abb9ef"><div class="ttname"><a href="classHAEntity.html#a64140dc1e3e041eafbcd6eca04abb9ef">HAEntity::getAnounceMessage</a></div><div class="ttdeci">size_t getAnounceMessage(int bufferlen, uint8_t *buffer)</div><div class="ttdoc">Gets entity anounce message to be sent over EnigmaIOT message.</div><div class="ttdef"><b>Definition:</b> <a href="haEntity_8h_source.html#l00153">haEntity.h:153</a></div></div>
+<div class="ttc" id="aclassHATrigger_html_a4fb9c73855aba7474fb26e13bd74f3cf"><div class="ttname"><a href="classHATrigger.html#a4fb9c73855aba7474fb26e13bd74f3cf">HATrigger::setSubtype</a></div><div class="ttdeci">void setSubtype(ha_triggerSubtype_t subtype)</div><div class="ttdoc">Set trigger subtype as ha_triggerSubtype_t https://www.home-assistant.io/integrations/device_trigger....</div><div class="ttdef"><b>Definition:</b> <a href="haTrigger_8h_source.html#l00196">haTrigger.h:196</a></div></div>
+<div class="ttc" id="aclassEnigmaIOTjsonController_html_ac9fda7397114e169164bc6ee390f0e2d"><div class="ttname"><a href="classEnigmaIOTjsonController.html#ac9fda7397114e169164bc6ee390f0e2d">EnigmaIOTjsonController::connectInform</a></div><div class="ttdeci">virtual void connectInform()</div><div class="ttdoc">Used to notify controller that it is registered on EnigmaIOT network.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTjsonController_8h_source.html#l00081">EnigmaIOTjsonController.h:81</a></div></div>
+<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_ae744508f79e2bdfcc7352908d537a671"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#ae744508f79e2bdfcc7352908d537a671">CONTROLLER_CLASS_NAME::loop</a></div><div class="ttdeci">void loop() override</div><div class="ttdoc">This should be called periodically for module handling.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00053">ButtonController.cpp:53</a></div></div>
+<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_ab5ec6ad2c5cd0f6edfb7635aba862915"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#ab5ec6ad2c5cd0f6edfb7635aba862915">CONTROLLER_CLASS_NAME::buildHADiscovery</a></div><div class="ttdeci">void buildHADiscovery()</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00124">ButtonController.cpp:124</a></div></div>
+<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_a6fc95acd652b504ae0e342f7ce5450c3"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#a6fc95acd652b504ae0e342f7ce5450c3">CONTROLLER_CLASS_NAME::configManagerStart</a></div><div class="ttdeci">void configManagerStart() override</div><div class="ttdoc">Called when wifi manager starts config portal.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00103">ButtonController.cpp:103</a></div></div>
 <div class="ttc" id="aBasicController_8h_html"><div class="ttname"><a href="BasicController_8h.html">BasicController.h</a></div></div>
-<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_af6ef186cd6f5518739ef722213151284"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#af6ef186cd6f5518739ef722213151284">CONTROLLER_CLASS_NAME::~CONTROLLER_CLASS_NAME</a></div><div class="ttdeci">~CONTROLLER_CLASS_NAME()</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00089">ButtonController.cpp:89</a></div></div>
-<div class="ttc" id="aEnigmaIOTNode_8h_html_ac183d8bfcebdc9231366539a77b669eb"><div class="ttname"><a href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a></div><div class="ttdeci">nodePayloadEncoding_t</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00057">EnigmaIOTNode.h:57</a></div></div>
-<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_a4a58511842391487187927dd1b87a0dc"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#a4a58511842391487187927dd1b87a0dc">CONTROLLER_CLASS_NAME::saveConfig</a></div><div class="ttdeci">bool saveConfig() override</div><div class="ttdoc">Saves output module configuration.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00110">ButtonController.cpp:110</a></div></div>
+<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_af6ef186cd6f5518739ef722213151284"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#af6ef186cd6f5518739ef722213151284">CONTROLLER_CLASS_NAME::~CONTROLLER_CLASS_NAME</a></div><div class="ttdeci">~CONTROLLER_CLASS_NAME()</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00098">ButtonController.cpp:98</a></div></div>
+<div class="ttc" id="aEnigmaIOTNode_8h_html_ac183d8bfcebdc9231366539a77b669eb"><div class="ttname"><a href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a></div><div class="ttdeci">nodePayloadEncoding_t</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00058">EnigmaIOTNode.h:58</a></div></div>
+<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_a4a58511842391487187927dd1b87a0dc"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#a4a58511842391487187927dd1b87a0dc">CONTROLLER_CLASS_NAME::saveConfig</a></div><div class="ttdeci">bool saveConfig() override</div><div class="ttdoc">Saves output module configuration.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00119">ButtonController.cpp:119</a></div></div>
+<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_ad5a5b5eb5068a97a6e41c74d264707eb"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME::connectInform</a></div><div class="ttdeci">void connectInform()</div><div class="ttdoc">Used to notify controller that it is registered on EnigmaIOT network.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00031">ButtonController.cpp:31</a></div></div>
+<div class="ttc" id="ahaTrigger_8h_html_a4f9c1c9c9344d12ea72582134ba7421bac8473ad51167f78c23ee4cb4719852f1"><div class="ttname"><a href="haTrigger_8h.html#a4f9c1c9c9344d12ea72582134ba7421bac8473ad51167f78c23ee4cb4719852f1">turn_on</a></div><div class="ttdeci">@ turn_on</div><div class="ttdef"><b>Definition:</b> <a href="haTrigger_8h_source.html#l00105">haTrigger.h:105</a></div></div>
+<div class="ttc" id="ahaTrigger_8h_html_ada6f3c61fe343e74af1f533d73d3c72caf1dd6651bf9013b816cca0dd1759b5e2"><div class="ttname"><a href="haTrigger_8h.html#ada6f3c61fe343e74af1f533d73d3c72caf1dd6651bf9013b816cca0dd1759b5e2">button_short_press</a></div><div class="ttdeci">@ button_short_press</div><div class="ttdef"><b>Definition:</b> <a href="haTrigger_8h_source.html#l00083">haTrigger.h:83</a></div></div>
 <div class="ttc" id="aGwOutput__generic_8h_html_a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b"><div class="ttname"><a href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a></div><div class="ttdeci">@ data</div><div class="ttdef"><b>Definition:</b> <a href="GwOutput__generic_8h_source.html#l00023">GwOutput_generic.h:23</a></div></div>
 <div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_a68bf2951e6f5ba11894856104e062e6e"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#a68bf2951e6f5ba11894856104e062e6e">CONTROLLER_CLASS_NAME::sendCommandResp</a></div><div class="ttdeci">bool sendCommandResp(const char *command, bool result) override</div><div class="ttdoc">Sends command processing response acknowledge.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00026">ButtonController.cpp:26</a></div></div>
-<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_a9fc25e3bff52d9d4a642e5a604dd7c44"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#a9fc25e3bff52d9d4a642e5a604dd7c44">CONTROLLER_CLASS_NAME::configManagerExit</a></div><div class="ttdeci">void configManagerExit(bool status) override</div><div class="ttdoc">Called when wifi manager exits config portal.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00100">ButtonController.cpp:100</a></div></div>
-<div class="ttc" id="aclassEnigmaIOTNodeClass_html"><div class="ttname"><a href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a></div><div class="ttdoc">Main node class. Manages communication with gateway and allows sending and receiving user data.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00127">EnigmaIOTNode.h:127</a></div></div>
+<div class="ttc" id="aclassHATrigger_html"><div class="ttname"><a href="classHATrigger.html">HATrigger</a></div><div class="ttdef"><b>Definition:</b> <a href="haTrigger_8h_source.html#l00126">haTrigger.h:126</a></div></div>
+<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_a9fc25e3bff52d9d4a642e5a604dd7c44"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#a9fc25e3bff52d9d4a642e5a604dd7c44">CONTROLLER_CLASS_NAME::configManagerExit</a></div><div class="ttdeci">void configManagerExit(bool status) override</div><div class="ttdoc">Called when wifi manager exits config portal.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00109">ButtonController.cpp:109</a></div></div>
+<div class="ttc" id="aclassEnigmaIOTNodeClass_html"><div class="ttname"><a href="classEnigmaIOTNodeClass.html">EnigmaIOTNodeClass</a></div><div class="ttdoc">Main node class. Manages communication with gateway and allows sending and receiving user data.</div><div class="ttdef"><b>Definition:</b> <a href="EnigmaIOTNode_8h_source.html#l00134">EnigmaIOTNode.h:134</a></div></div>
 <div class="ttc" id="aBasicController_8cpp_html_a0a5b20c0a44622656e3028948ca20a47"><div class="ttname"><a href="BasicController_8cpp.html#a0a5b20c0a44622656e3028948ca20a47">CONFIG_FILE</a></div><div class="ttdeci">constexpr auto CONFIG_FILE</div><div class="ttdoc">Custom configuration file name.</div><div class="ttdef"><b>Definition:</b> <a href="BasicController_8cpp_source.html#l00011">BasicController.cpp:11</a></div></div>
-<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_a826124fa1f5c24d99cc8e4f49c555bee"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">CONTROLLER_CLASS_NAME::setup</a></div><div class="ttdeci">void setup(EnigmaIOTNodeClass *node, void *data=NULL)</div><div class="ttdoc">Initialize data structures.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00031">ButtonController.cpp:31</a></div></div>
+<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_a826124fa1f5c24d99cc8e4f49c555bee"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#a826124fa1f5c24d99cc8e4f49c555bee">CONTROLLER_CLASS_NAME::setup</a></div><div class="ttdeci">void setup(EnigmaIOTNodeClass *node, void *data=NULL)</div><div class="ttdoc">Initialize data structures.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00040">ButtonController.cpp:40</a></div></div>
 <div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_a440e2979ce22f7fac243f6063469db6c"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#a440e2979ce22f7fac243f6063469db6c">CONTROLLER_CLASS_NAME::processRxCommand</a></div><div class="ttdeci">bool processRxCommand(const uint8_t *address, const uint8_t *buffer, uint8_t length, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding) override</div><div class="ttdoc">Called to process a downlink command.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00019">ButtonController.cpp:19</a></div></div>
-<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_ab2dd07a8fecca7f083f2776dbc294dc9"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#ab2dd07a8fecca7f083f2776dbc294dc9">CONTROLLER_CLASS_NAME::loadConfig</a></div><div class="ttdeci">bool loadConfig() override</div><div class="ttdoc">Loads output module configuration.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00105">ButtonController.cpp:105</a></div></div>
+<div class="ttc" id="aclassCONTROLLER__CLASS__NAME_html_ab2dd07a8fecca7f083f2776dbc294dc9"><div class="ttname"><a href="classCONTROLLER__CLASS__NAME.html#ab2dd07a8fecca7f083f2776dbc294dc9">CONTROLLER_CLASS_NAME::loadConfig</a></div><div class="ttdeci">bool loadConfig() override</div><div class="ttdoc">Loads output module configuration.</div><div class="ttdef"><b>Definition:</b> <a href="ButtonController_8cpp_source.html#l00114">ButtonController.cpp:114</a></div></div>
 <div class="ttc" id="aGwOutput__generic_8h_html_a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30"><div class="ttname"><a href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a></div><div class="ttdeci">@ status</div><div class="ttdef"><b>Definition:</b> <a href="GwOutput__generic_8h_source.html#l00026">GwOutput_generic.h:25</a></div></div>
+<div class="ttc" id="aclassHATrigger_html_adda48fb69d4ad6c9f95dfb7f7f92b79c"><div class="ttname"><a href="classHATrigger.html#adda48fb69d4ad6c9f95dfb7f7f92b79c">HATrigger::setType</a></div><div class="ttdeci">void setType(ha_triggerType_t type)</div><div class="ttdoc">Set trigger type as ha_triggerType_t https://www.home-assistant.io/integrations/device_trigger....</div><div class="ttdef"><b>Definition:</b> <a href="haTrigger_8h_source.html#l00178">haTrigger.h:178</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.20

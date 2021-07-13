@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.7</span>
+   &#160;<span id="projectnumber">0.9.8</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -70,6 +70,12 @@ $(function() {
 <li>data
 : <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">GwOutput_generic.h</a>
 </li>
+<li>DATA_TYPE
+: <a class="el" href="EnigmaIOTNode_8h.html#a3716f5ccb3d0e7f9222a842f67b9d0a2a66b2cf49a1e6f25c381fd9602bed19d6">EnigmaIOTNode.h</a>
+</li>
+<li>dataMessageType_t
+: <a class="el" href="EnigmaIOTNode_8h.html#a3716f5ccb3d0e7f9222a842f67b9d0a2">EnigmaIOTNode.h</a>
+</li>
 <li>DBG
 : <a class="el" href="EnigmaIOTdebug_8h.html#a49606be7356624568932ec81c0d429f4">EnigmaIOTdebug.h</a>
 </li>
@@ -91,20 +97,26 @@ $(function() {
 <li>DEFAULT_SLEEP_TIME
 : <a class="el" href="EnigmaIoTconfig_8h.html#a4400d84e20bfd15aed72aa991dd87d4f">EnigmaIoTconfig.h</a>
 </li>
+<li>DEVICE_TRACKER
+: <a class="el" href="haEntity_8h.html#aa0743062e1533ced64df39be6177d76da68bc7b1808d1b2a923f76d5fe34b613c">haEntity.h</a>
+</li>
+<li>DEVICE_TRIGGER
+: <a class="el" href="haEntity_8h.html#aa0743062e1533ced64df39be6177d76da9d2a31821cef38922da5a67e03c1013e">haEntity.h</a>
+</li>
 <li>DISCONNECT_ON_DATA_ERROR
 : <a class="el" href="EnigmaIoTconfigAdvanced_8h.html#a6aa9a1bf5b534f017d6c1c7bec100d1d">EnigmaIoTconfigAdvanced.h</a>
 </li>
 <li>disconnectEventHandler()
-: <a class="el" href="enigmaiot__led__flasher_8ino.html#a23fc74fc5731518093d5fa0db24edae1">enigmaiot_led_flasher.ino</a>
-, <a class="el" href="enigmaiot__node_8ino.html#a23fc74fc5731518093d5fa0db24edae1">enigmaiot_node.ino</a>
-, <a class="el" href="enigmaiot__node__msgpack_8ino.html#a23fc74fc5731518093d5fa0db24edae1">enigmaiot_node_msgpack.ino</a>
-, <a class="el" href="enigmaiot__node__nonsleepy_8ino.html#a23fc74fc5731518093d5fa0db24edae1">enigmaiot_node_nonsleepy.ino</a>
-, <a class="el" href="EnigmaIOT-Button-Controller_8ino.html#a23fc74fc5731518093d5fa0db24edae1">EnigmaIOT-Button-Controller.ino</a>
-, <a class="el" href="EnigmaIOT-DashButton-Controller_8ino.html#a23fc74fc5731518093d5fa0db24edae1">EnigmaIOT-DashButton-Controller.ino</a>
-, <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#a23fc74fc5731518093d5fa0db24edae1">EnigmaIOT-Json-Controller-Template.ino</a>
+: <a class="el" href="EnigmaIOT-Json-Controller-Template_8ino.html#a23fc74fc5731518093d5fa0db24edae1">EnigmaIOT-Json-Controller-Template.ino</a>
 , <a class="el" href="EnigmaIOT-Led-Controller_8ino.html#a23fc74fc5731518093d5fa0db24edae1">EnigmaIOT-Led-Controller.ino</a>
 , <a class="el" href="EnigmaIOT-Sensor-Controller_8ino.html#a23fc74fc5731518093d5fa0db24edae1">EnigmaIOT-Sensor-Controller.ino</a>
 , <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a23fc74fc5731518093d5fa0db24edae1">EnigmaIOT-SmartSwitch-Controller.ino</a>
+, <a class="el" href="enigmaiot__node__nonsleepy_8ino.html#a23fc74fc5731518093d5fa0db24edae1">enigmaiot_node_nonsleepy.ino</a>
+, <a class="el" href="enigmaiot__led__flasher_8ino.html#a23fc74fc5731518093d5fa0db24edae1">enigmaiot_led_flasher.ino</a>
+, <a class="el" href="enigmaiot__node_8ino.html#a23fc74fc5731518093d5fa0db24edae1">enigmaiot_node.ino</a>
+, <a class="el" href="enigmaiot__node__msgpack_8ino.html#a23fc74fc5731518093d5fa0db24edae1">enigmaiot_node_msgpack.ino</a>
+, <a class="el" href="EnigmaIOT-Button-Controller_8ino.html#a23fc74fc5731518093d5fa0db24edae1">EnigmaIOT-Button-Controller.ino</a>
+, <a class="el" href="EnigmaIOT-DashButton-Controller_8ino.html#a23fc74fc5731518093d5fa0db24edae1">EnigmaIOT-DashButton-Controller.ino</a>
 </li>
 <li>doRestart()
 : <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a4e0b35257234db80b4d6771ec42153a3">EnigmaIOTGatewayMQTT.ino</a>
@@ -121,8 +133,8 @@ $(function() {
 , <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613ae5aa3bb71dda4aa9ba38ca2a5eeba422">EnigmaIOTGateway.h</a>
 </li>
 <li>DOWNSTREAM_BRCAST_DATA_SET
-: <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa3b0c314d51c09e5960e07704bb05f4ab">EnigmaIOTNode.h</a>
-, <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a3b0c314d51c09e5960e07704bb05f4ab">EnigmaIOTGateway.h</a>
+: <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a3b0c314d51c09e5960e07704bb05f4ab">EnigmaIOTGateway.h</a>
+, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa3b0c314d51c09e5960e07704bb05f4ab">EnigmaIOTNode.h</a>
 </li>
 <li>DOWNSTREAM_CTRL_DATA
 : <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fad2c18ef749d0eca5f53ecfb0fb0af0bc">EnigmaIOTNode.h</a>
@@ -133,8 +145,8 @@ $(function() {
 , <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fac8a74f458aed6681bf199f1ce2f9eb03">EnigmaIOTNode.h</a>
 </li>
 <li>DOWNSTREAM_DATA_SET
-: <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a21ca6763c97e4804ee6957d039443d2d">EnigmaIOTGateway.h</a>
-, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa21ca6763c97e4804ee6957d039443d2d">EnigmaIOTNode.h</a>
+: <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7fa21ca6763c97e4804ee6957d039443d2d">EnigmaIOTNode.h</a>
+, <a class="el" href="EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613a21ca6763c97e4804ee6957d039443d2d">EnigmaIOTGateway.h</a>
 </li>
 <li>DSTROOTCA_H
 : <a class="el" href="dstrootca_8h.html#ac124c2449b0ec4b04fe4bc4e61632e33">dstrootca.h</a>

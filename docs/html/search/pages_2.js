@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['server_20api_1635',['Server API',['../md_docs_api.html',1,'']]]
+  ['howto_2076',['howto',['../md_docs_howto.html',1,'']]]
 ];

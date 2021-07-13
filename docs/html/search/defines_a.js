@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['red_5fled_1602',['RED_LED',['../EnigmaIOTGatewayDummy_8ino.html#a073dbcb7f5bc4f4b45dc048b55eaff3d',1,'RED_LED():&#160;EnigmaIOTGatewayDummy.ino'],['../EnigmaIOTGatewayMQTT_8ino.html#a073dbcb7f5bc4f4b45dc048b55eaff3d',1,'RED_LED():&#160;EnigmaIOTGatewayMQTT.ino']]],
-  ['reset_5fpin_1603',['RESET_PIN',['../EnigmaIOT-Button-Controller_8ino.html#a08bca59db4b190eaaea4d47b7562869c',1,'RESET_PIN():&#160;EnigmaIOT-Button-Controller.ino'],['../EnigmaIOT-DashButton-Controller_8ino.html#a08bca59db4b190eaaea4d47b7562869c',1,'RESET_PIN():&#160;EnigmaIOT-DashButton-Controller.ino'],['../EnigmaIOT-Json-Controller-Template_8ino.html#a08bca59db4b190eaaea4d47b7562869c',1,'RESET_PIN():&#160;EnigmaIOT-Json-Controller-Template.ino'],['../EnigmaIOT-Led-Controller_8ino.html#a08bca59db4b190eaaea4d47b7562869c',1,'RESET_PIN():&#160;EnigmaIOT-Led-Controller.ino'],['../EnigmaIOT-Sensor-Controller_8ino.html#a08bca59db4b190eaaea4d47b7562869c',1,'RESET_PIN():&#160;EnigmaIOT-Sensor-Controller.ino'],['../EnigmaIOT-SmartSwitch-Controller_8ino.html#a08bca59db4b190eaaea4d47b7562869c',1,'RESET_PIN():&#160;EnigmaIOT-SmartSwitch-Controller.ino']]],
-  ['restart_5fnotif_1604',['RESTART_NOTIF',['../GwOutput__mqtt_8h.html#ae2f0ef8f36c0b685940124089172e6c3',1,'GwOutput_mqtt.h']]]
+  ['no_5fdebug_2033',['NO_DEBUG',['../EnigmaIOTdebug_8h.html#a424f1b989129c5519f4df8f61ad6dcaf',1,'EnigmaIOTdebug.h']]],
+  ['node_5fdata_2034',['NODE_DATA',['../GwOutput__mqtt_8h.html#af1dcc05117b1f2ccb5922611c540e241',1,'GwOutput_mqtt.h']]],
+  ['node_5fstatus_2035',['NODE_STATUS',['../GwOutput__mqtt_8h.html#a82ea7d9552d7d2c2d977c578587e94dc',1,'GwOutput_mqtt.h']]],
+  ['ntp_5fserver_5f1_2036',['NTP_SERVER_1',['../EnigmaIoTconfig_8h.html#ad2cbd556e432924a29a3efa1d13668af',1,'EnigmaIoTconfig.h']]],
+  ['ntp_5fserver_5f2_2037',['NTP_SERVER_2',['../EnigmaIoTconfig_8h.html#a562447c925663fec9c7e923f6c46fa7d',1,'EnigmaIoTconfig.h']]]
 ];

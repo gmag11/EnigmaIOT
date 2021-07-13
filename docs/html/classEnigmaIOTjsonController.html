@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo text inside.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">EnigmaIOT
-   &#160;<span id="projectnumber">0.9.7</span>
+   &#160;<span id="projectnumber">0.9.8</span>
    </div>
    <div id="projectbrief">Secure sensor and gateway platform based on ESP8266 and ESP32</div>
   </td>
@@ -102,6 +102,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac9fda7397114e169164bc6ee390f0e2d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#ac9fda7397114e169164bc6ee390f0e2d">connectInform</a> ()</td></tr>
 <tr class="memdesc:ac9fda7397114e169164bc6ee390f0e2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to notify controller that it is registered on EnigmaIOT network.  <a href="classEnigmaIOTjsonController.html#ac9fda7397114e169164bc6ee390f0e2d">More...</a><br /></td></tr>
 <tr class="separator:ac9fda7397114e169164bc6ee390f0e2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2e1940f901e2ad05701b238374db9c0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#af2e1940f901e2ad05701b238374db9c0">disconnectInform</a> (<a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a> reason)</td></tr>
+<tr class="memdesc:af2e1940f901e2ad05701b238374db9c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to notify controller that it is unregistered on EnigmaIOT network.  <a href="classEnigmaIOTjsonController.html#af2e1940f901e2ad05701b238374db9c0">More...</a><br /></td></tr>
+<tr class="separator:af2e1940f901e2ad05701b238374db9c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d83f8376a37624a551421a2c8a90c5f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnigmaIOTjsonController.html#a9d83f8376a37624a551421a2c8a90c5f">configManagerStart</a> ()=0</td></tr>
 <tr class="memdesc:a9d83f8376a37624a551421a2c8a90c5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when wifi manager starts config portal.  <a href="classEnigmaIOTjsonController.html#a9d83f8376a37624a551421a2c8a90c5f">More...</a><br /></td></tr>
 <tr class="separator:a9d83f8376a37624a551421a2c8a90c5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,7 +139,7 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00028">28</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00034">34</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a844043532561398d54fa45cd7f0cf4ed"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a844043532561398d54fa45cd7f0cf4ed">&#9670;&nbsp;</a></span>configManagerExit()</h2>
@@ -221,14 +224,46 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Used to notify controller that it is registered on EnigmaIOT network. </p>
 
-<p>Reimplemented in <a class="el" href="classCONTROLLER__CLASS__NAME.html#a92c9b5871578251f1955fb4bc0327423">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME</a>, and <a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME</a>.</p>
+<p>Reimplemented in <a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME</a>, <a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME</a>, and <a class="el" href="classCONTROLLER__CLASS__NAME.html#ad5a5b5eb5068a97a6e41c74d264707eb">CONTROLLER_CLASS_NAME</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00081">81</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
+
+</div>
+</div>
+<a id="af2e1940f901e2ad05701b238374db9c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2e1940f901e2ad05701b238374db9c0">&#9670;&nbsp;</a></span>disconnectInform()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void EnigmaIOTjsonController::disconnectInform </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a>&#160;</td>
+          <td class="paramname"><em>reason</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used to notify controller that it is unregistered on EnigmaIOT network. </p>
+
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00097">97</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
 
 </div>
 </div>
@@ -470,7 +505,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00062">62</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00074">74</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
 
 </div>
 </div>
@@ -501,7 +536,7 @@ Protected Attributes</h2></td></tr>
 <p>Sends a JSON encoded message to lower layer. </p>
 <dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if message sending was successful. <code>false</code> otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00114">114</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00170">170</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
 
 </div>
 </div>
@@ -603,7 +638,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00031">31</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00037">37</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
 
 </div>
 </div>
@@ -627,7 +662,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00030">30</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTjsonController_8h_source.html#l00036">36</a> of file <a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>.</p>
 
 </div>
 </div>

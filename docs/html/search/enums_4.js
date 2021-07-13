@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['node_5fstatus_1456',['node_status',['../NodeList_8h.html#a8dd9280b6a6e53e65414115f47b0df6a',1,'NodeList.h']]],
-  ['nodeinvalidatereason_5ft_1457',['nodeInvalidateReason_t',['../EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6',1,'EnigmaIOTNode.h']]],
-  ['nodemessagetype_1458',['nodeMessageType',['../EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f',1,'EnigmaIOTNode.h']]],
-  ['nodenamestatus_5ft_1459',['nodeNameStatus_t',['../NodeList_8h.html#a1c9a1577fe153d9fa2548bd7c0b04b9a',1,'NodeList.h']]],
-  ['nodepayloadencoding_5ft_1460',['nodePayloadEncoding_t',['../EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb',1,'EnigmaIOTNode.h']]]
+  ['gatewaymessagetype_5ft_1794',['gatewayMessageType_t',['../EnigmaIOTGateway_8h.html#a7493ad6706df484ac2749d7613266613',1,'EnigmaIOTGateway.h']]],
+  ['gatewaypayloadencoding_5ft_1795',['gatewayPayloadEncoding_t',['../EnigmaIOTGateway_8h.html#a404510882576d212315fd2ed67280d8d',1,'EnigmaIOTGateway.h']]],
+  ['gwinvalidatereason_5ft_1796',['gwInvalidateReason_t',['../EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977',1,'EnigmaIOTGateway.h']]],
+  ['gwoutput_5fdata_5ftype_1797',['GwOutput_data_type',['../GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636',1,'GwOutput_generic.h']]]
 ];
