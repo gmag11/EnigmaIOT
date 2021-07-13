@@ -70,7 +70,7 @@ $(function() {
 <div class="contents">
 <div class="textblock"><h2>System Design</h2>
 <p>System functions are divided in three layers: application, link and physical layer.</p>
-<p><img src="../img/system_layers.png" alt="Software Layers" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/system_layers.png" alt="Software Layers" class="inline"/></p>
 <ul>
 <li><b>Application layer</b> is not controlled by EnigmaIoT protocol but main program. User may choose whatever data format or final destination of payload. A good option is to use CayenneLPP format but any other format or even raw data may be used. The only limit is the maximum packet length that, for ESP-NOW is around 200 bytes.</li>
 <li><b>Link layer</b> is the one that add privacy and security. It manages connection between nodes and gateway in a transparent way. It does key agreement and node registration and checks the correctness of data messages. In case of any error it automatically start a new registration process. On this layer, data packets are encrypted using calculated symmetric key.</li>
@@ -92,27 +92,27 @@ $(function() {
 <p>After that node may start new key agreement sending a new Client Hello message.</p>
 <p>All nodes and gateway are identified by its MAC address. No name is assigned so no configuration is needed on node. Function assignment has to be done at a higher level.</p>
 <h1>State diagram for nodes and Gateway</h1>
-<p><img src="../img/StateDiagram-Sensor.svg?sanitize=true" alt="Sensor State Diagram" style="pointer-events: none;" width="800" class="inline"/></p>
-<p><img src="../img/StateDiagram-Gateway.svg?sanitize=true" alt="Gateway State Diagram" style="pointer-events: none;" width="800" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/StateDiagram-Sensor.svg?sanitize=true" alt="Sensor State Diagram" style="pointer-events: none;" width="800" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/StateDiagram-Gateway.svg?sanitize=true" alt="Gateway State Diagram" style="pointer-events: none;" width="800" class="inline"/></p>
 <h1>Message format specification</h1>
 <h2>Client Hello message</h2>
-<p><img src="../img/ClientHello.png" alt="Client Hello message format" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ClientHello.png" alt="Client Hello message format" class="inline"/></p>
 <p>Client hello is sent by node to start registration procedure. It includes the public key to be used on Elliptic Curve Diffie Hellman (EDCH) algorithm to calculate the key. Initialization vector (IV) is used for encryption. There is a random 4 byte field reserved for future use.</p>
 <p>This message is sent encrypted with network key.</p>
 <h2>Server Hello message</h2>
-<p><img src="../img/ServerHello.png" alt="Server Hello message format" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ServerHello.png" alt="Server Hello message format" class="inline"/></p>
 <p>After receiving and checking Client Hello message, gateway responds with a Server Hello message. It carries gateway's public key to let node calculate key using ECDH. There is a random 4 byte field reserved for future use. Gateway assigns node a NodeID. It is signaled as a 2 byte field.</p>
 <p>Server Hello message is sent encrypted with network key.</p>
 <h2><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> Data message</h2>
-<p><img src="../img/SensorData.png" alt="Node payload message format" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/SensorData.png" alt="Node payload message format" class="inline"/></p>
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> data is always encrypted using shared key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.</p>
 <p>Total message length (without tag) is included on a 2 byte field.</p>
 <h2>Unencrypted <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> Data message</h2>
-<p><img src="../img/UnencryptedSensorData.png" alt="Node unencrypted payload message format" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/UnencryptedSensorData.png" alt="Node unencrypted payload message format" class="inline"/></p>
 <p>In case that extreme performance is needed there is the possibility to send unencrypted data so processor spends a few milliseconds less. It is not recommended to do so unless you want to investigate crypto software performance. Use at your own data risk :D</p>
 <p>This message also includes node ID and a counter used by gateway to check lost or repeated messages from that node.</p>
 <h2><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> control message (downlink)</h2>
-<p><img src="../img/SensorCommand-Downlink.png" alt="Node control message format" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/SensorCommand-Downlink.png" alt="Node control message format" class="inline"/></p>
 <p>Gateway can send commands to an individual node in a similar way as sensor data is sent by nodes. For nodes that can be slept between consecutive data messages this commands are queued and sent just after a data message is received.</p>
 <p>Only last message is queued. In case Gateway tries to send a new message, old one gets deleted and overridden by the new one.</p>
 <p>Possible values of first byte means:</p>
@@ -122,17 +122,17 @@ $(function() {
 <p>92: GET command (broadcast)</p>
 <h2>Control message</h2>
 <h4>Downlink Control Message</h4>
-<p><img src="../img/ControlComand-Downlink.png" alt="DL Control Command message format" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ControlComand-Downlink.png" alt="DL Control Command message format" class="inline"/></p>
 <p>Broadcast messages of this type start with <code>0x84</code>.</p>
 <h4>Uplink Control Message</h4>
-<p><img src="../img/ControlComand-Uplink.png" alt="UL Control Command message format" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ControlComand-Uplink.png" alt="UL Control Command message format" class="inline"/></p>
 <p>Gateway and node can exchange internal control commands. These are used to set internal protocol parameters like sleep time. This type of messages are processed like normal downlink messages, but are not passed to higher level (user code) in <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a>.</p>
 <p>Some control messages, like OTA update messages, require that they are processed immediately. Hence, it is required that node is not in deep sleep mode. This can be controlled, for instance, using another control command to set sleep time to 0.</p>
 <h2>Clock synchronization</h2>
 <h4>Clock sync request</h4>
-<p><img src="../img/ClockSyncRequest.png" alt="Clock sync request" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ClockSyncRequest.png" alt="Clock sync request" class="inline"/></p>
 <h4>Clock sync response</h4>
-<p><img src="../img/ClockSyncResponse.png" alt="Clock sync response" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ClockSyncResponse.png" alt="Clock sync response" class="inline"/></p>
 <p>In non sleepy nodes, it may be useful to send a message from time to time to let Gateway know that node is still active and let <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> to check that is is still registered in Gateway.</p>
 <p>Clock syncronization may be a very good feature if you need to coordinate actions on different nodes.</p>
 <p>EnigmaIOT combines these two features into one request and response. Nodes may send clock sync request every some time to ping gateway and get common clock updated. Clock synchronization uses a mechanism similar to the one used by <a href="https://en.wikipedia.org/wiki/Network_Time_Protocol#:~:text=Simple%20Network%20Time%20Protocol%20">SNTP protocol</a>.</p>
@@ -141,30 +141,30 @@ $(function() {
 <p>This feature may be disabled if needed.</p>
 <h2>Address to node name translation</h2>
 <h4>Set node name</h4>
-<p><img src="../img/SetNodeName.png" alt="Set Node Name" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/SetNodeName.png" alt="Set Node Name" class="inline"/></p>
 <h4>Set node name result</h4>
-<p><img src="../img/SetNodeNameResult.png" alt="Set Node Name result" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/SetNodeNameResult.png" alt="Set Node Name result" class="inline"/></p>
 <p>In order to make node messages more readable for humans, this implements a way to let Gateway to translate EnigmaIOT addresses to custom names (for instance, "RoomBlindControl"). This eases node replacement in case of failure.</p>
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> names can be up to 32 characters long and should avoid characters different of letters and numbers. <b>Characters #,+ and / are specially forbidden</b>.</p>
 <p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> name is configured by user during first configuration in WiFi Web portal.</p>
 <h2>Invalidate Key message</h2>
-<p><img src="../img/InvalidateKey.png" alt="Invalidate Key message format" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/InvalidateKey.png" alt="Invalidate Key message format" class="inline"/></p>
 <p>After every data message from nodes, gateway evaluates key integrity and validity. In case of any error decoding the packet gateways ignores data and reply with this message indicating the reason that caused error. <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> must start a new registration procedure in order to send data again. After this new registration node resends the last data message.</p>
 <p>A gateway defines a key validity period after that a node key is marked as expired. In a message is received after that is processed normally but an Invalidate Key message indicating key expiration as reason. <a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> then starts a registration procedure but does not retry communication.</p>
 <p>Invalidate Key message is always sent unencrypted.</p>
 <h1>Protocol procedures</h1>
 <h2>Normal node registration and node data exchange</h2>
-<p><img src="../img/NodeRegistration.svg?sanitize=true" alt="Normal node registration message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/NodeRegistration.svg?sanitize=true" alt="Normal node registration message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
 <h2>Incomplete Registration</h2>
-<p><img src="../img/RegistrationIncomplete.svg?sanitize=true" alt="Incomplete Registration message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/RegistrationIncomplete.svg?sanitize=true" alt="Incomplete Registration message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
 <h2><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> Not Registered</h2>
-<p><img src="../img/NodeNotRegistered.svg?sanitize=true" alt="Node Not Registered message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/NodeNotRegistered.svg?sanitize=true" alt="Node Not Registered message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
 <h2>Key Expiration</h2>
-<p><img src="../img/KeyExpiration.svg?sanitize=true" alt="KeyExpiration message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/KeyExpiration.svg?sanitize=true" alt="KeyExpiration message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
 <h2><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> Registration Collision</h2>
-<p><img src="../img/NodeRegistrationCollision.svg?sanitize=true" alt="Node Registration Collision message sequence" style="pointer-events: none;" width="600" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/NodeRegistrationCollision.svg?sanitize=true" alt="Node Registration Collision message sequence" style="pointer-events: none;" width="600" class="inline"/></p>
 <h2>Wrong Data Counter</h2>
-<p><img src="../img/WrongCounter.svg?sanitize=true" alt="Wrong Counter message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
+<p><img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/WrongCounter.svg?sanitize=true" alt="Wrong Counter message sequence" style="pointer-events: none;" width="400" class="inline"/></p>
 <h1>Hardware description</h1>
 <h2>Gateway</h2>
 <p>A gateway concentrates communication from all nodes, manages their registrations status, negotiate session key with them and outputs their messages to an output protocol.</p>

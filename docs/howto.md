@@ -78,7 +78,7 @@ A web browser should be open automatically pointing to configuration portal. If 
 
 You should see something like this:
 
-<img src="../img/EnigmaIOTGateway_config_portal.png" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/EnigmaIOTGateway_config_portal.png" style="zoom:50%;" />
 
 
 
@@ -86,7 +86,7 @@ Click on `Configure WiFi` and board will scan networks. Select yours and continu
 
 
 
-<img src="../img/EnigmaIOTGateway_wifi_selection.png" alt="image-20210703000533470" style="zoom: 50%;" />
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/EnigmaIOTGateway_wifi_selection.png" alt="image-20210703000533470" style="zoom: 50%;" />
 
 Fields explanation:
 
@@ -177,13 +177,13 @@ In the same way as we did with gateway, when node starts for first time it annou
 
 When you connect to this AP without password you get a web page like this:
 
-<img src="../img/EnigmaIOTNode_config_portal.png" alt="image-20210704121322147" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/img/EnigmaIOTNode_config_portal.png" alt="image-20210704121322147" style="zoom:50%;" />
 
 Click on `Configure WiFi` button and you will get the list of WiFi networks around. It is important not to select your home WiFi network here. It is not what an EnigmaIOT node needs. You should select the one whose name is you EnigmaIOT network name. This comes from your EnigmaIOT gateway.
 
 This AP needs a password it is the one that you configured as Network key in your gateway.
 
-<img src="../img/EnigmaIOTNode_wifi_selection.png" alt="image-20210704121626137" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/EnigmaIOTNode_wifi_selection.png" alt="image-20210704121626137" style="zoom:50%;" />
 
 
 

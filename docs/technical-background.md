@@ -4,7 +4,7 @@
 
 System functions are divided in three layers: application, link and physical layer.
 
-![Software Layers](../img/system_layers.png)
+![Software Layers](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/system_layers.png)
 
 - **Application layer** is not controlled by EnigmaIoT protocol but main program. User may choose whatever data format or final destination of payload. A good option is to use CayenneLPP format but any other format or even raw data may be used. The only limit is the maximum packet length that, for ESP-NOW is around 200 bytes.
 
@@ -44,15 +44,15 @@ All nodes and gateway are identified by its MAC address. No name is assigned so 
 
 ## State diagram for nodes and Gateway
 
-<img src="../img/StateDiagram-Sensor.svg?sanitize=true" alt="Sensor State Diagram" width="800"/>
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/StateDiagram-Sensor.svg?sanitize=true" alt="Sensor State Diagram" width="800"/>
 
-<img src="../img/StateDiagram-Gateway.svg?sanitize=true" alt="Gateway State Diagram" width="800"/>
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/StateDiagram-Gateway.svg?sanitize=true" alt="Gateway State Diagram" width="800"/>
 
 ## Message format specification
 
 ### Client Hello message
 
-![Client Hello message format](../img/ClientHello.png)
+![Client Hello message format](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ClientHello.png)
 
 Client hello is sent by node to start registration procedure. It includes the public key to be used on Elliptic Curve Diffie Hellman (EDCH) algorithm to calculate the key. Initialization vector (IV) is used for encryption. There is a random 4 byte field reserved for future use.
 
@@ -60,7 +60,7 @@ This message is sent encrypted with network key.
 
 ### Server Hello message
 
-![Server Hello message format](../img/ServerHello.png)
+![Server Hello message format](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ServerHello.png)
 
 After receiving and checking Client Hello message, gateway responds with a Server Hello message. It carries gateway's public key to let node calculate key using ECDH. There is a random 4 byte field reserved for future use. Gateway assigns node a NodeID. It is signaled as a 2 byte field.
 
@@ -68,7 +68,7 @@ Server Hello message is sent encrypted with network key.
 
 ### Node Data message
 
-![Node payload message format](../img/SensorData.png)
+![Node payload message format](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/SensorData.png)
 
 Node data is always encrypted using shared key and IV. Apart from payload this message includes node ID and a counter used by gateway to check lost or repeated messages from that node.
 
@@ -76,7 +76,7 @@ Total message length (without tag) is included on a 2 byte field.
 
 ### Unencrypted Node Data message
 
-![Node unencrypted payload message format](../img/UnencryptedSensorData.png)
+![Node unencrypted payload message format](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/UnencryptedSensorData.png)
 
 In case that extreme performance is needed there is the possibility to send unencrypted data so processor spends a few milliseconds less. It is not recommended to do so unless you want to investigate crypto software performance. Use at your own data risk :D
 
@@ -84,7 +84,7 @@ This message also includes node ID and a counter used by gateway to check lost o
 
 ### Node control message (downlink)
 
-![Node control message format](../img/SensorCommand-Downlink.png)
+![Node control message format](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/SensorCommand-Downlink.png)
 
 Gateway can send commands to an individual node in a similar way as sensor data is sent by nodes. For nodes that can be slept between consecutive data messages this commands are queued and sent just after a data message is received.
 
@@ -104,13 +104,13 @@ Possible values of first byte means:
 
 ##### Downlink Control Message
 
-![DL Control Command message format](../img/ControlComand-Downlink.png)
+![DL Control Command message format](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ControlComand-Downlink.png)
 
 Broadcast messages of this type start with `0x84`.
 
 ##### Uplink Control Message
 
-![UL Control Command message format](../img/ControlComand-Uplink.png)
+![UL Control Command message format](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ControlComand-Uplink.png)
 
 Gateway  and node can exchange internal control commands. These are used to set internal protocol parameters like sleep time. This type of messages are processed like normal downlink messages, but are not passed to higher level (user code) in Node.
 
@@ -120,11 +120,11 @@ Some control messages, like OTA update messages, require that they are processed
 
 ##### Clock sync request
 
-![Clock sync request](../img/ClockSyncRequest.png)
+![Clock sync request](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ClockSyncRequest.png)
 
 ##### Clock sync response
 
-![Clock sync response](../img/ClockSyncResponse.png)
+![Clock sync response](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/ClockSyncResponse.png)
 
 In non sleepy nodes, it may be useful to send a message from time to time to let Gateway know that node is still active and let Node to check that is is still registered in Gateway.
 
@@ -142,11 +142,11 @@ This feature may be disabled if needed.
 
 ##### Set node name
 
-![Set Node Name](../img/SetNodeName.png)
+![Set Node Name](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/SetNodeName.png)
 
 ##### Set node name result
 
-![Set Node Name result](../img/SetNodeNameResult.png)
+![Set Node Name result](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/SetNodeNameResult.png)
 
 In order to make node messages more readable for humans, this implements a way to let Gateway to translate EnigmaIOT addresses to custom names (for instance, "RoomBlindControl"). This eases node replacement in case of failure.
 
@@ -156,7 +156,7 @@ Node name is configured by user during first configuration in WiFi Web portal.
 
 ### Invalidate Key message
 
-![Invalidate Key message format](../img/InvalidateKey.png)
+![Invalidate Key message format](https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/InvalidateKey.png)
 
 After every data message from nodes, gateway evaluates key integrity and validity. In case of any error decoding the packet gateways ignores data and reply with this message indicating the reason that caused error. Node must start a new registration procedure in order to send data again. After this new registration node resends the last data message.
 
@@ -168,27 +168,27 @@ Invalidate Key message is always sent unencrypted.
 
 ### Normal node registration and node data exchange
 
-<img src="../img/NodeRegistration.svg?sanitize=true" alt="Normal node registration message sequence" width="400"/>
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/NodeRegistration.svg?sanitize=true" alt="Normal node registration message sequence" width="400"/>
 
 ### Incomplete Registration
 
-<img src="../img/RegistrationIncomplete.svg?sanitize=true" alt="Incomplete Registration message sequence" width="400"/>
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/RegistrationIncomplete.svg?sanitize=true" alt="Incomplete Registration message sequence" width="400"/>
 
 ### Node Not Registered
 
-<img src="../img/NodeNotRegistered.svg?sanitize=true" alt="Node Not Registered message sequence" width="400"/>
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/NodeNotRegistered.svg?sanitize=true" alt="Node Not Registered message sequence" width="400"/>
 
 ### Key Expiration
 
-<img src="../img/KeyExpiration.svg?sanitize=true" alt="KeyExpiration message sequence" width="400"/>
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/KeyExpiration.svg?sanitize=true" alt="KeyExpiration message sequence" width="400"/>
 
 ### Node Registration Collision
 
-<img src="../img/NodeRegistrationCollision.svg?sanitize=true" alt="Node Registration Collision message sequence" width="600"/>
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/NodeRegistrationCollision.svg?sanitize=true" alt="Node Registration Collision message sequence" width="600"/>
 
 ### Wrong Data Counter
 
-<img src="../img/WrongCounter.svg?sanitize=true" alt="Wrong Counter message sequence" width="400"/>
+<img src="https://raw.githubusercontent.com/gmag11/EnigmaIOT/master/img/WrongCounter.svg?sanitize=true" alt="Wrong Counter message sequence" width="400"/>
 
 ## Hardware description
 
