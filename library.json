@@ -1,7 +1,7 @@
 {
   "name": "EnigmaIOT",
   "frameworks": "arduino",
-  "version": "0.9.6",
+  "version": "0.9.8",
   "keywords": "esp-now, sensor, gateway, node, home",
   "platforms": ["espressif32", "espressif8266"],
   "description": "EnigmaIoT is an open source solution for wireless multi sensor systems",
