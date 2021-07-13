@@ -1,3 +1,12 @@
+/**
+  * @file haTrigger.h
+  * @version 0.9.8
+  * @date 15/07/2021
+  * @author German Martin
+  * @brief Home Assistant trigger integration
+  */
+
+
 #ifndef _HA_TRIGGER_h
 #define _HA_TRIGGER_h
 
@@ -144,7 +153,7 @@ public:
     /**
      * @brief Returns string that correspond with trigger subtype in ha_triggerSubtype_t format
      *          https://www.home-assistant.io/integrations/device_trigger.mqtt/#subtype
-     * @param type Trigger type
+     * @param subtype Trigger type
      */
     static const char* getTriggerSubtypeStr (int subtype) {
         if (subtype >= turn_on || subtype <= button_6) {
@@ -164,7 +173,7 @@ public:
     /**
      * @brief Set trigger type as ha_triggerType_t
      *          https://www.home-assistant.io/integrations/device_trigger.mqtt/#type
-     * @param payload Payload string
+     * @param type Payload string
      */
     void setType (ha_triggerType_t type) {
         (*entityConfig)[ha_type] = type;
@@ -173,7 +182,7 @@ public:
     /**
      * @brief Set trigger type as char string
      *          https://www.home-assistant.io/integrations/device_trigger.mqtt/#type
-     * @param payload Payload string
+     * @param type Payload string
      */
     void setType (const char* type) {
         (*entityConfig)[ha_type] = type;
@@ -182,7 +191,7 @@ public:
     /**
      * @brief Set trigger subtype as ha_triggerSubtype_t
      *          https://www.home-assistant.io/integrations/device_trigger.mqtt/#subtype
-     * @param payload Payload string
+     * @param subtype Payload string
      */
     void setSubtype (ha_triggerSubtype_t subtype) {
         (*entityConfig)[ha_subtype] = subtype;
@@ -191,7 +200,7 @@ public:
     /**
      * @brief Set trigger subtype as char string
      *          https://www.home-assistant.io/integrations/device_trigger.mqtt/#subtype
-     * @param payload Payload string
+     * @param subtype Payload string
      */
     void setSubtype (const char* subtype) {
         (*entityConfig)[ha_subtype] = subtype;

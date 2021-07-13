@@ -1,3 +1,11 @@
+/**
+  * @file haCover.cpp
+  * @version 0.9.8
+  * @date 15/07/2021
+  * @author German Martin
+  * @brief Home Assistant cover and shade integration 
+  */
+
 #include "haCover.h"
 
 #if SUPPORT_HA_DISCOVERY

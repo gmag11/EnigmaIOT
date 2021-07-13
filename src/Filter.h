@@ -1,7 +1,7 @@
 /**
   * @file Filter.h
-  * @version 0.9.7
-  * @date 04/02/2021
+  * @version 0.9.8
+  * @date 15/07/2021
   * @author German Martin
   * @brief Filter to process message rate or other values
   */

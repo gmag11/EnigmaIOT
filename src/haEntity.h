@@ -1,9 +1,12 @@
 /**
-  * Defines an entity for Home Assistant autodiscovery
+  * @file haEntity.h
+  * @version 0.9.8
+  * @date 15/07/2021
+  * @author German Martin
+  * @brief Defines an entity for Home Assistant autodiscovery
   *
-  * https://www.home-assistant.io/docs/mqtt/discovery/
+  *        https://www.home-assistant.io/docs/mqtt/discovery/
   */
-
 
 #ifndef _HA_ENTITY_h
 #define _HA_ENTITY_h

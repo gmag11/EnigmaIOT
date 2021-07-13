@@ -7,8 +7,8 @@
   * If `DEBUG_ESP_PORT` is not defined library will give no debug output at all
   *
   * @file EnigmaIOTdebug.h
-  * @version 0.9.7
-  * @date 04/02/2021
+  * @version 0.9.8
+  * @date 15/07/2021
   * @author German Martin
   */
 

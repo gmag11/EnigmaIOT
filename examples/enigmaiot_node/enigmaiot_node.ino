@@ -1,7 +1,7 @@
 /**
   * @file enigmaiot_node.ino
-  * @version 0.9.7
-  * @date 04/02/2021
+  * @version 0.9.8
+  * @date 15/07/2021
   * @author German Martin
   * @brief Node based on EnigmaIoT over ESP-NOW
   *

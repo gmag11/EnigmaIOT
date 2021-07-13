@@ -1,3 +1,11 @@
+/**
+  * @file haSensor.h
+  * @version 0.9.8
+  * @date 15/07/2021
+  * @author German Martin
+  * @brief Home Assistant sensor integration
+  */
+
 #ifndef _HA_SENSOR_h
 #define _HA_SENSOR_h
 

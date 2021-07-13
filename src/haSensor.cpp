@@ -1,3 +1,11 @@
+/**
+  * @file haSensor.cpp
+  * @version 0.9.8
+  * @date 15/07/2021
+  * @author German Martin
+  * @brief Home Assistant sensor integration
+  */
+
 #include "haSensor.h"
 
 #if SUPPORT_HA_DISCOVERY

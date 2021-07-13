@@ -1,3 +1,11 @@
+/**
+  * @file haCover.h
+  * @version 0.9.8
+  * @date 15/07/2021
+  * @author German Martin
+  * @brief Home Assistant cover and shade integration 
+  */
+
 #ifndef _HA_COVER_h
 #define _HA_COVER_h
 
@@ -204,7 +212,7 @@ public:
     /**
      * @brief Gets binary sensor class name from `haCoverClass_t`
      *          https://www.home-assistant.io/integrations/cover.mqtt/#device_class
-     * @param payload Cover class code
+     * @param sensorClass Cover class code
      */
     static String deviceClassStr (haCoverClass_t sensorClass);
 

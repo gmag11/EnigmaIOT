@@ -1,3 +1,11 @@
+/**
+  * @file haBinarySensor.h
+  * @version 0.9.8
+  * @date 15/07/2021
+  * @author German Martin
+  * @brief Home Assistant binary sensor integration 
+  */
+
 #ifndef _BINARY_SENSOR_h
 #define _BINARY_SENSOR_h
 
