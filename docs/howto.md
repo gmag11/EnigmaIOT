@@ -4,6 +4,9 @@ This document will serve as a guide to start working with EnigmaIOT, enabling yo
 
 ### Gateway
 Any ESP32 or ESP8266 will do the job. Anyway, it is always recommended to use an **ESP32** board because having much more RAM it will be more stable along time.
+
+**Notice that it is not possible to configure any node if you don't have a gateway working nearby.**
+
 ### MQTT broker
 You need to use a MQTT broker (or server). Any public or private will do the job. As EnigmaIOT is focused on privacy I advise to install your own MQTT private broker. You can do it on any home server or Raspberry Pi, or even in a virtual private server.
 Installing and configuring a broker is out of scope of this guide but there are plenty of good and easy guides online.
@@ -13,6 +16,21 @@ A good choice for a MQTT broker is [Eclipse Mosquitto](https://mosquitto.org).
 Don't forget to add a user and password to broker at least. EnigmaIOT supports MQTT brokers with TLS encryption. If you expose your broker to the public Internet adding TLS to your setup will improve privacy and security, so it is highly encouraged.
 
 Using MQTT enables you to use a wide range or solutions to process, display information and manage your EnigmaIOT nodes. Good choices are [Node-Red](https://nodered.org) and [Home Assistant](https://www.home-assistant.io), although you can use any software that is able to communicate with a MQTT broker, or any combination of them.
+
+## Required External libraries
+
+All examples have a `platformio.ini` file so that they can be compiled using PlatformIO without any additional requirement.
+
+If you use Arduino IDE instead, you have to install all these libraries into your environment:
+
+- ESPAsyncTCP -- https://github.com/me-no-dev/ESPAsyncTCP **(Required only for ESP8266)**
+- AsyncTCP -- https://github.com/me-no-dev/AsyncTCP **(Required only for ESP32)**
+- ESPAsyncWebServer -- https://github.com/me-no-dev/ESPAsyncWebServer
+- ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager version > 0.22
+- Arduino Crypto Library -- https://github.com/gmag11/CryptoArduino forked and formatted from https://github.com/rweather
+- PubSubClient -- https://github.com/knolleary/pubsubclient
+- CayenneLPP -- https://github.com/sabas1080/CayenneLPP version > 1.0.2
+- ArduinoJSON 6 -- https://github.com/bblanchon/ArduinoJson version > 6.0.0
 
 # How to start with EnigmaIOT MQTT Gateway
 
