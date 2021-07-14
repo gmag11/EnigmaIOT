@@ -26,7 +26,7 @@ If you use Arduino IDE instead, you have to install all these libraries into you
 - ESPAsyncTCP -- https://github.com/me-no-dev/ESPAsyncTCP **(Required only for ESP8266)**
 - AsyncTCP -- https://github.com/me-no-dev/AsyncTCP **(Required only for ESP32)**
 - ESPAsyncWebServer -- https://github.com/me-no-dev/ESPAsyncWebServer
-- ESPAsyncWiFiManager -- https://github.com/alanswx/ESPAsyncWiFiManager version > 0.22
+- ESPAsyncWiFiManager -- https://github.com/gmag11/ESPAsyncWiFiManager forked from https://github.com/alanswx/ESPAsyncWiFiManager
 - Arduino Crypto Library -- https://github.com/gmag11/CryptoArduino forked and formatted from https://github.com/rweather
 - PubSubClient -- https://github.com/knolleary/pubsubclient
 - CayenneLPP -- https://github.com/sabas1080/CayenneLPP version > 1.0.2

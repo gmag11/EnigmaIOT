@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>EnigmaIOT: examples/enigmaiot_node/enigmaiot_node.ino File Reference</title>
+<title>EnigmaIOT: examples/enigmaiot_led_flasher/enigmaiot_led_flasher.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -64,7 +64,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d28a4824dc47e487b107a5db32ef43c4.html">examples</a></li><li class="navelem"><a class="el" href="dir_ddb1aa94a6973c510045d1a2166b2b36.html">enigmaiot_node</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d28a4824dc47e487b107a5db32ef43c4.html">examples</a></li><li class="navelem"><a class="el" href="dir_d43fadc45274b5d05cae2a6678e1cfd4.html">enigmaiot_led_flasher</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -73,55 +73,52 @@ $(function() {
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">enigmaiot_node.ino File Reference</div>  </div>
+<div class="title">enigmaiot_led_flasher.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> based on EnigmaIoT over ESP-NOW.  
-<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="EnigmaIOTNode_8h_source.html">EnigmaIOTNode.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="espnow__hal_8h_source.html">espnow_hal.h</a>&gt;</code><br />
 <code>#include &lt;CayenneLPP.h&gt;</code><br />
 <code>#include &lt;ArduinoJson.h&gt;</code><br />
+<code>#include &lt;Curve25519.h&gt;</code><br />
+<code>#include &lt;ESPAsyncWebServer.h&gt;</code><br />
+<code>#include &lt;ESPAsyncWiFiManager.h&gt;</code><br />
+<code>#include &lt;DNSServer.h&gt;</code><br />
+<code>#include &lt;FS.h&gt;</code><br />
 </div>
-<p><a href="enigmaiot__node_8ino_source.html">Go to the source code of this file.</a></p>
+<p><a href="enigmaiot__led__flasher_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a450a7c16ead7b3c7b882536b08f30a00"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a>&#160;&#160;&#160;2</td></tr>
+<tr class="memitem:af2e697ac60e05813d45ea2c9c9e79c25"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8cpp.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a>&#160;&#160;&#160;LOW</td></tr>
+<tr class="separator:af2e697ac60e05813d45ea2c9c9e79c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80700bb63bd56ebabbb4728aa433fd29"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8cpp.html#a80700bb63bd56ebabbb4728aa433fd29">LED_OFF</a>&#160;&#160;&#160;!<a class="el" href="EnigmaIOTNode_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a></td></tr>
+<tr class="separator:a80700bb63bd56ebabbb4728aa433fd29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a450a7c16ead7b3c7b882536b08f30a00"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8cpp.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:a450a7c16ead7b3c7b882536b08f30a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">BLUE_LED</a>&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td></tr>
+<tr class="memitem:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8cpp.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">BLUE_LED</a>&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayMQTT_8cpp.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td></tr>
 <tr class="separator:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a940f8c4df553df52c9145ef2df107ad3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node_8ino.html#a940f8c4df553df52c9145ef2df107ad3">connectEventHandler</a> ()</td></tr>
+<tr class="memitem:a940f8c4df553df52c9145ef2df107ad3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8cpp.html#a940f8c4df553df52c9145ef2df107ad3">connectEventHandler</a> ()</td></tr>
 <tr class="separator:a940f8c4df553df52c9145ef2df107ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23fc74fc5731518093d5fa0db24edae1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node_8ino.html#a23fc74fc5731518093d5fa0db24edae1">disconnectEventHandler</a> (<a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a> reason)</td></tr>
+<tr class="memitem:a23fc74fc5731518093d5fa0db24edae1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8cpp.html#a23fc74fc5731518093d5fa0db24edae1">disconnectEventHandler</a> (<a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a> reason)</td></tr>
 <tr class="separator:a23fc74fc5731518093d5fa0db24edae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81397ad933b5a8b902d6161f702838fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node_8ino.html#a81397ad933b5a8b902d6161f702838fc">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
+<tr class="memitem:a81397ad933b5a8b902d6161f702838fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8cpp.html#a81397ad933b5a8b902d6161f702838fc">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
 <tr class="separator:a81397ad933b5a8b902d6161f702838fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
+<tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
 <tr class="separator:a4fc01d736fe50cf5b977f755b675f11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
+<tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8cpp.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
 <tr class="separator:afe461d27b9c48d5921c00d521181f12f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aa5a70ec3f08b72ccfe8365835fee927e"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__node_8ino.html#aa5a70ec3f08b72ccfe8365835fee927e">RESET_PIN</a> = -1</td></tr>
+<tr class="memitem:aa5a70ec3f08b72ccfe8365835fee927e"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enigmaiot__led__flasher_8cpp.html#aa5a70ec3f08b72ccfe8365835fee927e">RESET_PIN</a> = -1</td></tr>
 <tr class="separator:aa5a70ec3f08b72ccfe8365835fee927e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> based on EnigmaIoT over ESP-NOW. </p>
-<p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> based on EnigmaIoT over ESP-NOW that uses MessagePack as payload encoding.</p>
-<dl class="section version"><dt>Version</dt><dd>0.9.8 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>15/07/2021 </dd></dl>
-<dl class="section author"><dt>Author</dt><dd>German Martin</dd></dl>
-<p>Sensor reading code is mocked on this example. You can implement any other code you need for your specific need </p>
-
-<p class="definition">Definition in file <a class="el" href="enigmaiot__node_8ino_source.html">enigmaiot_node.ino</a>.</p>
-</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a41c7fcbe209a1c236fd1b8e35bd8b55a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a41c7fcbe209a1c236fd1b8e35bd8b55a">&#9670;&nbsp;</a></span>BLUE_LED</h2>
 
@@ -129,12 +126,12 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define BLUE_LED&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td>
+          <td class="memname">#define BLUE_LED&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayMQTT_8cpp.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node_8ino_source.html#l00032">32</a> of file <a class="el" href="enigmaiot__node_8ino_source.html">enigmaiot_node.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8cpp_source.html#l00046">46</a> of file <a class="el" href="enigmaiot__led__flasher_8cpp_source.html">enigmaiot_led_flasher.cpp</a>.</p>
 
 </div>
 </div>
@@ -150,7 +147,39 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node_8ino_source.html#l00029">29</a> of file <a class="el" href="enigmaiot__node_8ino_source.html">enigmaiot_node.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8cpp_source.html#l00043">43</a> of file <a class="el" href="enigmaiot__led__flasher_8cpp_source.html">enigmaiot_led_flasher.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a80700bb63bd56ebabbb4728aa433fd29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80700bb63bd56ebabbb4728aa433fd29">&#9670;&nbsp;</a></span>LED_OFF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LED_OFF&#160;&#160;&#160;!<a class="el" href="EnigmaIOTNode_8h.html#af2e697ac60e05813d45ea2c9c9e79c25">LED_ON</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8cpp_source.html#l00040">40</a> of file <a class="el" href="enigmaiot__led__flasher_8cpp_source.html">enigmaiot_led_flasher.cpp</a>.</p>
+
+</div>
+</div>
+<a id="af2e697ac60e05813d45ea2c9c9e79c25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2e697ac60e05813d45ea2c9c9e79c25">&#9670;&nbsp;</a></span>LED_ON</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LED_ON&#160;&#160;&#160;LOW</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8cpp_source.html#l00039">39</a> of file <a class="el" href="enigmaiot__led__flasher_8cpp_source.html">enigmaiot_led_flasher.cpp</a>.</p>
 
 </div>
 </div>
@@ -170,7 +199,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node_8ino_source.html#l00039">39</a> of file <a class="el" href="enigmaiot__node_8ino_source.html">enigmaiot_node.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8cpp_source.html#l00053">53</a> of file <a class="el" href="enigmaiot__led__flasher_8cpp_source.html">enigmaiot_led_flasher.cpp</a>.</p>
 
 </div>
 </div>
@@ -190,7 +219,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node_8ino_source.html#l00043">43</a> of file <a class="el" href="enigmaiot__node_8ino_source.html">enigmaiot_node.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8cpp_source.html#l00057">57</a> of file <a class="el" href="enigmaiot__led__flasher_8cpp_source.html">enigmaiot_led_flasher.cpp</a>.</p>
 
 </div>
 </div>
@@ -209,7 +238,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node_8ino_source.html#l00155">155</a> of file <a class="el" href="enigmaiot__node_8ino_source.html">enigmaiot_node.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8cpp_source.html#l00137">137</a> of file <a class="el" href="enigmaiot__led__flasher_8cpp_source.html">enigmaiot_led_flasher.cpp</a>.</p>
 
 </div>
 </div>
@@ -257,7 +286,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node_8ino_source.html#l00047">47</a> of file <a class="el" href="enigmaiot__node_8ino_source.html">enigmaiot_node.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8cpp_source.html#l00061">61</a> of file <a class="el" href="enigmaiot__led__flasher_8cpp_source.html">enigmaiot_led_flasher.cpp</a>.</p>
 
 </div>
 </div>
@@ -276,7 +305,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node_8ino_source.html#l00086">86</a> of file <a class="el" href="enigmaiot__node_8ino_source.html">enigmaiot_node.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8cpp_source.html#l00100">100</a> of file <a class="el" href="enigmaiot__led__flasher_8cpp_source.html">enigmaiot_led_flasher.cpp</a>.</p>
 
 </div>
 </div>
@@ -301,7 +330,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="enigmaiot__node_8ino_source.html#l00033">33</a> of file <a class="el" href="enigmaiot__node_8ino_source.html">enigmaiot_node.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="enigmaiot__led__flasher_8cpp_source.html#l00047">47</a> of file <a class="el" href="enigmaiot__led__flasher_8cpp_source.html">enigmaiot_led_flasher.cpp</a>.</p>
 
 </div>
 </div>

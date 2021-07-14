@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>EnigmaIOT: examples/EnigmaIOT-SmartSwitch-Controller/EnigmaIOT-SmartSwitch-Controller.ino File Reference</title>
+<title>EnigmaIOT: examples/EnigmaIOT-SmartSwitch-Controller/EnigmaIOT-SmartSwitch-Controller.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -73,12 +73,9 @@ $(function() {
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">EnigmaIOT-SmartSwitch-Controller.ino File Reference</div>  </div>
+<div class="title">EnigmaIOT-SmartSwitch-Controller.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> template for easy custom node creation.  
-<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="EnigmaIOTjsonController_8h_source.html">EnigmaIOTjsonController.h</a>&gt;</code><br />
 <code>#include &lt;FailSafe.h&gt;</code><br />
@@ -93,61 +90,54 @@ $(function() {
 <code>#include &lt;DNSServer.h&gt;</code><br />
 <code>#include &lt;FS.h&gt;</code><br />
 </div>
-<p><a href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">Go to the source code of this file.</a></p>
+<p><a href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:af040306e47883ec3c541ae1a43f77a1d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#af040306e47883ec3c541ae1a43f77a1d">SLEEPY</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memitem:af040306e47883ec3c541ae1a43f77a1d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#af040306e47883ec3c541ae1a43f77a1d">SLEEPY</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:af040306e47883ec3c541ae1a43f77a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a450a7c16ead7b3c7b882536b08f30a00"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a>&#160;&#160;&#160;2</td></tr>
+<tr class="memitem:a450a7c16ead7b3c7b882536b08f30a00"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:a450a7c16ead7b3c7b882536b08f30a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cb4a65422d8c7bd10ff4436e8a79b1b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a2cb4a65422d8c7bd10ff4436e8a79b1b">USE_SERIAL</a></td></tr>
+<tr class="memitem:a2cb4a65422d8c7bd10ff4436e8a79b1b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a2cb4a65422d8c7bd10ff4436e8a79b1b">USE_SERIAL</a></td></tr>
 <tr class="separator:a2cb4a65422d8c7bd10ff4436e8a79b1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">BLUE_LED</a>&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td></tr>
+<tr class="memitem:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">BLUE_LED</a>&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayMQTT_8cpp.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td></tr>
 <tr class="separator:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08bca59db4b190eaaea4d47b7562869c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a08bca59db4b190eaaea4d47b7562869c">RESET_PIN</a>&#160;&#160;&#160;4</td></tr>
+<tr class="memitem:a08bca59db4b190eaaea4d47b7562869c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a08bca59db4b190eaaea4d47b7562869c">RESET_PIN</a>&#160;&#160;&#160;4</td></tr>
 <tr class="separator:a08bca59db4b190eaaea4d47b7562869c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a940f8c4df553df52c9145ef2df107ad3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a940f8c4df553df52c9145ef2df107ad3">connectEventHandler</a> ()</td></tr>
+<tr class="memitem:a940f8c4df553df52c9145ef2df107ad3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a940f8c4df553df52c9145ef2df107ad3">connectEventHandler</a> ()</td></tr>
 <tr class="separator:a940f8c4df553df52c9145ef2df107ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23fc74fc5731518093d5fa0db24edae1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a23fc74fc5731518093d5fa0db24edae1">disconnectEventHandler</a> (<a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a> reason)</td></tr>
+<tr class="memitem:a23fc74fc5731518093d5fa0db24edae1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a23fc74fc5731518093d5fa0db24edae1">disconnectEventHandler</a> (<a class="el" href="EnigmaIOTNode_8h.html#a1c3e9c34675da8090182cab1de105bc6">nodeInvalidateReason_t</a> reason)</td></tr>
 <tr class="separator:a23fc74fc5731518093d5fa0db24edae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d577988d753f4702c13e41090c705a4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a2d577988d753f4702c13e41090c705a4">sendUplinkData</a> (const uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, size_t len, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding, <a class="el" href="EnigmaIOTNode_8h.html#a3716f5ccb3d0e7f9222a842f67b9d0a2">dataMessageType_t</a> dataMsgType)</td></tr>
+<tr class="memitem:a2d577988d753f4702c13e41090c705a4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a2d577988d753f4702c13e41090c705a4">sendUplinkData</a> (const uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, size_t len, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding, <a class="el" href="EnigmaIOTNode_8h.html#a3716f5ccb3d0e7f9222a842f67b9d0a2">dataMessageType_t</a> dataMsgType)</td></tr>
 <tr class="separator:a2d577988d753f4702c13e41090c705a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81397ad933b5a8b902d6161f702838fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a81397ad933b5a8b902d6161f702838fc">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
+<tr class="memitem:a81397ad933b5a8b902d6161f702838fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a81397ad933b5a8b902d6161f702838fc">processRxData</a> (const uint8_t *mac, const uint8_t *buffer, uint8_t length, <a class="el" href="EnigmaIOTNode_8h.html#a040804a4fb880b7e7dfe5c489f7bdf7f">nodeMessageType_t</a> command, <a class="el" href="EnigmaIOTNode_8h.html#ac183d8bfcebdc9231366539a77b669eb">nodePayloadEncoding_t</a> payloadEncoding)</td></tr>
 <tr class="separator:a81397ad933b5a8b902d6161f702838fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a960401606ecc83efdb2e45646619f277"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a960401606ecc83efdb2e45646619f277">wifiManagerExit</a> (boolean <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
+<tr class="memitem:a960401606ecc83efdb2e45646619f277"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a960401606ecc83efdb2e45646619f277">wifiManagerExit</a> (boolean <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
 <tr class="separator:a960401606ecc83efdb2e45646619f277"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad151c02682f80a13429640710b842160"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#ad151c02682f80a13429640710b842160">wifiManagerStarted</a> ()</td></tr>
+<tr class="memitem:ad151c02682f80a13429640710b842160"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#ad151c02682f80a13429640710b842160">wifiManagerStarted</a> ()</td></tr>
 <tr class="separator:ad151c02682f80a13429640710b842160"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
+<tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
 <tr class="separator:a4fc01d736fe50cf5b977f755b675f11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
+<tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
 <tr class="separator:afe461d27b9c48d5921c00d521181f12f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a6005c1a520c4bd733e221d70e642ebcd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEnigmaIOTjsonController.html">EnigmaIOTjsonController</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a6005c1a520c4bd733e221d70e642ebcd">controller</a></td></tr>
+<tr class="memitem:a6005c1a520c4bd733e221d70e642ebcd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEnigmaIOTjsonController.html">EnigmaIOTjsonController</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a6005c1a520c4bd733e221d70e642ebcd">controller</a></td></tr>
 <tr class="separator:a6005c1a520c4bd733e221d70e642ebcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00c12add296f0d83ff8d3437e23651c9"><td class="memItemLeft" align="right" valign="top">const time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a00c12add296f0d83ff8d3437e23651c9">BOOT_FLAG_TIMEOUT</a> = 10000</td></tr>
+<tr class="memitem:a00c12add296f0d83ff8d3437e23651c9"><td class="memItemLeft" align="right" valign="top">const time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a00c12add296f0d83ff8d3437e23651c9">BOOT_FLAG_TIMEOUT</a> = 10000</td></tr>
 <tr class="separator:a00c12add296f0d83ff8d3437e23651c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4fae2891cab0e7811bb5f339d57d213"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#ae4fae2891cab0e7811bb5f339d57d213">MAX_CONSECUTIVE_BOOT</a> = 3</td></tr>
+<tr class="memitem:ae4fae2891cab0e7811bb5f339d57d213"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#ae4fae2891cab0e7811bb5f339d57d213">MAX_CONSECUTIVE_BOOT</a> = 3</td></tr>
 <tr class="separator:ae4fae2891cab0e7811bb5f339d57d213"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a734029c5fc6508cd75bf19cd7f52b66d"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a734029c5fc6508cd75bf19cd7f52b66d">LED</a> = <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td></tr>
+<tr class="memitem:a734029c5fc6508cd75bf19cd7f52b66d"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a734029c5fc6508cd75bf19cd7f52b66d">LED</a> = <a class="el" href="EnigmaIOTGatewayMQTT_8cpp.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td></tr>
 <tr class="separator:a734029c5fc6508cd75bf19cd7f52b66d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d64e953651e420d91f95bacd3078b4e"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino.html#a4d64e953651e420d91f95bacd3078b4e">FAILSAFE_RTC_ADDRESS</a> = 0</td></tr>
+<tr class="memitem:a4d64e953651e420d91f95bacd3078b4e"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp.html#a4d64e953651e420d91f95bacd3078b4e">FAILSAFE_RTC_ADDRESS</a> = 0</td></tr>
 <tr class="separator:a4d64e953651e420d91f95bacd3078b4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classNode.html" title="Class definition for a single sensor Node.">Node</a> template for easy custom node creation. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.8 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>15/07/2021 </dd></dl>
-<dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
-
-<p class="definition">Definition in file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
-</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a41c7fcbe209a1c236fd1b8e35bd8b55a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a41c7fcbe209a1c236fd1b8e35bd8b55a">&#9670;&nbsp;</a></span>BLUE_LED</h2>
 
@@ -155,12 +145,12 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define BLUE_LED&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td>
+          <td class="memname">#define BLUE_LED&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayMQTT_8cpp.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00054">54</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00054">54</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -176,7 +166,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00048">48</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00048">48</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -192,7 +182,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00058">58</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00058">58</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -208,7 +198,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00045">45</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00045">45</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -224,7 +214,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00052">52</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00052">52</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -244,7 +234,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00066">66</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00066">66</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -264,7 +254,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00072">72</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00072">72</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -283,7 +273,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00162">162</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00162">162</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -331,7 +321,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00088">88</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00088">88</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -373,7 +363,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00077">77</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00077">77</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -392,7 +382,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00106">106</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00106">106</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -412,7 +402,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00097">97</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00097">97</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -431,7 +421,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00102">102</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00102">102</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -448,7 +438,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00060">60</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00060">60</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -464,7 +454,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00056">56</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00056">56</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -480,7 +470,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00063">63</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00063">63</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -491,12 +481,12 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const int LED = <a class="el" href="EnigmaIOTGatewayMQTT_8ino.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td>
+          <td class="memname">const int LED = <a class="el" href="EnigmaIOTGatewayMQTT_8cpp.html#a450a7c16ead7b3c7b882536b08f30a00">LED_BUILTIN</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00062">62</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00062">62</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>
@@ -512,7 +502,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html#l00061">61</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8ino_source.html">EnigmaIOT-SmartSwitch-Controller.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html#l00061">61</a> of file <a class="el" href="EnigmaIOT-SmartSwitch-Controller_8cpp_source.html">EnigmaIOT-SmartSwitch-Controller.cpp</a>.</p>
 
 </div>
 </div>

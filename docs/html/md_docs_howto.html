@@ -85,7 +85,7 @@ $(function() {
 <li>ESPAsyncTCP &ndash; <a href="https://github.com/me-no-dev/ESPAsyncTCP">https://github.com/me-no-dev/ESPAsyncTCP</a> **(Required only for ESP8266)**</li>
 <li>AsyncTCP &ndash; <a href="https://github.com/me-no-dev/AsyncTCP">https://github.com/me-no-dev/AsyncTCP</a> **(Required only for ESP32)**</li>
 <li>ESPAsyncWebServer &ndash; <a href="https://github.com/me-no-dev/ESPAsyncWebServer">https://github.com/me-no-dev/ESPAsyncWebServer</a></li>
-<li>ESPAsyncWiFiManager &ndash; <a href="https://github.com/alanswx/ESPAsyncWiFiManager">https://github.com/alanswx/ESPAsyncWiFiManager</a> version &gt; 0.22</li>
+<li>ESPAsyncWiFiManager &ndash; <a href="https://github.com/gmag11/ESPAsyncWiFiManager">https://github.com/gmag11/ESPAsyncWiFiManager</a> forked from <a href="https://github.com/alanswx/ESPAsyncWiFiManager">https://github.com/alanswx/ESPAsyncWiFiManager</a></li>
 <li>Arduino Crypto Library &ndash; <a href="https://github.com/gmag11/CryptoArduino">https://github.com/gmag11/CryptoArduino</a> forked and formatted from <a href="https://github.com/rweather">https://github.com/rweather</a></li>
 <li>PubSubClient &ndash; <a href="https://github.com/knolleary/pubsubclient">https://github.com/knolleary/pubsubclient</a></li>
 <li>CayenneLPP &ndash; <a href="https://github.com/sabas1080/CayenneLPP">https://github.com/sabas1080/CayenneLPP</a> version &gt; 1.0.2</li>
@@ -127,7 +127,7 @@ $(function() {
 <p>Now you are ready to start your own EnigmaIOT network.</p>
 <h3>Customizing gateway firmware</h3>
 <p>Although you can use gateway code as it is. There are some customizations available for experienced users.</p>
-<h4><a class="el" href="EnigmaIOTGatewayMQTT_8ino.html" title="MQTT Gateway based on EnigmaIoT over ESP-NOW.">EnigmaIOTGatewayMQTT.ino</a></h4>
+<h4>EnigmaIOTGatewayMQTT.ino</h4>
 <p><code>LED_BUILTIN</code>: On many ESP32 boards, built in LED is connected to Pin 5. On EnigmaIOTGatewayMQTT, LED is used to signal configuration mode (flashing LED) and to show activity from nodes. If your board uses a different pin you can set it here. You may use different LEDs to signal received or sent message, In that case you may set <code>BLUE_LED</code> and <code>RED_LED</code>.</p>
 <h4><a class="el" href="dstrootca_8h.html">dstrootca.h</a></h4>
 <p>If you use TLS to encrypt communication with MQTT broker, then you must provide the root certificate used to check server certificate. This varies between different certificate providers. Included certificate works with <a href="https://letsencrypt.org">Let's encrypt</a>. If you use a different provider or you have setup your own public key infrastructure you need to copy your CA certificate in <a href="https://knowledge.digicert.com/quovadis/ssl-certificates/ssl-general-topics/what-is-pem-format.html">PEM format</a> assigned to <code>DSTroot_CA</code> variable.</p>
@@ -260,7 +260,7 @@ $(function() {
 <div class="line">#ifndef _DS18B20CONTROLLER_h</div>
 <div class="line">#define _DS18B20CONTROLLER_h</div>
 </div><!-- fragment --><h4>Define if your node should sleep</h4>
-<p>If you want to design a node that is powered with batteries, then it should enter into deep sleep mode after sending its data. To do so you only need to set <code>SLEEPY</code> to 1 or <code>true</code>. You need to do so on main cpp file. In sensor controller example, it is <code><a class="el" href="EnigmaIOT-Sensor-Controller_8ino.html">EnigmaIOT-Sensor-Controller.ino</a></code>.</p>
+<p>If you want to design a node that is powered with batteries, then it should enter into deep sleep mode after sending its data. To do so you only need to set <code>SLEEPY</code> to 1 or <code>true</code>. You need to do so on main cpp file. In sensor controller example, it is <code>EnigmaIOT-Sensor-Controller.ino</code>.</p>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">#define SLEEPY 1 // Set it to 1 if your node should sleep after sending data</div>
 </div><!-- fragment --><p>It you don't need sleep function leave it as 0.</p>
@@ -324,7 +324,7 @@ $(function() {
 <p>If you modified file and class names you will need to update include in cpp file</p>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">#include &quot;ds18b20Controller.h&quot;</div>
-</div><!-- fragment --><h4>Add <code><a class="el" href="EnigmaIOT-Button-Controller_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup()</a></code> and <code><a class="el" href="EnigmaIOT-Button-Controller_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop()</a></code>code to class method</h4>
+</div><!-- fragment --><h4>Add <code><a class="el" href="EnigmaIOT-Button-Controller_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d">setup()</a></code> and <code><a class="el" href="EnigmaIOT-Button-Controller_8cpp.html#afe461d27b9c48d5921c00d521181f12f">loop()</a></code>code to class method</h4>
 <p>Now, you can start integrating your code into JSON controller class. You need to copy setup and loop code into corresponding methods in JSON controller class.</p>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">void CONTROLLER_CLASS_NAME::setup (EnigmaIOTNodeClass* node, void* data) {</div>

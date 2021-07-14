@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>EnigmaIOT: examples/EnigmaIOTGatewayDummy/EnigmaIOTGatewayDummy.ino File Reference</title>
+<title>EnigmaIOT: examples/EnigmaIOTGatewayDummy/EnigmaIOTGatewayDummy.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -73,12 +73,9 @@ $(function() {
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">EnigmaIOTGatewayDummy.ino File Reference</div>  </div>
+<div class="title">EnigmaIOTGatewayDummy.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>Gateway based on EnigmaIoT over ESP-NOW with dummy output module to serve as start for new gateways.  
-<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="GwOutput__generic_8h_source.html">GwOutput_generic.h</a>&gt;</code><br />
 <code>#include &quot;<a class="el" href="GwOutput__dummy_8h_source.html">GwOutput_dummy.h</a>&quot;</code><br />
@@ -97,59 +94,52 @@ $(function() {
 <code>#include &lt;ESPAsyncWebServer.h&gt;</code><br />
 <code>#include &lt;ESPAsyncWiFiManager.h&gt;</code><br />
 </div>
-<p><a href="EnigmaIOTGatewayDummy_8ino_source.html">Go to the source code of this file.</a></p>
+<p><a href="EnigmaIOTGatewayDummy_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a4a71aecac635579082c10addb16df4a0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a>&#160;&#160;&#160;5</td></tr>
+<tr class="memitem:a4a71aecac635579082c10addb16df4a0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a>&#160;&#160;&#160;5</td></tr>
 <tr class="separator:a4a71aecac635579082c10addb16df4a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">BLUE_LED</a>&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td></tr>
+<tr class="memitem:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a41c7fcbe209a1c236fd1b8e35bd8b55a">BLUE_LED</a>&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td></tr>
 <tr class="separator:a41c7fcbe209a1c236fd1b8e35bd8b55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a073dbcb7f5bc4f4b45dc048b55eaff3d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a073dbcb7f5bc4f4b45dc048b55eaff3d">RED_LED</a>&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td></tr>
+<tr class="memitem:a073dbcb7f5bc4f4b45dc048b55eaff3d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a073dbcb7f5bc4f4b45dc048b55eaff3d">RED_LED</a>&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td></tr>
 <tr class="separator:a073dbcb7f5bc4f4b45dc048b55eaff3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae6fc0fcbb7779efc63d50434dbd44d7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#ae6fc0fcbb7779efc63d50434dbd44d7a">flashConnectionLed</a> (void *led)</td></tr>
+<tr class="memitem:ae6fc0fcbb7779efc63d50434dbd44d7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#ae6fc0fcbb7779efc63d50434dbd44d7a">flashConnectionLed</a> (void *led)</td></tr>
 <tr class="separator:ae6fc0fcbb7779efc63d50434dbd44d7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ff09343e5169937476aa04932b76915"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a6ff09343e5169937476aa04932b76915">startConnectionFlash</a> (int period)</td></tr>
+<tr class="memitem:a6ff09343e5169937476aa04932b76915"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a6ff09343e5169937476aa04932b76915">startConnectionFlash</a> (int period)</td></tr>
 <tr class="separator:a6ff09343e5169937476aa04932b76915"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad85ae6aaf68f30aa59facd8f80635ffd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#ad85ae6aaf68f30aa59facd8f80635ffd">stopConnectionFlash</a> ()</td></tr>
+<tr class="memitem:ad85ae6aaf68f30aa59facd8f80635ffd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#ad85ae6aaf68f30aa59facd8f80635ffd">stopConnectionFlash</a> ()</td></tr>
 <tr class="separator:ad85ae6aaf68f30aa59facd8f80635ffd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a960401606ecc83efdb2e45646619f277"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a960401606ecc83efdb2e45646619f277">wifiManagerExit</a> (boolean <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
+<tr class="memitem:a960401606ecc83efdb2e45646619f277"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a960401606ecc83efdb2e45646619f277">wifiManagerExit</a> (boolean <a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a9a6940c3bba41cdd6dacae1a00176a30">status</a>)</td></tr>
 <tr class="separator:a960401606ecc83efdb2e45646619f277"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad151c02682f80a13429640710b842160"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#ad151c02682f80a13429640710b842160">wifiManagerStarted</a> ()</td></tr>
+<tr class="memitem:ad151c02682f80a13429640710b842160"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#ad151c02682f80a13429640710b842160">wifiManagerStarted</a> ()</td></tr>
 <tr class="separator:ad151c02682f80a13429640710b842160"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acecaff385e13802f95e84d1ece4f6322"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#acecaff385e13802f95e84d1ece4f6322">processRxControlData</a> (char *macStr, uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, uint8_t length)</td></tr>
+<tr class="memitem:acecaff385e13802f95e84d1ece4f6322"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#acecaff385e13802f95e84d1ece4f6322">processRxControlData</a> (char *macStr, uint8_t *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, uint8_t length)</td></tr>
 <tr class="separator:acecaff385e13802f95e84d1ece4f6322"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fd7dd2cafc98a62e99242dd11968a7c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a5fd7dd2cafc98a62e99242dd11968a7c">processRxData</a> (uint8_t *mac, uint8_t *buffer, uint8_t length, uint16_t lostMessages, bool control, <a class="el" href="EnigmaIOTGateway_8h.html#a404510882576d212315fd2ed67280d8d">gatewayPayloadEncoding_t</a> payload_type, char *nodeName=NULL)</td></tr>
+<tr class="memitem:a5fd7dd2cafc98a62e99242dd11968a7c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a5fd7dd2cafc98a62e99242dd11968a7c">processRxData</a> (uint8_t *mac, uint8_t *buffer, uint8_t length, uint16_t lostMessages, bool control, <a class="el" href="EnigmaIOTGateway_8h.html#a404510882576d212315fd2ed67280d8d">gatewayPayloadEncoding_t</a> payload_type, char *nodeName=NULL)</td></tr>
 <tr class="separator:a5fd7dd2cafc98a62e99242dd11968a7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad84b439af2caa4fa2b92ba383b9513a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#ad84b439af2caa4fa2b92ba383b9513a8">onDownlinkData</a> (uint8_t *address, char *nodeName, <a class="el" href="NodeList_8h.html#ac5c28a5827b5a3b34222c13589adeba7">control_message_type_t</a> msgType, char *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, unsigned int len)</td></tr>
+<tr class="memitem:ad84b439af2caa4fa2b92ba383b9513a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#ad84b439af2caa4fa2b92ba383b9513a8">onDownlinkData</a> (uint8_t *address, char *nodeName, <a class="el" href="NodeList_8h.html#ac5c28a5827b5a3b34222c13589adeba7">control_message_type_t</a> msgType, char *<a class="el" href="GwOutput__generic_8h.html#a0cab60406a9b7a79387a3ad8b212e636a604ac82e88d7a367d4c2830411520c2b">data</a>, unsigned int len)</td></tr>
 <tr class="separator:ad84b439af2caa4fa2b92ba383b9513a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60e672b8465063bff29ed39899e15948"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a60e672b8465063bff29ed39899e15948">newNodeConnected</a> (uint8_t *mac, uint16_t node_id, char *nodeName=NULL)</td></tr>
+<tr class="memitem:a60e672b8465063bff29ed39899e15948"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a60e672b8465063bff29ed39899e15948">newNodeConnected</a> (uint8_t *mac, uint16_t node_id, char *nodeName=NULL)</td></tr>
 <tr class="separator:a60e672b8465063bff29ed39899e15948"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade106fbc95d08320451d9b901aafd230"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#ade106fbc95d08320451d9b901aafd230">nodeDisconnected</a> (uint8_t *mac, <a class="el" href="EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977">gwInvalidateReason_t</a> reason)</td></tr>
+<tr class="memitem:ade106fbc95d08320451d9b901aafd230"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#ade106fbc95d08320451d9b901aafd230">nodeDisconnected</a> (uint8_t *mac, <a class="el" href="EnigmaIOTGateway_8h.html#a4272866ccf327ab11a97c334d16cf977">gwInvalidateReason_t</a> reason)</td></tr>
 <tr class="separator:ade106fbc95d08320451d9b901aafd230"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
+<tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
 <tr class="separator:a4fc01d736fe50cf5b977f755b675f11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
+<tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
 <tr class="separator:afe461d27b9c48d5921c00d521181f12f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a86bc66f6ecbde6ad8502d0cefb1a67f0"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a86bc66f6ecbde6ad8502d0cefb1a67f0">connectionLed</a> = <a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td></tr>
+<tr class="memitem:a86bc66f6ecbde6ad8502d0cefb1a67f0"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a86bc66f6ecbde6ad8502d0cefb1a67f0">connectionLed</a> = <a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td></tr>
 <tr class="separator:a86bc66f6ecbde6ad8502d0cefb1a67f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54adb71fcf29bc72c8a829133e425d80"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a54adb71fcf29bc72c8a829133e425d80">connectionLedFlashing</a> = false</td></tr>
+<tr class="memitem:a54adb71fcf29bc72c8a829133e425d80"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a54adb71fcf29bc72c8a829133e425d80">connectionLedFlashing</a> = false</td></tr>
 <tr class="separator:a54adb71fcf29bc72c8a829133e425d80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Gateway based on EnigmaIoT over ESP-NOW with dummy output module to serve as start for new gateways. </p>
-<dl class="section version"><dt>Version</dt><dd>0.9.8 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>15/07/2021 </dd></dl>
-<dl class="section author"><dt>Author</dt><dd>German Martin </dd></dl>
-
-<p class="definition">Definition in file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
-</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a41c7fcbe209a1c236fd1b8e35bd8b55a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a41c7fcbe209a1c236fd1b8e35bd8b55a">&#9670;&nbsp;</a></span>BLUE_LED</h2>
 
@@ -157,12 +147,12 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define BLUE_LED&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td>
+          <td class="memname">#define BLUE_LED&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00053">53</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00053">53</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -178,7 +168,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00050">50</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00050">50</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -189,12 +179,12 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define RED_LED&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td>
+          <td class="memname">#define RED_LED&#160;&#160;&#160;<a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00054">54</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00054">54</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -215,7 +205,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00065">65</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00065">65</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -234,7 +224,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00319">319</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00319">319</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -270,7 +260,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00205">205</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00205">205</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -300,7 +290,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00224">224</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00224">224</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -348,7 +338,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00180">180</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00180">180</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -384,7 +374,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00110">110</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00110">110</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -444,7 +434,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00116">116</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00116">116</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -463,7 +453,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00254">254</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00254">254</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -483,7 +473,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00070">70</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00070">70</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -502,7 +492,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00086">86</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00086">86</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -522,7 +512,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00102">102</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00102">102</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -541,7 +531,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00106">106</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00106">106</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -553,12 +543,12 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const int connectionLed = <a class="el" href="EnigmaIOTGatewayDummy_8ino.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td>
+          <td class="memname">const int connectionLed = <a class="el" href="EnigmaIOTGatewayDummy_8cpp.html#a4a71aecac635579082c10addb16df4a0">BUILTIN_LED</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00062">62</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00062">62</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
@@ -574,7 +564,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html#l00063">63</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8ino_source.html">EnigmaIOTGatewayDummy.ino</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html#l00063">63</a> of file <a class="el" href="EnigmaIOTGatewayDummy_8cpp_source.html">EnigmaIOTGatewayDummy.cpp</a>.</p>
 
 </div>
 </div>
