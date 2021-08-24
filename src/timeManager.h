@@ -38,7 +38,7 @@ public:
       * @return Clock value in seconds. It uses UnixTime format
       */
     time_t unixtime () {
-        uint64_t time_sec = clock () / 1000000L;
+        uint64_t time_sec = clock () / 1000L;
         return time_sec;
     }
 
