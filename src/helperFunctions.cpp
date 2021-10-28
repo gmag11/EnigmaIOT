@@ -51,9 +51,15 @@ void initWiFi (uint8_t channel, const char* networkName, const char* networkKey,
 #endif
 		DEBUG_DBG ("Mode set to STA. Channel %u", channel);
 	} else { // Gateway
+        esp_err_t err_ok;
 		WiFi.mode (WIFI_AP);
 		WiFi.softAP (networkName, networkKey, channel);
 		DEBUG_DBG ("Mode set to AP in channel %u", channel);
+#ifdef ESP32
+        if ((err_ok = esp_wifi_set_bandwidth (ESP_IF_WIFI_AP, WIFI_BW_HT20))) {
+            DEBUG_ERROR ("Error setting wifi bandwidth: %s", esp_err_to_name (err_ok));
+        }
+#endif
 	}
 
 	DEBUG_INFO ("AP MAC address of this device is %s", WiFi.softAPmacAddress ().c_str ());
