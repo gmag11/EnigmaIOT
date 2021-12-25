@@ -22,7 +22,7 @@ You may interrogate node for led status in any moment by sending this message
 Node will answer with a message using this format.
 
 ```
-<Network_name>/<node_name or node_address>/data  {"cmd":"led","led":< 1 or 0 >}
+<Network_name>/<node_name or node_address>/set/data  {"cmd":"led","led":< 1 or 0 >}
 ```
 
 No configuration data is added here to keep example as simple as possible.
