@@ -789,12 +789,13 @@ void EnigmaIOTGatewayClass::begin (Comms_halClass* comm, uint8_t* networkKey, bo
 	}
 }
 
-bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t* msg, size_t len) {
+bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t* msg, size_t len, signed int rssi) {
 	msg_queue_item_t message;
 
 	message.len = len;
 	memcpy (message.data, msg, len);
-	memcpy (message.addr, addr, ENIGMAIOT_ADDR_LEN);
+    memcpy (message.addr, addr, ENIGMAIOT_ADDR_LEN);
+    message.rssi = rssi;
 
 #ifdef ESP32
 	portENTER_CRITICAL (&myMutex);
@@ -803,7 +804,7 @@ bool EnigmaIOTGatewayClass::addInputMsgQueue (const uint8_t* addr, const uint8_t
 #endif
 	input_queue->push (&message);
 	//char macstr[ENIGMAIOT_ADDR_LEN * 3];
-	DEBUG_DBG ("Message 0x%02X added from %s. Size: %d", message.data[0], mac2str (message.addr), input_queue->size ());
+	DEBUG_DBG ("Message 0x%02X added from %s. Size: %d. RSSI: %d", message.data[0], mac2str (message.addr), input_queue->size (), message.rssi);
 #ifdef ESP32
 	portEXIT_CRITICAL (&myMutex);
 #else
@@ -825,8 +826,9 @@ msg_queue_item_t* EnigmaIOTGatewayClass::getInputMsgQueue (msg_queue_item_t* buf
 		DEBUG_DBG ("EnigmaIOT message got from queue. Size: %d", input_queue->size ());
 		memcpy (buffer->data, message->data, message->len);
 		memcpy (buffer->addr, message->addr, ENIGMAIOT_ADDR_LEN);
-		buffer->len = message->len;
-		popInputMsgQueue ();
+        buffer->len = message->len;
+        buffer->rssi = message->rssi;
+        popInputMsgQueue ();
 	}
 #ifdef esp32
 	portEXIT_CRITICAL (&myMutex);
@@ -846,9 +848,9 @@ void EnigmaIOTGatewayClass::popInputMsgQueue () {
 	}
 }
 
-void EnigmaIOTGatewayClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
-
-	EnigmaIOTGateway.addInputMsgQueue (mac_addr, data, len);
+void EnigmaIOTGatewayClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len, signed int rssi) {
+    DEBUG_WARN ("------------------------> RX RSSI: %d", rssi);
+	EnigmaIOTGateway.addInputMsgQueue (mac_addr, data, len, rssi);
 }
 
 void EnigmaIOTGatewayClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
@@ -927,12 +929,12 @@ void EnigmaIOTGatewayClass::handle () {
 
 		if (message) {
 			DEBUG_DBG ("EnigmaIOT input message from queue. MsgType: 0x%02X", message->data[0]);
-			manageMessage (message->addr, message->data, message->len);
+			manageMessage (message->addr, message->data, message->len, message->rssi);
 		}
 	}
 }
 
-void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uint8_t count) {
+void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uint8_t count, signed int rssi) {
 	Node* node;
 
 	DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
@@ -946,6 +948,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 	node = nodelist.getNewNode (mac);
 
 	flashRx = true;
+    node->setRSSI (rssi);
 
 	int espNowError = 0; // May I remove this??
 

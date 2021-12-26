@@ -110,7 +110,8 @@ typedef struct {
 typedef struct {
 	uint8_t addr[ENIGMAIOT_ADDR_LEN]; /**< Message address*/
 	uint8_t data[MAX_MESSAGE_LENGTH]; /**< Message buffer*/
-	size_t len; /**< Message length*/
+    size_t len; /**< Message length*/
+    signed int rssi; /**< Message RSSI*/
 } msg_queue_item_t;
 
 /**
@@ -283,17 +284,19 @@ protected:
 	 * It starts clasiffying message usint the first byte. After that it passes it to the corresponding method for decoding
 	 * @param mac Address of message sender
 	 * @param buf Buffer that stores message bytes
-	 * @param count Length of message in number of bytes
-	 */
-	void manageMessage (const uint8_t* mac, uint8_t* buf, uint8_t count);
+     * @param count Length of message in number of bytes
+     * @param rssi RSSI of message
+     */
+	void manageMessage (const uint8_t* mac, uint8_t* buf, uint8_t count, signed int rssi);
 
 	/**
 	 * @brief Function that will be called anytime this gateway receives a message
 	 * @param mac_addr Address of message sender
 	 * @param data Buffer that stores message bytes
-	 * @param len Length of message in number of bytes
-	 */
-	static void rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len);
+     * @param len Length of message in number of bytes
+     * @param rssi RSSI of message
+     */
+	static void rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len, signed int rssi);
 
 	/**
 	 * @brief Function that will be called anytime this gateway sends a message
@@ -570,9 +573,10 @@ public:
 	 * @brief Add message to input queue
 	 * @param addr Origin address
 	 * @param msg EnigmaIoT message
-	 * @param len Message length
-	 */
-	bool addInputMsgQueue (const uint8_t* addr, const uint8_t* msg, size_t len);
+     * @param len Message length
+     * @param rssi RSSI of received message
+     */
+	bool addInputMsgQueue (const uint8_t* addr, const uint8_t* msg, size_t len, signed int rssi);
 
 	 /**
 	 * @brief Gets next item in the queue
