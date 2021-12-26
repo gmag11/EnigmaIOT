@@ -947,10 +947,16 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 
 	node = nodelist.getNewNode (mac);
 
-	flashRx = true;
-    node->setRSSI (rssi);
+    if (!node) {
+        DEBUG_WARN ("No node found");
+        return;
+    }
 
-	int espNowError = 0; // May I remove this??
+    node->setRSSI (rssi);
+    
+    flashRx = true;
+
+	int espNowError = 0; // TODO: May I remove this??
 
 	switch (buf[0]) {
 	case CLIENT_HELLO:
