@@ -82,7 +82,7 @@ uint32_t EnigmaIOTNodeClass::getSleepTime () {
 	}
 }
 
-int8_t EnigmaIOTNodeClass::getRSSI () {
+signed int EnigmaIOTNodeClass::getRSSI () {
 	return rtcmem_data.rssi;
 }
 
@@ -1171,8 +1171,8 @@ void EnigmaIOTNodeClass::handle () {
 
 }
 
-void EnigmaIOTNodeClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
-	EnigmaIOTNode.manageMessage (mac_addr, data, len);
+void EnigmaIOTNodeClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len, signed int rssi) {
+	EnigmaIOTNode.manageMessage (mac_addr, data, len, rssi);
 }
 
 void EnigmaIOTNodeClass::tx_cb (uint8_t* mac_addr, uint8_t status) {
@@ -2548,9 +2548,10 @@ nodeInvalidateReason_t EnigmaIOTNodeClass::processInvalidateKey (const uint8_t* 
 	return (nodeInvalidateReason_t)reason;
 }
 
-void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count) {
-	DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-	DEBUG_VERBOSE ("Received data: %s", printHexBuffer (const_cast<uint8_t*>(buf), count));
+void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count, signed int rssi) {
+    DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    DEBUG_WARN ("Received message RSSI: %d", rssi);
+    DEBUG_VERBOSE ("Received data: %s", printHexBuffer (const_cast<uint8_t*>(buf), count));
 	flashBlue = true;
 
 	if (count <= 1) {

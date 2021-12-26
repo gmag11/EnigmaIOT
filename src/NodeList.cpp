@@ -113,8 +113,9 @@ void Node::reset () {
 	lastControlCounter = 0;
 	lastDownlinkMsgCounter = 0;
 	keyValidFrom = 0;
-	status = UNREGISTERED;
-	enigmaIOTVersion[0] = 0;
+    status = UNREGISTERED;
+    rssi = 0;
+    enigmaIOTVersion[0] = 0;
 	enigmaIOTVersion[1] = 0;
 	enigmaIOTVersion[2] = 0;
 	//broadcastEnabled = false;

@@ -329,9 +329,10 @@ protected:
 	  * It starts clasiffying message usint the first byte. After that it passes it to the corresponding method for decoding
 	  * @param mac Address of message sender
 	  * @param buf Buffer that stores message bytes
-	  * @param count Length of message in number of bytes
-	  */
-	void manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count);
+      * @param count Length of message in number of bytes
+      * @param rssi RSSI of received message
+      */
+    void manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count, signed int rssi);
 
 	/**
 	  * @brief Functrion to debug send status.
@@ -344,9 +345,10 @@ protected:
 	  * @brief Function that will be called anytime this node receives a message
 	  * @param mac_addr Address of message sender
 	  * @param data Buffer that stores message bytes
-	  * @param len Length of message in number of bytes
-	  */
-	static void rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len);
+      * @param len Length of message in number of bytes
+      * @param rssi RSSI of received message
+      */
+	static void rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len, signed int rssi);
 
 	/**
 	  * @brief Function that will be called anytime this node sends a message
@@ -775,7 +777,7 @@ public:
 	 * @brief Gets latest RSSI measurement. It is updated during start up or in case of transmission errors
 	 * @return RSSI value
 	 */
-	int8_t getRSSI ();
+	signed int getRSSI ();
 
 	/**
 	 * @brief Deletes configuration file stored on flash. It makes neccessary to configure it again using WiFi Portal
