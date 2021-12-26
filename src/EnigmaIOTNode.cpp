@@ -928,7 +928,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 		}
 #endif
 
-		requestReportRSSI = true;
+		// requestReportRSSI = true;
 		return true;
 	}
 	DEBUG_WARN ("Gateway %s not found", data->networkName);
@@ -979,42 +979,42 @@ void EnigmaIOTNodeClass::setSleepTime (uint32_t sleepTime, bool forceSleepForeve
 	}
 }
 
-bool EnigmaIOTNodeClass::reportRSSI () {
-	uint8_t buffer[MAX_MESSAGE_LENGTH];
-	uint8_t bufLength;
+// bool EnigmaIOTNodeClass::reportRSSI () {
+// 	uint8_t buffer[MAX_MESSAGE_LENGTH];
+// 	uint8_t bufLength;
 
-	DEBUG_DBG ("Report RSSI and channel");
+// 	DEBUG_DBG ("Report RSSI and channel");
 
-	buffer[0] = control_message_type::RSSI_ANS;
-	buffer[1] = rtcmem_data.rssi;
-	buffer[2] = rtcmem_data.channel;
-	bufLength = 3;
+// 	buffer[0] = control_message_type::RSSI_ANS;
+// 	buffer[1] = rtcmem_data.rssi;
+// 	buffer[2] = rtcmem_data.channel;
+// 	bufLength = 3;
 
-	if (sendData (buffer, bufLength, CONTROL_TYPE)) {
-		DEBUG_DBG ("Sleep time is %d seconds", sleepTime / 1000000);
-		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
-		return true;
-	} else {
-		DEBUG_WARN ("Error sending version response");
-		return false;
-	}
-}
+// 	if (sendData (buffer, bufLength, CONTROL_TYPE)) {
+// 		DEBUG_DBG ("Sleep time is %d seconds", sleepTime / 1000000);
+// 		DEBUG_VERBOSE ("Data: %s", printHexBuffer (buffer, bufLength));
+// 		return true;
+// 	} else {
+// 		DEBUG_WARN ("Error sending version response");
+// 		return false;
+// 	}
+// }
 
 void EnigmaIOTNodeClass::handle () {
 	static unsigned long blueOntime;
 
-	// Locate gateway address, channel and rssi
+	// Locate gateway address and channel // and rssi
 	if (requestSearchGateway) {
 		requestSearchGateway = false;
-		requestReportRSSI = true;
+		// requestReportRSSI = true;
 		searchForGateway (&rtcmem_data, true);
 	}
 
 	// Report RSSI to gateway
-	if (requestReportRSSI && node.isRegistered ()) {
-		requestReportRSSI = false;
-		reportRSSI ();
-	}
+	// if (requestReportRSSI && node.isRegistered ()) {
+	// 	requestReportRSSI = false;
+	// 	reportRSSI ();
+	// }
 
 	// Flash led if programmed (when data is transferred)
 	if (led >= 0) {
@@ -2043,12 +2043,12 @@ bool EnigmaIOTNodeClass::processSetIdentifyCommand (const uint8_t* mac, const ui
 	return true;
 }
 
-bool EnigmaIOTNodeClass::processGetRSSICommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
-	requestSearchGateway = true;
-	requestReportRSSI = true;
+// bool EnigmaIOTNodeClass::processGetRSSICommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
+// 	requestSearchGateway = true;
+// 	requestReportRSSI = true;
 
-	return true;
-}
+// 	return true;
+// }
 
 bool EnigmaIOTNodeClass::processSetRestartCommand (const uint8_t* mac, const uint8_t* data, uint8_t len) {
 	DEBUG_WARN ("Restart due to command");
@@ -2378,8 +2378,8 @@ bool EnigmaIOTNodeClass::processControlCommand (const uint8_t* mac, const uint8_
 		return processSetIdentifyCommand (mac, data, len);
 	case control_message_type::RESET:
 		return processSetResetConfigCommand (mac, data, len);
-	case control_message_type::RSSI_GET:
-		return processGetRSSICommand (mac, data, len);
+	// case control_message_type::RSSI_GET:
+	// 	return processGetRSSICommand (mac, data, len);
 	case control_message_type::NAME_GET:
 		return processGetNameCommand (mac, data, len);
 	case control_message_type::NAME_SET:

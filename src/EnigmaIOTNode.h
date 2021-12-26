@@ -163,7 +163,7 @@ protected:
 	restartReason_t restartReason; ///< @brief Reason of restart (OTA, restart requested, configuration reset)
 	bool gatewaySearchStarted = false; ///< @brief Avoids start a new gateway scan if it already started
 	bool requestSearchGateway = false; ///< @brief Flag to control updating gateway address, RSSI and channel
-	bool requestReportRSSI = false; ///< @brief Flag to control RSSI reporting
+	// bool requestReportRSSI = false; ///< @brief Flag to control RSSI reporting
 	bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
 	int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
 	AsyncWiFiManager* wifiManager; ///< @brief Wifi configuration portal
@@ -452,11 +452,11 @@ protected:
 	 */
 	void checkResetButton ();
 
-	/**
-	  * @brief Sends RSSI value and channel to Gateway
-	  * @return True if report was sent successfuly
-	  */
-	bool reportRSSI ();
+	// /**
+	//   * @brief Sends RSSI value and channel to Gateway
+	//   * @return True if report was sent successfuly
+	//   */
+	// bool reportRSSI ();
 
 	/**
 	  * @brief Processes a request to measure RSSI
