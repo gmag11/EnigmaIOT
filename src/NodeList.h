@@ -415,7 +415,7 @@ public:
       * @brief Gets last RSSI measurement of Gateway
       * @return RSSI power of Gateway signal
       */
-    int8_t getRSSI () {
+    signed int getRSSI () {
         return rssi;
     }
 
@@ -423,7 +423,7 @@ public:
       * @brief Stores last RSSI measurement of Gateway
       * @param rssi RSSI power of Gateway signal
       */
-    void setRSSI (int8_t rssi) {
+    void setRSSI (signed int rssi) {
         this->rssi = rssi;
     }
     
@@ -491,7 +491,7 @@ protected:
     timer_t lastMessageTime; ///< @brief Node state
     FilterClass* rateFilter; ///< @brief Filter for message rate smoothing
     char nodeName[NODE_NAME_LENGTH]; ///< @brief Node name. Use as a human friendly name to avoid use of numeric address
-    int8_t rssi; ///< @brief Stores last RSSI measurement
+    signed int rssi; ///< @brief Stores last RSSI measurement
     uint8_t enigmaIOTVersion[3]; ///< @brief Protocol version, filled when a version message is received
 
      /**
