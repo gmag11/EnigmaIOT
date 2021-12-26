@@ -16,6 +16,26 @@ extern "C" {
 #endif
 }
 
+typedef struct {
+    uint16_t frame_head;
+    uint16_t duration;
+    uint8_t destination_address[6];
+    uint8_t source_address[6];
+    uint8_t broadcast_address[6];
+    uint16_t sequence_control;
+
+    uint8_t category_code;
+    uint8_t organization_identifier[3]; // 0x18fe34
+    uint8_t random_values[4];
+    struct {
+        uint8_t element_id;                 // 0xdd
+        uint8_t lenght;                     //
+        uint8_t organization_identifier[3]; // 0x18fe34
+        uint8_t type;                       // 4
+        uint8_t version;
+        uint8_t body[0];
+    } vendor_specific_content;
+} __attribute__ ((packed)) espnow_frame_format_t;
 
 Espnow_halClass Espnow_hal;
 
@@ -62,8 +82,12 @@ void Espnow_halClass::initComms (peerType_t peerType) {
 }
 
 void ICACHE_FLASH_ATTR Espnow_halClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len) {
-	if (Espnow_hal.dataRcvd) {
-		Espnow_hal.dataRcvd (mac_addr, data, len);
+    espnow_frame_format_t* espnow_data = (espnow_frame_format_t*)(data - sizeof (espnow_frame_format_t));
+    wifi_promiscuous_pkt_t* promiscuous_pkt = (wifi_promiscuous_pkt_t*)(data - sizeof (wifi_pkt_rx_ctrl_t) - sizeof (espnow_frame_format_t));
+    wifi_pkt_rx_ctrl_t* rx_ctrl = &promiscuous_pkt->rx_ctrl;
+    
+    if (Espnow_hal.dataRcvd) {
+        Espnow_hal.dataRcvd (mac_addr, data, len, rx_ctrl->rssi);
 	}
 }
 

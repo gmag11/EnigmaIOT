@@ -32,7 +32,7 @@ typedef struct {
 } comms_queue_item_t;
 
 
-typedef void (*comms_hal_rcvd_data)(uint8_t* address, uint8_t* data, uint8_t len);
+typedef void (*comms_hal_rcvd_data)(uint8_t* address, uint8_t* data, uint8_t len, signed int rssi);
 typedef void (*comms_hal_sent_data)(uint8_t* address, uint8_t status);
 
 /**
