@@ -122,7 +122,7 @@ void ICACHE_FLASH_ATTR Espnow_halClass::rx_cb (uint8_t* mac_addr, uint8_t* data,
     wifi_pkt_rx_ctrl_t* rx_ctrl = &promiscuous_pkt->rx_ctrl;
     
     if (Espnow_hal.dataRcvd) {
-        Espnow_hal.dataRcvd (mac_addr, data, len, rx_ctrl->rssi);
+        Espnow_hal.dataRcvd (mac_addr, data, len, rx_ctrl->rssi - 98); // rssi should be in dBm but it has added almost 100 dB. Do not know why
 	}
 }
 

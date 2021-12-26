@@ -849,7 +849,7 @@ void EnigmaIOTGatewayClass::popInputMsgQueue () {
 }
 
 void EnigmaIOTGatewayClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len, signed int rssi) {
-    DEBUG_WARN ("------------------------> RX RSSI: %d", rssi);
+    DEBUG_WARN ("------------------------> RX RSSI: %d dBm", rssi);
 	EnigmaIOTGateway.addInputMsgQueue (mac_addr, data, len, rssi);
 }
 
@@ -937,8 +937,9 @@ void EnigmaIOTGatewayClass::handle () {
 void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uint8_t count, signed int rssi) {
 	Node* node;
 
-	DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-	DEBUG_VERBOSE ("Received data: %s", printHexBuffer (buf, count));
+    DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    DEBUG_WARN ("Received message RSSI: %d dBm", rssi);
+    DEBUG_VERBOSE ("Received data: %s", printHexBuffer (buf, count));
 
 	if (count <= 1) {
 		DEBUG_WARN ("Empty message");
