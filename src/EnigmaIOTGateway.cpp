@@ -112,15 +112,15 @@ bool buildSetIdentify (uint8_t* data, size_t& dataLen, const uint8_t* inputData,
 	return true;
 }
 
-bool buildGetRSSI (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
-	DEBUG_VERBOSE ("Build 'Get RSSI' message from: %s", printHexBuffer (inputData, inputLen));
-	if (dataLen < 1) {
-		return false;
-	}
-	data[0] = (uint8_t)control_message_type::RSSI_GET;
-	dataLen = 1;
-	return true;
-}
+// bool buildGetRSSI (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
+// 	DEBUG_VERBOSE ("Build 'Get RSSI' message from: %s", printHexBuffer (inputData, inputLen));
+// 	if (dataLen < 1) {
+// 		return false;
+// 	}
+// 	data[0] = (uint8_t)control_message_type::RSSI_GET;
+// 	dataLen = 1;
+// 	return true;
+// }
 
 bool buildGetName (uint8_t* data, size_t& dataLen, const uint8_t* inputData, size_t inputLen) {
 	DEBUG_VERBOSE ("Build 'Get Node Name and Address' message from: %s", printHexBuffer (inputData, inputLen));
@@ -361,6 +361,22 @@ bool buildSetSleep (uint8_t* data, size_t& dataLen, const uint8_t* inputData, si
 	return true;
 }
 
+void EnigmaIOTGatewayClass::sendNodeRSSI (Node* node) {
+    if (node && node->getStatus () == REGISTERED) {
+        char* nodeName = node->getNodeName ();
+        uint8_t* macaddr = node->getMacAddress ();
+        DEBUG_VERBOSE ("Get RSSI for node %s. Last RSSI: %d dBm. Channel: %u", nodeName ? nodeName : "NO NAME", node->getRSSI (), WiFi.channel());
+        uint8_t payload[3];
+        payload[0] = control_message_type::RSSI_ANS;
+        payload[1] = (int8_t)node->getRSSI ();
+        payload[2] = WiFi.channel ();
+        uint8_t len = 3;
+        if (notifyData) {
+            notifyData (macaddr, payload, len, 0, true, ENIGMAIOT, nodeName);
+        }
+    }
+}
+
 bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, size_t len, control_message_type_t controlData, gatewayPayloadEncoding_t encoding, char* nodeName) {
 	Node* node;
 	if (nodeName) {
@@ -425,13 +441,28 @@ bool EnigmaIOTGatewayClass::sendDownstream (uint8_t* mac, const uint8_t* data, s
 		}
 		DEBUG_VERBOSE ("Reset Config message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
 		break;
-	case control_message_type::RSSI_GET:
-		if (!buildGetRSSI (downstreamData, dataLen, data, len)) {
-			DEBUG_ERROR ("Error building get RSSI message");
-			return false;
-		}
-		DEBUG_VERBOSE ("Get RSSI message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
-		break;
+    case control_message_type::RSSI_GET:
+        sendNodeRSSI (node);
+        return true; // No more things to do
+        // if (node->getStatus () == REGISTERED) {
+        //     char* nodeName = node->getNodeName ();
+        //     DEBUG_WARN ("Get RSSI for node %s. Last RSSI: %d", nodeName, node->getRSSI ());
+        //     uint8_t* macaddr = node->getMacAddress ();
+        //     uint8_t payload[3]; // TODO: Fill in RSSI packet
+        //     payload[0] = control_message_type::RSSI_ANS;
+        //     payload[1] = (int8_t)node->getRSSI ();
+        //     payload[2] = gwConfig.channel;
+        //     uint8_t len = 3;
+        //     if (notifyData) {
+        //         notifyData (macaddr, payload, len, 0, true, ENIGMAIOT, nodeName ? nodeName : NULL);
+        //     }
+        // }
+        // if (!buildGetRSSI (downstreamData, dataLen, data, len)) {
+        // 	DEBUG_ERROR ("Error building get RSSI message");
+		// 	return false;
+		// }
+        // DEBUG_VERBOSE ("Get RSSI message. Len: %d Data %s", dataLen, printHexBuffer (downstreamData, dataLen));
+        break;
 	case control_message_type::NAME_GET:
 		if (!buildGetName (downstreamData, dataLen, data, len)) {
 			DEBUG_ERROR ("Error building get name message");
@@ -849,7 +880,7 @@ void EnigmaIOTGatewayClass::popInputMsgQueue () {
 }
 
 void EnigmaIOTGatewayClass::rx_cb (uint8_t* mac_addr, uint8_t* data, uint8_t len, signed int rssi) {
-    DEBUG_WARN ("------------------------> RX RSSI: %d dBm", rssi);
+    DEBUG_VERBOSE ("------------------------> RX RSSI: %d dBm", rssi);
 	EnigmaIOTGateway.addInputMsgQueue (mac_addr, data, len, rssi);
 }
 
@@ -938,7 +969,7 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 	Node* node;
 
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    DEBUG_WARN ("Received message RSSI: %d dBm", rssi);
+    DEBUG_VERBOSE ("Received message RSSI: %d dBm", rssi);
     DEBUG_VERBOSE ("Received data: %s", printHexBuffer (buf, count));
 
 	if (count <= 1) {
@@ -954,7 +985,8 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
     }
 
     node->setRSSI (rssi);
-    
+    DEBUG_VERBOSE ("Node RSSI set to %d", node->getRSSI ());
+
     flashRx = true;
 
 	int espNowError = 0; // TODO: May I remove this??
@@ -968,8 +1000,9 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 		if (espNowError == 0) {
 			if (processClientHello (mac, buf, count, node)) {
 				if (serverHello (myPublicKey, node)) {
-					DEBUG_INFO ("Server Hello sent");
-					node->setStatus (REGISTERED);
+                    DEBUG_INFO ("Server Hello sent");
+                    node->setRSSI (rssi); // Node is reset inside processClientHello
+                    node->setStatus (REGISTERED);
 					node->setKeyValidFrom (millis ());
 					node->setLastMessageCounter (0);
 					node->setLastControlCounter (0);
@@ -977,7 +1010,9 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 					node->setLastMessageTime ();
 					if (notifyNewNode) {
 						notifyNewNode (node->getMacAddress (), node->getNodeId (), NULL);
-					}
+                    }
+                    DEBUG_VERBOSE ("Send RSSI: %d dBm", node->getRSSI ());
+                    sendNodeRSSI (node);
 #if DEBUG_LEVEL >= INFO
 					nodelist.printToSerial (&DEBUG_ESP_PORT);
 #endif
@@ -1102,8 +1137,9 @@ void EnigmaIOTGatewayClass::manageMessage (const uint8_t* mac, uint8_t* buf, uin
 				DEBUG_INFO ("Node name for node %d set to %s", node->getNodeId (), node->getNodeName ());
 				if (notifyNewNode) {
 					notifyNewNode (node->getMacAddress (), node->getNodeId (), node->getNodeName ());
-				}
-			} else {
+                }
+                sendNodeRSSI (node);
+            } else {
 				DEBUG_WARN ("Error setting node name for node %d", node->getNodeId ());
 			}
 		}

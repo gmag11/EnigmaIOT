@@ -307,11 +307,17 @@ protected:
 	static void tx_cb (uint8_t* mac_addr, uint8_t status);
 
 	/**
-	 * @brief Functrion to debug send status.
+	 * @brief Function to debug send status.
 	 * @param mac_addr Address of message sender
 	 * @param status Result status code
 	 */
-	void getStatus (uint8_t* mac_addr, uint8_t status);
+    void getStatus (uint8_t* mac_addr, uint8_t status);
+    
+    /**
+     * @brief Sends node RSSI and channel information to GwOutput, like MQTT
+     * @param node Node whose RSSI and channel information is going to be sent
+     */
+    void sendNodeRSSI (Node* node);
 
 	/**
 	* @brief Loads configuration from flash memory

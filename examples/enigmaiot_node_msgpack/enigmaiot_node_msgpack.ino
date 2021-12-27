@@ -100,7 +100,7 @@ void processRxData (const uint8_t* mac, const uint8_t* buffer, uint8_t length, n
 
 void setup () {
 
-	Serial.begin (115200); Serial.println (); Serial.println ();
+	Serial.begin (921600); Serial.println (); Serial.println ();
 	time_t start = millis ();
 
 #ifdef ESP32

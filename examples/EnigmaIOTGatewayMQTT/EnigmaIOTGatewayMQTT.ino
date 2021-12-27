@@ -268,8 +268,9 @@ void processRxData (uint8_t* mac, uint8_t* buffer, uint8_t length, uint16_t lost
 		DEBUG_INFO ("Published MQTT from %s: %s", nodeName ? nodeName : mac_str, payload);
 	}
 #if ENABLE_STATUS_MESSAGES
-	pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}",
-						 EnigmaIOTGateway.getPER ((uint8_t*)mac),
+    pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"rssi\":%d,\"per\":%e,\"lostmessages\":%u,\"totalmessages\":%u,\"packetshour\":%.2f}",
+                         EnigmaIOTGateway.getNodes()->getNodeFromMAC((uint8_t*)mac)->getRSSI(),
+                         EnigmaIOTGateway.getPER ((uint8_t*)mac),
 						 EnigmaIOTGateway.getErrorPackets ((uint8_t*)mac),
 						 EnigmaIOTGateway.getTotalPackets ((uint8_t*)mac),
 						 EnigmaIOTGateway.getPacketsHour ((uint8_t*)mac));

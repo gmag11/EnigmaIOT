@@ -608,8 +608,8 @@ bool GwOutput_MQTT::outputControlSend (char* address, uint8_t* data, size_t leng
 			result = true;
 		}
 		break;
-	case control_message_type::RSSI_ANS:
-		snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, GET_RSSI_ANS);
+    case control_message_type::RSSI_ANS:
+        snprintf (topic, TOPIC_SIZE, "%s/%s/%s", netName.c_str (), address, GET_RSSI_ANS);
 		pld_size = snprintf (payload, PAYLOAD_SIZE, "{\"rssi\":%d,\"channel\":%u}", (int8_t)data[1], data[2]);
 		EnigmaIOTGateway.getNodes ()->getNodeFromName (address)->setRSSI (data[1]);
 		if (addMQTTqueue (topic, payload, pld_size)) {
