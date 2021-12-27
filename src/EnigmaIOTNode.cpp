@@ -2550,7 +2550,7 @@ nodeInvalidateReason_t EnigmaIOTNodeClass::processInvalidateKey (const uint8_t* 
 
 void EnigmaIOTNodeClass::manageMessage (const uint8_t* mac, const uint8_t* buf, uint8_t count, signed int rssi) {
     DEBUG_INFO ("Reveived message. Origin MAC: %02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    DEBUG_WARN ("Received message RSSI: %d", rssi);
+    DEBUG_VERBOSE ("Received message RSSI: %d", rssi);
     DEBUG_VERBOSE ("Received data: %s", printHexBuffer (const_cast<uint8_t*>(buf), count));
 	flashBlue = true;
 
