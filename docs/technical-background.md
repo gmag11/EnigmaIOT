@@ -330,7 +330,7 @@ This is the list of currently implemented control commands:
 - OTA Update
 - Identify
 - Node configuration reset
-- Request measure RSSI
+- Get last node messagge RSSI
 - Get/Set node name
 - Restart node MCU
 
@@ -370,7 +370,7 @@ This is the list of currently implemented control commands:
     <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/reset {}</code></td>
   </tr>
   <tr>
-    <td>Request measure RSSI</td>
+    <td>Get node RSSI</td>
     <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/get/rssi</code></td>
     <td><code>&lt;configurable prefix&gt;/&lt;node address | node name&gt;/result/rssi {"rssi":&lt;RSSI&gt;,"channel":&lt;WiFi channel&gt;}</code></td>
   </tr>
@@ -410,14 +410,15 @@ Messages are encoded to reduce the amount of bytes to be sent over internal prot
 | Identify                  | `0x04`   | None. Function to identify a physical node by flashing its LED |
 | Reset node configuration  | `0x05`   | None. This will set node to factory config                   |
 | Reset config confirmation | `0x85`   | None                                                         |
-| Request measure RSSI      | `0x06`   | None                                                         |
-| Report measure RSSI       | `0x86`   | RSSI (signed integer - 8 bit), WiFi channel (unsigned integer - 8 bit) |
+| Request measure RSSI (Deprecated) *     | `0x06`   | None                                                         |
+| Report measure RSSI (Deprecated) *     | `0x86`   | RSSI (signed integer - 8 bit), WiFi channel (unsigned integer - 8 bit) |
 | Get node name             | `0x07`   | None                                                         |
 | Report node name          | `0x87`   | Node name as string                                          |
 | Set node name             | `0x08`   | Node name as string                                          |
 | Restart node MCU          | `0x09`   | None                                                         |
 | Send Broadcast Key        | `0x10`   | 32 byte key                                                  |
 
+* Note: Since version 0.9.8 RSSI information is got from every message, stored into gateway. There is no longer need for a request to node
 ## OTA Update
 
 MQTT Gateway example includes plain Arduino OTA mechanism. OTA is protected using network key selected during initial configuration.
