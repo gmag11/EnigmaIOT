@@ -159,24 +159,48 @@ char* GatewayAPI::getNodeInfo (Node* node, int& resultCode, char* nodeInfo, size
 			DEBUG_INFO ("Node %d is registered", node->getNodeId ());
 			resultCode = 200;
 			time_t currentMillis = millis ();
+            time_t keyValidFrom = currentMillis - node->getKeyValidFrom ();
+            time_t lastMessageTime = currentMillis - node->getLastMessageTime ();
             uint8_t* version = node->getVersion ();
+            uint16_t nodeid = node->getNodeId ();
+            uint8_t *macaddr = node->getMacAddress ();
+            signed int rssi = node->getRSSI ();
             size_t index;
+            
             index = snprintf (nodeInfo, len,
-                              "{\"version\":\"%d.%d.%d\",\"node_id\":%d,\"address\":\"" MACSTR "\","\
-                              "\"keyValidSince\":%lld,\"lastMessageTime\":%lld,\"sleepy\":%s,"\
-                              "\"Broadcast\":%s,\"TimeSync\":%s,\"rssi\":%d,\"packetsHour\":%f,\"per\":%f",
-					  version[0], version[1], version[2],
-					  node->getNodeId (),
-					  MAC2STR (node->getMacAddress ()),
-					  currentMillis - node->getKeyValidFrom (),
-					  currentMillis - node->getLastMessageTime (),
-					  node->getSleepy () ? "True" : "False",
-					  node->broadcastIsEnabled () ? "True" : "False",
-                      node->useTimeSync () ? "True" : "False",
-					  node->getRSSI (),
-					  node->packetsHour,
-					  node->per
+                              "{\"version\":\"%d.%d.%d\",",
+					  version[0], version[1], version[2]
             );
+            index = index + snprintf (nodeInfo + index, len - index,
+                                      "\"node_id\":%d,",
+                                      nodeid);
+            index = index + snprintf (nodeInfo + index, len - index,
+                                      "\"address\":\"" MACSTR "\",",
+                                      MAC2STR (macaddr));
+            index = index + snprintf (nodeInfo + index, len - index,
+                                      "\"keyValidSince\":%lld,",
+                                      (long long int) keyValidFrom);
+            index = index + snprintf (nodeInfo + index, len - index,
+                                      "\"lastMessageTime\":%lld,",
+                                      (long long int) lastMessageTime);
+            index = index + snprintf (nodeInfo + index, len - index,
+                                      "\"sleepy\":%s,",
+                                      node->getSleepy () ? "True" : "False");
+            index = index + snprintf (nodeInfo + index, len - index,
+                                      "\"Broadcast\":%s,",
+                                      node->broadcastIsEnabled () ? "True" : "False");
+            index = index + snprintf (nodeInfo + index, len - index,
+                                      "\"TimeSync\":%s,",
+                                      node->useTimeSync () ? "True" : "False");
+            index = index + snprintf (nodeInfo + index, len - index,
+                                      "\"rssi\":%d,",
+                                      rssi);
+            index = index + snprintf (nodeInfo + index, len - index,
+                                      "\"packetsHour\":%f,",
+                                      node->packetsHour);
+            index = index + snprintf (nodeInfo + index, len - index,
+                                      "\"per\":%f",
+                                      node->per);
             char* nodeName = node->getNodeName ();
             if (nodeName && strlen (nodeName)) {
                 index = index + snprintf (nodeInfo + index, len - index, ",\"Name\":\"%s\"", nodeName);

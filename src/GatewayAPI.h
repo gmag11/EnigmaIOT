@@ -18,7 +18,7 @@
 #include "WProgram.h"
 #endif
 
-const size_t RESPONSE_SIZE = 250;  ///< @brief Maximum API response size
+const size_t RESPONSE_SIZE = 350;  ///< @brief Maximum API response size
 
 String methodToString (WebRequestMethodComposite method);
 
