@@ -56,7 +56,7 @@ void initWiFi (uint8_t channel, const char* networkName, const char* networkKey,
 		DEBUG_DBG ("Mode set to AP in channel %u", channel);
 #ifdef ESP32
         esp_err_t err_ok;
-        if ((err_ok = esp_wifi_set_bandwidth (ESP_IF_WIFI_AP, WIFI_BW_HT20))) {
+        if ((err_ok = esp_wifi_set_bandwidth (WIFI_IF_AP, WIFI_BW_HT20))) {
             DEBUG_ERROR ("Error setting wifi bandwidth: %s", esp_err_to_name (err_ok));
         }
 #endif

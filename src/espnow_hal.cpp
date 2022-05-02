@@ -247,9 +247,9 @@ int32_t Espnow_halClass::sendEspNowMessage (comms_queue_item_t* message) {
     //}
 #endif
 
-    error = esp_now_send (message->dstAddress, message->payload, message->payload_len);
     DEBUG_DBG ("Ready to send: false");
     readyToSend = false;
+    error = esp_now_send (message->dstAddress, message->payload, message->payload_len);
 #ifdef ESP32
     DEBUG_DBG ("esp now send result = %s", esp_err_to_name(error));
 	//if (_ownPeerType == COMM_GATEWAY) {

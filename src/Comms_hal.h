@@ -31,8 +31,20 @@ typedef struct {
     size_t payload_len; /**< Payload length*/
 } comms_queue_item_t;
 
-
+/**
+      * @brief Received data callback definition
+      * @param address Address of the sender
+      * @param data Received data
+      * @param len Received data length
+      * @param rssi Received signal strength
+*/
 typedef void (*comms_hal_rcvd_data)(uint8_t* address, uint8_t* data, uint8_t len, signed int rssi);
+
+/**
+      * @brief Sent data status callback definition
+      * @param address Destination address
+      * @param status Status of the sent data. 0 if success, 1 if error
+*/
 typedef void (*comms_hal_sent_data)(uint8_t* address, uint8_t status);
 
 /**
