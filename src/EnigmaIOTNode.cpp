@@ -478,6 +478,7 @@ void EnigmaIOTNodeClass::clearFlash () {
     FILESYSTEM.end ();
 }
 
+#ifndef NO_PORTAL
 bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 	AsyncWebServer server (80);
 	DNSServer dns;
@@ -613,6 +614,7 @@ bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
 
 	return result;
 }
+#endif
 
 void flashLed (void* led) {
 #ifdef ESP8266
@@ -755,32 +757,9 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 					//DEBUG_DBG ("Found gateway. Storing");
 					rtcmem_data.commErrors = 0;
 				}
-			} else { // Configuration empty. Enter config AP mode
-				DEBUG_DBG ("No flash data present. Starting Configuration AP");
-				bool result = configWiFiManager (&rtcmem_data);
-				if (result) {
-					DEBUG_DBG ("Got configuration. Searching for Gateway");
-					if (searchForGateway (&rtcmem_data, true)) {
-						DEBUG_DBG ("Found EnigmaIOT Gateway. Storing configuration");
-						if (!saveFlashData (true)) {
-							DEBUG_ERROR ("Error saving data on flash");
-						}
-                        FILESYSTEM.end ();
-						ESP.restart ();
-						return;
-					}
-                    FILESYSTEM.end ();
-                    if (node.getSleepy ()) {
-                        DEBUG_WARN ("No gateway found. Go to sleep for 120 seconds");
-                        ESP.deepSleep (120);
-                    } else {
-                        DEBUG_WARN ("No gateway found. Restarting");
-                        ESP.restart ();
-                    }
-                } else { // Configuration error
-					DEBUG_ERROR ("Configuration error. Restarting");
-					ESP.restart ();
-				}
+			} else {
+				DEBUG_ERROR ("No flash data present and config Portal not enabled. Restarting");
+				ESP.restart ();
 			}
 		}
 	}

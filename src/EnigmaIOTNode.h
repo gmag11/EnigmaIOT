@@ -10,6 +10,8 @@
 #define _ENIGMAIOTNODE_h
 //#ifdef ESP8266
 
+//#define ENIGMAIOT_NODE_WEB_PORTAL 1
+
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -23,8 +25,11 @@
 #include "NodeList.h"
 #include <cstddef>
 #include <cstdint>
+
+#ifndef NO_PORTAL
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
+#endif
 
 #define LED_ON LOW
 #define LED_OFF !LED_ON
@@ -166,7 +171,9 @@ protected:
 	bool requestReportRSSI = false; ///< @brief Flag to control RSSI reporting
 	bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
 	int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
+#ifndef NO_PORTAL
 	AsyncWiFiManager* wifiManager; ///< @brief Wifi configuration portal
+#endif
 	onWiFiManagerExit_t notifyWiFiManagerExit; ///< @brief Function called when configuration portal exits
 	simpleEventHandler_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
 	time_t cycleStartedTime; ///< @brief Used to calculate exact sleep time by substracting awake time
@@ -211,6 +218,7 @@ protected:
 	*/
 	bool saveFlashData (bool fsOpen = false);
 
+#ifndef NO_PORTAL
 	/**
 	* @brief Starts configuration AP and web server and gets settings from it
 	* @param data Pointer to configuration data to be stored on RTC memory to keep status
@@ -218,6 +226,7 @@ protected:
 	* @return Returns `true` if data was been correctly configured. `false` otherwise
 	*/
 	bool configWiFiManager (rtcmem_data_t* data);
+#endif
 
    /**
 	* @brief Sends a restart notification control message
@@ -728,6 +737,7 @@ public:
 		notifyWiFiManagerStarted = handle;
 	}
 
+#ifndef NO_PORTAL
 	/**
 	 * @brief Adds a parameter to configuration portal
 	 * @param p Configuration parameter
@@ -737,6 +747,7 @@ public:
 			wifiManager->addParameter (p);
 		}
 	}
+#endif
 
 	/**
 	  * @brief Requests transition to sleep mode (low energy state)
