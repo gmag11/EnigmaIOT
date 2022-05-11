@@ -22,4 +22,4 @@ include/
 lib/
 test/
 Makefile
-examples/enigmaiot_node_no_portal/enigmaiot_node_no_portal.cpp
+examples/enigmaiot_node_configurer/enigmaiot_node_configurer.cpp

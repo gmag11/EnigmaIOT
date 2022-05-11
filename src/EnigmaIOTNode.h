@@ -23,13 +23,10 @@
 #include "helperFunctions.h"
 #include "Comms_hal.h"
 #include "NodeList.h"
+#include "rtc_data.h"
 #include <cstddef>
 #include <cstdint>
 
-#ifndef NO_PORTAL
-#include <ESPAsyncWebServer.h>
-#include <ESPAsyncWiFiManager.h>
-#endif
 
 #define LED_ON LOW
 #define LED_OFF !LED_ON
@@ -88,33 +85,6 @@ enum nodeInvalidateReason_t {
 	KEY_EXPIRED = 0x05 /**< Node key has reached maximum validity time */
 };
 
-/**
-  * @brief Context data to be stored con persistent storage to be used after wake from sleep mode
-  */
-typedef struct {
-	uint32_t crc32; /**< CRC to check RTC data integrity */
-	uint8_t nodeKey[KEY_LENGTH]; /**< Node shared key */
-	uint16_t nodeId; /**< Node identification */
-	uint8_t channel /*= DEFAULT_CHANNEL*/; /**< WiFi channel used on ESP-NOW communication */
-	uint8_t gateway[ENIGMAIOT_ADDR_LEN]; /**< Gateway address */
-	int8_t rssi; /**< Gateway signal strength */
-	uint8_t networkKey[KEY_LENGTH]; /**< Network key to protect key agreement */
-	char networkName[NETWORK_NAME_LENGTH]; /**< Network name. Used to search gateway peer */
-	bool sleepy; /**< Sleepy node */
-	uint32_t sleepTime /*= 0*/; /**< Time to sleep between sensor data delivery */
-	char nodeName[NODE_NAME_LENGTH + 1]; /**< Node name. Use as a human friendly name to avoid use of numeric address*/
-	uint8_t commErrors /*= 0*/; /**< number of non acknowledged packets. May mean that gateway is not available or its channel has changed.
-								This is used to retrigger Gateway scan*/
-	bool nodeKeyValid /* = false*/; /**< true if key has been negotiated successfully */
-	uint8_t broadcastKey[KEY_LENGTH]; /**< Key to encrypt broadcast messages */
-	bool broadcastKeyValid /* = false*/; /**< true if broadcast key has been received from gateway */
-	bool broadcastKeyRequested /* = false*/; /**< true if broadcast key has been requested to gateway */
-	status_t nodeRegisterStatus /*= UNREGISTERED*/; /**< Node registration status */
-	uint16_t lastMessageCounter; /**< Node last message counter */
-	uint16_t lastControlCounter; /**< Control message last counter */
-	uint16_t lastDownlinkMsgCounter; /**< Downlink message last counter */
-} rtcmem_data_t;
-
 typedef nodeMessageType nodeMessageType_t;
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
@@ -122,14 +92,13 @@ typedef nodeMessageType nodeMessageType_t;
 typedef std::function<void (const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding)> onNodeDataRx_t;
 typedef std::function<void ()> onConnected_t;
 typedef std::function<void (nodeInvalidateReason_t reason)> onDisconnected_t;
-typedef std::function<void (bool status)> onWiFiManagerExit_t;
 typedef std::function<void (void)> simpleEventHandler_t;
+typedef std::function<bool (rtcmem_data_t* data)> nodeConfigurer_t;
 #else
 typedef void (*onNodeDataRx_t)(const uint8_t* mac, const uint8_t* buf, uint8_t len, nodeMessageType_t command, nodePayloadEncoding_t payloadEncoding);
 typedef void (*onConnected_t)();
 typedef void (*onDisconnected_t)(nodeInvalidateReason_t reason);
-typedef void (*onWiFiManagerExit_t)(bool status);
-typedef void (*onWiFiManagerStarted_t)(void);
+typedef bool (*nodeConfigurer_t)(rtcmem_data_t* data);
 #endif
 
 /**
@@ -171,11 +140,6 @@ protected:
 	bool requestReportRSSI = false; ///< @brief Flag to control RSSI reporting
 	bool configCleared = false; ///< @brief This flag disables asy configuration save after triggering a factory reset
 	int resetPin = -1; ///< @brief  Pin used to reset configuration if it is connected to ground during startup
-#ifndef NO_PORTAL
-	AsyncWiFiManager* wifiManager; ///< @brief Wifi configuration portal
-#endif
-	onWiFiManagerExit_t notifyWiFiManagerExit; ///< @brief Function called when configuration portal exits
-	simpleEventHandler_t notifyWiFiManagerStarted; ///< @brief Function called when configuration portal is started
 	time_t cycleStartedTime; ///< @brief Used to calculate exact sleep time by substracting awake time
 	int16_t lastBroadcastMsgCounter; ///< @brief Counter for broadcast messages from gateway */
 
@@ -522,7 +486,7 @@ public:
 	  * normally those that are powered with batteries, downlink message will be queued on gateway and sent just after an uplink data
 	  * message from node has been sent
 	  */
-	void begin (Comms_halClass* comm, uint8_t* gateway = NULL, uint8_t* networkKey = NULL, bool useCounter = true, bool sleepy = true);
+	void begin (Comms_halClass* comm, uint8_t* gateway = NULL, uint8_t* networkKey = NULL, bool useCounter = true, bool sleepy = true, nodeConfigurer_t configurer = NULL);
 
 	/**
 	  * @brief Stops EnigmaIoT protocol
@@ -720,34 +684,6 @@ public:
 	void onDisconnected (onDisconnected_t handler) {
 		notifyDisconnection = handler;
 	}
-
-	/**
-	 * @brief Register callback to be called on wifi manager exit
-	 * @param handle Callback function pointer
-	 */
-	void onWiFiManagerExit (onWiFiManagerExit_t handle) {
-		notifyWiFiManagerExit = handle;
-	}
-
-   /**
-	* @brief Register callback to be called on wifi manager start
-	* @param handle Callback function pointer
-	*/
-	void onWiFiManagerStarted (simpleEventHandler_t handle) {
-		notifyWiFiManagerStarted = handle;
-	}
-
-#ifndef NO_PORTAL
-	/**
-	 * @brief Adds a parameter to configuration portal
-	 * @param p Configuration parameter
-	 */
-	void addWiFiManagerParameter (AsyncWiFiManagerParameter* p) {
-		if (wifiManager) {
-			wifiManager->addParameter (p);
-		}
-	}
-#endif
 
 	/**
 	  * @brief Requests transition to sleep mode (low energy state)

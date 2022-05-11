@@ -75,8 +75,12 @@ protected:
      * @param request Node information request
      */
 	void restartNode (AsyncWebServerRequest* request);
-	// TODO: Reset node
-	// TODO: Reset Gw
+    
+    /**
+     * @brief Restart node
+     * @param request Node restart request
+     */
+	void resetNode (AsyncWebServerRequest* request);
 
     /**
      * @brief Processes unknown entry points or methods
@@ -118,6 +122,12 @@ protected:
      * @param node Node te send restart to
      */    
 	bool restartNodeRequest (Node* node);
+
+    /**
+     * @brief Sends reset node message
+     * @param node Node te send reset to
+     */    
+	bool resetNodeRequest (Node* node);
 
 public:
     
