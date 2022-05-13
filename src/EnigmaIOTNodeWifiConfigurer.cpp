@@ -4,6 +4,9 @@
 #include "EnigmaIOTdebug.h"
 #include "cryptModule.h"
 #include "helperFunctions.h"
+#if defined ESP32
+#include "esp_wifi.h"
+#endif
 
 bool EnigmaIOTNodeWifiConfigurerClass::configure(rtcmem_data_t* data) {
     AsyncWebServer server(80);

@@ -736,7 +736,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 	while (!(WiFi.scanComplete () || (millis () - scanStarted) > 1500)) {
 #if DEBUG_LEVEL >= DBG
 		delay (250);
-		Serial.printf ("%lu.", millis () - scanStarted);
+		Serial.printf ("%llu.", millis () - scanStarted);
 #else
 		delay (50);
 #endif

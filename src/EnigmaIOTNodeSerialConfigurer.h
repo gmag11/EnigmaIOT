@@ -4,12 +4,6 @@
 
 #include "rtc_data.h"
 
-// a helper class to configure node when configuration is empty
-// possible ways:
-// 1. static (hardcoded) configuration: use provided values
-// 2.
-// 3. wifi manager, start AP and ask user to enter configuration
-
 /**
  * @brief read initial configuration from a Serial port
  */

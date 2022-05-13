@@ -46,4 +46,6 @@ All responses are given in JSON format
 | /api/node/node    | nodename   | DEL    | **result**: Error string       | Unregisters node given its name        |
 | /api/node/node    | nodeaddr   | DEL    | **result**: Error string       | Unregisters node given its mac address |
 | /api/node/restart | nodename   | PUT    | **node_restart**: Error string | Triggers node restart                  |
+| /api/node/reset | nodename   | PUT    | **node_reset**: Error string | Triggers node reset                  |
+
 
