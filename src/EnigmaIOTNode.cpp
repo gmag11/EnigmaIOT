@@ -478,142 +478,6 @@ void EnigmaIOTNodeClass::clearFlash () {
     FILESYSTEM.end ();
 }
 
-bool EnigmaIOTNodeClass::configWiFiManager (rtcmem_data_t* data) {
-	AsyncWebServer server (80);
-	DNSServer dns;
-
-	//regex_t regex;
-	bool regexResult = true;
-
-	//char networkKey[33] = "";
-	char sleepy[5] = "10";
-	//char networkName[NETWORK_NAME_LENGTH] = "";
-	char nodeName[NODE_NAME_LENGTH] = "";
-
-	wifiManager = new AsyncWiFiManager (&server, &dns);
-#if DEBUG_LEVEL == NONE
-    wifiManager->setDebugOutput (false);
-#endif
-
-	//AsyncWiFiManagerParameter networkNameParam ("netname", "Network name", networkName, (int)NETWORK_NAME_LENGTH, "required type=\"text\" maxlength=20");
-	//AsyncWiFiManagerParameter netKeyParam ("netkey", "NetworkKey", networkKey, 33, "required type=\"password\" maxlength=32");
-	AsyncWiFiManagerParameter sleepyParam ("sleepy", "Sleep Time", sleepy, 5, "required type=\"number\" min=\"0\" max=\"13600\" step=\"1\"");
-	AsyncWiFiManagerParameter nodeNameParam ("nodename", "Node Name", nodeName, NODE_NAME_LENGTH, "type=\"text\" pattern=\"^[^/\\\\]+$\" maxlength=32");
-
-	wifiManager->setCustomHeadElement ("<style>input:invalid {border: 2px dashed red;input:valid{border: 2px solid black;}</style>");
-	//wifiManager->addParameter (&networkNameParam);
-	//wifiManager->addParameter (&netKeyParam);
-	wifiManager->addParameter (&sleepyParam);
-	wifiManager->addParameter (&nodeNameParam);
-
-	if (notifyWiFiManagerStarted) {
-		notifyWiFiManagerStarted ();
-	}
-	wifiManager->setConnectTimeout (30);
-	wifiManager->setBreakAfterConfig (true);
-	wifiManager->setTryConnectDuringConfigPortal (false);
-	char apname[64];
-#ifdef ESP8266
-	snprintf (apname, 64, "EnigmaIoTNode%06x", ESP.getChipId ());
-	//String apname = "EnigmaIoTNode" + String (ESP.getChipId (), 16);
-#elif defined ESP32
-	snprintf (apname, 64, "EnigmaIoTNode%06x", (uint32_t)(ESP.getEfuseMac () & (uint64_t)0x0000000000FFFFFF));
-	//String apname = "EnigmaIoTNode" + String (ESP.getEfuseMac (), 16);
-#endif
-	DEBUG_VERBOSE ("Start AP: %s", apname);
-
-	boolean result = wifiManager->startConfigPortal (apname, NULL);
-	if (result) {
-		DEBUG_DBG ("==== Config Portal result ====");
-
-		DEBUG_DBG ("Network Name: %s", WiFi.SSID ().c_str ());
-#ifdef ESP8266
-		station_config wifiConfig;
-		if (!wifi_station_get_config (&wifiConfig)) {
-			DEBUG_WARN ("Error getting WiFi config");
-		}
-		DEBUG_DBG ("WiFi password: %s", wifiConfig.password);
-		const char* netkey = (char*)(wifiConfig.password);
-#elif defined ESP32
-        wifi_config_t wifiConfig;
-        if (esp_wifi_get_config (WIFI_IF_STA, &wifiConfig)) {
-            DEBUG_WARN ("Error getting WiFi config");
-        }
-        DEBUG_WARN ("WiFi password: %.*s", 64, wifiConfig.sta.password);
-        const char* netkey = (char*)(wifiConfig.sta.password);
-#endif
-		DEBUG_DBG ("Network Key: %s", netkey);
-		DEBUG_DBG ("Sleppy time: %s", sleepyParam.getValue ());
-		DEBUG_DBG ("Node Name: %s", nodeNameParam.getValue ());
-
-		data->lastMessageCounter = 0;
-
-		strncpy ((char*)(data->networkKey), netkey, KEY_LENGTH);
-		DEBUG_DBG ("Stored network key before hash: %.*s", KEY_LENGTH, (char*)(data->networkKey));
-
-		CryptModule::getSHA256 (data->networkKey, KEY_LENGTH);
-		DEBUG_DBG ("Calculated network key: %s", printHexBuffer (data->networkKey, KEY_LENGTH));
-		data->nodeRegisterStatus = UNREGISTERED;
-
-		//const char* netName = WiFi.SSID ().c_str ();
-		DEBUG_DBG ("Temp network name: %s", WiFi.SSID ().c_str ());
-		strncpy (data->networkName, WiFi.SSID ().c_str (), NETWORK_NAME_LENGTH - 1);
-		DEBUG_DBG ("Stored network name: %s", data->networkName);
-
-#ifdef ESP32
-		std::regex sleepTimeRegex ("(\\d)+");
-		regexResult = std::regex_match (sleepyParam.getValue (), sleepTimeRegex);
-		if (regexResult) {
-#endif
-			DEBUG_DBG ("Sleep time check ok");
-			int sleepyVal = atoi (sleepyParam.getValue ());
-			if (sleepyVal > 0) {
-				data->sleepy = true;
-			}
-			data->sleepTime = sleepyVal;
-#ifdef ESP32
-		} else {
-			DEBUG_WARN ("Sleep time parameter error");
-			result = false;
-		}
-#endif
-
-		//char tempStr[NODE_NAME_LENGTH];
-		//strncpy (tempStr, nodeNameParam.getValue (), NODE_NAME_LENGTH - 1);
-
-#ifdef ESP32
-		std::regex nodeNameRegex ("^[^/\\\\]+$");
-		regexResult = std::regex_match (nodeNameParam.getValue (), nodeNameRegex);
-#elif defined ESP8266
-		if (strstr (nodeNameParam.getValue (), "/")) {
-			regexResult = false;
-			DEBUG_WARN ("Node name parameter error. Contains '/'");
-		} else if (strstr (nodeNameParam.getValue (), "\\")) {
-			regexResult = false;
-			DEBUG_WARN ("Node name parameter error. Contains '\\'");
-		}
-#endif
-		if (regexResult) {
-			strncpy (data->nodeName, nodeNameParam.getValue (), NODE_NAME_LENGTH);
-			DEBUG_DBG ("Node name: %s", data->nodeName);
-		} else {
-			DEBUG_WARN ("Node name parameter error");
-			result = false;
-		}
-
-		data->nodeKeyValid = false;
-		data->crc32 = calculateCRC32 ((uint8_t*)(data->nodeKey), sizeof (rtcmem_data_t) - sizeof (uint32_t));
-	}
-
-	if (notifyWiFiManagerExit) {
-		notifyWiFiManagerExit (result);
-	}
-    
-    delete (wifiManager);
-
-	return result;
-}
-
 void flashLed (void* led) {
 #ifdef ESP8266
 	digitalWrite (*(int*)led, !digitalRead (*(int*)led));
@@ -693,7 +557,7 @@ void EnigmaIOTNodeClass::checkResetButton () {
 	}
 }
 
-void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t* networkKey, bool useCounter, bool sleepy) {
+void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t* networkKey, bool useCounter, bool sleepy, nodeConfigurer_t configurer) {
 	cycleStartedTime = 0; // Calculate time from start
 	pinMode (led, OUTPUT);
 #ifdef ESP8266
@@ -755,9 +619,9 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 					//DEBUG_DBG ("Found gateway. Storing");
 					rtcmem_data.commErrors = 0;
 				}
-			} else { // Configuration empty. Enter config AP mode
-				DEBUG_DBG ("No flash data present. Starting Configuration AP");
-				bool result = configWiFiManager (&rtcmem_data);
+			} else { // Configuration empty. configute node using provided configurer
+				DEBUG_DBG ("No flash data present. Configuring node using provided configurer");
+				bool result = configurer(&rtcmem_data);
 				if (result) {
 					DEBUG_DBG ("Got configuration. Searching for Gateway");
 					if (searchForGateway (&rtcmem_data, true)) {
@@ -782,7 +646,7 @@ void EnigmaIOTNodeClass::begin (Comms_halClass* comm, uint8_t* gateway, uint8_t*
 					ESP.restart ();
 				}
 			}
-		}
+		}		
 	}
 
 	initWiFi (rtcmem_data.channel, rtcmem_data.networkName);
@@ -872,7 +736,7 @@ bool EnigmaIOTNodeClass::searchForGateway (rtcmem_data_t* data, bool shouldStore
 	while (!(WiFi.scanComplete () || (millis () - scanStarted) > 1500)) {
 #if DEBUG_LEVEL >= DBG
 		delay (250);
-		Serial.printf ("%lu.", millis () - scanStarted);
+		Serial.printf ("%llu.", millis () - scanStarted);
 #else
 		delay (50);
 #endif

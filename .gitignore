@@ -21,3 +21,5 @@ Libraries/
 include/
 lib/
 test/
+Makefile
+examples/enigmaiot_node_configurer/enigmaiot_node_configurer.cpp

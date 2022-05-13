@@ -31,6 +31,7 @@ jobs:
         run: |
           mv examples/enigmaiot_led_flasher/enigmaiot_led_flasher.ino examples/enigmaiot_led_flasher/enigmaiot_led_flasher.cpp
           mv examples/enigmaiot_node/enigmaiot_node.ino examples/enigmaiot_node/enigmaiot_node.cpp
+          mv examples/enigmaiot_node_configurer/enigmaiot_node_configurer.ino examples/enigmaiot_node/enigmaiot_node_configurer.cpp
           mv examples/enigmaiot_node_msgpack/enigmaiot_node_msgpack.ino examples/enigmaiot_node_msgpack/enigmaiot_node_msgpack.cpp
           mv examples/enigmaiot_node_nonsleepy/enigmaiot_node_nonsleepy.ino examples/enigmaiot_node_nonsleepy/enigmaiot_node_nonsleepy.cpp
           mv examples/EnigmaIOT-Button-Controller/EnigmaIOT-Button-Controller.ino examples/EnigmaIOT-Button-Controller/EnigmaIOT-Button-Controller.cpp
@@ -41,5 +42,5 @@ jobs:
           mv examples/EnigmaIOT-Led-Controller/EnigmaIOT-Led-Controller.ino examples/EnigmaIOT-Led-Controller/EnigmaIOT-Led-Controller.cpp
           mv examples/EnigmaIOT-Sensor-Controller/EnigmaIOT-Sensor-Controller.ino examples/EnigmaIOT-Sensor-Controller/EnigmaIOT-Sensor-Controller.cpp
           mv examples/EnigmaIOT-SmartSwitch-Controller/EnigmaIOT-SmartSwitch-Controller.ino examples/EnigmaIOT-SmartSwitch-Controller/EnigmaIOT-SmartSwitch-Controller.cpp
-          pio run -e esp8266-MQTTGateway -e esp8266-DummyGateway -e esp8266-Node -e esp8266-NodeLedFlasher -e esp8266-NodeMsgPack -e esp8266-NodeNonSleepy -e esp8266-ButtonController -e esp8266-DashButtonController -e esp8266-JsonControllerTemplate -e esp8266-LedController -e esp8266-SensorController -e esp8266-SmartSwitchController
+          pio run -e esp8266-MQTTGateway -e esp8266-DummyGateway -e esp8266-Node -e esp8266-NodeLedFlasher -e esp8266-NodeMsgPack -e esp8266-NodeNonSleepy -e esp8266-ButtonController -e esp8266-DashButtonController -e esp8266-JsonControllerTemplate -e esp8266-LedController -e esp8266-SensorController -e esp8266-SmartSwitchController -e esp8266-Node-Configurer
       
